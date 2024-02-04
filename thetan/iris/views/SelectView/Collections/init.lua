@@ -176,7 +176,8 @@ function ViewConfig:update(view)
 	end
 end
 
-function ViewConfig:draw(view)
+function ViewConfig:draw(view, position)
+	Layout:draw(position)
 	self:cacheStatus(view)
 	self:osuDirectDownloadQueue(view)
 	self:collectionsList(view)

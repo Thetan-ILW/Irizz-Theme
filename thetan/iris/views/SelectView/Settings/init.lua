@@ -87,7 +87,8 @@ function ViewConfig:settings(view)
 	SettingsTab:draw(view, w, h, currentTab)
 end
 
-function ViewConfig:draw(view)
+function ViewConfig:draw(view, position)
+	Layout:draw(position)
 	Frames(view)
 	self:tabs(view)
 	self:settings(view)

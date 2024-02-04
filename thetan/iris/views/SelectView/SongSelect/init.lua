@@ -341,7 +341,8 @@ function ViewConfig:_draw(view)
 
 end
 
-function ViewConfig:draw(view)
+function ViewConfig:draw(view, position)
+	Layout:draw(position)
 	Frames(view)
 	SearchField(view)
 	self:NoteChartSets(view)

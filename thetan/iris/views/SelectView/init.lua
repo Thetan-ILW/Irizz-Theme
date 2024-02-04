@@ -6,13 +6,8 @@ local ScreenView = require("sphere.views.ScreenView")
 local Layout = require("thetan.iris.views.SelectView.Layout")
 local SelectViewConfig = require("thetan.iris.views.SelectView.SelectViewConfig")
 
-local SettingsLayout = require("thetan.iris.views.SelectView.Settings.SettingsLayout")
 local SettingsViewConfig = require("thetan.iris.views.SelectView.Settings")
-
-local SongSelectLayout = require("thetan.iris.views.SelectView.SongSelect.SongSelectLayout")
 local SongSelectViewConfig = require("thetan.iris.views.SelectView.SongSelect")
-
-local CollectionsLayout = require("thetan.iris.views.SelectView.Collections.CollectionsLayout")
 local CollectionViewConfig = require("thetan.iris.views.SelectView.Collections")
 
 ---@class iris.SelectView: sphere.ScreenView
@@ -212,13 +207,10 @@ end
 
 function SelectView:draw()
 	Layout:draw()
-	SongSelectLayout:draw(self.screenX)
-	CollectionsLayout:draw(self.screenX + 1)
-	SettingsLayout:draw(self.screenX - 1)
 	self.selectViewConfig:draw(self)
-    self.songSelectViewConfig:draw(self)
-	self.collectionsViewConfig:draw(self)
-	self.settingsViewConfig:draw(self)
+    self.songSelectViewConfig:draw(self, self.screenX)
+	self.collectionsViewConfig:draw(self, self.screenX + 1)
+	self.settingsViewConfig:draw(self, self.screenX - 1)
 end
 
 return SelectView
