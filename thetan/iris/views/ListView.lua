@@ -68,7 +68,7 @@ function ListView:draw(w, h)
 		if self.tween then
 			self.tween:stop()
 		end
-		self.tween = flux.to(self, 0.1, {visualItemIndex = itemIndex}):ease("linear")
+		self.tween = flux.to(self, 0.2, {visualItemIndex = itemIndex}):ease("quartout")
 		self.itemIndex = itemIndex
 	end
 
