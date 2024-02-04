@@ -6,14 +6,14 @@ local ScreenView = require("sphere.views.ScreenView")
 local Layout = require("thetan.iris.views.SelectView.Layout")
 local SelectViewConfig = require("thetan.iris.views.SelectView.SelectViewConfig")
 
-local SettingsLayout = require("thetan.iris.views.SelectView.SettingsLayout")
-local SettingsViewConfig = require("thetan.iris.views.SelectView.SettingsViewConfig")
+local SettingsLayout = require("thetan.iris.views.SelectView.Settings.SettingsLayout")
+local SettingsViewConfig = require("thetan.iris.views.SelectView.Settings")
 
-local SongSelectLayout = require("thetan.iris.views.SelectView.SongSelectLayout")
-local SongSelectViewConfig = require("thetan.iris.views.SelectView.SongSelectViewConfig")
+local SongSelectLayout = require("thetan.iris.views.SelectView.SongSelect.SongSelectLayout")
+local SongSelectViewConfig = require("thetan.iris.views.SelectView.SongSelect")
 
-local CollectionsLayout = require("thetan.iris.views.SelectView.CollectionsLayout")
-local CollectionViewConfig = require("thetan.iris.views.SelectView.CollectionsViewConfig")
+local CollectionsLayout = require("thetan.iris.views.SelectView.Collections.CollectionsLayout")
+local CollectionViewConfig = require("thetan.iris.views.SelectView.Collections")
 
 ---@class iris.SelectView: sphere.ScreenView
 ---@operator call: iris.SelectView
@@ -53,7 +53,7 @@ function SelectView:reloadViews()
 	SongSelectLayout = require("thetan.iris.views.SelectView.SongSelectLayout")
 	SongSelectViewConfig = require("thetan.iris.views.SelectView.SongSelectViewConfig")
 	CollectionsLayout = require("thetan.iris.views.SelectView.CollectionsLayout")
-	CollectionViewConfig = require("thetan.iris.views.SelectView.CollectionsViewConfig")
+	CollectionViewConfig = require("moddedgame.Iris-Theme.thetan.iris.views.SelectView.CollectionsView.init")
 	self.selectViewConfig = SelectViewConfig(self.game)
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)

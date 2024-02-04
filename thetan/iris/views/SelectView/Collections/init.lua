@@ -3,17 +3,17 @@ local just = require("just")
 local imgui = require("imgui")
 local gfx_util = require("gfx_util")
 
-local Layout = require("thetan.iris.views.SelectView.CollectionsLayout")
+local Layout = require("thetan.iris.views.SelectView.Collections.CollectionsLayout")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textCollections
 local Font
 
-local CollectionListView = require("thetan.iris.views.SelectView.CollectionListView")
-local OsuDirectListView = require("thetan.iris.views.SelectView.OsuDirectListView")
-local OsuDirectChartsListView = require("thetan.iris.views.SelectView.OsuDirectChartsListView")
-local OsuDirectQueueListView = require("thetan.iris.views.SelectView.OsuDirectQueueListView")
+local CollectionListView = require("thetan.iris.views.SelectView.Collections.CollectionListView")
+local OsuDirectListView = require("thetan.iris.views.SelectView.Collections.OsuDirectListView")
+local OsuDirectChartsListView = require("thetan.iris.views.SelectView.Collections.OsuDirectChartsListView")
+local OsuDirectQueueListView = require("thetan.iris.views.SelectView.Collections.OsuDirectQueueListView")
 
 local ViewConfig = class()
 

@@ -2,8 +2,8 @@ local class = require("class")
 local just = require("just")
 local gfx_util = require("gfx_util")
 
-local Layout = require("thetan.iris.views.SelectView.SettingsLayout")
-local SettingsTab = require("thetan.iris.views.SelectView.SettingsTabs")
+local Layout = require("thetan.iris.views.SelectView.Settings.SettingsLayout")
+local SettingsTab = require("thetan.iris.views.SelectView.Settings.SettingsTabs")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors

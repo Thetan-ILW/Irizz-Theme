@@ -7,7 +7,7 @@ local TextInput = require("thetan.iris.imgui.TextInput")
 local ScrollBar = require("thetan.iris.imgui.ScrollBar")
 
 local Format = require("sphere.views.Format")
-local Layout = require("thetan.iris.views.SelectView.SongSelectLayout")
+local Layout = require("thetan.iris.views.SelectView.SongSelect.SongSelectLayout")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
@@ -17,9 +17,9 @@ local font
 local ModifierEncoder = require("sphere.models.ModifierEncoder")
 local ModifierModel = require("sphere.models.ModifierModel")
 
-local NoteChartSetListView = require("thetan.iris.views.SelectView.NoteChartSetListView")
-local NoteChartListView = require("thetan.iris.views.SelectView.NoteChartListView")
-local ScoreListView = require("thetan.iris.views.SelectView.ScoreListView")
+local NoteChartSetListView = require("thetan.iris.views.SelectView.SongSelect.NoteChartSetListView")
+local NoteChartListView = require("thetan.iris.views.SelectView.SongSelect.NoteChartListView")
+local ScoreListView = require("thetan.iris.views.SelectView.SongSelect.ScoreListView")
 
 local boxes = {
 	"scores",
