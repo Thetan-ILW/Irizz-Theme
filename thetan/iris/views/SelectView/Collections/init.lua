@@ -17,6 +17,8 @@ local OsuDirectQueueListView = require("thetan.iris.views.SelectView.Collections
 
 local ViewConfig = class()
 
+local collectionsMode = "Collections"
+
 function ViewConfig:new(game)
 	self.collectionListView = CollectionListView(game)
 	self.collectionListView.scrollSound = love.audio.newSource("iris/sounds/hitsound_retro3.wav", "static")
@@ -95,8 +97,9 @@ function ViewConfig:collectionsButtons(view)
 	end
 
 	if imgui.TextOnlyButton("osuDirect", Text.osuDirect, w, h) then
-		view:switchToOsudirect()
-		self.osuDirectChartsListView.noItemsText = Text.noCharts
+		collectionsMode = "osu!direct"
+		view.game.osudirectModel:searchNoDebounce()
+		self.osuDirectChartsListView.noItemsText = Text.notInOsuDirect
 	end
 
 	w, h = Layout:move("button3")
@@ -124,14 +127,17 @@ function ViewConfig:osuDirectButtons(view)
 		if imgui.TextOnlyButton("download", buttonText, w, h) then
 			view.game.osudirectModel:downloadBeatmapSet(set)
 		end
+	else
+		imgui.TextOnlyButton("wait", Text.wait, w, h)
 	end
-
+	
 	if imgui.TextOnlyButton("collections", Text.collections, w, h) then
-		view:switchToCollections()
-		self.osuDirectChartsListView.noItemsText = Text.notInOsuDirect
+		collectionsMode = "Collections"
+		view.game.selectModel:debouncePullNoteChartSet()
+		self.osuDirectChartsListView.items = {}
+		self.osuDirectChartsListView.noItemsText = Text.noCharts
 	end
 
-	w, h = Layout:move("button3")
 	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
 		view.gameView:setModal(require("sphere.views.MountsView"))
 	end
@@ -141,7 +147,7 @@ function ViewConfig:osuDirectButtons(view)
 end
 
 function ViewConfig:collectionsList(view)
-	if view.collectionsMode ~= "Collections" then
+	if collectionsMode ~= "Collections" then
 		return
 	end
 
@@ -152,7 +158,7 @@ function ViewConfig:collectionsList(view)
 end
 
 function ViewConfig:osuDirectList(view)
-	if view.collectionsMode ~= "osu!direct" then
+	if collectionsMode ~= "osu!direct" then
 		return
 	end
 
@@ -167,13 +173,13 @@ function ViewConfig:footer(view)
 	love.graphics.setFont(Font.titleAndMode)
 	love.graphics.setColor(Color.text)
 
-	if view.collectionsMode == "Collections" then
+	if collectionsMode == "Collections" then
 		local name = self.collectionListView:getItem().name
 		just.text(name, w)
 	end
 
 	w, h = Layout:move("mode")
-	just.text(view.collectionsMode, w, true)
+	just.text(collectionsMode, w, true)
 end
 
 function ViewConfig:update(view)
@@ -190,7 +196,13 @@ function ViewConfig:draw(view, position)
 	self:osuDirectDownloadQueue(view)
 	self:collectionsList(view)
 	self:osuDirectList(view)
-	self:collectionsButtons(view)
+
+	if collectionsMode == "Collections" then
+		self:collectionsButtons(view)
+	else
+		self:osuDirectButtons(view)
+	end
+	
 	self:osuDirectCharts(view)
 	self:footer(view)
 end

@@ -17,8 +17,6 @@ local SelectView = ScreenView + {}
 SelectView.screenX = 0
 SelectView.screenXTarget = 0
 
-SelectView.collectionsMode = "Collections"
-
 local playSound = love.audio.newSource("iris/sounds/start.wav", "static")
 
 function SelectView:load()
@@ -148,17 +146,6 @@ end
 
 function SelectView:switchToSongSelect()
 	self.game.selectModel:debouncePullNoteChartSet()
-end
-
-function SelectView:switchToCollections()
-	self.collectionsMode = "Collections"
-	self.game.selectModel:debouncePullNoteChartSet()
-	self.collectionsViewConfig.osuDirectChartsListView.items = {}
-end
-
-function SelectView:switchToOsudirect()
-	self.collectionsMode = "osu!direct"
-	self.game.osudirectModel:searchNoDebounce()
 end
 
 ---@param dt number

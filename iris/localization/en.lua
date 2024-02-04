@@ -152,7 +152,8 @@ localization.textCollections = {
 	complete = "Status: Complete!",
 	idle = "Status: Doing nothing.",
 	download = "Download",
-	redownload = "Redownload"
+	redownload = "Redownload",
+	wait = "Wait..."
 }
 
 localization.fontFamilyList = {
