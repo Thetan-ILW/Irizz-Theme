@@ -127,7 +127,7 @@ function imgui.slider1(id, v, format, a, b, c, label)
 	just.sameline()
 	love.graphics.setColor(Color.text)
 	imgui.label(id .. "label", label)
-	just.next(0, cfg.slider.nextItemOffset)
+	just.next(0, cfg.nextItemOffset)
 	v = math_util.map(_v, 0, 1, a, b)
 	v = math_util.round(v, c)
 
@@ -178,7 +178,7 @@ function imgui.checkbox(id, v, label)
 	just.sameline()
 	love.graphics.setColor(Color.text)
 	imgui.label(id, label)
-	just.next(0, cfg.checkBox.nextItemOffset)
+	just.next(0, cfg.nextItemOffset)
 	if isNumber then
 		v = v and 1 or 0
 	end
@@ -196,7 +196,7 @@ function imgui.combo(id, v, values, to_string, label)
 	local i = imgui.SpoilerList(id, _w, _h, values, fv, to_string)
 	just.sameline()
 	imgui.label(id .. "label", label)
-	just.next(0, cfg.spoiler.nextItemOffset)
+	just.next(0, cfg.nextItemOffset)
 	return i and values[i] or v
 end
 
@@ -241,10 +241,10 @@ function imgui.intButtons(id, v, s, label)
 			v = v + (button == 1 and 1 or -1) * d
 		end
 	end
-	just.next(Theme.imgui.textButton.size/10)
+	just.next(Theme.imgui.size/10)
 	imgui.label(id .. "label", label)
 	just.row()
-	just.next(0, cfg.textButton.nextItemOffset)
+	just.next(0, cfg.nextItemOffset)
 	return math.floor(v)
 end
 

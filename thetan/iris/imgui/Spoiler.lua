@@ -10,7 +10,7 @@ local open_frame_id
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
-local cfg = Theme.imgui.spoiler
+local cfg = Theme.imgui
 
 return function(id, w, h, preview)
 	local size = cfg.size

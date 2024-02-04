@@ -5,7 +5,7 @@ local TextOnlyButton = require("thetan.iris.imgui.TextOnlyButton")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
-local cfg = Theme.imgui.spoiler
+local cfg = Theme.imgui
 
 return function(id, w, h, list, preview, to_string)
 	local _i, _name

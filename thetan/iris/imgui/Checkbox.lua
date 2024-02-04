@@ -1,7 +1,7 @@
 local just = require("just")
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
-local cfg = Theme.imgui.checkBox
+local cfg = Theme.imgui
 
 return function(id, v, size)
 	size = cfg.size

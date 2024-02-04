@@ -58,31 +58,9 @@ Theme.layout = {
 }
 
 Theme.imgui = {
-	checkBox = {
-		size = 50,
-		rounding = 10,
-		nextItemOffset = 10,
-	},
-	slider = {
-		size = 50,
-		rounding = 10,
-		nextItemOffset = 10,
-	},
-	spoiler = {
-		size = 50,
-		rounding = 10,
-		nextItemOffset = 10,
-	},
-	textButton = {
-		size = 50,
-		rounding = 10,
-		nextItemOffset = 10,
-	},
-	hotkey = {
-		size = 50,
-		rounding = 10,
-		nextItemOffset = 10,
-	}
+	size = 50,
+	rounding = 10,
+	nextItemOffset = 10,
 }
 
 for k, v in pairs(localization) do

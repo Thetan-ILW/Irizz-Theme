@@ -4,7 +4,7 @@ local theme = require("imgui.theme")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
-local cfg = Theme.imgui.hotkey
+local cfg = Theme.imgui
 
 return function(id, device, key, w, h)
 	local _key = key

@@ -5,7 +5,7 @@ local theme = require("imgui.theme")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
-local cfg = Theme.imgui.slider
+local cfg = Theme.imgui
 
 ---@param w number
 ---@param h number

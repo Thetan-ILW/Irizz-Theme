@@ -4,7 +4,7 @@ local gfx_util = require("gfx_util")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
-local cfg = Theme.imgui.textButton
+local cfg = Theme.imgui
 
 return function(id, text, w, h)
 	local changed, active, hovered = just.button(id, just.is_over(w, cfg.size))
