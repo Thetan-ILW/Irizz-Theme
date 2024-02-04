@@ -49,6 +49,8 @@ function ListView:drawItemBody(w, h, i, selected)
 
 	if selected and not self.staticCursor then
 		itemColor = Color.select
+	elseif selected and not self.centerItems then
+		itemColor = Color.select
 	end
 
 	love.graphics.setColor(itemColor)
@@ -115,7 +117,7 @@ function ListView:draw(w, h)
 		return
 	end
 
-	if self.staticCursor then
+	if self.staticCursor and self.centerItems then
 		love.graphics.setColor(Color.select)
 		love.graphics.rectangle("fill", 0, (_h * self.rows/2) - _h/2, w, _h)
 	end
