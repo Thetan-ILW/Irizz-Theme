@@ -5,17 +5,17 @@ local TextCellImView = require("thetan.iris.imviews.TextCellImView")
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textSongSelect
-local Font
 
 local NoteChartSetListView = ListView + {}
 
 NoteChartSetListView.rows = 13
 NoteChartSetListView.centerItems = true
 NoteChartSetListView.noItemsText = Text.noChartSets
+NoteChartSetListView.scrollSound = Theme.sounds.scrollSoundLargeList
 
 function NoteChartSetListView:new(game)
-	self:crap(game)
-	Font = Theme:getFonts("noteChartSetListView")
+	self.game = game
+	self.font = Theme:getFonts("noteChartSetListView")
 end
 
 function NoteChartSetListView:reloadItems()
@@ -66,8 +66,8 @@ function NoteChartSetListView:drawItem(i, w, h)
 	love.graphics.translate(0, 4)
 	just.indent(15)
 	TextCellImView(math.huge, h, "left", item.artist, item.title,
-		Font.artist,
-		Font.title
+		self.font.artist,
+		self.font.title
 	)
 end
 

@@ -5,16 +5,16 @@ local just = require("just")
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textCollections
-local Font
 
 local OsudirectListView = ListView + {}
 
 OsudirectListView.rows = 11
 OsudirectListView.centerItems = true
+OsudirectListView.scrollSound = Theme.sounds.scrollSoundLargeList
 
 function OsudirectListView:new(game)
-    self:crap(game)
-    Font = Theme:getFonts("osuDirectListView")
+    self.game = game
+    self.font = Theme:getFonts("osuDirectListView")
 end
 
 function OsudirectListView:reloadItems()
@@ -29,6 +29,7 @@ end
 function OsudirectListView:scroll(count)
 	ListView.scroll(self, count)
 	self.game.osudirectModel:setBeatmap(self.items[self.targetItemIndex])
+	self:playSound()
 end
 
 ---@param ... any?
@@ -63,7 +64,7 @@ function OsudirectListView:drawItem(i, w, h)
     love.graphics.setColor(color)
     love.graphics.translate(0, 4)
     just.indent(15)
-	TextCellImView(math.huge, h, "left", item.artist, item.title, Font.artist, Font.title)
+	TextCellImView(math.huge, h, "left", item.artist, item.title, self.font.artist, self.font.title)
 end
 
 return OsudirectListView

@@ -6,7 +6,6 @@ local gfx_util = require("gfx_util")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
-local font
 
 ---@class sphere.IrisTheme.ListView
 ---@operator call: sphere.IrisTheme.ListView
@@ -19,12 +18,8 @@ ListView.visualItemIndex = 1
 ListView.rows = 3
 
 ListView.scrollSound = nil
+ListView.font = nil
 ListView.noItemsText = "No items!"
-
-function ListView:crap(game)
-	self.game = game
-	font = Theme:getFonts("listView")
-end
 
 function ListView:playSound()
 	local audioSettings = self.game.configModel.configs.settings.audio
@@ -114,7 +109,7 @@ function ListView:draw(w, h)
 
 	if #self.items == 0 then
 		love.graphics.setColor(Color.text)
-		love.graphics.setFont(font.noItems)
+		love.graphics.setFont(self.font.noItems)
 		gfx_util.printBaseline(self.noItemsText, 0, h/2, w, 1, "center")
 	end
 end

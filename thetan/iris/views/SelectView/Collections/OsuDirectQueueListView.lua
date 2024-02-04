@@ -5,7 +5,6 @@ local just = require("just")
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textCollections
-local Font
 
 local OsudirectProcessingListView = ListView + {}
 
@@ -14,8 +13,8 @@ OsudirectProcessingListView.centerItems = false
 OsudirectProcessingListView.noItemsText = Text.queueEmpty
 
 function OsudirectProcessingListView:new(game)
-	self:crap(game)
-	Font = Theme:getFonts("osuDirectQueueListView")
+	self.game = game
+	self.font = Theme:getFonts("osuDirectQueueListView")
 end
 
 function OsudirectProcessingListView:reloadItems()
@@ -33,7 +32,7 @@ function OsudirectProcessingListView:drawItem(i, w, h)
 	love.graphics.translate(0, 4)
     just.indent(15)
 	love.graphics.setColor(Color.text)
-	TextCellImView(math.huge, h, "left", item.artist, item.title, Font.artist, Font.title)
+	TextCellImView(math.huge, h, "left", item.artist, item.title, self.font.artist, self.font.title)
 end
 
 return OsudirectProcessingListView

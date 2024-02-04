@@ -7,7 +7,6 @@ local time_util = require("time_util")
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textSongSelect
-local font
 
 local ScoreListView = ListView + {}
 
@@ -18,8 +17,8 @@ ScoreListView.openResult = false
 ScoreListView.noItemsText = Text.noScores
 
 function ScoreListView:new(game)
-	self:crap(game)
-	font = Theme:getFonts("scoreListView")
+	self.game = game
+	self.font = Theme:getFonts("scoreListView")
 end
 
 function ScoreListView:reloadItems()
@@ -68,7 +67,7 @@ function ScoreListView:drawItem(i, w, h)
 	self:drawItemBody(w, h, i, i == self.selectedScoreIndex)
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(font.line1)
+	love.graphics.setFont(self.font.line1)
 
 	love.graphics.translate(0, 0)
 	just.indent(10)
@@ -78,7 +77,7 @@ function ScoreListView:drawItem(i, w, h)
 	just.indent(-10)
 	just.text(string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate), w, true)
 	just.indent(10)
-	love.graphics.setFont(font.line2)
+	love.graphics.setFont(self.font.line2)
 	just.text(string.format("Score: %i",item.score), w)
 	just.sameline()
 	just.offset(0)

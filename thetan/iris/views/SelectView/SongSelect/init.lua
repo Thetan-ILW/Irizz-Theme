@@ -33,9 +33,7 @@ local ViewConfig = class()
 
 function ViewConfig:new(game)
 	self.noteChartSetListView = NoteChartSetListView(game)
-	self.noteChartSetListView.scrollSound = love.audio.newSource("iris/sounds/hitsound_retro3.wav", "static")
 	self.noteChartListView = NoteChartListView(game)
-	self.noteChartListView.scrollSound = love.audio.newSource("iris/sounds/hitsound_retro5.wav", "static")
 	self.scoreListView = ScoreListView(game)
 	font = Theme:getFonts("songSelectViewConfig")
 end

@@ -17,6 +17,8 @@ local Theme = {}
 
 Theme.sounds = {
 	ui = 0.2,
+	scrollSoundLargeList = love.audio.newSource("iris/sounds/hitsound_retro3.wav", "static"),
+	scrollSoundSmallList = love.audio.newSource("iris/sounds/hitsound_retro5.wav", "static")
 }
 
 Theme.fontFamilyList = {}

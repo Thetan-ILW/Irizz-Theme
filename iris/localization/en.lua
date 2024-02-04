@@ -204,47 +204,50 @@ localization.fonts = {
 		titleAndMode = {"ZenMaruGothic-Black", 32}
 	},
 
-	listView = {
-		noItems = {"ZenMaruGothic-Medium", 36}
-	},
-
 	noteChartListView = {
 		inputMode = {"ZenMaruGothic-Black", 18},
 		difficulty = {"ZenMaruGothic-Black", 24},
 		creator = {"ZenMaruGothic-Black", 18},
-		name = {"ZenMaruGothic-Black", 24}
+		name = {"ZenMaruGothic-Black", 24},
+		noItems = {"ZenMaruGothic-Medium", 36}
 	},
 
 	noteChartSetListView = {
 		artist = {"ZenMaruGothic-Black", 18},
-		title = {"ZenMaruGothic-Black", 24}
+		title = {"ZenMaruGothic-Black", 24},
+		noItems = {"ZenMaruGothic-Medium", 36}
 	},
 
 	collectionsListView = {
 		shortPath = {"ZenMaruGothic-Black", 18},
 		itemCount = {"ZenMaruGothic-Black", 24},
-		name = {"ZenMaruGothic-Black", 24}
+		name = {"ZenMaruGothic-Black", 24},
+		noItems = {"ZenMaruGothic-Medium", 36}
 	},
 
 	scoreListView = {
 		line1 = {"ZenMaruGothic-Black", 22},
-		line2 = {"ZenMaruGothic-Black", 20}
+		line2 = {"ZenMaruGothic-Black", 20},
+		noItems = {"ZenMaruGothic-Medium", 36}
 	},
 
 	osuDirectListView = {
 		artist = {"ZenMaruGothic-Black", 18},
-		title = {"ZenMaruGothic-Black", 24}
+		title = {"ZenMaruGothic-Black", 24},
+		noItems = {"ZenMaruGothic-Medium", 36}
 	},
 
 	osuDirectChartsListView = {
 		creator = {"ZenMaruGothic-Black", 18},
-		difficultyName = {"ZenMaruGothic-Black", 24}
+		difficultyName = {"ZenMaruGothic-Black", 24},
+		noItems = {"ZenMaruGothic-Medium", 36}
 	},
 
 	osuDirectQueueListView = {
 		title = {"ZenMaruGothic-Black", 24},
 		artist = {"ZenMaruGothic-Black", 14},
-		status = {"ZenMaruGothic-Black", 14}
+		status = {"ZenMaruGothic-Black", 14},
+		noItems = {"ZenMaruGothic-Medium", 36}
 	}
 }
 

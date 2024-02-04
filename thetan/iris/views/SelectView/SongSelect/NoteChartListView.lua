@@ -6,17 +6,17 @@ local Format = require("sphere.views.Format")
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textSongSelect
-local Font
 
 local NoteChartListView = ListView + {}
 
 NoteChartListView.rows = 7
 NoteChartListView.centerItems = true
 NoteChartListView.noItemsText = Text.noCharts
+NoteChartListView.scrollSound = Theme.sounds.scrollSoundSmallList
 
 function NoteChartListView:new(game)
-	self:crap(game)
-	Font = Theme:getFonts("noteChartListView")
+	self.game = game
+	self.font = Theme:getFonts("noteChartListView")
 end
 
 function NoteChartListView:reloadItems()
@@ -78,8 +78,8 @@ function NoteChartListView:drawItem(i, w, h)
 		"left",
 		string.format("[%s]", inputMode),
 		difficulty,
-		Font.inputMode,
-		Font.difficulty
+		self.font.inputMode,
+		self.font.difficulty
 	)
 
 	just.sameline()
@@ -89,8 +89,8 @@ function NoteChartListView:drawItem(i, w, h)
 		"left",
 		creator,
 		name,
-		Font.creator,
-		Font.name
+		self.font.creator,
+		self.font.name
 	)
 end
 

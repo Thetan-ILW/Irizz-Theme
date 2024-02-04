@@ -21,13 +21,9 @@ local collectionsMode = "Collections"
 
 function ViewConfig:new(game)
 	self.collectionListView = CollectionListView(game)
-	self.collectionListView.scrollSound = love.audio.newSource("iris/sounds/hitsound_retro3.wav", "static")
 	self.osuDirectListView = OsuDirectListView(game)
-	self.osuDirectListView.scrollSound = love.audio.newSource("iris/sounds/hitsound_retro3.wav", "static")
 	self.osuDirectChartsListView = OsuDirectChartsListView(game)
-	self.osuDirectChartsListView.scrollSound = love.audio.newSource("iris/sounds/hitsound_retro5.wav", "static")
 	self.osuDirectQueueListView = OsuDirectQueueListView(game)
-	self.osuDirectQueueListView.scrollSound = love.audio.newSource("iris/sounds/hitsound_retro5.wav", "static")
 	Font = Theme:getFonts("collectionsViewConfig")
 end
 

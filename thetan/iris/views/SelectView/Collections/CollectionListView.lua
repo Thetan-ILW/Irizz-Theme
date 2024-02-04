@@ -5,17 +5,17 @@ local TextCellImView = require("thetan.iris.imviews.TextCellImView")
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textCollections
-local Font
 
 local CollectionListView = ListView + {}
 
 CollectionListView.rows = 13
 CollectionListView.centerItems = true
 CollectionListView.noItemsText = Text.noCollections
+CollectionListView.scrollSound = Theme.sounds.scrollSoundLargeList
 
 function CollectionListView:new(game)
-	self:crap(game)
-	Font = Theme:getFonts("collectionsListView")
+	self.game = game
+	self.font = Theme:getFonts("collectionsListView")
 end
 
 function CollectionListView:reloadItems()
@@ -72,8 +72,8 @@ function CollectionListView:drawItem(i, w, h)
 		"left",
 		"",
 		item.count ~= 0 and item.count or "",
-		Font.itemCount,
-		Font.itemCount
+		self.font.itemCount,
+		self.font.itemCount
 	)
 
 	just.sameline()
@@ -83,8 +83,8 @@ function CollectionListView:drawItem(i, w, h)
 		"left",
 		item.shortPath,
 		item.name,
-		Font.shortPath,
-		Font.name
+		self.font.shortPath,
+		self.font.name
 	)
 end
 
