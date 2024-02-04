@@ -20,6 +20,7 @@ ListView.rows = 3
 ListView.scrollSound = nil
 ListView.font = nil
 ListView.noItemsText = "No items!"
+ListView.staticCursor = Theme.misc.staticListViewCursor
 
 function ListView:playSound()
 	local audioSettings = self.game.configModel.configs.settings.audio
@@ -46,7 +47,7 @@ end
 function ListView:drawItemBody(w, h, i, selected)
 	local itemColor = (i % 2) == 1 and Color.listItemEven or Color.listItemOdd
 
-	if selected then
+	if selected and not self.staticCursor then
 		itemColor = Color.select
 	end
 
@@ -111,6 +112,12 @@ function ListView:draw(w, h)
 		love.graphics.setColor(Color.text)
 		love.graphics.setFont(self.font.noItems)
 		gfx_util.printBaseline(self.noItemsText, 0, h/2, w, 1, "center")
+		return
+	end
+
+	if self.staticCursor then
+		love.graphics.setColor(Color.select)
+		love.graphics.rectangle("fill", 0, (_h * self.rows/2) - _h/2, w, _h)
 	end
 end
 

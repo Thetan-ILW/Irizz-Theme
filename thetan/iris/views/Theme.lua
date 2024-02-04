@@ -65,6 +65,10 @@ Theme.imgui = {
 	nextItemOffset = 10,
 }
 
+Theme.misc = {
+	staticListViewCursor = true
+}
+
 for k, v in pairs(localization) do
 	Theme[k] = v
 end
