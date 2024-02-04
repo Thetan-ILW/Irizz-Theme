@@ -1,6 +1,6 @@
 local class = require("class")
 local just = require("just")
-local gfx_util = require("gfx_util")
+local imgui = require("thetan.iris.imgui")
 
 local Layout = require("thetan.iris.views.SelectView.Settings.SettingsLayout")
 local SettingsTab = require("thetan.iris.views.SelectView.Settings.SettingsTabs")
@@ -57,28 +57,15 @@ function ViewConfig:tabs(view)
 	local w, h = Layout:move("tabs")
 
 	local tabsCount = #tabs
-	h = h / (tabsCount)
+	h = h / tabsCount
 
 	love.graphics.setFont(Font.tabs)
 
 	for _, tab in ipairs(tabs) do
-		local changed, active, hovered = just.button(tab, just.is_over(w, h), 1)
-		if changed then
+		if imgui.TextOnlyButton(tab, tab, w, h, "center", tab == currentTab) then
 			currentTab = tab
 			SettingsTab:reset()
 		end
-
-		local color = hovered and Color.buttonHover or Color.button
-		color = (currentTab == tab) and Color.select or color
-
-		love.graphics.setColor(color)
-		love.graphics.rectangle("fill", 0, 2, w, h-2)
-		love.graphics.setColor(Color.mutedBorder)
-		love.graphics.rectangle("fill", w/2 - w/4, h-2, w/2, 4)
-		love.graphics.setColor(Color.text)
-		gfx_util.printBaseline(tab, 0, h/1.5, w, 1, "center")
-
-		just.next(0, h)
 	end
 end
 

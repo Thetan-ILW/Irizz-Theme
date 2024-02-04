@@ -31,13 +31,11 @@ function _Layout:_rightPanels(x, y, w, h)
 
 
 
-	local y2, h2 = gfx_util.layout(y1[2], h1[2], {-1/3, 4, -1/3, 4, -1/3})
+	local y2, h2 = gfx_util.layout(y1[2], h1[2], {-1/3, -1/3, -1/3})
 	self:pack("button1", x1[1], y2[1], w1[1], h2[1])
-	self:pack("button2", x1[1], y2[3], w1[1], h2[3])
-	self:pack("button3", x1[1], y2[5], w1[1], h2[5])
+	self:pack("button2", x1[1], y2[2], w1[1], h2[2])
+	self:pack("button3", x1[1], y2[3], w1[1], h2[3])
 
-	self:pack("line1", x1[1], y2[2], w1[1], h2[2])
-	self:pack("line2", x1[1], y2[4], w1[1], h2[4])
 end
 
 function _Layout:draw(offset)

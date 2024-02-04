@@ -1,6 +1,6 @@
 local class = require("class")
 local just = require("just")
-local imgui = require("imgui")
+local imgui = require("thetan.iris.imgui")
 local gfx_util = require("gfx_util")
 
 local Layout = require("thetan.iris.views.SelectView.Collections.CollectionsLayout")
@@ -78,7 +78,7 @@ function ViewConfig:osuDirectCharts(view)
 	border(w, h)
 end
 
-function ViewConfig:buttons(view)
+function ViewConfig:collectionsButtons(view)
 	local w, h = Layout:move("buttons")
 	frame(w, h)
 
@@ -86,47 +86,55 @@ function ViewConfig:buttons(view)
 	love.graphics.setFont(Font.buttons)
 
 	w, h = Layout:move("button1")
-	if view.collectionsMode == "Collections" then
-		if imgui.TextOnlyButton("cache", Text.cache, w, h) then
-			view.game.selectController:updateCacheCollection(
-				view.game.selectModel.collectionItem.path,
-				love.keyboard.isDown("lshift")
-			)
-		end
-	else
-		local set = view.game.osudirectModel.beatmap
-		if set then
-			local buttonText = set.downloaded and Text.redownload or Text.download
-	
-			if imgui.TextOnlyButton("download", buttonText, w, h) then
-				view.game.osudirectModel:downloadBeatmapSet(set)
-			end
-		end
+
+	if imgui.TextOnlyButton("cache", Text.cache, w, h) then
+		view.game.selectController:updateCacheCollection(
+			view.game.selectModel.collectionItem.path,
+			love.keyboard.isDown("lshift")
+		)
 	end
 
-	w, h = Layout:move("button2")
-	if view.collectionsMode == "Collections" then
-		if imgui.TextOnlyButton("osuDirect", Text.osuDirect, w, h) then
-			view:switchToOsudirect()
-			self.osuDirectChartsListView.noItemsText = Text.noCharts
-		end
-	else
-		if imgui.TextOnlyButton("collections", Text.collections, w, h) then
-			view:switchToCollections()
-			self.osuDirectChartsListView.noItemsText = Text.notInOsuDirect
-		end
+	if imgui.TextOnlyButton("osuDirect", Text.osuDirect, w, h) then
+		view:switchToOsudirect()
+		self.osuDirectChartsListView.noItemsText = Text.noCharts
 	end
 
 	w, h = Layout:move("button3")
 	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
 		view.gameView:setModal(require("sphere.views.MountsView"))
 	end
-	
-	love.graphics.setColor(Color.mutedBorder)
-	w, h = Layout:move("line1")
-	love.graphics.rectangle("fill", w/2 - w/4, h - 5, w/2, 4)
-	w, h = Layout:move("line2")
-	love.graphics.rectangle("fill", w/2 - w/4, h - 5, w/2, 4)
+
+	w, h = Layout:move("buttons")
+	border(w, h)
+end
+
+function ViewConfig:osuDirectButtons(view)
+	local w, h = Layout:move("buttons")
+	frame(w, h)
+
+	love.graphics.setColor(Color.text)
+	love.graphics.setFont(Font.buttons)
+
+	w, h = Layout:move("button1")
+
+	local set = view.game.osudirectModel.beatmap
+	if set then
+		local buttonText = set.downloaded and Text.redownload or Text.download
+
+		if imgui.TextOnlyButton("download", buttonText, w, h) then
+			view.game.osudirectModel:downloadBeatmapSet(set)
+		end
+	end
+
+	if imgui.TextOnlyButton("collections", Text.collections, w, h) then
+		view:switchToCollections()
+		self.osuDirectChartsListView.noItemsText = Text.notInOsuDirect
+	end
+
+	w, h = Layout:move("button3")
+	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
+		view.gameView:setModal(require("sphere.views.MountsView"))
+	end
 
 	w, h = Layout:move("buttons")
 	border(w, h)
@@ -182,7 +190,7 @@ function ViewConfig:draw(view, position)
 	self:osuDirectDownloadQueue(view)
 	self:collectionsList(view)
 	self:osuDirectList(view)
-	self:buttons(view)
+	self:collectionsButtons(view)
 	self:osuDirectCharts(view)
 	self:footer(view)
 end
