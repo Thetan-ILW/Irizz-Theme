@@ -101,7 +101,7 @@ function SelectView:updateSongSelect(dt)
 	end
 
 	if (just.keypressed("f1")) then
-		self:openModal("sphere.views.ModifierView")
+		self:openModal("thetan.iris.views.modals.ModifierModal")
 	end
 
 	if ctrlDown and just.keypressed("s") then

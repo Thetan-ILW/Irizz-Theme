@@ -156,6 +156,10 @@ localization.textCollections = {
 	wait = "Wait..."
 }
 
+localization.textModifiers = {
+	modifiers = "Modifiers"
+}
+
 localization.fontFamilyList = {
     ["Noto Sans"] = {
 		"resources/fonts/NotoSansCJK-Regular.ttc",
@@ -248,6 +252,10 @@ localization.fonts = {
 		artist = {"ZenMaruGothic-Black", 14},
 		status = {"ZenMaruGothic-Black", 14},
 		noItems = {"ZenMaruGothic-Medium", 36}
+	},
+
+	modifiersModal = {
+		title = {"ZenMaruGothic-Black", 72}
 	}
 }
 
