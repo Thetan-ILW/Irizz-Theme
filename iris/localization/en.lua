@@ -122,7 +122,8 @@ localization.textSettings = {
 	other = "Other",
 	volume = "Volume",
 	audioDevice = "Audio device",
-	bpm = "%i BPM"
+	bpm = "%i BPM",
+	noMods = "No modifiers"
 }
 
 localization.textSongSelect = {
@@ -255,7 +256,11 @@ localization.fonts = {
 	},
 
 	modifiersModal = {
-		title = {"ZenMaruGothic-Black", 72}
+		title = {"ZenMaruGothic-Black", 72},
+		modifierName = {"ZenMaruGothic-Black", 24},
+		inputMode = {"ZenMaruGothic-Black", 48},
+		numberOfUses = {"ZenMaruGothic-Black", 24},
+		noItems = {"ZenMaruGothic-Medium", 36}
 	}
 }
 

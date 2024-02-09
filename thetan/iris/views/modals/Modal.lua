@@ -34,9 +34,9 @@ function Modal:draw(view)
     local previousCanvas = love.graphics.getCanvas()
     self.canvas = gfx_util.getCanvas("ModifierView")
 
-    love.graphics.setCanvas(self.canvas)
+    love.graphics.setCanvas({self.canvas, stencil=true})
         love.graphics.clear()
-        self.viewConfig(self)
+        self.viewConfig:draw(self)
     love.graphics.setCanvas(previousCanvas)
 
     love.graphics.origin()

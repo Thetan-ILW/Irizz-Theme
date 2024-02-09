@@ -86,12 +86,7 @@ function ListView:draw(w, h)
 	local deltaItemIndex = math.floor(visualItemIndex) - visualItemIndex
 
 	just.clip(love.graphics.rectangle, "fill", 0, 0, w, h)
-
-	if self.centerItems then
-		love.graphics.translate(0, deltaItemIndex * _h)
-	else
-		love.graphics.translate(0, (deltaItemIndex * _h) - (math.floor(self.rows / 2) * _h))
-	end
+	love.graphics.translate(0, deltaItemIndex * _h)
 
 	local delta = just.wheel_over(self, just.is_over(w, h))
 	if delta then
@@ -99,7 +94,14 @@ function ListView:draw(w, h)
 	end
 
 	for i = math.floor(visualItemIndex), self.rows + math.ceil(visualItemIndex) + 1 do
-		local _i = i - math.floor(self.rows / 2)
+		local _i = 0
+
+		if self.centerItems then
+			_i = i - math.floor(self.rows / 2)
+		else
+			_i = i
+		end
+		
 		if self.items[_i] then
 			just.push()
 			self:drawItem(_i, w, _h)

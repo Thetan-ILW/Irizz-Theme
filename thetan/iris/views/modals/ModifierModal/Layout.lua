@@ -16,10 +16,16 @@ function _Layout:draw()
 
     self:pack("base", _x, _y, _w, _h)
 
-	local gx, gw = gfx_util.layout(_x, _w, {20, "*", 20})
-	local gy, gh = gfx_util.layout(_y, _h, {20, "*", 20})
+	local gx, gw = gfx_util.layout(_x, _xw, {20, "*", 20})
+	local gy, gh = gfx_util.layout(_y, _yh, {20, "*", 20})
 
-	self:pack("modalName", gx[2], gy[2], gw[2], gh[2])
+	local x1, w1 = gfx_util.layout(gx[2], gw[2], {-0.5, 550, 20, 550, -0.5})
+	local y1, h1 = gfx_util.layout(gy[2], gh[2], {200, -1, 200})
+
+	self:pack("modalName", gx[2], y1[1], gw[2], h1[1])
+	self:pack("availableMods", x1[2], y1[2], w1[2], h1[2])
+	self:pack("activeMods", x1[4], y1[2], w1[4], h1[2])
+	self:pack("inputMode", gx[2], y1[3], gw[2], h1[3])
 end
 
 return _Layout

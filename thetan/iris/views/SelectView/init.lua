@@ -82,12 +82,13 @@ function SelectView:moveScreen(where, exact)
 	self.tween = flux.to(self, 0.32, {screenX = self.screenXTarget}):ease("quadout")
 end
 
-function SelectView:openModal(modal)
+function SelectView:openModal(modalName)
 	if self.game.gameView.modal then
 		return
 	end
 
-	self.game.gameView:setModal(require(modal))
+	local modal = require(modalName)(self.game)
+	self.game.gameView:setModal(modal)
 end
 
 ---@param dt number
@@ -216,7 +217,7 @@ function SelectView:draw()
 	local alpha = 1
 
 	if self.modalActive then
-		alpha = 1 - self.game.gameView.modal.alpha * 0.7
+		alpha = 1 - self.game.gameView.modal.alpha
 	end
 
 	love.graphics.origin()
