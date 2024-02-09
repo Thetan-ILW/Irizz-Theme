@@ -1,6 +1,7 @@
 local just = require("just")
 local flux = require("flux")
 local math_util = require("math_util")
+local gfx_util = require("gfx_util")
 local ScreenView = require("sphere.views.ScreenView")
 
 local Layout = require("thetan.iris.views.SelectView.Layout")
@@ -9,6 +10,8 @@ local SelectViewConfig = require("thetan.iris.views.SelectView.SelectViewConfig"
 local SettingsViewConfig = require("thetan.iris.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.iris.views.SelectView.SongSelect")
 local CollectionViewConfig = require("thetan.iris.views.SelectView.Collections")
+
+local BackgroundView = require("sphere.views.BackgroundView")
 
 ---@class iris.SelectView: sphere.ScreenView
 ---@operator call: iris.SelectView
@@ -26,7 +29,7 @@ function SelectView:load()
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
 
-	self.modalActive = false
+	BackgroundView.game = self.game
 end
 
 function SelectView:reloadViews()
@@ -59,6 +62,7 @@ end
 
 function SelectView:unload()
     self.game.selectController:unload()
+	self.collectionsViewConfig = nil
 end
 
 ---@param where number
@@ -111,8 +115,6 @@ function SelectView:updateSongSelect(dt)
 	if ctrlDown and just.keypressed("i") then
 		self:openModal("sphere.views.InputView")
 	end
-
-	self.modalActive = self.game.gameView.modal ~= nil
 
 	if self.modalActive then
 		return
@@ -194,10 +196,34 @@ end
 
 function SelectView:draw()
 	Layout:draw()
-	self.selectViewConfig:draw(self)
-    self.songSelectViewConfig:draw(self, self.screenX)
-	self.collectionsViewConfig:draw(self, self.screenX + 1)
-	self.settingsViewConfig:draw(self, self.screenX - 1)
+
+	local w, h = Layout:move("background")
+	local dim = self.game.configModel.configs.settings.graphics.dim.select
+	BackgroundView:draw(w, h, dim, 0.01)
+
+	local previousCanvas = love.graphics.getCanvas()
+	local canvas = gfx_util.getCanvas("SelectView")
+
+	love.graphics.setCanvas({canvas, stencil = true})
+		love.graphics.clear()
+		love.graphics.setBlendMode("alpha", "alphamultiply")
+		self.selectViewConfig:draw(self)
+		self.songSelectViewConfig:draw(self, self.screenX)
+		self.collectionsViewConfig:draw(self, self.screenX + 1)
+		self.settingsViewConfig:draw(self, self.screenX - 1)
+	love.graphics.setCanvas(previousCanvas)
+
+	local alpha = 1
+
+	if self.modalActive then
+		alpha = 1 - self.game.gameView.modal.alpha * 0.7
+	end
+
+	love.graphics.origin()
+	love.graphics.setColor(alpha, alpha, alpha, alpha)
+	love.graphics.setBlendMode("alpha", "premultiplied")
+	love.graphics.draw(canvas)
+	love.graphics.setBlendMode("alpha")
 end
 
 return SelectView

@@ -11,30 +11,20 @@ local Color = Theme.colors
 local Text = Theme.textHeader
 local font
 
-local BackgroundView = require("sphere.views.BackgroundView")
+
 local Logo = require("sphere.views.logo")
 
 local ViewConfig = class()
 
 function ViewConfig:new(game)
     font = Theme:getFonts("header")
-    BackgroundView.game = game
-
+    
     local path = "userdata/avatar.png"
     if love.filesystem.getInfo(path) then
         self.avatarImage = love.graphics.newImage(path)
     else
         self.avatarImage = love.graphics.newImage("iris/avatar.png")
     end
-end
-
----@param view table
-local function Background(view)
-	local w, h = Layout:move("background")
-
-	local dim = view.game.configModel.configs.settings.graphics.dim.select
-	
-	BackgroundView:draw(w, h, dim, 0.01)
 end
 
 function ViewConfig:Header(view)
@@ -137,7 +127,6 @@ end
 
 
 function ViewConfig:draw(view)
-    Background(view)
     self:Header(view)
 end
 

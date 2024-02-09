@@ -70,8 +70,9 @@ function GameView:draw()
 	if self.modal then
 		self.modal:draw()
 
-        if self.modal.state == "closed" then
+        if self.modal.alpha < 0 then
             self.modal = nil
+			self.view.modalActive = false
         end
 	end
 
@@ -117,7 +118,9 @@ function GameView:setModal(modal)
 	local opennedModal = self.modal
 	if not opennedModal then
 		self.modal = modal
+		self.modal.alpha = 0
         self.modal:show()
+		self.view.modalActive = true
 		return
 	end
 
