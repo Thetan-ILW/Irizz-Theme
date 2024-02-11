@@ -167,6 +167,7 @@ localization.textNoteSkins = {
 }
 
 localization.textInputs = {
+	inputs = "Inputs",
 	noInputs = "No chart selected.\nCannot determine input mode."
 }
 
@@ -284,7 +285,8 @@ localization.fonts = {
 		title = {"ZenMaruGothic-Black", 72},
 		tabs = {"ZenMaruGothic-Medium", 28},
 		noInputs = {"ZenMaruGothic-Medium", 36},
-		inputs = {"ZenMaruGothic-Black", 24}
+		inputs = {"ZenMaruGothic-Black", 24},
+		inputMode = {"ZenMaruGothic-Black", 48}
 	}
 }
 

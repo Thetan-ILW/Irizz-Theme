@@ -23,8 +23,10 @@ function _Layout:draw()
 	local y1, h1 = gfx_util.layout(gy[2], gh[2], {200, -1, 200})
     local y2, h2 = gfx_util.layout(y1[2], h1[2], {-0.3, -0.4, -0.3})
 
+	self:pack("modalName", gx[2], y1[1], gw[2], h1[1])
     self:pack("tabs", x1[2], y2[2], w1[2], h2[2])
     self:pack("inputs", x1[4], y1[2], w1[4], h1[2])
+	self:pack("inputMode", gx[2], y1[3], gw[2], h1[3])
 end
 
 return _Layout
