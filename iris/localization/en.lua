@@ -161,6 +161,11 @@ localization.textModifiers = {
 	modifiers = "Modifiers"
 }
 
+localization.textNoteSkins = {
+	noteSkins = "Note skins",
+	noSettings = "No settings!"
+}
+
 localization.fontFamilyList = {
     ["Noto Sans"] = {
 		"resources/fonts/NotoSansCJK-Regular.ttc",
@@ -261,6 +266,13 @@ localization.fonts = {
 		inputMode = {"ZenMaruGothic-Black", 48},
 		numberOfUses = {"ZenMaruGothic-Black", 24},
 		noItems = {"ZenMaruGothic-Medium", 36}
+	},
+
+	noteSkinModal = {
+		title = {"ZenMaruGothic-Black", 72},
+		noteSkinName = {"ZenMaruGothic-Black", 24},
+		noteSkinSettings = {"ZenMaruGothic-Black", 24},
+		noSettings = {"ZenMaruGothic-Medium", 36}
 	}
 }
 

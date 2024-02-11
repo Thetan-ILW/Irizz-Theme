@@ -6,6 +6,8 @@ local gfx_util = require("gfx_util")
 
 local Modal = class()
 
+Modal.name = nil
+Modal.forceClose = false
 Modal.alpha = 0
 
 function Modal:show()
@@ -27,7 +29,7 @@ function Modal:hide()
 end
 
 function Modal:draw(view)
-    if (just.keypressed("f1") or just.keypressed("escape")) and self.alpha > 0.1 then
+    if (self.forceClose or just.keypressed("escape")) and self.alpha > 0.1 then
         self:hide()
     end
 

@@ -17,6 +17,7 @@ local BackgroundView = require("sphere.views.BackgroundView")
 ---@operator call: iris.SelectView
 local SelectView = ScreenView + {}
 
+SelectView.modalActive = false
 SelectView.screenX = 0
 SelectView.screenXTarget = 0
 
@@ -30,30 +31,6 @@ function SelectView:load()
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
 
 	BackgroundView.game = self.game
-end
-
-function SelectView:reloadViews()
-	package.loaded["thetan.iris.views.Theme"]=nil
-	package.loaded["thetan.iris.views.SelectView.Layout"]=nil
-	package.loaded["thetan.iris.views.SelectView.SelectViewConfig"]=nil
-	package.loaded["thetan.iris.views.SelectView.SettingsLayout"]=nil
-	package.loaded["thetan.iris.views.SelectView.SettingsViewConfig"]=nil
-	package.loaded["thetan.iris.views.SelectView.SongSelectLayout"]=nil
-	package.loaded["thetan.iris.views.SelectView.SongSelectViewConfig"]=nil
-	package.loaded["thetan.iris.views.SelectView.CollectionsLayout"]=nil
-	package.loaded["thetan.iris.views.SelectView.CollectionsViewConfig"]=nil
-	Layout = require("thetan.iris.views.SelectView.Layout")
-	SelectViewConfig = require("thetan.iris.views.SelectView.SelectViewConfig")
-	SettingsLayout = require("thetan.iris.views.SelectView.SettingsLayout")
-	SettingsViewConfig = require("thetan.iris.views.SelectView.SettingsViewConfig")
-	SongSelectLayout = require("thetan.iris.views.SelectView.SongSelectLayout")
-	SongSelectViewConfig = require("thetan.iris.views.SelectView.SongSelectViewConfig")
-	CollectionsLayout = require("thetan.iris.views.SelectView.CollectionsLayout")
-	CollectionViewConfig = require("moddedgame.Iris-Theme.thetan.iris.views.SelectView.CollectionsView.init")
-	self.selectViewConfig = SelectViewConfig(self.game)
-	self.settingsViewConfig = SettingsViewConfig(self.game)
-	self.songSelectViewConfig = SongSelectViewConfig(self.game)
-	self.collectionsViewConfig = CollectionViewConfig(self.game)
 end
 
 function SelectView:beginUnload()
@@ -83,10 +60,6 @@ function SelectView:moveScreen(where, exact)
 end
 
 function SelectView:openModal(modalName)
-	if self.game.gameView.modal then
-		return
-	end
-
 	local modal = require(modalName)(self.game)
 	self.game.gameView:setModal(modal)
 end
@@ -110,7 +83,7 @@ function SelectView:updateSongSelect(dt)
 	end
 
 	if ctrlDown and just.keypressed("s") then
-		self:openModal("sphere.views.NoteSkinView")
+		self:openModal("thetan.iris.views.modals.NoteSkinModal")
 	end
 
 	if ctrlDown and just.keypressed("i") then

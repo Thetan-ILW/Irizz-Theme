@@ -5,6 +5,7 @@ local ModifierListView = require("thetan.iris.views.modals.ModifierModal.Modifie
 
 local ModifierModal = Modal + {}
 
+ModifierModal.name = "Modifiers"
 ModifierModal.viewConfig = ViewConfig
 
 function ModifierModal:new(game)

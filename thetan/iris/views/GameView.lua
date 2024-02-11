@@ -113,7 +113,7 @@ function GameView:setContextMenu(f, width)
 	self.contextMenuWidth = width
 end
 
----@param modal table?
+---@param modal table
 function GameView:setModal(modal)
 	local opennedModal = self.modal
 	if not opennedModal then
@@ -124,9 +124,8 @@ function GameView:setModal(modal)
 		return
 	end
 
-	self.modal = modal
-	if opennedModal == modal then
-		self.modal:hide()
+	if opennedModal.name == modal.name then
+		self.modal.forceClose = true
 	end
 end
 
