@@ -120,7 +120,9 @@ function SettingsTab:Gameplay(view)
 	end
 	g.eventBasedRender = g.swapVelocityType
 	g.scaleSpeed = g.swapVelocityType and true or g.scaleSpeed
-	
+	local playContext = view.game.playContext
+	playContext.const = imgui.checkbox("const", playContext.const, "const!!!!!!!!!!!")
+
 	imgui.separator()
 	just.text(Text.hp)
 	just.next(0, textSeparation)
@@ -370,6 +372,9 @@ function SettingsTab:Inputs(view)
 	just.text(Text.inputsTab)
 	just.next(0, textSeparation)
 	g.asynckey = imgui.checkbox("asynckey", g.asynckey, Text.threadedInput)
+
+	local playContext = view.game.playContext
+	playContext.single = imgui.checkbox("single", playContext.single, "single handler mode (taiko)!!!!!!!!")
 end
 
 ---@param f table

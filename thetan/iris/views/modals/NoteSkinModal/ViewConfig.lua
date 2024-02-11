@@ -2,6 +2,8 @@ local just = require("just")
 local imgui = require("imgui")
 local gfx_util = require("gfx_util")
 
+local Format = require("sphere.views.Format")
+
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textNoteSkins
@@ -44,6 +46,21 @@ function ViewConfig:noteSkinSettings(view)
 	just.pop()
 end
 
+function ViewConfig:selectedNoteSkin(view)
+    local w, h = Layout:move("selectedNoteSkin")
+
+    local inputMode = self.noteSkinListView.inputMode
+    local skinName = self.noteSkinListView.selectedNoteSkin.name
+    inputMode = Format.inputMode(inputMode)
+    inputMode = inputMode == "2K" and "TAIKO" or inputMode
+
+    local text = string.format("[%s] %s", inputMode, skinName)
+
+    love.graphics.setColor(Color.text)
+    love.graphics.setFont(Font.skinName)
+    gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
+end
+
 function ViewConfig:draw(view)
     Layout:draw()
     local w, h = Layout:move("base")
@@ -57,6 +74,7 @@ function ViewConfig:draw(view)
 
     self:noteSkins(view)
     self:noteSkinSettings(view)
+    self:selectedNoteSkin(view)
 end
 
 return ViewConfig

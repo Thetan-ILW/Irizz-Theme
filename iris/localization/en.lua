@@ -270,6 +270,7 @@ localization.fonts = {
 
 	noteSkinModal = {
 		title = {"ZenMaruGothic-Black", 72},
+		skinName = {"ZenMaruGothic-Black", 48},
 		noteSkinName = {"ZenMaruGothic-Black", 24},
 		noteSkinSettings = {"ZenMaruGothic-Black", 24},
 		noSettings = {"ZenMaruGothic-Medium", 36}
