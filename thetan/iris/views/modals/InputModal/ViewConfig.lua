@@ -4,7 +4,6 @@ local imgui = require("thetan.iris.imgui")
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textModifiers
---local Font = Theme:getFonts("modifiersModal")
 
 local Layout = require("thetan.iris.views.modals.InputModal.Layout")
 
@@ -22,6 +21,8 @@ end
 
 function ViewConfig:tabs(view)
     local w, h = Layout:move("tabs")
+    love.graphics.setColor(Color.panel)
+    love.graphics.rectangle("fill", 0, 0, w, h)
 
 	local devices = view.game.inputModel.devices
 	local tabsCount = #devices
@@ -40,6 +41,8 @@ end
 
 function ViewConfig:inputs(view)
     local w, h = Layout:move("inputs")
+    love.graphics.setColor(Color.panel)
+    love.graphics.rectangle("fill", 0, 0, w, h)
 
     love.graphics.setColor(Color.border)
     love.graphics.rectangle("line", 0, 0, w, h)

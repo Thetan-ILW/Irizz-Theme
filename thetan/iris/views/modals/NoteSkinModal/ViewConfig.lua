@@ -15,6 +15,9 @@ local ViewConfig = {}
 
 function ViewConfig:noteSkins(view)
     local w, h = Layout:move("noteSkins")
+    love.graphics.setColor(Color.panel)
+    love.graphics.rectangle("fill", 0, 0, w, h)
+
     self.noteSkinListView:draw(w, h)
     love.graphics.setColor(Color.border)
     love.graphics.rectangle("line", 0, 0, w, h)
@@ -24,6 +27,8 @@ local scrollYconfig = 0
 
 function ViewConfig:noteSkinSettings(view)
     local w, h = Layout:move("noteSkinSettings")
+    love.graphics.setColor(Color.panel)
+    love.graphics.rectangle("fill", 0, 0, w, h)
 
     love.graphics.setColor(Color.border)
     love.graphics.rectangle("line", 0, 0, w, h)

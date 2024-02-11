@@ -14,6 +14,9 @@ local ViewConfig = {}
 
 function ViewConfig:availableModifierList(view)
     local w, h = Layout:move("availableMods")
+    love.graphics.setColor(Color.panel)
+    love.graphics.rectangle("fill", 0, 0, w, h)
+
 	self.availableModifierListView:draw(w, h)
     w, h = Layout:move("availableMods")
     love.graphics.setColor(Color.border)
@@ -23,6 +26,9 @@ end
 ---@param self table
 function ViewConfig:modifierList(view)
     local w, h = Layout:move("activeMods")
+    love.graphics.setColor(Color.panel)
+    love.graphics.rectangle("fill", 0, 0, w, h)
+    
 	self.modifierListView:draw(w, h)
     love.graphics.setColor(Color.border)
     love.graphics.rectangle("line", 0, 0, w, h)
