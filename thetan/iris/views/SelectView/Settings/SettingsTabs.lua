@@ -7,6 +7,7 @@ local version = require("version")
 
 local Theme = require("thetan.iris.views.Theme")
 local Text = Theme.textSettings
+local cfg = Theme.imgui
 
 local SettingsTab = {}
 
@@ -33,7 +34,7 @@ function SettingsTab:draw(view, w, h, tab)
 		self.tween = flux.to(self, 0.25, {scroll = self.scrollTarget}):ease("quartout")
 	end
 
-    imgui.setSize(w, h, w/2.5, h/rows)
+    imgui.setSize(w, h, w/2.5, cfg.size)
 
     just.clip(love.graphics.rectangle, "fill", 0, 0, w, h)
     love.graphics.translate(15, self.scroll + 15)

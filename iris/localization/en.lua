@@ -166,6 +166,10 @@ localization.textNoteSkins = {
 	noSettings = "No settings!"
 }
 
+localization.textInputs = {
+	noInputs = "No chart selected.\nCannot determine input mode."
+}
+
 localization.fontFamilyList = {
     ["Noto Sans"] = {
 		"resources/fonts/NotoSansCJK-Regular.ttc",
@@ -274,6 +278,13 @@ localization.fonts = {
 		noteSkinName = {"ZenMaruGothic-Black", 24},
 		noteSkinSettings = {"ZenMaruGothic-Black", 24},
 		noSettings = {"ZenMaruGothic-Medium", 36}
+	},
+
+	inputsModal = {
+		title = {"ZenMaruGothic-Black", 72},
+		tabs = {"ZenMaruGothic-Medium", 28},
+		noInputs = {"ZenMaruGothic-Medium", 36},
+		inputs = {"ZenMaruGothic-Black", 24}
 	}
 }
 

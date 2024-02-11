@@ -31,16 +31,16 @@ return function(id, device, key, w, h)
 	end
 
 	love.graphics.setColor(just.focused_id == id and Color.uiActive or Color.uiPanel)
-	love.graphics.rectangle("fill", 0, 0, w, cfg.size, cfg.rounding)
+	love.graphics.rectangle("fill", 0, 0, w, h, cfg.rounding)
 	love.graphics.setColor(Color.uiFrames)
-	love.graphics.rectangle("line", 0, 0, w, cfg.size, cfg.rounding)
+	love.graphics.rectangle("line", 0, 0, w, h, cfg.rounding)
 
 	love.graphics.setColor(1, 1, 1, 1)
 
 	local text = just.focused_id == id and "???" or key or "none"
 	gfx_util.printFrame(text, h * theme.padding, 0, w, h, "left", "center")
 
-	just.next(w + cfg.size/10, h + cfg.nextItemOffset)
+	just.next(w + h/10, h + cfg.nextItemOffset)
 
 	return changed, key
 end
