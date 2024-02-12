@@ -26,7 +26,7 @@ function _Layout:draw()
 	self:pack("modalName", gx[2], y1[1], gw[2], h1[1])
 	self:pack("window", x1[4], y1[2], w1[4], h1[2])
 	self:pack("buttons", x1[6], y2[2], w1[6], h2[2])
-	self:pack("info", gx[2], y1[3], gw[2], h1[3])
+	self:pack("path", gx[2], y1[3], gw[2], h1[3])
 end
 
 return _Layout

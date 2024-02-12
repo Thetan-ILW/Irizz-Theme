@@ -100,7 +100,7 @@ function ViewConfig:collectionsButtons(view)
 
 	w, h = Layout:move("button3")
 	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
-		view.gameView:setModal(require("thetan.iris.views.modals.MountsModal"))
+		view:openModal("thetan.iris.views.modals.MountsModal")
 	end
 
 	w, h = Layout:move("buttons")

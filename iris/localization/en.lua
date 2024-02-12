@@ -172,7 +172,8 @@ localization.textInputs = {
 }
 
 localization.textMounts = {
-	mounts = "Mounts"
+	mounts = "Mounts",
+	noMounts = "No mounts!"
 }
 
 localization.fontFamilyList = {
@@ -295,9 +296,10 @@ localization.fonts = {
 
 	mountsModal = {
 		title = {"ZenMaruGothic-Black", 72},
+		tabs = {"ZenMaruGothic-Medium", 28},
 		noMounts = {"ZenMaruGothic-Medium", 36},
 		mountPaths = {"ZenMaruGothic-Black", 24},
-		name = {"ZenMaruGothic-Black", 48}
+		path = {"ZenMaruGothic-Black", 48}
 	}
 }
 
