@@ -171,6 +171,10 @@ localization.textInputs = {
 	noInputs = "No chart selected.\nCannot determine input mode."
 }
 
+localization.textMounts = {
+	mounts = "Mounts"
+}
+
 localization.fontFamilyList = {
     ["Noto Sans"] = {
 		"resources/fonts/NotoSansCJK-Regular.ttc",
@@ -287,6 +291,13 @@ localization.fonts = {
 		noInputs = {"ZenMaruGothic-Medium", 36},
 		inputs = {"ZenMaruGothic-Black", 24},
 		inputMode = {"ZenMaruGothic-Black", 48}
+	},
+
+	mountsModal = {
+		title = {"ZenMaruGothic-Black", 72},
+		noMounts = {"ZenMaruGothic-Medium", 36},
+		mountPaths = {"ZenMaruGothic-Black", 24},
+		name = {"ZenMaruGothic-Black", 48}
 	}
 }
 

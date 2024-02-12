@@ -190,6 +190,18 @@ function Theme:getFonts(objectName)
 	return loadedFonts
 end
 
+function Theme:panel(w, h)
+	love.graphics.setColor(self.colors.panel)
+	love.graphics.rectangle("fill", 0, 0, w, h)
+end
+
+function Theme:border(w, h)
+	love.graphics.setLineStyle("rough")
+	love.graphics.setLineWidth(4)
+	love.graphics.setColor(self.colors.border)
+	love.graphics.rectangle("line", 0, 0, w, h)
+end
+
 Theme.version = "0.1.0"
 
 return Theme
