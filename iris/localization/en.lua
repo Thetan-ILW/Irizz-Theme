@@ -5,18 +5,19 @@ localization.name = "English"
 localization.textHeader = {
 	settings = "Settings",
 	songs = "Songs",
-	collections = "Collections"
+	collections = "Collections",
+	notLoggedIn = "Offline",
 }
 
 localization.textSettings = {
-    gameplayTab = "Gameplay",
-    audioTab = "Audio",
-    videoTab = "Video",
-    timingsTab = "Timings",
-    keybindsTab = "Keybinds",
-    inputsTab = "Inputs",
-    uiTab = "UI",
-    versionTab = "Version",
+	gameplayTab = "Gameplay",
+	audioTab = "Audio",
+	videoTab = "Video",
+	timingsTab = "Timings",
+	keybindsTab = "Keybinds",
+	inputsTab = "Inputs",
+	uiTab = "UI",
+	versionTab = "Version",
 	--
 	scrollSpeed = "Scroll speed",
 	speedType = "Speed type",
@@ -93,7 +94,7 @@ localization.textSettings = {
 	selectRandom = "Select random",
 	captureScreenshot = "Capture screenshot",
 	openScreenshot = "Open screenshot",
-	-- 
+	--
 	dim = "Dim",
 	blur = "Blur",
 	select = "Song Select",
@@ -123,7 +124,7 @@ localization.textSettings = {
 	volume = "Volume",
 	audioDevice = "Audio device",
 	bpm = "%i BPM",
-	noMods = "No modifiers"
+	noMods = "No modifiers",
 }
 
 localization.textSongSelect = {
@@ -137,7 +138,7 @@ localization.textSongSelect = {
 	searchPlaceholder = "Type to search...",
 	filterPlaceholder = "No filters.",
 	you = "You",
-	score = "Score: %i"
+	score = "Score: %i",
 }
 
 localization.textCollections = {
@@ -154,30 +155,40 @@ localization.textCollections = {
 	idle = "Status: Doing nothing.",
 	download = "Download",
 	redownload = "Redownload",
-	wait = "Wait..."
+	wait = "Wait...",
 }
 
 localization.textModifiers = {
-	modifiers = "Modifiers"
+	modifiers = "Modifiers",
 }
 
 localization.textNoteSkins = {
 	noteSkins = "Note skins",
-	noSettings = "No settings!"
+	noSettings = "No settings!",
 }
 
 localization.textInputs = {
 	inputs = "Inputs",
-	noInputs = "No chart selected.\nCannot determine input mode."
+	noInputs = "No chart selected.\nCannot determine input mode.",
 }
 
 localization.textMounts = {
 	mounts = "Mounts",
-	noMounts = "No mounts!"
+	noMounts = "No mounts!",
+}
+
+localization.textOnline = {
+	notLoggedIn = "Connect to the server:",
+	loggedIn = "You are connected to the server.",
+	connect = "Sign in",
+	quickConnect = "Login with browser",
+	logout = "Log out",
+	emailPlaceholder = "Email",
+	passwordPlaceholder = "Password",
 }
 
 localization.fontFamilyList = {
-    ["Noto Sans"] = {
+	["Noto Sans"] = {
 		"resources/fonts/NotoSansCJK-Regular.ttc",
 		"resources/fonts/NotoSans-Minimal.ttf",
 		height = 813 / 758,
@@ -187,120 +198,126 @@ localization.fontFamilyList = {
 		"resources/fonts/NotoSansMono-Minimal.ttf",
 		height = 730 / 699,
 	},
-    ["ZenMaruGothic-Black"] = {
-        "iris/fonts/ZenMaruGothic/ZenMaruGothic-Black.ttf"
-    },
+	["ZenMaruGothic-Black"] = {
+		"iris/fonts/ZenMaruGothic/ZenMaruGothic-Black.ttf",
+	},
 	["ZenMaruGothic-Medium"] = {
-        "iris/fonts/ZenMaruGothic/ZenMaruGothic-Medium.ttf"
-    },
+		"iris/fonts/ZenMaruGothic/ZenMaruGothic-Medium.ttf",
+	},
 }
 
 localization.fonts = {
 	header = {
-		anyText = {"ZenMaruGothic-Medium", 24}
+		anyText = { "ZenMaruGothic-Medium", 24 },
 	},
 
 	settingsViewConfig = {
-		tabs = {"ZenMaruGothic-Medium", 28},
+		tabs = { "ZenMaruGothic-Medium", 28 },
 	},
 
 	songSelectViewConfig = {
-		searchField = {"ZenMaruGothic-Black", 36},
-		difficulty = {"ZenMaruGothic-Medium", 28},
-		calculator = {"ZenMaruGothic-Medium", 24},
-		patterns = {"ZenMaruGothic-Medium", 16},
-		info = {"ZenMaruGothic-Medium", 28},
-		moreInfo = {"ZenMaruGothic-Medium", 28},
-		timeRate = {"ZenMaruGothic-Medium", 32},
-		mods = {"ZenMaruGothic-Medium", 24},
-		titleAndDifficulty = {"ZenMaruGothic-Black", 32}
+		searchField = { "ZenMaruGothic-Black", 36 },
+		difficulty = { "ZenMaruGothic-Medium", 28 },
+		calculator = { "ZenMaruGothic-Medium", 24 },
+		patterns = { "ZenMaruGothic-Medium", 16 },
+		info = { "ZenMaruGothic-Medium", 28 },
+		moreInfo = { "ZenMaruGothic-Medium", 28 },
+		timeRate = { "ZenMaruGothic-Medium", 32 },
+		mods = { "ZenMaruGothic-Medium", 24 },
+		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
 	},
 
 	collectionsViewConfig = {
-		status = {"ZenMaruGothic-Black", 36},
-		queue = {"ZenMaruGothic-Medium", 32},
-		osuDirectCharts = {"ZenMaruGothic-Medium", 32},
-		buttons = {"ZenMaruGothic-Medium", 28},
-		titleAndMode = {"ZenMaruGothic-Black", 32}
+		status = { "ZenMaruGothic-Black", 36 },
+		queue = { "ZenMaruGothic-Medium", 32 },
+		osuDirectCharts = { "ZenMaruGothic-Medium", 32 },
+		buttons = { "ZenMaruGothic-Medium", 28 },
+		titleAndMode = { "ZenMaruGothic-Black", 32 },
 	},
 
 	noteChartListView = {
-		inputMode = {"ZenMaruGothic-Black", 18},
-		difficulty = {"ZenMaruGothic-Black", 24},
-		creator = {"ZenMaruGothic-Black", 18},
-		name = {"ZenMaruGothic-Black", 24},
-		noItems = {"ZenMaruGothic-Medium", 36}
+		inputMode = { "ZenMaruGothic-Black", 18 },
+		difficulty = { "ZenMaruGothic-Black", 24 },
+		creator = { "ZenMaruGothic-Black", 18 },
+		name = { "ZenMaruGothic-Black", 24 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	noteChartSetListView = {
-		artist = {"ZenMaruGothic-Black", 18},
-		title = {"ZenMaruGothic-Black", 24},
-		noItems = {"ZenMaruGothic-Medium", 36}
+		artist = { "ZenMaruGothic-Black", 18 },
+		title = { "ZenMaruGothic-Black", 24 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	collectionsListView = {
-		shortPath = {"ZenMaruGothic-Black", 18},
-		itemCount = {"ZenMaruGothic-Black", 24},
-		name = {"ZenMaruGothic-Black", 24},
-		noItems = {"ZenMaruGothic-Medium", 36}
+		shortPath = { "ZenMaruGothic-Black", 18 },
+		itemCount = { "ZenMaruGothic-Black", 24 },
+		name = { "ZenMaruGothic-Black", 24 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	scoreListView = {
-		line1 = {"ZenMaruGothic-Black", 22},
-		line2 = {"ZenMaruGothic-Black", 20},
-		noItems = {"ZenMaruGothic-Medium", 36}
+		line1 = { "ZenMaruGothic-Black", 22 },
+		line2 = { "ZenMaruGothic-Black", 20 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	osuDirectListView = {
-		artist = {"ZenMaruGothic-Black", 18},
-		title = {"ZenMaruGothic-Black", 24},
-		noItems = {"ZenMaruGothic-Medium", 36}
+		artist = { "ZenMaruGothic-Black", 18 },
+		title = { "ZenMaruGothic-Black", 24 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	osuDirectChartsListView = {
-		creator = {"ZenMaruGothic-Black", 18},
-		difficultyName = {"ZenMaruGothic-Black", 24},
-		noItems = {"ZenMaruGothic-Medium", 36}
+		creator = { "ZenMaruGothic-Black", 18 },
+		difficultyName = { "ZenMaruGothic-Black", 24 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	osuDirectQueueListView = {
-		title = {"ZenMaruGothic-Black", 24},
-		artist = {"ZenMaruGothic-Black", 14},
-		status = {"ZenMaruGothic-Black", 14},
-		noItems = {"ZenMaruGothic-Medium", 36}
+		title = { "ZenMaruGothic-Black", 24 },
+		artist = { "ZenMaruGothic-Black", 14 },
+		status = { "ZenMaruGothic-Black", 14 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	modifiersModal = {
-		title = {"ZenMaruGothic-Black", 72},
-		modifierName = {"ZenMaruGothic-Black", 24},
-		inputMode = {"ZenMaruGothic-Black", 48},
-		numberOfUses = {"ZenMaruGothic-Black", 24},
-		noItems = {"ZenMaruGothic-Medium", 36}
+		title = { "ZenMaruGothic-Black", 72 },
+		modifierName = { "ZenMaruGothic-Black", 24 },
+		inputMode = { "ZenMaruGothic-Black", 48 },
+		numberOfUses = { "ZenMaruGothic-Black", 24 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	noteSkinModal = {
-		title = {"ZenMaruGothic-Black", 72},
-		skinName = {"ZenMaruGothic-Black", 48},
-		noteSkinName = {"ZenMaruGothic-Black", 24},
-		noteSkinSettings = {"ZenMaruGothic-Black", 24},
-		noSettings = {"ZenMaruGothic-Medium", 36}
+		title = { "ZenMaruGothic-Black", 72 },
+		skinName = { "ZenMaruGothic-Black", 48 },
+		noteSkinName = { "ZenMaruGothic-Black", 24 },
+		noteSkinSettings = { "ZenMaruGothic-Black", 24 },
+		noSettings = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	inputsModal = {
-		title = {"ZenMaruGothic-Black", 72},
-		tabs = {"ZenMaruGothic-Medium", 28},
-		noInputs = {"ZenMaruGothic-Medium", 36},
-		inputs = {"ZenMaruGothic-Black", 24},
-		inputMode = {"ZenMaruGothic-Black", 48}
+		title = { "ZenMaruGothic-Black", 72 },
+		tabs = { "ZenMaruGothic-Medium", 28 },
+		noInputs = { "ZenMaruGothic-Medium", 36 },
+		inputs = { "ZenMaruGothic-Black", 24 },
+		inputMode = { "ZenMaruGothic-Black", 48 },
 	},
 
 	mountsModal = {
-		title = {"ZenMaruGothic-Black", 72},
-		tabs = {"ZenMaruGothic-Medium", 28},
-		noMounts = {"ZenMaruGothic-Medium", 36},
-		mountPaths = {"ZenMaruGothic-Black", 24},
-		path = {"ZenMaruGothic-Black", 48}
-	}
+		title = { "ZenMaruGothic-Black", 72 },
+		tabs = { "ZenMaruGothic-Medium", 28 },
+		noMounts = { "ZenMaruGothic-Medium", 36 },
+		mountPaths = { "ZenMaruGothic-Black", 24 },
+		path = { "ZenMaruGothic-Black", 48 },
+	},
+
+	onlineModal = {
+		status = { "ZenMaruGothic-Black", 48 },
+		fields = { "ZenMaruGothic-Medium", 36 },
+		buttons = { "ZenMaruGothic-Medium", 28 },
+	},
 }
 
 return localization

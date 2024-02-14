@@ -89,12 +89,12 @@ function ViewConfig:Header(view)
     
     if just.is_over(w, h) then
         if just.mousepressed(1) then
-            view:openModal("sphere.views.OnlineView")
+            view:openModal("thetan.iris.views.modals.OnlineModal")
         end
     end
     
     love.graphics.setColor(Color.text)
-    local username = view.game.configModel.configs.online.user.name or "Not logged in"
+    local username = view.game.configModel.configs.online.user.name or Text.notLoggedIn
     local time = time_util.format(loop.time - loop.startTime)
 
     r = h / 1.4

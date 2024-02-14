@@ -33,6 +33,7 @@ Theme.colors = {
 	select = Hex("#f669db55"),
 	headerSelect = Hex("#e97bf6"),
 	text = Hex("#FFFFFF"),
+    unfocusedText = {0.75, 0.75, 0.75, 1},
 	darkText = {0.2, 0.2, 0.2, 1},
 	itemDownloaded = {1, 1, 1, 0.5},
 	listItemOdd = {0, 0, 0, 0},

@@ -90,7 +90,7 @@ end
 ---@return number?
 function imgui.button(id, text)
 	local width = love.graphics.getFont():getWidth(text)
-	return imgui.TextButton(id, text, width + _h * 2 * oldtheme.padding, _h)
+	return imgui.TextButton(id, text, width + cfg.size, _h)
 end
 
 ---@param id any
