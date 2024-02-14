@@ -14,72 +14,81 @@ local Layout = require("thetan.iris.views.modals.NoteSkinModal.Layout")
 local ViewConfig = {}
 
 function ViewConfig:noteSkins(view)
-    local w, h = Layout:move("noteSkins")
-    love.graphics.setColor(Color.panel)
-    love.graphics.rectangle("fill", 0, 0, w, h)
+	local w, h = Layout:move("noteSkins")
+	love.graphics.setColor(Color.panel)
+	love.graphics.rectangle("fill", 0, 0, w, h)
 
-    self.noteSkinListView:draw(w, h)
-    love.graphics.setColor(Color.border)
-    love.graphics.rectangle("line", 0, 0, w, h)
+	self.noteSkinListView:draw(w, h)
+	love.graphics.setColor(Color.border)
+	love.graphics.rectangle("line", 0, 0, w, h)
 end
 
 local scrollYconfig = 0
 
 function ViewConfig:noteSkinSettings(view)
-    local w, h = Layout:move("noteSkinSettings")
-    love.graphics.setColor(Color.panel)
-    love.graphics.rectangle("fill", 0, 0, w, h)
+	local w, h = Layout:move("noteSkinSettings")
+	love.graphics.setColor(Color.panel)
+	love.graphics.rectangle("fill", 0, 0, w, h)
 
-    love.graphics.setColor(Color.border)
-    love.graphics.rectangle("line", 0, 0, w, h)
+	love.graphics.setColor(Color.border)
+	love.graphics.rectangle("line", 0, 0, w, h)
 
-    local selectedNoteSkin = self.noteSkinListView.selectedNoteSkin
+	local selectedNoteSkin = self.noteSkinListView.selectedNoteSkin
 
-    local config = selectedNoteSkin.config
-	if not config or not config.draw then
-        love.graphics.setFont(Font.noSettings)
-        love.graphics.setColor(Color.text)
-        gfx_util.printFrame(Text.noSettings, 0, 0, w, h, "center", "center")
+	if not selectedNoteSkin then
 		return
 	end
 
-    love.graphics.setFont(Font.noteSkinSettings)
-    just.push()
-    imgui.Container("NoteSkinView", w, h, h/20, h, scrollYconfig)
-    config:draw(w, h)
-    scrollYconfig = imgui.Container()
+	local config = selectedNoteSkin.config
+	if not config or not config.draw then
+		love.graphics.setFont(Font.noSettings)
+		love.graphics.setColor(Color.text)
+		gfx_util.printFrame(Text.noSettings, 0, 0, w, h, "center", "center")
+		return
+	end
+
+	love.graphics.setFont(Font.noteSkinSettings)
+	just.push()
+	imgui.Container("NoteSkinView", w, h, h / 20, h, scrollYconfig)
+	config:draw(w, h)
+	scrollYconfig = imgui.Container()
 	just.pop()
 end
 
 function ViewConfig:selectedNoteSkin(view)
-    local w, h = Layout:move("selectedNoteSkin")
+	local w, h = Layout:move("selectedNoteSkin")
 
-    local inputMode = self.noteSkinListView.inputMode
-    local skinName = self.noteSkinListView.selectedNoteSkin.name
-    inputMode = Format.inputMode(inputMode)
-    inputMode = inputMode == "2K" and "TAIKO" or inputMode
+	if not self.noteSkinListView.selectedNoteSkin then
+		return
+	end
 
-    local text = string.format("[%s] %s", inputMode, skinName)
+	local inputMode = self.noteSkinListView.inputMode
+	local skinName = self.noteSkinListView.selectedNoteSkin.name
+	inputMode = Format.inputMode(inputMode)
+	inputMode = inputMode == "2K" and "TAIKO" or inputMode
 
-    love.graphics.setColor(Color.text)
-    love.graphics.setFont(Font.skinName)
-    gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
+	local text = string.format("[%s] %s", inputMode, skinName)
+
+	love.graphics.setColor(Color.text)
+	love.graphics.setFont(Font.skinName)
+	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:draw(view)
-    Layout:draw()
-    local w, h = Layout:move("base")
-    love.graphics.setColor(0, 0, 0, 0.75)
-    love.graphics.rectangle("fill", 0, 0, w, h)
+	Layout:draw()
+	local w, h = Layout:move("base")
+	love.graphics.setColor(0, 0, 0, 0.75)
+	love.graphics.rectangle("fill", 0, 0, w, h)
 
-    w, h = Layout:move("modalName")
-    love.graphics.setColor(Color.text)
-    love.graphics.setFont(Font.title)
-    gfx_util.printFrame(Text.noteSkins, 0, 0, w, h, "center", "center")
+	w, h = Layout:move("modalName")
+	love.graphics.setColor(Color.text)
+	love.graphics.setFont(Font.title)
+	gfx_util.printFrame(Text.noteSkins, 0, 0, w, h, "center", "center")
 
-    self:noteSkins(view)
-    self:noteSkinSettings(view)
-    self:selectedNoteSkin(view)
+	self:noteSkins(view)
+	self:noteSkinSettings(view)
+	self:selectedNoteSkin(view)
 end
 
 return ViewConfig
+

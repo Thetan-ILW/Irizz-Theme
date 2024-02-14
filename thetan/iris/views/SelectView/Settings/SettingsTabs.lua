@@ -11,36 +11,35 @@ local cfg = Theme.imgui
 
 local SettingsTab = {}
 
-local rows = 14
 local textSeparation = 15
 SettingsTab.scroll = 0
 SettingsTab.scrollTarget = 0
-SettingsTab.tween = flux.to(SettingsTab, 0, {scroll = 0})
+SettingsTab.tween = flux.to(SettingsTab, 0, { scroll = 0 })
 
 function SettingsTab:reset()
-    self.scroll = 0
+	self.scroll = 0
 	self.scrollTarget = 0
 	self.tween:stop()
-    just.reset()
+	just.reset()
 end
 
 function SettingsTab:draw(view, w, h, tab)
-    local scrollLimit = just.height
+	local scrollLimit = just.height
 
-    local delta = just.wheel_over(tab, just.is_over(w, h))
+	local delta = just.wheel_over(tab, just.is_over(w, h))
 	if delta then
 		self.scrollTarget = self.scrollTarget + (delta * 80)
 		self.scrollTarget = math_util.clamp(-scrollLimit, self.scrollTarget, 0)
-		self.tween = flux.to(self, 0.25, {scroll = self.scrollTarget}):ease("quartout")
+		self.tween = flux.to(self, 0.25, { scroll = self.scrollTarget }):ease("quartout")
 	end
 
-    imgui.setSize(w, h, w/2.5, cfg.size)
+	imgui.setSize(w, h, w / 2.5, cfg.size)
 
-    just.clip(love.graphics.rectangle, "fill", 0, 0, w, h)
-    love.graphics.translate(15, self.scroll + 15)
+	just.clip(love.graphics.rectangle, "fill", 0, 0, w, h)
+	love.graphics.translate(15, self.scroll + 15)
 	love.graphics.setLineStyle("smooth")
-    self[tab](self, view)
-    just.clip()
+	self[tab](self, view)
+	just.clip()
 end
 
 ---@param id any
@@ -53,20 +52,20 @@ end
 
 local speedType = {
 	["default"] = Text.default,
-	["osu"] = Text.osu
+	["osu"] = Text.osu,
 }
 
 local actionOnFail = {
 	["none"] = Text.none,
 	["pause"] = Text.pause,
-	["quit"] = Text.quit
+	["quit"] = Text.quit,
 }
 
 local tempoFactor = {
 	["average"] = Text.average,
 	["primary"] = Text.primary,
 	["minimum"] = Text.minimum,
-	["maximum"] = Text.maximum
+	["maximum"] = Text.maximum,
 }
 
 ---@param v number?
@@ -89,7 +88,7 @@ end
 
 function SettingsTab:Gameplay(view)
 	imgui.separator()
-    local configs = view.game.configModel.configs
+	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local g = settings.gameplay
 
@@ -100,16 +99,36 @@ function SettingsTab:Gameplay(view)
 	just.text(Text.scrollSpeed)
 	just.next(0, textSeparation)
 
-	local newSpeed = imgui.slider1("speed", speedModel:get(), speedFormat, speedRange[1], speedRange[2], speedRange[3], Text.scrollSpeed)
+	local newSpeed = imgui.slider1(
+		"speed",
+		speedModel:get(),
+		speedFormat,
+		speedRange[1],
+		speedRange[2],
+		speedRange[3],
+		Text.scrollSpeed
+	)
 	speedModel:set(newSpeed)
 
 	g.speedType = imgui.combo("speedType", g.speedType, speedModel.types, formatSpeedType, Text.speedType)
 
 	g.longNoteShortening = imgui.slider1(
-		"shortening", g.longNoteShortening * 1000, "%dms", -300, 0, 10,
-		Text.lnShortening) / 1000
+		"shortening",
+		g.longNoteShortening * 1000,
+		"%dms",
+		-300,
+		0,
+		10,
+		Text.lnShortening
+	) / 1000
 
-	g.tempoFactor = imgui.combo("tempoFactor", g.tempoFactor, {"average", "primary", "minimum", "maximum"}, formatTempoFactor, Text.tempoFactor)
+	g.tempoFactor = imgui.combo(
+		"tempoFactor",
+		g.tempoFactor,
+		{ "average", "primary", "minimum", "maximum" },
+		formatTempoFactor,
+		Text.tempoFactor
+	)
 	if g.tempoFactor == "primary" then
 		g.primaryTempo = imgui.slider1("primaryTempo", g.primaryTempo, Text.bpm, 60, 240, 1, Text.primaryTempo)
 	end
@@ -122,14 +141,15 @@ function SettingsTab:Gameplay(view)
 	g.eventBasedRender = g.swapVelocityType
 	g.scaleSpeed = g.swapVelocityType and true or g.scaleSpeed
 	local playContext = view.game.playContext
-	playContext.const = imgui.checkbox("const", playContext.const, "const!!!!!!!!!!!")
+	playContext.const = imgui.checkbox("const", playContext.const, Text.const)
 
 	imgui.separator()
 	just.text(Text.hp)
 	just.next(0, textSeparation)
 	g.hp.shift = imgui.checkbox("hp.shift", g.hp.shift, Text.hpShift)
 	g.hp.notes = math.min(math.max(imgui.intButtons("hp.notes", g.hp.notes, 1, Text.hpNotes), 0), 100)
-	g.actionOnFail = imgui.combo("actionOnFail", g.actionOnFail, {"none", "pause", "quit"}, formatActionOnFail, Text.actionOnFail)
+	g.actionOnFail =
+		imgui.combo("actionOnFail", g.actionOnFail, { "none", "pause", "quit" }, formatActionOnFail, Text.actionOnFail)
 
 	imgui.separator()
 	just.text(Text.waitTime)
@@ -148,7 +168,7 @@ end
 
 function SettingsTab:Timings(view)
 	imgui.separator()
-    local configs = view.game.configModel.configs
+	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local g = settings.gameplay
 
@@ -169,7 +189,7 @@ local _formatModes = {
 
 local volumeType = {
 	["linear"] = Text.linearType,
-	["logarithmic"] = Text.logarithmicType
+	["logarithmic"] = Text.logarithmicType,
 }
 
 ---@param mode string
@@ -186,21 +206,22 @@ end
 
 function SettingsTab:Audio(view)
 	imgui.separator()
-    local settings = view.game.configModel.configs.settings
+	local settings = view.game.configModel.configs.settings
 	local a = settings.audio
 	local g = settings.gameplay
 
 	just.text(Text.volume)
 	just.next(0, textSeparation)
 
-	a.volumeType = imgui.combo("a.volumeType", a.volumeType, {"linear", "logarithmic"}, formatVolumeType, Text.volumeType)
+	a.volumeType =
+		imgui.combo("a.volumeType", a.volumeType, { "linear", "logarithmic" }, formatVolumeType, Text.volumeType)
 
 	local v = a.volume
 	if a.volumeType == "linear" then
-		v.master = imgui.slider1("v.master", v.master*100, "%i%%", 0, 100, 1, Text.master)/100
-		v.music = imgui.slider1("v.music", v.music*100, "%i%%", 0, 100, 1, Text.music)/100
-		v.effects = imgui.slider1("v.effects", v.effects*100, "%i%%", 0, 100, 1, Text.effects)/100
-		v.metronome = imgui.slider1("v.metronome", v.metronome*100, "%i%%", 0, 100, 1, Text.metronome)/100
+		v.master = imgui.slider1("v.master", v.master * 100, "%i%%", 0, 100, 1, Text.master) / 100
+		v.music = imgui.slider1("v.music", v.music * 100, "%i%%", 0, 100, 1, Text.music) / 100
+		v.effects = imgui.slider1("v.effects", v.effects * 100, "%i%%", 0, 100, 1, Text.effects) / 100
+		v.metronome = imgui.slider1("v.metronome", v.metronome * 100, "%i%%", 0, 100, 1, Text.metronome) / 100
 	elseif a.volumeType == "logarithmic" then
 		v.master = imgui.lfslider("v.master", v.master, "%ddB", -60, 0, 1, Text.master)
 		v.music = imgui.lfslider("v.music", v.music, "%ddB", -60, 0, 1, Text.music)
@@ -261,13 +282,13 @@ local vsyncNames = {
 
 local fullscreenType = {
 	["desktop"] = Text.desktop,
-	["exclusive"] = Text.exclusive
+	["exclusive"] = Text.exclusive,
 }
 
 local cursor = {
 	["circle"] = Text.circle,
 	["arrow"] = Text.arrow,
-	["system"] = Text.system
+	["system"] = Text.system,
 }
 
 ---@param v number?
@@ -290,10 +311,10 @@ end
 
 function SettingsTab:Video(view)
 	imgui.separator()
-    local configs = view.game.configModel.configs
+	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local g = settings.graphics
-    local gp = settings.gameplay
+	local gp = settings.gameplay
 
 	just.text(Text.videoTab)
 	just.next(0, textSeparation)
@@ -302,18 +323,22 @@ function SettingsTab:Video(view)
 
 	local flags = g.mode.flags
 
-	flags.fullscreentype = imgui.combo("flags.fst", flags.fullscreentype, {"desktop", "exclusive"}, formatFullscreenType, Text.fullscreenType)
+	flags.fullscreentype = imgui.combo(
+		"flags.fst",
+		flags.fullscreentype,
+		{ "desktop", "exclusive" },
+		formatFullscreenType,
+		Text.fullscreenType
+	)
 	self.modes = self.modes or love.window.getFullscreenModes()
 	g.mode.window = imgui.combo("mode.window", g.mode.window, self.modes, formatMode, Text.startupWindowResolution)
-	flags.vsync = imgui.combo("flags.vsync", flags.vsync, {1, 0, -1}, formatVsync, Text.vsync)
-	flags.msaa = imgui.combo("flags.msaa", flags.msaa, {0, 1, 2, 4, 8, 16}, nil, "MSAA")
+	flags.vsync = imgui.combo("flags.vsync", flags.vsync, { 1, 0, -1 }, formatVsync, Text.vsync)
+	flags.msaa = imgui.combo("flags.msaa", flags.msaa, { 0, 1, 2, 4, 8, 16 }, nil, "MSAA")
 	flags.fullscreen = imgui.checkbox("flags.fullscreen", flags.fullscreen, Text.fullscreen)
 	g.vsyncOnSelect = imgui.checkbox("vsyncOnSelect", g.vsyncOnSelect, Text.vsyncOnSelect)
 	g.dwmflush = imgui.checkbox("dwmflush", g.dwmflush, Text.dwmFlush)
-	
 
-
-    imgui.separator()
+	imgui.separator()
 	just.text(Text.backgroundAnimation)
 	just.next(0, textSeparation)
 	gp.bga.video = imgui.checkbox("bga.video", gp.bga.video, Text.video)
@@ -333,7 +358,7 @@ function SettingsTab:Keybinds(view)
 	local settings = view.game.configModel.configs.settings
 	local i = settings.input
 
-    just.text(Text.gameplay)
+	just.text(Text.gameplay)
 	just.next(0, textSeparation)
 	i.skipIntro = imgui.hotkey("skipIntro", i.skipIntro, Text.skipIntro)
 	i.quickRestart = imgui.hotkey("quickRestart", i.quickRestart, Text.quickRestart)
@@ -375,7 +400,7 @@ function SettingsTab:Inputs(view)
 	g.asynckey = imgui.checkbox("asynckey", g.asynckey, Text.threadedInput)
 
 	local playContext = view.game.playContext
-	playContext.single = imgui.checkbox("single", playContext.single, "single handler mode (taiko)!!!!!!!!")
+	playContext.single = imgui.checkbox("single", playContext.single, Text.singleNoteHandler)
 end
 
 ---@param f table
@@ -386,14 +411,14 @@ end
 
 function SettingsTab:UI(view)
 	imgui.separator()
-    local configs = view.game.configModel.configs
+	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local s = configs.select
-    local g = settings.graphics
+	local g = settings.graphics
 
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
-	g.cursor = imgui.combo("g.cursor", g.cursor, {"circle", "arrow", "system"}, formatCursor, Text.cursor)
+	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
 	imgui.separator()
 
 	just.text(Text.dim)
@@ -411,10 +436,10 @@ function SettingsTab:UI(view)
 	blur.gameplay = imgui.slider1("blur.gameplay", blur.gameplay, "%d", 0, 20, 1, Text.gameplay)
 	blur.result = imgui.slider1("blur.result", blur.result, "%d", 0, 20, 1, Text.result)
 
-    imgui.separator()
+	imgui.separator()
 	just.text(Text.select)
 	just.next(0, textSeparation)
-    s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
+	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
 
 	local filters = view.game.configModel.configs.filters.notechart
 	local config = view.game.configModel.configs.select
@@ -437,9 +462,10 @@ function SettingsTab:UI(view)
 end
 
 function SettingsTab:Version(view)
-    just.text(Text.themeVersion .. Theme.version)
+	just.text(Text.themeVersion .. Theme.version)
 	just.text(Text.commit .. version.commit)
 	just.text(Text.commitDate .. version.date)
 end
 
 return SettingsTab
+

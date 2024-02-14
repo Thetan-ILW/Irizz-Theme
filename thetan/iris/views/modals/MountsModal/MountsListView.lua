@@ -21,7 +21,10 @@ end
 
 function MountsListView:reloadItems()
 	self.items = self.game.configModel.configs.mount
-    self.selectedItem = self.items[1]
+
+	if not self.selectedItem then
+		self.selectedItem = self.items[1]
+	end
 end
 
 ---@return number
@@ -42,15 +45,15 @@ function MountsListView:drawItem(i, w, h)
 
 	self:drawItemBody(w, h, i, self.selectedItem == item)
 
-    local changed, active, hovered = just.button("mount" .. i, just.is_over(w, h))
+	local changed, active, hovered = just.button("mount" .. i, just.is_over(w, h))
 	if changed then
-        self.selectedItem = item
+		self.selectedItem = item
 	end
 
-    love.graphics.setColor(Color.text)
-    love.graphics.setFont(self.font.mountPaths)
-    love.graphics.translate(15, 10)
-    just.text(item[1]:match("^.+/(.+)$"), math.huge)
+	love.graphics.setColor(Color.text)
+	love.graphics.setFont(self.font.mountPaths)
+	love.graphics.translate(15, 10)
+	just.text(item[1]:match("^.+/(.+)$"), math.huge)
 end
 
 return MountsListView

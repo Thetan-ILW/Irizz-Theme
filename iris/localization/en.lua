@@ -125,6 +125,8 @@ localization.textSettings = {
 	audioDevice = "Audio device",
 	bpm = "%i BPM",
 	noMods = "No modifiers",
+	const = "Constant scroll speed",
+	singleNoteHandler = "Taiko note handler",
 }
 
 localization.textSongSelect = {
@@ -295,6 +297,7 @@ localization.fonts = {
 		noteSkinName = { "ZenMaruGothic-Black", 24 },
 		noteSkinSettings = { "ZenMaruGothic-Black", 24 },
 		noSettings = { "ZenMaruGothic-Medium", 36 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	inputsModal = {
@@ -303,6 +306,7 @@ localization.fonts = {
 		noInputs = { "ZenMaruGothic-Medium", 36 },
 		inputs = { "ZenMaruGothic-Black", 24 },
 		inputMode = { "ZenMaruGothic-Black", 48 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	mountsModal = {
@@ -314,7 +318,7 @@ localization.fonts = {
 	},
 
 	onlineModal = {
-		status = { "ZenMaruGothic-Black", 48 },
+		status = { "ZenMaruGothic-Black", 72 },
 		fields = { "ZenMaruGothic-Medium", 36 },
 		buttons = { "ZenMaruGothic-Medium", 28 },
 	},
