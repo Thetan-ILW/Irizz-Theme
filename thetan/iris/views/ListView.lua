@@ -17,6 +17,7 @@ ListView.itemIndex = 1
 ListView.visualItemIndex = 1
 ListView.rows = 3
 
+ListView.items = {}
 ListView.scrollSound = nil
 ListView.font = nil
 ListView.noItemsText = "No items!"
@@ -93,8 +94,11 @@ end
 
 ---@param w number
 ---@param h number
-function ListView:draw(w, h)
-	self:update(w, h)
+function ListView:draw(w, h, update)
+	if update then
+		self:update(w, h)
+	end
+
 	local itemIndex = assert(self:getItemIndex())
 
 	if self.itemIndex ~= itemIndex then

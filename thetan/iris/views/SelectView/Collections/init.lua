@@ -17,6 +17,7 @@ local OsuDirectQueueListView = require("thetan.iris.views.SelectView.Collections
 
 local ViewConfig = class()
 
+local canUpdate = false
 local collectionsMode = "Collections"
 
 function ViewConfig:new(game)
@@ -64,14 +65,14 @@ end
 function ViewConfig:osuDirectDownloadQueue(view)
 	local w, h = Layout:move("queue")
 	frame(w, h)
-	self.osuDirectQueueListView:draw(w, h)
+	self.osuDirectQueueListView:draw(w, h, canUpdate)
 	border(w, h)
 end
 
 function ViewConfig:osuDirectCharts(view)
 	local w, h = Layout:move("charts")
 	frame(w, h)
-	self.osuDirectChartsListView:draw(w, h)
+	self.osuDirectChartsListView:draw(w, h, canUpdate)
 	border(w, h)
 end
 
@@ -148,7 +149,7 @@ function ViewConfig:collectionsList(view)
 
 	local w, h = Layout:move("list")
 	frame(w, h)
-	self.collectionListView:draw(w, h)
+	self.collectionListView:draw(w, h, canUpdate)
 	border(w, h)
 end
 
@@ -159,7 +160,7 @@ function ViewConfig:osuDirectList(view)
 
 	local w, h = Layout:move("list")
 	frame(w, h)
-	self.osuDirectListView:draw(w, h)
+	self.osuDirectListView:draw(w, h, canUpdate)
 	border(w, h)
 end
 
@@ -168,7 +169,7 @@ function ViewConfig:footer(view)
 	love.graphics.setFont(Font.titleAndMode)
 	love.graphics.setColor(Color.text)
 
-	if collectionsMode == "Collections" then
+	if collectionsMode == "Collections" and #self.collectionListView.items > 0 then
 		local name = self.collectionListView:getItem().name
 		just.text(name, w)
 	end
@@ -179,6 +180,13 @@ end
 
 function ViewConfig:draw(view, position)
 	Layout:draw(position)
+
+	canUpdate = position == 0
+
+	if math.abs(position) >= 1 then
+		return
+	end
+
 	self:cacheStatus(view)
 	self:osuDirectDownloadQueue(view)
 	self:collectionsList(view)
@@ -195,4 +203,3 @@ function ViewConfig:draw(view, position)
 end
 
 return ViewConfig
-

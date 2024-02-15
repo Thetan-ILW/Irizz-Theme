@@ -20,7 +20,7 @@ local tabs = {
 	Text.keybindsTab,
 	Text.inputsTab,
 	Text.uiTab,
-	Text.versionTab
+	Text.versionTab,
 }
 
 local currentTab = Text.gameplayTab
@@ -31,7 +31,7 @@ end
 
 local boxes = {
 	"tabs",
-	"settings"
+	"settings",
 }
 
 local function Frames(view)
@@ -49,7 +49,7 @@ local function Borders(view)
 	for i, name in pairs(boxes) do
 		local w, h = Layout:move(name)
 		love.graphics.setColor(Color.border)
-		love.graphics.rectangle("line", -2, -2, w+3, h+3)
+		love.graphics.rectangle("line", -2, -2, w + 3, h + 3)
 	end
 end
 
@@ -76,6 +76,11 @@ end
 
 function ViewConfig:draw(view, position)
 	Layout:draw(position)
+
+	if math.abs(position) >= 1 then
+		return
+	end
+
 	Frames(view)
 	self:tabs(view)
 	self:settings(view)

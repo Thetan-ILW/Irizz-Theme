@@ -18,7 +18,7 @@ function ViewConfig:noteSkins(view)
 	love.graphics.setColor(Color.panel)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
-	self.noteSkinListView:draw(w, h)
+	self.noteSkinListView:draw(w, h, true)
 	love.graphics.setColor(Color.border)
 	love.graphics.rectangle("line", 0, 0, w, h)
 end
@@ -91,4 +91,3 @@ function ViewConfig:draw(view)
 end
 
 return ViewConfig
-

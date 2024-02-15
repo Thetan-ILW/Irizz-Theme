@@ -31,6 +31,8 @@ local boxes = {
 
 local ViewConfig = class()
 
+local canUpdate = false
+
 function ViewConfig:new(game)
 	self.noteChartSetListView = NoteChartSetListView(game)
 	self.noteChartListView = NoteChartListView(game)
@@ -86,7 +88,7 @@ function ViewConfig:NoteChartSets(view)
 	local w, h = Layout:move("column2")
 
 	local list = self.noteChartSetListView
-	list:draw(w, h)
+	list:draw(w, h, canUpdate)
 
 	local count = #list.items - 1
 
@@ -104,14 +106,14 @@ function ViewConfig:NoteChartList(view)
 	local w, h = Layout:move("charts")
 
 	local list = self.noteChartListView
-	list:draw(w, h)
+	list:draw(w, h, canUpdate)
 end
 
 function ViewConfig:Scores(view)
 	local w, h = Layout:move("scores")
 
 	local list = self.scoreListView
-	list:draw(w, h)
+	list:draw(w, h, canUpdate)
 
 	if list.openResult then
 		list.openResult = false
@@ -337,6 +339,13 @@ end
 
 function ViewConfig:draw(view, position)
 	Layout:draw(position)
+
+	canUpdate = position == 0
+
+	if math.abs(position) >= 1 then
+		return
+	end
+
 	Frames(view)
 	SearchField(view)
 	self:NoteChartSets(view)
@@ -350,4 +359,3 @@ function ViewConfig:draw(view, position)
 end
 
 return ViewConfig
-

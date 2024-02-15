@@ -9,13 +9,12 @@ ModifierModal.name = "Modifiers"
 ModifierModal.viewConfig = ViewConfig
 
 function ModifierModal:new(game)
-    self.game = game
+	self.game = game
 
-    AvailableModifierListView.game = game
-    ModifierListView.game = game
-    
-    self.viewConfig.availableModifierListView = AvailableModifierListView(game)
-    self.viewConfig.modifierListView = ModifierListView(game)
+	AvailableModifierListView.game = game
+	ModifierListView.game = game
+	self.viewConfig.availableModifierListView = AvailableModifierListView(game)
+	self.viewConfig.modifierListView = ModifierListView(game)
 end
 
 return ModifierModal
