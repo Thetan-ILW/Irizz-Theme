@@ -244,6 +244,9 @@ function SettingsTab:Audio(view)
 	g.autoKeySound = imgui.checkbox("autoKeySound", g.autoKeySound, Text.autoKeySound)
 	a.midi.constantVolume = imgui.checkbox("midi.constantVolume", a.midi.constantVolume, Text.midiConstantVolume)
 
+	local m = settings.miscellaneous
+	m.muteOnUnfocus = imgui.checkbox("muteOnUnfocus", m.muteOnUnfocus, Text.muteOnUnfocus)
+
 	imgui.separator()
 	just.text(Text.audioDevice)
 	just.next(0, textSeparation)
@@ -461,9 +464,20 @@ function SettingsTab:UI(view)
 	if name then
 		view.game.selectModel:setSortFunction(name)
 	end
+
+	just.next(0, textSeparation)
+	local m = settings.miscellaneous
+	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
 end
 
 function SettingsTab:Version(view)
+	imgui.separator()
+	local settings = view.game.configModel.configs.settings
+	local m = settings.miscellaneous
+	just.next(0, textSeparation)
+	m.autoUpdate = imgui.checkbox("autoUpdate", m.autoUpdate, Text.autoUpdate)
+
+	imgui.separator()
 	just.text(Text.themeVersion .. Theme.version)
 	just.text(Text.commit .. version.commit)
 	just.text(Text.commitDate .. version.date)

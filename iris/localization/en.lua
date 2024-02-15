@@ -127,6 +127,9 @@ localization.textSettings = {
 	noMods = "No modifiers",
 	const = "Constant scroll speed",
 	singleNoteHandler = "Taiko note handler",
+	muteOnUnfocus = "Mute game out of focus",
+	autoUpdate = "Auto update",
+	showNonManiaCharts = "Show non-mania charts",
 }
 
 localization.textSongSelect = {
