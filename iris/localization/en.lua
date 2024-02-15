@@ -318,7 +318,7 @@ localization.fonts = {
 	},
 
 	onlineModal = {
-		status = { "ZenMaruGothic-Black", 72 },
+		status = { "ZenMaruGothic-Black", 48 },
 		fields = { "ZenMaruGothic-Medium", 36 },
 		buttons = { "ZenMaruGothic-Medium", 28 },
 	},
