@@ -5,27 +5,27 @@ local function Hex(rgba)
 	local gb = tonumber(string.sub(rgba, 4, 5), 16)
 	local bb = tonumber(string.sub(rgba, 6, 7), 16)
 	local ab = tonumber(string.sub(rgba, 8, 9), 16) or 255
-	local r, g, b, a = love.math.colorFromBytes( rb, gb, bb, ab )
-	return {r, g, b, a}
+	local r, g, b, a = love.math.colorFromBytes(rb, gb, bb, ab)
+	return { r, g, b, a }
 end
 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 local Theme = {}
 
 Theme.sounds = {
 	ui = 0.2,
 	scrollSoundLargeList = love.audio.newSource("iris/sounds/hitsound_retro3.wav", "static"),
-	scrollSoundSmallList = love.audio.newSource("iris/sounds/hitsound_retro5.wav", "static")
+	scrollSoundSmallList = love.audio.newSource("iris/sounds/hitsound_retro5.wav", "static"),
 }
 
 Theme.fontFamilyList = {}
 
 Theme.colors = {
 	panel = Hex("#000000AA"),
-    border = Hex("#adadad"),
+	border = Hex("#adadad"),
 	mutedBorder = Hex("#616161"),
 	transparentPanel = Hex("#00000077"),
 	accent = Hex("#fc72e3"),
@@ -33,17 +33,17 @@ Theme.colors = {
 	select = Hex("#f669db55"),
 	headerSelect = Hex("#e97bf6"),
 	text = Hex("#FFFFFF"),
-    unfocusedText = {0.75, 0.75, 0.75, 1},
-	darkText = {0.2, 0.2, 0.2, 1},
-	itemDownloaded = {1, 1, 1, 0.5},
-	listItemOdd = {0, 0, 0, 0},
-	listItemEven = {0.5, 0.5, 0.5, 0.15},
-	button = {0, 0, 0, 0},
-	buttonHover = {1, 1, 1, 0.2},
-	uiFrames = {1, 1, 1, 0.8},
-	uiPanel = {0.1, 0.1, 0.1, 0.7},
-	uiHover = {0.2, 0.2, 0.2, 0.7},
-	uiActive = {0.2, 0.2, 0.2, 0.9}
+	unfocusedText = { 0.75, 0.75, 0.75, 1 },
+	darkText = { 0.2, 0.2, 0.2, 1 },
+	itemDownloaded = { 1, 1, 1, 0.5 },
+	listItemOdd = { 0, 0, 0, 0 },
+	listItemEven = { 0.5, 0.5, 0.5, 0.15 },
+	button = { 0, 0, 0, 0 },
+	buttonHover = { 1, 1, 1, 0.2 },
+	uiFrames = { 1, 1, 1, 0.8 },
+	uiPanel = { 0.1, 0.1, 0.1, 0.7 },
+	uiHover = { 0.2, 0.2, 0.2, 0.7 },
+	uiActive = { 0.2, 0.2, 0.2, 0.9 },
 }
 
 Theme.layout = {
@@ -67,7 +67,7 @@ Theme.imgui = {
 }
 
 Theme.misc = {
-	staticListViewCursor = true
+	staticListViewCursor = true,
 }
 
 for k, v in pairs(localization) do
@@ -75,35 +75,35 @@ for k, v in pairs(localization) do
 end
 
 local difficultyColors = {
-	{0.25, 0.79, 0.90, 1},
-	{0.24, 0.78, 0.17, 1},
-	{0.89, 0.78, 0.22, 1},
-	{0.91, 0.15, 0.32, 1},
-	{0.97, 0.20, 0.26, 1},
-	{0.90, 0.15, 0.91, 1}
+	{ 0.25, 0.79, 0.90, 1 },
+	{ 0.24, 0.78, 0.17, 1 },
+	{ 0.89, 0.78, 0.22, 1 },
+	{ 0.91, 0.15, 0.32, 1 },
+	{ 0.97, 0.20, 0.26, 1 },
+	{ 0.90, 0.15, 0.91, 1 },
 }
 
 local msdColorRanges = {
-	{0, 8},
-	{8, 15},
-	{15, 20},
-	{20, 25},
-	{25, 29},
-	{29, 32},
+	{ 0, 8 },
+	{ 8, 15 },
+	{ 15, 20 },
+	{ 20, 25 },
+	{ 25, 29 },
+	{ 29, 32 },
 }
 
 local enpsColorRanges = {
-	{0, 6},
-	{6, 10},
-	{10, 14},
-	{14, 19},
-	{19, 23},
-	{23, 32},
+	{ 0, 6 },
+	{ 6, 10 },
+	{ 10, 14 },
+	{ 14, 19 },
+	{ 19, 23 },
+	{ 23, 32 },
 }
 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 ---@param difficulty number
 ---@param calculator string
@@ -125,7 +125,7 @@ function Theme:getDifficultyColor(difficulty, calculator)
 		end
 	end
 
-	if (colorIndex == 1) then
+	if colorIndex == 1 then
 		colorIndex = 2
 	end
 
@@ -133,14 +133,14 @@ function Theme:getDifficultyColor(difficulty, calculator)
 
 	local color1 = difficultyColors[colorIndex - 1]
 	local color2 = difficultyColors[colorIndex]
-	
+
 	local mixingRatio = (difficulty - lowerLimit) / (upperLimit - lowerLimit)
 
 	local mixedColor = {
 		color1[1] * (1 - mixingRatio) + color2[1] * mixingRatio,
 		color1[2] * (1 - mixingRatio) + color2[2] * mixingRatio,
 		color1[3] * (1 - mixingRatio) + color2[3] * mixingRatio,
-		1
+		1,
 	}
 
 	return mixedColor
@@ -189,6 +189,11 @@ function Theme:getFonts(objectName)
 	end
 
 	return loadedFonts
+end
+
+function Theme:setLines()
+	love.graphics.setLineStyle("rough")
+	love.graphics.setLineWidth(4)
 end
 
 function Theme:panel(w, h)

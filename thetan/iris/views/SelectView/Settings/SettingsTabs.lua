@@ -37,7 +37,9 @@ function SettingsTab:draw(view, w, h, tab)
 
 	just.clip(love.graphics.rectangle, "fill", 0, 0, w, h)
 	love.graphics.translate(15, self.scroll + 15)
-	love.graphics.setLineStyle("smooth")
+
+	Theme:setLines()
+
 	self[tab](self, view)
 	just.clip()
 end
@@ -468,4 +470,3 @@ function SettingsTab:Version(view)
 end
 
 return SettingsTab
-

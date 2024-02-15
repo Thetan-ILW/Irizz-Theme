@@ -4,6 +4,7 @@ local math_util = require("math_util")
 local gfx_util = require("gfx_util")
 local ScreenView = require("sphere.views.ScreenView")
 
+local Theme = require("thetan.iris.views.Theme")
 local Layout = require("thetan.iris.views.SelectView.Layout")
 local SelectViewConfig = require("thetan.iris.views.SelectView.SelectViewConfig")
 
@@ -165,6 +166,7 @@ end
 
 function SelectView:draw()
 	Layout:draw()
+	Theme:setLines()
 
 	local w, h = Layout:move("background")
 	local dim = self.game.configModel.configs.settings.graphics.dim.select
