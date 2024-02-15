@@ -75,11 +75,12 @@ function ViewConfig:settings(view)
 end
 
 function ViewConfig:draw(view, position)
-	Layout:draw(position)
-
 	if math.abs(position) >= 1 then
 		return
 	end
+
+	just.origin()
+	Layout:draw(position)
 
 	Frames(view)
 	self:tabs(view)

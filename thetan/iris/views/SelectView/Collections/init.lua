@@ -179,13 +179,14 @@ function ViewConfig:footer(view)
 end
 
 function ViewConfig:draw(view, position)
-	Layout:draw(position)
-
-	canUpdate = position == 0
-
 	if math.abs(position) >= 1 then
 		return
 	end
+
+	canUpdate = position == 0
+
+	just.origin()
+	Layout:draw(position)
 
 	self:cacheStatus(view)
 	self:osuDirectDownloadQueue(view)
