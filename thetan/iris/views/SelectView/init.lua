@@ -24,7 +24,7 @@ SelectView.screenXTarget = 0
 local playSound = love.audio.newSource("iris/sounds/start.wav", "static")
 
 function SelectView:load()
-    self.game.selectController:load()
+	self.game.selectController:load()
 	self.selectViewConfig = SelectViewConfig(self.game)
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
@@ -34,11 +34,11 @@ function SelectView:load()
 end
 
 function SelectView:beginUnload()
-    self.game.selectController:beginUnload()
+	self.game.selectController:beginUnload()
 end
 
 function SelectView:unload()
-    self.game.selectController:unload()
+	self.game.selectController:unload()
 	self.collectionsViewConfig = nil
 end
 
@@ -48,7 +48,7 @@ function SelectView:moveScreen(where, exact)
 	if self.game.gameView.modal then
 		return
 	end
-	
+
 	self.screenXTarget = self.screenXTarget - where
 
 	if exact then
@@ -56,7 +56,7 @@ function SelectView:moveScreen(where, exact)
 	end
 
 	self.screenXTarget = math_util.clamp(-1, self.screenXTarget, 1)
-	self.tween = flux.to(self, 0.32, {screenX = self.screenXTarget}):ease("quadout")
+	self.tween = flux.to(self, 0.32, { screenX = self.screenXTarget }):ease("quadout")
 end
 
 function SelectView:openModal(modalName)
@@ -65,20 +65,17 @@ function SelectView:openModal(modalName)
 end
 
 ---@param dt number
-function SelectView:updateSettings(dt)
-
-end
+function SelectView:updateSettings(dt) end
 
 ---@param dt number
 function SelectView:updateSongSelect(dt)
-	self.songSelectViewConfig:update(self)
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
 
 	if ctrlDown and just.keypressed("p") then
 		self.game.previewModel:stop()
 	end
 
-	if (just.keypressed("f1")) then
+	if just.keypressed("f1") then
 		self:openModal("thetan.iris.views.modals.ModifierModal")
 	end
 
@@ -116,9 +113,7 @@ function SelectView:updateSongSelect(dt)
 end
 
 ---@param dt number
-function SelectView:updateCollections(dt)
-	self.collectionsViewConfig:update(self)
-end
+function SelectView:updateCollections(dt) end
 
 function SelectView:switchToSongSelect()
 	self.game.selectModel:debouncePullNoteChartSet()
@@ -131,7 +126,7 @@ function SelectView:update(dt)
 		self:reloadViews()
 	end
 
-    self.game.selectController:update()
+	self.game.selectController:update()
 
 	if self.screenX == 0 then
 		self:updateSongSelect(dt)
@@ -144,7 +139,7 @@ end
 
 ---@param event table
 function SelectView:receive(event)
-    self.game.selectController:receive(event)
+	self.game.selectController:receive(event)
 end
 
 function SelectView:play()
@@ -178,13 +173,13 @@ function SelectView:draw()
 	local previousCanvas = love.graphics.getCanvas()
 	local canvas = gfx_util.getCanvas("SelectView")
 
-	love.graphics.setCanvas({canvas, stencil = true})
-		love.graphics.clear()
-		love.graphics.setBlendMode("alpha", "alphamultiply")
-		self.selectViewConfig:draw(self)
-		self.songSelectViewConfig:draw(self, self.screenX)
-		self.collectionsViewConfig:draw(self, self.screenX + 1)
-		self.settingsViewConfig:draw(self, self.screenX - 1)
+	love.graphics.setCanvas({ canvas, stencil = true })
+	love.graphics.clear()
+	love.graphics.setBlendMode("alpha", "alphamultiply")
+	self.selectViewConfig:draw(self)
+	self.songSelectViewConfig:draw(self, self.screenX)
+	self.collectionsViewConfig:draw(self, self.screenX + 1)
+	self.settingsViewConfig:draw(self, self.screenX - 1)
 	love.graphics.setCanvas(previousCanvas)
 
 	local alpha = 1
@@ -201,3 +196,4 @@ function SelectView:draw()
 end
 
 return SelectView
+

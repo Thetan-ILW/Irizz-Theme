@@ -57,18 +57,30 @@ function ListView:drawItemBody(w, h, i, selected)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 end
 
----@param w number
----@param h number
-function ListView:draw(w, h)
-	local itemIndex = assert(self:getItemIndex())
-
-	if self.itemIndex ~= itemIndex then
-		if self.tween then
-			self.tween:stop()
-		end
-		self.tween = flux.to(self, 0.2, {visualItemIndex = itemIndex}):ease("quartout")
-		self.itemIndex = itemIndex
+function ListView:input()
+	local kp = just.keypressed
+	if kp("left") then
+		self:scroll(-1)
+	elseif kp("right") then
+		self:scroll(1)
+	elseif kp("pageup") then
+		self:scroll(-10)
+	elseif kp("pagedown") then
+		self:scroll(10)
+	elseif kp("home") then
+		self:scroll(-math.huge)
+	elseif kp("end") then
+		self:scroll(math.huge)
 	end
+end
+
+function ListView:update(w, h)
+	local delta = just.wheel_over(self, just.is_over(w, h))
+	if delta then
+		self:scroll(-delta)
+	end
+
+	self:input()
 
 	local stateCounter = self.stateCounter
 	self:reloadItems()
@@ -76,6 +88,21 @@ function ListView:draw(w, h)
 		local itemIndex = assert(self:getItemIndex())
 		self.itemIndex = itemIndex
 		self.visualItemIndex = itemIndex
+	end
+end
+
+---@param w number
+---@param h number
+function ListView:draw(w, h)
+	self:update(w, h)
+	local itemIndex = assert(self:getItemIndex())
+
+	if self.itemIndex ~= itemIndex then
+		if self.tween then
+			self.tween:stop()
+		end
+		self.tween = flux.to(self, 0.2, { visualItemIndex = itemIndex }):ease("quartout")
+		self.itemIndex = itemIndex
 	end
 
 	love.graphics.setColor(1, 1, 1, 1)
@@ -88,11 +115,6 @@ function ListView:draw(w, h)
 	just.clip(love.graphics.rectangle, "fill", 0, 0, w, h)
 	love.graphics.translate(0, deltaItemIndex * _h)
 
-	local delta = just.wheel_over(self, just.is_over(w, h))
-	if delta then
-		self:scroll(-delta)
-	end
-
 	for i = math.floor(visualItemIndex), self.rows + math.ceil(visualItemIndex) + 1 do
 		local _i = 0
 
@@ -101,7 +123,7 @@ function ListView:draw(w, h)
 		else
 			_i = i
 		end
-		
+
 		if self.items[_i] then
 			just.push()
 			self:drawItem(_i, w, _h)
@@ -115,13 +137,13 @@ function ListView:draw(w, h)
 	if #self.items == 0 then
 		love.graphics.setColor(Color.text)
 		love.graphics.setFont(self.font.noItems)
-		gfx_util.printBaseline(self.noItemsText, 0, h/2, w, 1, "center")
+		gfx_util.printBaseline(self.noItemsText, 0, h / 2, w, 1, "center")
 		return
 	end
 
 	if self.staticCursor and self.centerItems then
 		love.graphics.setColor(Color.select)
-		love.graphics.rectangle("fill", 0, (_h * self.rows/2) - _h/2, w, _h)
+		love.graphics.rectangle("fill", 0, (_h * self.rows / 2) - _h / 2, w, _h)
 	end
 end
 

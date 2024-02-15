@@ -31,27 +31,11 @@ end
 ---@param count number
 function NoteChartSetListView:scroll(count)
 	self.game.selectModel:scrollNoteChartSet(count)
-	if (math.abs(count) ~= 1) then
+	if math.abs(count) ~= 1 then
 		return
 	end
 	self.direction = count
 	self:playSound()
-end
-
----@param ... any?
-function NoteChartSetListView:draw(...)
-	ListView.draw(self, ...)
-end
-
-function NoteChartSetListView:update()
-	local kp = just.keypressed
-	if kp("left") then self:scroll(-1)
-	elseif kp("right") then self:scroll(1)
-	elseif kp("pageup") then self:scroll(-10)
-	elseif kp("pagedown") then self:scroll(10)
-	elseif kp("home") then self:scroll(-math.huge)
-	elseif kp("end") then self:scroll(math.huge)
-	end
 end
 
 ---@param i number
@@ -65,10 +49,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 	love.graphics.setColor(Color.text)
 	love.graphics.translate(0, 4)
 	just.indent(15)
-	TextCellImView(math.huge, h, "left", item.artist, item.title,
-		self.font.artist,
-		self.font.title
-	)
+	TextCellImView(math.huge, h, "left", item.artist, item.title, self.font.artist, self.font.title)
 end
 
 return NoteChartSetListView

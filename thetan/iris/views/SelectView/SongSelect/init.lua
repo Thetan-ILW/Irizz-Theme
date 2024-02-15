@@ -26,7 +26,7 @@ local boxes = {
 	"infoAndMods",
 	"column2",
 	"difficultyAndInfo",
-	"charts"
+	"charts",
 }
 
 local ViewConfig = class()
@@ -53,7 +53,7 @@ local function Borders(view)
 	for i, name in pairs(boxes) do
 		local w, h = Layout:move(name)
 		love.graphics.setColor(Color.border)
-		love.graphics.rectangle("line", -2, -2, w+3, h+3)
+		love.graphics.rectangle("line", -2, -2, w + 3, h + 3)
 	end
 end
 
@@ -71,10 +71,12 @@ local function SearchField(view)
 	local selectModel = view.game.selectModel
 
 	love.graphics.setFont(font.searchField)
-	local changed, text = TextInput("SearchField", {config.filterString, Text.searchPlaceholder}, nil, w, h)
+	local changed, text = TextInput("SearchField", { config.filterString, Text.searchPlaceholder }, nil, w, h)
 
 	if changed == "text" then
-		if delAll then text = "" end
+		if delAll then
+			text = ""
+		end
 		config.filterString = text
 		selectModel:debouncePullNoteChartSet()
 	end
@@ -142,7 +144,7 @@ local function MsdDifficulty(view, noteChartItem)
 	if not noteChartItem.difficulty then
 		return
 	end
-	
+
 	local baseTimeRate = view.game.playContext.rate
 
 	if baseTimeRate ~= 1 then
@@ -172,7 +174,7 @@ local function Info(view)
 	local w, h = Layout:move("difficulty")
 
 	love.graphics.setColor(Color.transparentPanel)
-	love.graphics.rectangle("fill", 0, 0, w ,h)
+	love.graphics.rectangle("fill", 0, 0, w, h)
 
 	w, h = Layout:move("difficultyAndInfoLine")
 	love.graphics.setColor(Color.mutedBorder)
@@ -201,17 +203,17 @@ local function Info(view)
 
 	w, h = Layout:move("info1row1")
 	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(string.format(Text.length, length), 0, h/offset, w, 1, "center")
+	gfx_util.printBaseline(string.format(Text.length, length), 0, h / offset, w, 1, "center")
 	love.graphics.setColor(Color.mutedBorder)
-	love.graphics.rectangle("fill", w/2 - w/4, h - 5, w/2, 4)
+	love.graphics.rectangle("fill", w / 2 - w / 4, h - 5, w / 2, 4)
 	w, h = Layout:move("info1row2")
 	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(string.format(Text.ln, longNoteRatio), 0, h/offset, w, 1, "center")
+	gfx_util.printBaseline(string.format(Text.ln, longNoteRatio), 0, h / offset, w, 1, "center")
 	love.graphics.setColor(Color.mutedBorder)
-	love.graphics.rectangle("fill", w/2 - w/4, h - 5, w/2, 4)
+	love.graphics.rectangle("fill", w / 2 - w / 4, h - 5, w / 2, 4)
 	w, h = Layout:move("info1row3")
 	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(inputMode, 0, h/offset, w, 1, "center")
+	gfx_util.printBaseline(inputMode, 0, h / offset, w, 1, "center")
 end
 
 local function MoreInfoLol(view)
@@ -231,17 +233,17 @@ local function MoreInfoLol(view)
 
 	love.graphics.setColor(Color.text)
 	local w, h = Layout:move("info2row1")
-	gfx_util.printBaseline(string.format(Text.bpm, bpm), 0, h/offset, w, 1, "center")
+	gfx_util.printBaseline(string.format(Text.bpm, bpm), 0, h / offset, w, 1, "center")
 	love.graphics.setColor(Color.mutedBorder)
-	love.graphics.rectangle("fill", w/2 - w/4, h - 5, w/2, 4)
+	love.graphics.rectangle("fill", w / 2 - w / 4, h - 5, w / 2, 4)
 	w, h = Layout:move("info2row2")
 	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(string.format(Text.notes, noteCount), 0, h/offset, w, 1, "center")
+	gfx_util.printBaseline(string.format(Text.notes, noteCount), 0, h / offset, w, 1, "center")
 	love.graphics.setColor(Color.mutedBorder)
-	love.graphics.rectangle("fill", w/2 - w/4, h - 5, w/2, 4)
+	love.graphics.rectangle("fill", w / 2 - w / 4, h - 5, w / 2, 4)
 	w, h = Layout:move("info2row3")
 	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(format, 0, h/offset, w, 1, "center")
+	gfx_util.printBaseline(format, 0, h / offset, w, 1, "center")
 end
 
 ---@param mods table
@@ -251,7 +253,7 @@ local function GetModifierString(mods)
 		mods = ModifierEncoder:decode(mods)
 	end
 
-	local modString =  ""
+	local modString = ""
 	for _, mod in pairs(mods) do
 		local modifier = ModifierModel:getModifier(mod.id)
 
@@ -321,22 +323,16 @@ local function Footer(view)
 	just.text(string.format("%s - %s", noteChartItem.artist, noteChartItem.title), w)
 
 	w, h = Layout:move("footerChartName")
-	just.text(string.format(
-		"[%s] [%s] %s",
-		Format.inputMode(noteChartItem.inputMode),
-		noteChartItem.creator,
-		noteChartItem.name),
-		w, true
+	just.text(
+		string.format(
+			"[%s] [%s] %s",
+			Format.inputMode(noteChartItem.inputMode),
+			noteChartItem.creator,
+			noteChartItem.name
+		),
+		w,
+		true
 	)
-end
-
-function ViewConfig:update(view)
-	self.noteChartListView:update()
-	self.noteChartSetListView:update()
-end
-
-function ViewConfig:_draw(view)
-
 end
 
 function ViewConfig:draw(view, position)
@@ -354,3 +350,4 @@ function ViewConfig:draw(view, position)
 end
 
 return ViewConfig
+

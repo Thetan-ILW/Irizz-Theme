@@ -30,14 +30,13 @@ end
 local function frame(w, h)
 	love.graphics.setColor(Color.panel)
 	love.graphics.rectangle("fill", 0, 0, w, h)
-
 end
 
 local function border(w, h)
 	love.graphics.setLineStyle("rough")
 	love.graphics.setLineWidth(4)
 	love.graphics.setColor(Color.border)
-	love.graphics.rectangle("line", -2, -2, w+3, h+3)
+	love.graphics.rectangle("line", -2, -2, w + 3, h + 3)
 end
 
 function ViewConfig:cacheStatus(view)
@@ -59,7 +58,7 @@ function ViewConfig:cacheStatus(view)
 	local w, h = Layout:move("status")
 	love.graphics.setFont(Font.status)
 	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(text, 0, h/2, w, 1, "center")
+	gfx_util.printBaseline(text, 0, h / 2, w, 1, "center")
 end
 
 function ViewConfig:osuDirectDownloadQueue(view)
@@ -126,7 +125,7 @@ function ViewConfig:osuDirectButtons(view)
 	else
 		imgui.TextOnlyButton("wait", Text.wait, w, h)
 	end
-	
+
 	if imgui.TextOnlyButton("collections", Text.collections, w, h) then
 		collectionsMode = "Collections"
 		view.game.selectModel:debouncePullNoteChartSet()
@@ -178,14 +177,6 @@ function ViewConfig:footer(view)
 	just.text(collectionsMode, w, true)
 end
 
-function ViewConfig:update(view)
-	if view.collectionsMode == "Collections" then
-		self.collectionListView:update()
-	else
-		self.osuDirectListView:update()
-	end
-end
-
 function ViewConfig:draw(view, position)
 	Layout:draw(position)
 	self:cacheStatus(view)
@@ -198,9 +189,10 @@ function ViewConfig:draw(view, position)
 	else
 		self:osuDirectButtons(view)
 	end
-	
+
 	self:osuDirectCharts(view)
 	self:footer(view)
 end
 
 return ViewConfig
+

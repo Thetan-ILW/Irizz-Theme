@@ -33,21 +33,18 @@ end
 function NoteChartListView:scroll(count)
 	self.game.selectModel:scrollNoteChart(count)
 
-	if (math.abs(count) ~= 1) then
+	if math.abs(count) ~= 1 then
 		return
 	end
-	
+
 	self:playSound()
 end
 
----@param ... any?
-function NoteChartListView:draw(...)
-	ListView.draw(self, ...)
-end
-
-function NoteChartListView:update()
-	if just.keypressed("up") then self:scroll(-1)
-	elseif just.keypressed("down") then self:scroll(1)
+function NoteChartListView:input()
+	if just.keypressed("up") then
+		self:scroll(-1)
+	elseif just.keypressed("down") then
+		self:scroll(1)
 	end
 end
 
@@ -84,14 +81,7 @@ function NoteChartListView:drawItem(i, w, h)
 
 	just.sameline()
 	just.indent(20)
-	TextCellImView(math.huge,
-		h,
-		"left",
-		creator,
-		name,
-		self.font.creator,
-		self.font.name
-	)
+	TextCellImView(math.huge, h, "left", creator, name, self.font.creator, self.font.name)
 end
 
 return NoteChartListView
