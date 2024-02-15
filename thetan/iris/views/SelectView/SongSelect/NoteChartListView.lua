@@ -40,7 +40,8 @@ function NoteChartListView:scroll(count)
 	self:playSound()
 end
 
-function NoteChartListView:input()
+function NoteChartListView:input(w, h)
+	ListView.input(self, w, h)
 	if just.keypressed("up") then
 		self:scroll(-1)
 	elseif just.keypressed("down") then

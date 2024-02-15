@@ -58,7 +58,12 @@ function ListView:drawItemBody(w, h, i, selected)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 end
 
-function ListView:input()
+function ListView:input(w, h)
+	local delta = just.wheel_over(self, just.is_over(w, h))
+	if delta then
+		self:scroll(-delta)
+	end
+
 	local kp = just.keypressed
 	if kp("left") then
 		self:scroll(-1)
@@ -75,14 +80,10 @@ function ListView:input()
 	end
 end
 
+function ListView:mouseClick(w, h, i) end
+
 function ListView:update(w, h)
-	local delta = just.wheel_over(self, just.is_over(w, h))
-	if delta then
-		self:scroll(-delta)
-	end
-
-	self:input()
-
+	self:input(w, h)
 	local stateCounter = self.stateCounter
 	self:reloadItems()
 	if stateCounter ~= self.stateCounter then
@@ -126,6 +127,10 @@ function ListView:draw(w, h, update)
 			_i = i - math.floor(self.rows / 2)
 		else
 			_i = i
+		end
+
+		if update then
+			self:mouseClick(w, _h, i)
 		end
 
 		if self.items[_i] then

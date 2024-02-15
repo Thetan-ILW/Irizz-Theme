@@ -24,17 +24,32 @@ end
 function ScoreListView:reloadItems()
 	self.stateCounter = self.game.selectModel.scoreStateCounter
 
-	if (self.items == self.game.scoreLibraryModel.items) then
+	if self.items == self.game.scoreLibraryModel.items then
 		return
 	end
 
 	self.items = self.game.scoreLibraryModel.items
 
-	if #self.items ~= 0 then
+	if #self.items == 0 then
 		self.selectedScoreIndex = 1
 		self.selectedScore = self.items[1]
 		self.game.selectModel:scrollScore(nil, 1)
 		return
+	end
+end
+
+function ScoreListView:mouseClick(w, h, i)
+	if just.is_over(w, h, 0, 0) then
+		if just.mousepressed(1) then
+			if self.selectedScoreIndex == i then
+				self.openResult = true
+				return
+			end
+
+			self.selectedScoreIndex = i
+			self.selectedScore = self.items[i]
+			self.game.selectModel:scrollScore(nil, i)
+		end
 	end
 end
 
@@ -51,19 +66,6 @@ function ScoreListView:drawItem(i, w, h)
 		username = item.user.name
 	end
 
-	if just.is_over(w, h, 0, 0) then
-		if just.mousepressed(1) then
-			if self.selectedScoreIndex == i then
-				self.openResult = true
-				return
-			end
-
-			self.selectedScoreIndex = i
-			self.selectedScore = item
-			self.game.selectModel:scrollScore(nil, i)
-		end
-	end
-
 	self:drawItemBody(w, h, i, i == self.selectedScoreIndex)
 
 	love.graphics.setColor(Color.text)
@@ -78,7 +80,7 @@ function ScoreListView:drawItem(i, w, h)
 	just.text(string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate), w, true)
 	just.indent(10)
 	love.graphics.setFont(self.font.line2)
-	just.text(string.format("Score: %i",item.score), w)
+	just.text(string.format("Score: %i", item.score), w)
 	just.sameline()
 	just.offset(0)
 	just.indent(-10)
@@ -86,4 +88,3 @@ function ScoreListView:drawItem(i, w, h)
 end
 
 return ScoreListView
-

@@ -184,6 +184,7 @@ function ViewConfig:draw(view, position)
 	end
 
 	canUpdate = position == 0
+	canUpdate = canUpdate and not view.modalActive
 
 	just.origin()
 	Layout:draw(position)

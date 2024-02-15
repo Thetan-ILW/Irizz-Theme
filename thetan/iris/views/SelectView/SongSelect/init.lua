@@ -275,7 +275,7 @@ local function Mods(view)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
 	local delta = just.wheel_over("timeRate", just.is_over(w, h))
-	if delta then
+	if delta and not view.modalActive then
 		local newRate = view.game.playContext.rate + 0.05 * delta
 		local timeRateModel = view.game.timeRateModel
 
@@ -341,6 +341,7 @@ function ViewConfig:draw(view, position)
 	Layout:draw(position)
 
 	canUpdate = position == 0
+	canUpdate = canUpdate and not view.modalActive
 
 	if math.abs(position) >= 1 then
 		return
