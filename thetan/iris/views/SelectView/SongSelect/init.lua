@@ -299,7 +299,7 @@ local function Mods(view)
 
 	if just.is_over(w, h) then
 		if just.mousepressed(1) then
-			view:openModal("sphere.views.ModifierView")
+			view:openModal("thetan.iris.views.modals.ModifierModal")
 		end
 	end
 

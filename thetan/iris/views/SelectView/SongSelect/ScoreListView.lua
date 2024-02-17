@@ -11,7 +11,7 @@ local Text = Theme.textSongSelect
 local ScoreListView = ListView + {}
 
 ScoreListView.rows = 7
-ScoreListView.selectedScoreIndex = 0
+ScoreListView.selectedScoreIndex = 1
 ScoreListView.selectedScore = nil
 ScoreListView.openResult = false
 ScoreListView.noItemsText = Text.noScores
