@@ -6,7 +6,7 @@ local ScreenView = require("sphere.views.ScreenView")
 
 local Theme = require("thetan.iris.views.Theme")
 local Layout = require("thetan.iris.views.SelectView.Layout")
-local SelectViewConfig = require("thetan.iris.views.SelectView.SelectViewConfig")
+local HeaderView = require("thetan.iris.views.HeaderView")
 
 local SettingsViewConfig = require("thetan.iris.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.iris.views.SelectView.SongSelect")
@@ -26,11 +26,11 @@ local playSound = love.audio.newSource("iris/sounds/start.wav", "static")
 
 function SelectView:load()
 	self.game.selectController:load()
-	self.selectViewConfig = SelectViewConfig(self.game)
+	self.headerView = HeaderView(self.game, "select")
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
-
+	
 	BackgroundView.game = self.game
 end
 
@@ -178,7 +178,7 @@ function SelectView:draw()
 	love.graphics.setCanvas({ canvas, stencil = true })
 	love.graphics.clear()
 	love.graphics.setBlendMode("alpha", "alphamultiply")
-	self.selectViewConfig:draw(self)
+	self.headerView:draw(self)
 	self.songSelectViewConfig:draw(self, self.screenX)
 	self.collectionsViewConfig:draw(self, self.screenX + 1)
 	self.settingsViewConfig:draw(self, self.screenX - 1)

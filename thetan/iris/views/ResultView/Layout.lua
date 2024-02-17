@@ -12,7 +12,9 @@ function _Layout:draw()
 	local _x, _y = love.graphics.inverseTransformPoint(0, 0)
 	local _xw, _yh = love.graphics.inverseTransformPoint(width, height)
 
-	self:pack("background", _x, _y, _xw, _yh)
+	local _w, _h = _xw - _x, _yh - _y
+
+	self:pack("background", _x, _y, _w, _h)
 end
 
 return _Layout

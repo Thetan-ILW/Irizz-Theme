@@ -4,7 +4,7 @@ local time_util = require("time_util")
 local gfx_util = require("gfx_util")
 local loop = require("loop")
 
-local Layout = require("thetan.iris.views.SelectView.Layout")
+local Layout = require("thetan.iris.views.HeaderLayout")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
@@ -15,18 +15,7 @@ local Logo = require("sphere.views.logo")
 
 local ViewConfig = class()
 
-function ViewConfig:new(game)
-	font = Theme:getFonts("header")
-
-	local path = "userdata/avatar.png"
-	if love.filesystem.getInfo(path) then
-		self.avatarImage = love.graphics.newImage(path)
-	else
-		self.avatarImage = love.graphics.newImage("iris/avatar.png")
-	end
-end
-
-function ViewConfig:Header(view)
+function ViewConfig:songSelectButtons(view)
 	love.graphics.setLineWidth(2)
 	love.graphics.setLineStyle("smooth")
 	love.graphics.setFont(font.anyText)
@@ -83,8 +72,40 @@ function ViewConfig:Header(view)
 			view:moveScreen(1, true)
 		end
 	end
+end
 
-	w, h = Layout:move("user")
+function ViewConfig:resultButtons(view)
+	love.graphics.setLineWidth(2)
+	love.graphics.setLineStyle("smooth")
+	love.graphics.setFont(font.anyText)
+
+	local w, h = Layout:move("buttons")
+	local r = h / 1.4
+	love.graphics.setColor({ 0.08, 0.35, 0.79, 1 })
+	love.graphics.circle("fill", r, r, r)
+	love.graphics.setColor({ 1, 1, 1, 1 })
+	love.graphics.circle("line", r, r, r)
+	Logo.draw("fill", 0, 0, r * 2)
+
+	local songsText = font.anyText:getWidth(Text.songs)
+
+	just.indent(30)
+	local x = r * 2
+	local y = h - 8
+
+	love.graphics.setColor(Color.text)
+	gfx_util.printBaseline(Text.songs, x, y, w, 1, "left")
+	love.graphics.rectangle("fill", x, y + 10, songsText, 4)
+
+	if just.is_over(songsText, h + 10, x) then
+		if just.mousepressed(1) then
+			view:changeScreen("selectView")
+		end
+	end
+end
+
+function ViewConfig:rightSide(view)
+	local w, h = Layout:move("user")
 
 	if just.is_over(w, h) then
 		if just.mousepressed(1) then
@@ -96,7 +117,7 @@ function ViewConfig:Header(view)
 	local username = view.game.configModel.configs.online.user.name or Text.notLoggedIn
 	local time = time_util.format(loop.time - loop.startTime)
 
-	r = h / 1.4
+	local r = h / 1.4
 	local imageW = (r * 2) / self.avatarImage:getPixelWidth()
 	local imageH = (r * 2) / self.avatarImage:getPixelHeight()
 
@@ -120,9 +141,27 @@ function ViewConfig:Header(view)
 	love.graphics.rectangle("fill", w + (-r * 2) - userTextWidth - timeTextWidth, h + 2, timeTextWidth, 4)
 end
 
+function ViewConfig:new(game, screen)
+	font = Theme:getFonts("header")
+
+	local path = "userdata/avatar.png"
+	if love.filesystem.getInfo(path) then
+		self.avatarImage = love.graphics.newImage(path)
+	else
+		self.avatarImage = love.graphics.newImage("iris/avatar.png")
+	end
+
+	if screen == "select" then
+		self.buttons = self.songSelectButtons
+	else
+		self.buttons = self.resultButtons
+	end
+end
+
 function ViewConfig:draw(view)
-	self:Header(view)
+	Layout:draw()
+	self:buttons(view)
+	self:rightSide(view)
 end
 
 return ViewConfig
-
