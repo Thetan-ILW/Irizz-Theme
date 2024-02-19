@@ -44,6 +44,9 @@ Theme.colors = {
 	uiPanel = { 0.1, 0.1, 0.1, 0.7 },
 	uiHover = { 0.2, 0.2, 0.2, 0.7 },
 	uiActive = { 0.2, 0.2, 0.2, 0.9 },
+	hitPerfect = {1, 1, 1, 1},
+	hitBad = {0.90, 0.26, 0.68, 1},
+	hitMiss = {1, 0, 0, 1}
 }
 
 Theme.layout = {

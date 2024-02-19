@@ -1,3 +1,5 @@
+local just = require("just")
+
 local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
 
@@ -10,7 +12,7 @@ local ViewConfig = require("thetan.iris.views.ResultView.ViewConfig")
 ---@operator call: thetan.iris.ResultView
 local ResultView = ScreenView + {}
 
-local loading
+local loading = false
 ResultView.load = thread.coro(function(self)
 	if loading then
 		return
@@ -22,8 +24,15 @@ ResultView.load = thread.coro(function(self)
 	end
 
 	self.header = Header(self.game, "result")
+	self.viewConfig = ViewConfig(self.game)
 	loading = false
 end)
+
+function ResultView:update(dt)
+	if just.keypressed("escape") then
+		self:changeScreen("selectView")
+	end	
+end
 
 function ResultView:draw()
 	Layout:draw()
@@ -31,11 +40,14 @@ function ResultView:draw()
 	local dim = self.game.configModel.configs.settings.graphics.dim.select
 	BackgroundView:draw(w, h, dim, 0.01)
 
+	if loading then
+		return
+	end
 	if self.header then
 		self.header:draw(self)
 	end
 
-	ViewConfig:draw(self)
+	self.viewConfig:draw(self)
 end
 
 ResultView.loadScore = thread.coro(function(self, itemIndex)

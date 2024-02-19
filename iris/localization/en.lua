@@ -325,6 +325,10 @@ localization.fonts = {
 		fields = { "ZenMaruGothic-Medium", 36 },
 		buttons = { "ZenMaruGothic-Medium", 28 },
 	},
+
+	resultView = {
+		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
+	}
 }
 
 return localization
