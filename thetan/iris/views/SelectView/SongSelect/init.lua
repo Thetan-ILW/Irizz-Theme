@@ -19,7 +19,7 @@ local ModifierModel = require("sphere.models.ModifierModel")
 
 local NoteChartSetListView = require("thetan.iris.views.SelectView.SongSelect.NoteChartSetListView")
 local NoteChartListView = require("thetan.iris.views.SelectView.SongSelect.NoteChartListView")
-local ScoreListView = require("thetan.iris.views.SelectView.SongSelect.ScoreListView")
+local ScoreListView = require("thetan.iris.views.ScoreListView")
 
 local boxes = {
 	"scores",

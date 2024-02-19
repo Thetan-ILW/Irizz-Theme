@@ -8,12 +8,13 @@ local font
 
 local Layout = require("thetan.iris.views.ResultView.Layout")
 
+local ScoreListView = require("thetan.iris.views.ScoreListView")
 local PointGraphView = require("sphere.views.GameplayView.PointGraphView")
 
 local ViewConfig = class()
 
 function ViewConfig:new(game)
-	--	self.scores = Scores(game)
+	self.scoreListView = ScoreListView(game, true)
 	font = Theme:getFonts("resultView")
 end
 
@@ -28,28 +29,16 @@ local function showLoadedScore(view)
 	return scoreItem.id == scoreEntry.id
 end
 
-function ViewConfig:dumbass(view)
-	local w, h = Layout:move("dumbass")
-	local show = showLoadedScore(view)
-	local scoreEngine = view.game.rhythmModel.scoreEngine
-	local scoreItem = view.game.selectModel.scoreItem
-	local judgement = scoreEngine.scoreSystem.judgement
-
-	if not judgement or not scoreItem then
-		return
-	end
-
-	local base = scoreEngine.scoreSystem.base
-
-	local miss = show and base.missCount or scoreItem.miss or 0
-
+function ViewConfig:scores(view)
+	local w, h = Layout:move("gyattScores")
 	Theme:panel(w, h)
-	love.graphics.setColor(Color.text)
-	just.text("Score:", w)
-	just.text(string.format("Misses: %i", miss), w)
-	just.text("Grade: noob")
-	w, h = Layout:move("dumbass")
+	local list = self.scoreListView
+	list:draw(w, h, true)
 	Theme:border(w, h)
+	if list.openResult then
+		list.openResult = false
+		view:loadScore(list.selectedScoreIndex)
+	end
 end
 
 local pointR = 4
@@ -57,13 +46,13 @@ local pointR = 4
 ---@param self table
 local function drawGraph(self)
 	local w, h = Layout:move("hitGraph")
-	love.graphics.translate(pointR,pointR)
-	self.__index.draw(self, w-pointR, h-pointR)
-	love.graphics.translate(-pointR,-pointR)
+	love.graphics.translate(pointR, pointR)
+	self.__index.draw(self, w - pointR, h - pointR)
+	love.graphics.translate(-pointR, -pointR)
 end
 
-local perfectColor = Color.hitPerfect 
-local notPerfectColor = Color.hitBad 
+local perfectColor = Color.hitPerfect
+local notPerfectColor = Color.hitBad
 local _HitGraph = PointGraphView({
 	draw = drawGraph,
 	radius = pointR,
@@ -87,14 +76,14 @@ local _HitGraph = PointGraphView({
 local _EarlyHitGraph = PointGraphView({
 	draw = drawGraph,
 	radius = pointR,
-	backgroundColor = {1, 1, 1, 1},
-	backgroundRadius = 0,
+	backgroundColor = { 0, 0, 0, 1 },
+	backgroundRadius = pointR + 4,
 	point = function(self, point)
 		if not point.base.isEarlyHit then
 			return
 		end
 		local y = point.misc.deltaTime / 0.16 / 2 + 0.5
-		return  y, unpack(Color.hitMiss) 
+		return y, unpack(Color.hitMiss)
 	end,
 	show = showLoadedScore
 })
@@ -102,14 +91,14 @@ local _EarlyHitGraph = PointGraphView({
 local _MissGraph = PointGraphView({
 	draw = drawGraph,
 	radius = pointR,
-	backgroundColor = {1, 1, 1, 1},
-	backgroundRadius = 0,
+	backgroundColor = { 0, 0, 0, 1 },
+	backgroundRadius = pointR + 4,
 	point = function(self, point)
 		if not point.base.isMiss then
 			return
 		end
 		local y = point.misc.deltaTime / 0.16 / 2 + 0.5
-		return y, unpack(Color.hitMiss) 
+		return y, unpack(Color.hitMiss)
 	end,
 	show = showLoadedScore
 })
@@ -154,7 +143,8 @@ local function Footer(view)
 end
 
 function ViewConfig:draw(view)
-	Layout:draw()
+	just.origin()
+	self:scores(view)
 	HitGraph(view)
 	Footer(view)
 end

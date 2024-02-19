@@ -14,10 +14,12 @@ ScoreListView.rows = 7
 ScoreListView.selectedScoreIndex = 1
 ScoreListView.selectedScore = nil
 ScoreListView.openResult = false
+ScoreListView.oneClickOpen = false
 ScoreListView.noItemsText = Text.noScores
 
-function ScoreListView:new(game)
+function ScoreListView:new(game, oneClickOpen)
 	self.game = game
+	self.oneClickOpen = oneClickOpen or false
 	self.font = Theme:getFonts("scoreListView")
 end
 
@@ -49,6 +51,11 @@ function ScoreListView:mouseClick(w, h, i)
 			self.selectedScoreIndex = i
 			self.selectedScore = self.items[i]
 			self.game.selectModel:scrollScore(nil, i)
+
+			if self.oneClickOpen then
+				self.openResult = true
+				return
+			end
 		end
 	end
 end
@@ -70,8 +77,6 @@ function ScoreListView:drawItem(i, w, h)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.line1)
-
-	love.graphics.translate(0, 0)
 	just.indent(10)
 	just.text(string.format("#%i %s", i, username), w)
 	just.sameline()
