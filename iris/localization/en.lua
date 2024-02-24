@@ -224,7 +224,7 @@ localization.fonts = {
 		searchField = { "ZenMaruGothic-Black", 36 },
 		difficulty = { "ZenMaruGothic-Medium", 28 },
 		calculator = { "ZenMaruGothic-Medium", 24 },
-		patterns = { "ZenMaruGothic-Medium", 16 },
+		patterns = { "ZenMaruGothic-Medium", 22},
 		info = { "ZenMaruGothic-Medium", 28 },
 		moreInfo = { "ZenMaruGothic-Medium", 28 },
 		timeRate = { "ZenMaruGothic-Medium", 32 },
@@ -328,6 +328,11 @@ localization.fonts = {
 
 	resultView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
+		hitError = {"ZenMaruGothic-Medium", 24},
+		judgements = {"ZenMaruGothic-Medium", 24},
+		difficulty = { "ZenMaruGothic-Medium", 28 },
+		calculator = { "ZenMaruGothic-Medium", 24 },
+		patterns = { "ZenMaruGothic-Medium", 22},
 	}
 }
 

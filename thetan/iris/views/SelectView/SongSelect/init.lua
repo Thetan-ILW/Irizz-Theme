@@ -168,8 +168,7 @@ local function MsdDifficulty(view, noteChartItem)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
 	w, h = Layout:move("patterns")
-	just.indent(-5)
-	just.text(difficultyData, w, true)
+	gfx_util.printFrame(difficultyData, 0, 12, w, h, "center", "center") 
 end
 
 local function Info(view)

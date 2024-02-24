@@ -46,6 +46,7 @@ Theme.colors = {
 	uiActive = { 0.2, 0.2, 0.2, 0.9 },
 	hitPerfect = {1, 1, 1, 1},
 	hitBad = {0.90, 0.26, 0.68, 1},
+	hitVeryBad = {0.49, 0.76, 1, 1}, 
 	hitMiss = {1, 0, 0, 1}
 }
 
@@ -204,11 +205,13 @@ function Theme:panel(w, h)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 end
 
+local lineWidth = 4
+local half = lineWidth/2
 function Theme:border(w, h)
 	love.graphics.setLineStyle("rough")
-	love.graphics.setLineWidth(4)
+	love.graphics.setLineWidth(lineWidth)
 	love.graphics.setColor(self.colors.border)
-	love.graphics.rectangle("line", 0, 0, w, h)
+	love.graphics.rectangle("line", -half, -half, w + lineWidth, h + lineWidth)
 end
 
 Theme.version = "0.1.0"

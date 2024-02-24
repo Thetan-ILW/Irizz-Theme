@@ -1,6 +1,9 @@
 local just = require("just")
 local gfx_util = require("gfx_util")
 
+local Theme = require("thetan.iris.views.Theme")
+local Color = Theme.colors
+
 ---@param text any
 ---@param x number
 ---@param y number
@@ -34,12 +37,17 @@ local function print_values(w, h, ratio, name, value, right)
 
 	love.graphics.translate(x, 0)
 	if fw > w then
+		love.graphics.setColor(Color.darkText)
 		_print(name, b * nw, 0, nw, h)
+		love.graphics.settColor(Color.text)
 		_print(value, a * nw + b * vw, 0, vw, h)
 	elseif fw > w * (1 - ratio) or nw <= w * ratio then
+		love.graphics.setColor(Color.darkText)
 		_print(name, b * nw, 0, nw, h)
+		love.graphics.setColor(Color.darkText)
 		_print(value, a * math.max(nw, w * ratio - offset) + b * vw, 0, vw, h)
 	else
+		love.graphics.setColor(Color.text)
 		_print(name, a * w * ratio + b * nw, 0, nw, h)
 		_print(value, a * (nw + w * ratio) + b * vw, 0, vw, h)
 	end
@@ -48,17 +56,11 @@ end
 
 local shadow = 2
 return function(w, h, ratio, name, value, right)
-	love.graphics.setColor(1, 1, 1, 0.2)
+	love.graphics.setColor(Color.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h)
-	love.graphics.setColor(0.9, 0.7, 0, 1)
+	love.graphics.setColor(Color.accent)
 	love.graphics.rectangle("fill", right and w * (1 - ratio) or 0, 0, w * ratio, h)
 
-	love.graphics.translate(shadow, shadow)
-	love.graphics.setColor(0, 0, 0, 1)
-	print_values(w, h, ratio, name, value, right)
-
-	love.graphics.translate(-shadow, -shadow)
-	love.graphics.setColor(1, 1, 1, 1)
 	print_values(w, h, ratio, name, value, right)
 
 	just.next(w, h)

@@ -8,13 +8,21 @@ local Theme = require("thetan.iris.views.Theme")
 local outerPanelsSize = Theme.layout.outerPanelsSize
 local innerPanelSize = Theme.layout.innerPanelSize
 local gap = Theme.layout.gap
-local verticalPanelGap = Theme.layout.verticalPanelGap
-local horizontalPanelGap = Theme.layout.horizontalPanelGap
+local verticalPanelGap = 4 
+local horizontalPanelGap = 4 
 
 function _Layout:_footer(x, y, w, h)
 	local x1, w1 = gfx_util.layout(x, w, { -0.65, -0.35 })
 	self:pack("footerTitle", x1[1], y, w1[1], h)
 	self:pack("footerChartName", x1[2], y, w1[2], h)
+end
+
+function _Layout:_difficulty(x, y, w, h)
+	local x1, w1 = gfx_util.layout(x, w, {-0.25, -0.75})
+
+	self:pack("difficulty", x1[1], y, w1[1], h)
+	self:pack("patterns", x1[2], y, w1[2], h)
+	self:pack("difficultyLine", x, y, w, h)
 end
 
 function _Layout:draw()
@@ -25,23 +33,39 @@ function _Layout:draw()
 	local _x, _y = love.graphics.inverseTransformPoint(0, 0)
 	local _xw, _yh = love.graphics.inverseTransformPoint(width, height)
 
-	local _w, _h = _xw - _x, _yh - _y
-
 	local gx, gw = gfx_util.layout(_x, _xw, { gap, "*", gap })
 	local gy, gh = gfx_util.layout(_y, _yh, { 64, -1, gap })
 
-	self:pack("background", _x, _y, _xw, _yh)
+	local _w, _h = _xw - _x, _yh - _y
+	self:pack("background", _x, _y, _w, _h)
 
 	local x1, w1 = gfx_util.layout(gx[2], gw[2],
-		{ -0.5, outerPanelsSize, horizontalPanelGap, innerPanelSize, horizontalPanelGap, outerPanelsSize, -0.5 })
-	local y1, h1 = gfx_util.layout(gy[2], gh[2], { gap, -0.1, gap, -0.9, gap, 20, gap })
+		{ -0.5, outerPanelsSize, horizontalPanelGap, innerPanelSize, horizontalPanelGap,
+			outerPanelsSize, -0.5 })
+	local y1, h1 = gfx_util.layout(gy[2], gh[2], { gap, -0.2, gap, -0.6, -0.2, gap, 20, gap })
 
-	self:_footer(gx[2], y1[6], gw[2], h1[6])
+	self:_footer(gx[2], y1[7], gw[2], h1[7])
 
-	local y2, h2 = gfx_util.layout(y1[4], h1[4], { -0.15, -0.55, verticalPanelGap, -0.3 })
+	local y3, h3 = gfx_util.layout(y1[4], h1[4],
+		{ -0.3, 1, -0.55, verticalPanelGap, -0.15 })
+
 	local hitGraphWidth = w1[2] + w1[3] + w1[4] + w1[5] + w1[6]
-	self:pack("hitGraph", x1[2], y2[4], hitGraphWidth, h2[4])
-	self:pack("gyattScores", x1[6], y2[2], w1[6], h2[2])
+	self:pack("hitGraph", x1[2], y3[1], hitGraphWidth, h3[1])
+
+	local panelHeight = h3[2] + h3[3] + h3[4] + h3[5]
+	self:pack("panel", x1[2] , y3[2], hitGraphWidth, panelHeight)
+
+	self:pack("line1", x1[3], y3[2], w1[3], panelHeight)
+	self:pack("line2", x1[5], y3[2], w1[5], panelHeight)
+	self:pack("line3", x1[2], y3[4], w1[2], h3[4])
+	self:pack("line4", x1[4], y3[4], w1[4], h3[4])
+	self:pack("line5", x1[6], y3[4], w1[6], h3[4])
+
+	self:pack("judgements", x1[2], y3[3], w1[2], h3[3])
+	self:pack("judgementsAccuracy", x1[2], y3[5], w1[2], h3[5])
+	self:pack("normalscore", x1[4], y3[3], w1[4], h3[3])
+	self:pack("scores", x1[6], y3[3], w1[6], h3[3])
+	self:_difficulty(x1[4], y3[5], w1[4], h3[5])
 end
 
 return _Layout

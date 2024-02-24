@@ -72,9 +72,6 @@ function SelectView:updateSettings(dt) end
 function SelectView:updateSongSelect(dt)
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
 
-	if ctrlDown and just.keypressed("p") then
-		self.game.previewModel:stop()
-	end
 
 	if just.keypressed("f1") then
 		self:openModal("thetan.iris.views.modals.ModifierModal")
@@ -123,11 +120,12 @@ end
 ---@param dt number
 function SelectView:update(dt)
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-	if ctrlDown and just.keypressed("r") then
-		self:reloadViews()
-	end
 
 	self.game.selectController:update()
+
+	if ctrlDown and just.keypressed("p") then
+		self.game.previewModel:stop()
+	end
 
 	if self.screenX == 0 then
 		self:updateSongSelect(dt)
