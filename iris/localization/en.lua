@@ -192,6 +192,15 @@ localization.textOnline = {
 	passwordPlaceholder = "Password",
 }
 
+localization.textResult = {
+	score = "Score",
+	accuracy = "Accuracy",
+	inputMode = "Input mode",
+	timeRate = "Time rate",
+	pauses = "Pauses",
+	scrollSpeed = "Scroll speed"
+}
+
 localization.fontFamilyList = {
 	["Noto Sans"] = {
 		"resources/fonts/NotoSansCJK-Regular.ttc",
@@ -330,6 +339,8 @@ localization.fonts = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
 		hitError = {"ZenMaruGothic-Medium", 24},
 		judgements = {"ZenMaruGothic-Medium", 24},
+		scoreInfo = {"ZenMaruGothic-Medium", 36},
+		pauses = {"ZenMaruGothic-Medium", 24},
 		difficulty = { "ZenMaruGothic-Medium", 28 },
 		calculator = { "ZenMaruGothic-Medium", 24 },
 		patterns = { "ZenMaruGothic-Medium", 22},

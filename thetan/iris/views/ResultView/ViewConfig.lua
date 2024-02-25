@@ -1,11 +1,12 @@
 local class = require("class")
 local just = require("just")
-local imgui = require("thetan.iris.imgui")
 local gfx_util = require("gfx_util")
 local Format = require("sphere.views.Format")
+local erfunc = require("libchart.erfunc")
 
 local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
+local Text = Theme.textResult
 local font
 
 local Layout = require("thetan.iris.views.ResultView.Layout")
@@ -243,27 +244,23 @@ local function Footer(view)
 end
 
 function ViewConfig:scoreInfo(view)
-	local w, h = Layout:move("gyattScoreInfo")
-	Theme:panel(w, h)
-	Theme:border(w, h)
+	local ratingHitTimingWindow = view.game.configModel.configs.settings.gameplay.ratingHitTimingWindow
 
-	local ratingHitTimingWindow = self.game.configModel.configs.settings.gameplay.ratingHitTimingWindow
-
-	local rhythmModel = self.game.rhythmModel
+	local rhythmModel = view.game.rhythmModel
 	local normalscore = rhythmModel.scoreEngine.scoreSystem.normalscore
 
-	local noteChartItem = self.game.selectModel.noteChartItem
-	local scoreItem = self.game.selectModel.scoreItem
+	local noteChartItem = view.game.selectModel.noteChartItem
+	local scoreItem = view.game.selectModel.scoreItem
 	local scoreEngine = rhythmModel.scoreEngine
-	local playContext = self.game.playContext
+	local playContext = view.game.playContext
 
 	if not scoreItem then
 		return
 	end
 
-	local topScoreItem = self.game.scoreLibraryModel.items[1]
+	local topScoreItem = view.game.scoreLibraryModel.items[1]
 	if topScoreItem == scoreItem then
-		topScoreItem = self.game.scoreLibraryModel.items[2]
+		topScoreItem = view.game.scoreLibraryModel.items[2]
 	end
 	if not topScoreItem then
 		topScoreItem = scoreItem
@@ -274,15 +271,32 @@ function ViewConfig:scoreInfo(view)
 		return
 	end
 
-	local show = showLoadedScore(self)
+	local show = showLoadedScore(view)
 
 	local baseTimeRate = show and playContext.rate or scoreItem.rate
-
-	local baseDifficulty = noteChartItem.difficulty
 	local baseInputMode = noteChartItem.inputMode
 
-	local difficulty = show and playContext.enps or scoreItem.difficulty
 	local inputMode = show and tostring(rhythmModel.noteChart.inputMode) or scoreItem.inputmode
+	inputMode = Format.inputMode(inputMode)
+	local score = not show and scoreItem.score or
+		erfunc.erf(ratingHitTimingWindow / (normalscore.accuracyAdjusted * math.sqrt(2))) * 10000
+	if score ~= score then
+		score = 0
+	end
+	
+	local accuracyValue = show and normalscore.accuracyAdjusted or scoreItem.accuracy
+	local accuracy = Format.accuracy(accuracyValue)
+	
+	local w, h = Layout:move("normalscore")
+	love.graphics.setFont(font.scoreInfo)
+	gfx_util.printFrame(
+		("%s: %i\n%s: %s\n%s: %s\n%s: %0.02fx"):format(
+			Text.score, score,
+			Text.accuracy, accuracy,
+			Text.inputMode, inputMode,
+			Text.timeRate, baseTimeRate),
+		0, 0, w, h, "center", "center"
+	)
 end
 
 ---@param view table
@@ -332,7 +346,8 @@ local function MsdDifficulty(view, noteChartItem)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
 	w, h = Layout:move("patterns")
-	gfx_util.printFrame(difficultyData, 0, 12, w, h, "center", "center")
+	gfx_util.printFrame(difficultyData, 0, 15, w, h, "center", "center")
+
 end
 
 function ViewConfig:difficulty(view)
@@ -354,12 +369,32 @@ function ViewConfig:difficulty(view)
 	end
 end
 
+function ViewConfig:pauses(view)
+	local scoreItem = view.game.selectModel.scoreItem
+	local rhythmModel = view.game.rhythmModel
+	local scoreEngine = rhythmModel.scoreEngine
+	local playContext = view.game.playContext
+
+	local show = showLoadedScore(view)
+	local const = show and playContext.const or scoreItem.const
+	local scrollSpeed = "X"
+	if const then
+		scrollSpeed = "Constant"
+	end
+
+	local w, h = Layout:move("pauses")
+	love.graphics.setFont(font.pauses)
+	gfx_util.printFrame(("%s: %i\n%s: %s"):format(Text.pauses, scoreItem.pauses, Text.scrollSpeed, scrollSpeed), 0, 0, w, h, "center", "center")
+end
+
 function ViewConfig:draw(view)
 	just.origin()
 	panel()
 	self:judgements(view)
 	self:scores(view)
 	self:difficulty(view)
+	self:scoreInfo(view)
+	self:pauses(view)
 	HitGraph(view)
 	Footer(view)
 end
