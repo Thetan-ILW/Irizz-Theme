@@ -44,9 +44,9 @@ Theme.colors = {
 	uiPanel = { 0.1, 0.1, 0.1, 0.7 },
 	uiHover = { 0.2, 0.2, 0.2, 0.7 },
 	uiActive = { 0.2, 0.2, 0.2, 0.9 },
-	hitPerfect = {1, 1, 1, 1},
-	hitBad = {0.90, 0.26, 0.68, 1},
-	hitVeryBad = {0.49, 0.76, 1, 1}, 
+	hitPerfect = {0.25, 0.95, 1, 1},
+	hitBad = {1, 0.92, 0.25, 1},
+	hitVeryBad = {0, 0.86, 0.18, 1}, 
 	hitMiss = {1, 0, 0, 1}
 }
 
@@ -105,6 +105,14 @@ local enpsColorRanges = {
 	{ 23, 32 },
 }
 
+local dupsColorRange = {
+	{ 0, 6 },
+	{ 6, 8 },
+	{ 8, 11 },
+	{ 11, 15 },
+	{ 15, 18 },
+	{ 18, 23 },
+}
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -113,14 +121,14 @@ local enpsColorRanges = {
 ---@param calculator string
 ---@return table
 function Theme:getDifficultyColor(difficulty, calculator)
-	if difficulty > 32 then
+	local colorRanges = calculator == "msd" and dupsColorRange or enpsColorRanges
+
+	if difficulty > colorRanges[#colorRanges][2] then
 		return difficultyColors[#difficultyColors]
 	elseif difficulty < 5 then
 		return difficultyColors[1]
 	end
-
-	local colorRanges = calculator == "msd" and msdColorRanges or enpsColorRanges
-
+	
 	local colorIndex
 	for i, range in pairs(colorRanges) do
 		if difficulty >= range[1] and difficulty <= range[2] then

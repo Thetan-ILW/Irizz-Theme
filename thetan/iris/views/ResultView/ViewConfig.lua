@@ -313,9 +313,9 @@ local function MsdDifficulty(view, noteChartItem)
 
 	local baseTimeRate = view.game.playContext.rate
 
-	if baseTimeRate ~= 1 then
-		baseTimeRate = baseTimeRate / 1.04
-	end
+	--if baseTimeRate ~= 1 then
+	--	baseTimeRate = baseTimeRate / 1.04
+	--end
 
 	local difficultyData = noteChartItem.difficulty_data or "None"
 	difficultyData = difficultyData:gsub(";", "\n")
@@ -327,7 +327,7 @@ local function MsdDifficulty(view, noteChartItem)
 	gfx_util.printBaseline(string.format("%0.02f", noteChartItem.difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
 
 	love.graphics.setFont(font.calculator)
-	gfx_util.printBaseline("MSD", 0, h / 1.2, w, 1, "center")
+	gfx_util.printBaseline("DUPS", 0, h / 1.2, w, 1, "center")
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
