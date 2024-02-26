@@ -14,9 +14,6 @@ local Color = Theme.colors
 local Text = Theme.textSongSelect
 local font
 
-local ModifierEncoder = require("sphere.models.ModifierEncoder")
-local ModifierModel = require("sphere.models.ModifierModel")
-
 local NoteChartSetListView = require("thetan.iris.views.SelectView.SongSelect.NoteChartSetListView")
 local NoteChartListView = require("thetan.iris.views.SelectView.SongSelect.NoteChartListView")
 local ScoreListView = require("thetan.iris.views.ScoreListView")
@@ -247,26 +244,6 @@ local function MoreInfoLol(view)
 	gfx_util.printBaseline(format, 0, h / offset, w, 1, "center")
 end
 
----@param mods table
----@return string
-local function GetModifierString(mods)
-	if type(mods) == "string" then
-		mods = ModifierEncoder:decode(mods)
-	end
-
-	local modString = ""
-	for _, mod in pairs(mods) do
-		local modifier = ModifierModel:getModifier(mod.id)
-
-		if modifier then
-			local modifierString, modifierSubString = modifier:getString(mod)
-			modString = string.format("%s %s%s", modString, modifierString, modifierSubString or "")
-		end
-	end
-
-	return modString
-end
-
 local function Mods(view)
 	local w, h = Layout:move("timeRate")
 
@@ -306,8 +283,7 @@ local function Mods(view)
 
 	love.graphics.setFont(font.mods)
 	love.graphics.setColor(Color.text)
-
-	just.text(GetModifierString(mods), w)
+	gfx_util.printFrame(Theme:getModifierString(mods), 0, -5, w, h, "center", "center")
 end
 
 local function Footer(view)

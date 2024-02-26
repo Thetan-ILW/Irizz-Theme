@@ -344,6 +344,7 @@ localization.fonts = {
 		difficulty = { "ZenMaruGothic-Black", 28 },
 		calculator = { "ZenMaruGothic-Black", 24 },
 		patterns = { "ZenMaruGothic-Black", 22},
+		modifiers = { "ZenMaruGothic-Black", 48}
 	}
 }
 

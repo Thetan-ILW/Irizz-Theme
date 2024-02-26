@@ -1,5 +1,8 @@
 local localization = require("iris.localization.en")
 
+local ModifierEncoder = require("sphere.models.ModifierEncoder")
+local ModifierModel = require("sphere.models.ModifierModel")
+
 local function Hex(rgba)
 	local rb = tonumber(string.sub(rgba, 2, 3), 16)
 	local gb = tonumber(string.sub(rgba, 4, 5), 16)
@@ -233,6 +236,29 @@ function Theme:getHitColor(delta, isMiss)
 	end
 end
 
+---@param mods table
+---@return string
+function Theme:getModifierString(mods)
+	if type(mods) == "string" then
+		mods = ModifierEncoder:decode(mods)
+	end
+	local modString = ""
+	for _, mod in pairs(mods) do
+		local modifier = ModifierModel:getModifier(mod.id)
+
+		if modifier then
+			local modifierString, modifierSubString = modifier:getString(mod)
+			modString = string.format("%s %s%s", modString, modifierString, modifierSubString or "")
+		end
+	end
+
+	if modString == "" then
+		modString = "No mods"
+	end
+
+	return modString
+end
+
 function Theme:setLines()
 	love.graphics.setLineStyle("rough")
 	love.graphics.setLineWidth(4)
@@ -253,4 +279,5 @@ function Theme:border(w, h)
 end
 
 Theme.version = "0.1.0"
+
 return Theme

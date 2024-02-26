@@ -205,7 +205,7 @@ function ViewConfig:judgements(view)
 	end
 
 	w, h = Layout:move("judgementsAccuracy")
-	gfx_util.printFrame(("%3.2f%%"):format(judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
+	gfx_util.printFrame(("%s %3.2f%%"):format(counterName, judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
 end
 
 local function Footer(view)
@@ -378,6 +378,18 @@ function ViewConfig:pauses(view)
 	gfx_util.printFrame(("%s: %i\n%s: %s"):format(Text.pauses, scoreItem.pauses, Text.scrollSpeed, scrollSpeed), 0, 0, w, h, "center", "center")
 end
 
+function ViewConfig:modifiers(view)
+	local selectModel = view.game.selectModel
+	local modifiers = view.game.playContext.modifiers
+	if not showLoadedScore(view) and selectModel.scoreItem then
+		modifiers = selectModel.scoreItem.modifiers
+	end
+
+	local w, h = Layout:move("mods")
+	love.graphics.setFont(font.modifiers)
+	gfx_util.printFrame(Theme:getModifierString(modifiers), 0, 0, w, h, "center", "center")
+end
+
 function ViewConfig:draw(view)
 	just.origin()
 	panel()
@@ -386,6 +398,7 @@ function ViewConfig:draw(view)
 	self:difficulty(view)
 	self:scoreInfo(view)
 	self:pauses(view)
+	self:modifiers(view)
 	HitGraph(view)
 	Footer(view)
 end

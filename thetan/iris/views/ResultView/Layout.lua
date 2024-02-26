@@ -67,6 +67,7 @@ function _Layout:draw()
 	self:pack("scores", x1[6], y3[3], w1[6], h3[3])
 	self:_difficulty(x1[4], y3[5], w1[4], h3[5])
 	self:pack("pauses", x1[6], y3[5], w1[6], h3[5])
+	self:pack("mods", gx[2], y1[2], gw[2], h1[2])
 end
 
 return _Layout
