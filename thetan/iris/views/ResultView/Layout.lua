@@ -6,10 +6,10 @@ local _Layout = Layout()
 
 local Theme = require("thetan.iris.views.Theme")
 local outerPanelsSize = Theme.layout.outerPanelsSize
-local innerPanelSize = Theme.layout.innerPanelSize
+local innerPanelSize = 350
 local gap = Theme.layout.gap
-local verticalPanelGap = 4 
-local horizontalPanelGap = 4 
+local verticalPanelGap = 4
+local horizontalPanelGap = 4
 
 function _Layout:_footer(x, y, w, h)
 	local x1, w1 = gfx_util.layout(x, w, { -0.65, -0.35 })
@@ -18,7 +18,7 @@ function _Layout:_footer(x, y, w, h)
 end
 
 function _Layout:_difficulty(x, y, w, h)
-	local x1, w1 = gfx_util.layout(x, w, {-0.25, -0.75})
+	local x1, w1 = gfx_util.layout(x, w, { -0.25, -0.75 })
 
 	self:pack("difficulty", x1[1], y, w1[1], h)
 	self:pack("patterns", x1[2], y, w1[2], h)
@@ -53,7 +53,7 @@ function _Layout:draw()
 	self:pack("hitGraph", x1[2], y3[1], hitGraphWidth, h3[1])
 
 	local panelHeight = h3[2] + h3[3] + h3[4] + h3[5]
-	self:pack("panel", x1[2] , y3[2], hitGraphWidth, panelHeight)
+	self:pack("panel", x1[2], y3[2], hitGraphWidth, panelHeight)
 
 	self:pack("line1", x1[3], y3[2], w1[3], panelHeight)
 	self:pack("line2", x1[5], y3[2], w1[5], panelHeight)

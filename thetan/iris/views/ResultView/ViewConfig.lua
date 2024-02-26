@@ -77,9 +77,6 @@ local function getPointY(y)
 	return (y.misc.deltaTime / 0.27) + 0.5
 end
 
-local perfectColor = Color.hitPerfect
-local notPerfectColor = Color.hitBad
-local noobColor = Color.hitVeryBad
 local _HitGraph = PointGraphView({
 	draw = drawGraph,
 	radius = pointR,
@@ -89,14 +86,8 @@ local _HitGraph = PointGraphView({
 		if point.base.isMiss then
 			return
 		end
-		local color = noobColor
-		if math.abs(point.misc.deltaTime) <= 0.032 then
-			color = notPerfectColor
-		end
-		if math.abs(point.misc.deltaTime) <= 0.016 then
-			color = perfectColor
-		end
 		local y = getPointY(point)
+		local color = Theme:getHitColor(point.misc.deltaTime, false)
 		return y, unpack(color)
 	end,
 	show = showLoadedScore
@@ -112,7 +103,7 @@ local _EarlyHitGraph = PointGraphView({
 			return
 		end
 		local y = getPointY(point)
-		return y, unpack(Color.hitMiss)
+		return y, unpack(Theme:getHitColor(0, true))
 	end,
 	show = showLoadedScore
 })
@@ -121,13 +112,13 @@ local _MissGraph = PointGraphView({
 	draw = drawGraph,
 	radius = pointR,
 	backgroundColor = { 0, 0, 0, 1 },
-	backgroundRadius = pointR + 4,
+	backgroundRadius = 0,
 	point = function(self, point)
 		if not point.base.isMiss then
 			return
 		end
 		local y = getPointY(point)
-		return y, unpack(Color.hitMiss)
+		return y, unpack(Theme:getHitColor(0, true))
 	end,
 	show = showLoadedScore
 })

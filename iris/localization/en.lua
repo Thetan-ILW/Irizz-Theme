@@ -337,13 +337,13 @@ localization.fonts = {
 
 	resultView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
-		hitError = {"ZenMaruGothic-Medium", 24},
-		judgements = {"ZenMaruGothic-Medium", 24},
-		scoreInfo = {"ZenMaruGothic-Medium", 36},
-		pauses = {"ZenMaruGothic-Medium", 24},
-		difficulty = { "ZenMaruGothic-Medium", 28 },
-		calculator = { "ZenMaruGothic-Medium", 24 },
-		patterns = { "ZenMaruGothic-Medium", 22},
+		hitError = {"ZenMaruGothic-Black", 24},
+		judgements = {"ZenMaruGothic-Black", 24},
+		scoreInfo = {"ZenMaruGothic-Black", 36},
+		pauses = {"ZenMaruGothic-Black", 24},
+		difficulty = { "ZenMaruGothic-Black", 28 },
+		calculator = { "ZenMaruGothic-Black", 24 },
+		patterns = { "ZenMaruGothic-Black", 22},
 	}
 }
 
