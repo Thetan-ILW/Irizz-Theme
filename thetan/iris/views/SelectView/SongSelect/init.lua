@@ -145,13 +145,18 @@ local function MsdDifficulty(view, noteChartItem)
 	end
 
 	local baseTimeRate = view.game.playContext.rate
+	
+	local rate = 1.0
+	if math.abs(baseTimeRate - 1) > 0.00001 then
+		rate = baseTimeRate / 1.04
+	end
+	
+	local difficultyData = noteChartItem.difficulty_data or nil
+	local patterns = ""
 
---	if baseTimeRate ~= 1 then
---		baseTimeRate = baseTimeRate / 1.04
---	end
-
-	local difficultyData = noteChartItem.difficulty_data or "None"
-	difficultyData = difficultyData:gsub(";", "\n")
+	for key, value in pairs(difficultyData) do
+		patterns = string.format("%s%0.02f %s\n", patterns, value * rate, key)
+	end
 
 	local w, h = Layout:move("difficulty")
 
@@ -165,7 +170,7 @@ local function MsdDifficulty(view, noteChartItem)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
 	w, h = Layout:move("patterns")
-	gfx_util.printFrame(difficultyData, 0, 12, w, h, "center", "center") 
+	gfx_util.printFrame(patterns, -3, 15, w, h, "center", "center") 
 end
 
 local function Info(view)
