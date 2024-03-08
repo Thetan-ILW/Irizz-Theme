@@ -28,7 +28,7 @@ Theme.fontFamilyList = {}
 
 Theme.colors = {
 	panel = Hex("#000000AA"),
-	border = Hex("#adadad"),
+	border = Hex("#FFFFFF"),
 	mutedBorder = Hex("#616161"),
 	transparentPanel = Hex("#00000077"),
 	accent = Hex("#fc72e3"),
@@ -266,16 +266,16 @@ end
 
 function Theme:panel(w, h)
 	love.graphics.setColor(self.colors.panel)
-	love.graphics.rectangle("fill", 0, 0, w, h)
+	love.graphics.rectangle("fill", 0, 0, w, h, 8, 8)
 end
 
 local lineWidth = 4
 local half = lineWidth/2
 function Theme:border(w, h)
-	love.graphics.setLineStyle("rough")
+	love.graphics.setLineStyle("smooth")
 	love.graphics.setLineWidth(lineWidth)
 	love.graphics.setColor(self.colors.border)
-	love.graphics.rectangle("line", -half, -half, w + lineWidth, h + lineWidth)
+	love.graphics.rectangle("line", -half, -half, w + lineWidth, h + lineWidth, 8, 8)
 end
 
 Theme.version = "0.1.0"

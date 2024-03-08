@@ -28,16 +28,25 @@ function ViewConfig:new(game)
 	Font = Theme:getFonts("collectionsViewConfig")
 end
 
-local function frame(w, h)
-	love.graphics.setColor(Color.panel)
-	love.graphics.rectangle("fill", 0, 0, w, h)
+local boxes = {
+	"queue",
+	"charts",
+	"buttons",
+	"list"
+}
+
+local function panels()
+	for _, name in ipairs(boxes) do
+		local w, h = Layout:move(name)
+		Theme:panel(w, h)
+	end
 end
 
-local function border(w, h)
-	love.graphics.setLineStyle("rough")
-	love.graphics.setLineWidth(4)
-	love.graphics.setColor(Color.border)
-	love.graphics.rectangle("line", -2, -2, w + 3, h + 3)
+local function borders()
+	for _, name in ipairs(boxes) do
+		local w, h = Layout:move(name)
+		Theme:border(w, h)
+	end
 end
 
 function ViewConfig:cacheStatus(view)
@@ -64,21 +73,16 @@ end
 
 function ViewConfig:osuDirectDownloadQueue(view)
 	local w, h = Layout:move("queue")
-	frame(w, h)
 	self.osuDirectQueueListView:draw(w, h, canUpdate)
-	border(w, h)
 end
 
 function ViewConfig:osuDirectCharts(view)
 	local w, h = Layout:move("charts")
-	frame(w, h)
 	self.osuDirectChartsListView:draw(w, h, canUpdate)
-	border(w, h)
 end
 
 function ViewConfig:collectionsButtons(view)
 	local w, h = Layout:move("buttons")
-	frame(w, h)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.buttons)
@@ -104,12 +108,10 @@ function ViewConfig:collectionsButtons(view)
 	end
 
 	w, h = Layout:move("buttons")
-	border(w, h)
 end
 
 function ViewConfig:osuDirectButtons(view)
 	local w, h = Layout:move("buttons")
-	frame(w, h)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.buttons)
@@ -139,7 +141,6 @@ function ViewConfig:osuDirectButtons(view)
 	end
 
 	w, h = Layout:move("buttons")
-	border(w, h)
 end
 
 function ViewConfig:collectionsList(view)
@@ -148,9 +149,7 @@ function ViewConfig:collectionsList(view)
 	end
 
 	local w, h = Layout:move("list")
-	frame(w, h)
 	self.collectionListView:draw(w, h, canUpdate)
-	border(w, h)
 end
 
 function ViewConfig:osuDirectList(view)
@@ -159,9 +158,7 @@ function ViewConfig:osuDirectList(view)
 	end
 
 	local w, h = Layout:move("list")
-	frame(w, h)
 	self.osuDirectListView:draw(w, h, canUpdate)
-	border(w, h)
 end
 
 function ViewConfig:footer(view)
@@ -189,6 +186,7 @@ function ViewConfig:draw(view, position)
 	just.origin()
 	Layout:draw(position)
 
+	panels()
 	self:cacheStatus(view)
 	self:osuDirectDownloadQueue(view)
 	self:collectionsList(view)
@@ -202,6 +200,7 @@ function ViewConfig:draw(view, position)
 
 	self:osuDirectCharts(view)
 	self:footer(view)
+	borders()
 end
 
 return ViewConfig

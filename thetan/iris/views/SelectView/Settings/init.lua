@@ -34,22 +34,17 @@ local boxes = {
 	"settings",
 }
 
-local function Frames(view)
-	for i, name in pairs(boxes) do
+local function panels(view)
+	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
-		love.graphics.setColor(Color.panel)
-		love.graphics.rectangle("fill", 0, 0, w, h)
+		Theme:panel(w, h)
 	end
 end
 
-local function Borders(view)
-	love.graphics.setLineStyle("rough")
-	love.graphics.setLineWidth(4)
-
-	for i, name in pairs(boxes) do
+local function borders(view)
+	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
-		love.graphics.setColor(Color.border)
-		love.graphics.rectangle("line", -2, -2, w + 3, h + 3)
+		Theme:border(w, h)
 	end
 end
 
@@ -82,10 +77,10 @@ function ViewConfig:draw(view, position)
 	just.origin()
 	Layout:draw(position)
 
-	Frames(view)
+	panels(view)
 	self:tabs(view)
 	self:settings(view)
-	Borders(view)
+	borders(view)
 end
 
 return ViewConfig

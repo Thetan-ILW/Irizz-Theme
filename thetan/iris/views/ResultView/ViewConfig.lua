@@ -205,7 +205,16 @@ function ViewConfig:judgements(view)
 	end
 
 	w, h = Layout:move("judgementsAccuracy")
+	love.graphics.setFont(font.accuracy)
 	gfx_util.printFrame(("%s %3.2f%%"):format(counterName, judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
+
+	local osu = scoreEngine.scoreSystem.osu.judges.od9.accuracy
+	local quaver = scoreEngine.scoreSystem.quaver.judges.standard.accuracy
+	local wife = scoreEngine.scoreSystem.wife.judges.j4.accuracy
+
+	gfx_util.printFrame(("osu V2 OD9 %3.2f%%"):format(osu * 100), 0, 60, w, h, "center", "center")
+	gfx_util.printFrame(("quaver %3.2f%%"):format(quaver * 100), 0, 120, w, h, "center", "center")
+	gfx_util.printFrame(("wife J4 %3.2f%%"):format(wife * 100), 0, 180, w, h, "center", "center")
 end
 
 local function Footer(view)

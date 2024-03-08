@@ -37,27 +37,25 @@ function ViewConfig:new(game)
 	font = Theme:getFonts("songSelectViewConfig")
 end
 
-local function Frames(view)
+local function panels(view)
 	for i, name in pairs(boxes) do
 		local w, h = Layout:move(name)
-		love.graphics.setColor(Color.panel)
-		love.graphics.rectangle("fill", 0, 0, w, h)
+		Theme:panel(w, h)
 	end
 end
 
-local function Borders(view)
+local function borders(view)
 	love.graphics.setLineStyle("rough")
 	love.graphics.setLineWidth(4)
 
 	for i, name in pairs(boxes) do
 		local w, h = Layout:move(name)
-		love.graphics.setColor(Color.border)
-		love.graphics.rectangle("line", -2, -2, w + 3, h + 3)
+		Theme:border(w, h)
 	end
 end
 
 ---@param view table
-local function SearchField(view)
+local function searchField(view)
 	if not just.focused_id then
 		just.focus("SearchField")
 	end
@@ -81,7 +79,7 @@ local function SearchField(view)
 	end
 end
 
-function ViewConfig:NoteChartSets(view)
+function ViewConfig:noteChartSets(view)
 	local w, h = Layout:move("column2")
 
 	local list = self.noteChartSetListView
@@ -99,14 +97,14 @@ function ViewConfig:NoteChartSets(view)
 end
 
 ---@param view table
-function ViewConfig:NoteChartList(view)
+function ViewConfig:noteChartList(view)
 	local w, h = Layout:move("charts")
 
 	local list = self.noteChartListView
 	list:draw(w, h, canUpdate)
 end
 
-function ViewConfig:Scores(view)
+function ViewConfig:scores(view)
 	local w, h = Layout:move("scores")
 
 	local list = self.scoreListView
@@ -120,7 +118,7 @@ end
 
 ---@param view table
 ---@param noteChartItem table
-local function EnpsDifficulty(view, noteChartItem)
+local function enpsDifficulty(view, noteChartItem)
 	if not noteChartItem.difficulty then
 		return
 	end
@@ -139,7 +137,7 @@ end
 
 ---@param view table
 ---@param noteChartItem table
-local function MsdDifficulty(view, noteChartItem)
+local function msdDifficulty(view, noteChartItem)
 	if not noteChartItem.difficulty then
 		return
 	end
@@ -170,10 +168,10 @@ local function MsdDifficulty(view, noteChartItem)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
 	w, h = Layout:move("patterns")
-	gfx_util.printFrame(patterns, -3, 15, w, h, "center", "center") 
+	gfx_util.printFrame(patterns, -3, 15, w, h, "center", "center")
 end
 
-local function Info(view)
+local function info(view)
 	local w, h = Layout:move("difficulty")
 
 	love.graphics.setColor(Color.transparentPanel)
@@ -190,9 +188,9 @@ local function Info(view)
 	end
 
 	if noteChartItem.difficulty_data then
-		MsdDifficulty(view, noteChartItem)
+		msdDifficulty(view, noteChartItem)
 	else
-		EnpsDifficulty(view, noteChartItem)
+		enpsDifficulty(view, noteChartItem)
 	end
 
 	love.graphics.setFont(font.info)
@@ -219,7 +217,7 @@ local function Info(view)
 	gfx_util.printBaseline(inputMode, 0, h / offset, w, 1, "center")
 end
 
-local function MoreInfoLol(view)
+local function moreInfo(view)
 	local noteChartItem = view.game.selectModel.noteChartItem
 
 	if not noteChartItem then
@@ -249,7 +247,7 @@ local function MoreInfoLol(view)
 	gfx_util.printBaseline(format, 0, h / offset, w, 1, "center")
 end
 
-local function Mods(view)
+local function mods(view)
 	local w, h = Layout:move("timeRate")
 
 	love.graphics.setColor(Color.transparentPanel)
@@ -291,7 +289,7 @@ local function Mods(view)
 	gfx_util.printFrame(Theme:getModifierString(mods), 0, -5, w, h, "center", "center")
 end
 
-local function Footer(view)
+local function footer(view)
 	local noteChartItem = view.game.selectModel.noteChartItem
 
 	if not noteChartItem then
@@ -327,16 +325,16 @@ function ViewConfig:draw(view, position)
 		return
 	end
 
-	Frames(view)
-	SearchField(view)
-	self:NoteChartSets(view)
-	self:NoteChartList(view)
-	self:Scores(view)
-	Info(view)
-	MoreInfoLol(view)
-	Mods(view)
-	Footer(view)
-	Borders(view)
+	panels(view)
+	searchField(view)
+	self:noteChartSets(view)
+	self:noteChartList(view)
+	self:scores(view)
+	info(view)
+	moreInfo(view)
+	mods(view)
+	footer(view)
+	borders(view)
 end
 
 return ViewConfig

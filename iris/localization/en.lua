@@ -193,12 +193,12 @@ localization.textOnline = {
 }
 
 localization.textResult = {
-	score = "Score",
-	accuracy = "Accuracy",
-	inputMode = "Input mode",
-	timeRate = "Time rate",
-	pauses = "Pauses",
-	scrollSpeed = "Scroll speed"
+	score = "SCORE",
+	accuracy = "ACCURACY",
+	inputMode = "INPUT MODE",
+	timeRate = "TIME RATE",
+	pauses = "PAUSES",
+	scrollSpeed = "SCROLL SPEED"
 }
 
 localization.fontFamilyList = {
@@ -337,13 +337,14 @@ localization.fonts = {
 
 	resultView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
-		hitError = {"ZenMaruGothic-Black", 24},
-		judgements = {"ZenMaruGothic-Black", 24},
-		scoreInfo = {"ZenMaruGothic-Black", 36},
-		pauses = {"ZenMaruGothic-Black", 24},
-		difficulty = { "ZenMaruGothic-Black", 28 },
-		calculator = { "ZenMaruGothic-Black", 24 },
-		patterns = { "ZenMaruGothic-Black", 22},
+		hitError = {"ZenMaruGothic-Medium", 16},
+		judgements = {"ZenMaruGothic-Medium", 24},
+		accuracy = {"ZenMaruGothic-Medium", 28},
+		scoreInfo = {"ZenMaruGothic-Medium", 36},
+		pauses = {"ZenMaruGothic-Medium", 24},
+		difficulty = { "ZenMaruGothic-Medium", 28 },
+		calculator = { "ZenMaruGothic-Medium", 24 },
+		patterns = { "ZenMaruGothic-Medium", 22},
 		modifiers = { "ZenMaruGothic-Black", 48}
 	}
 }
