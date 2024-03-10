@@ -208,7 +208,9 @@ end
 
 function SettingsTab:Audio(view)
 	imgui.separator()
-	local settings = view.game.configModel.configs.settings
+	local configs = view.game.configModel.configs
+	local settings = configs.settings
+	local iris = configs.iris
 	local a = settings.audio
 	local g = settings.gameplay
 
@@ -224,11 +226,13 @@ function SettingsTab:Audio(view)
 		v.music = imgui.slider1("v.music", v.music * 100, "%i%%", 0, 100, 1, Text.music) / 100
 		v.effects = imgui.slider1("v.effects", v.effects * 100, "%i%%", 0, 100, 1, Text.effects) / 100
 		v.metronome = imgui.slider1("v.metronome", v.metronome * 100, "%i%%", 0, 100, 1, Text.metronome) / 100
+		iris.uiVolume = imgui.slider1("iris.uiVolume", iris.uiVolume * 100, "%i%%", 0, 100, 1, Text.uiVolume) / 100
 	elseif a.volumeType == "logarithmic" then
 		v.master = imgui.lfslider("v.master", v.master, "%ddB", -60, 0, 1, Text.master)
 		v.music = imgui.lfslider("v.music", v.music, "%ddB", -60, 0, 1, Text.music)
 		v.effects = imgui.lfslider("v.effects", v.effects, "%ddB", -60, 0, 1, Text.effects)
 		v.metronome = imgui.lfslider("v.metronome", v.metronome, "%ddB", -60, 0, 1, Text.metronome)
+		iris.uiVolume = imgui.lfslider("iris.uiVolume", iris.uiVolume, "%ddB", -60, 0, 1, Text.uiVolume)
 	end
 
 	local mode = a.mode

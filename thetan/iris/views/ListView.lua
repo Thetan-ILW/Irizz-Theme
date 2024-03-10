@@ -24,8 +24,10 @@ ListView.noItemsText = "No items!"
 ListView.staticCursor = Theme.misc.staticListViewCursor
 
 function ListView:playSound()
-	local audioSettings = self.game.configModel.configs.settings.audio
-	self.scrollSound:setVolume(audioSettings.volume.master * Theme.sounds.ui)
+	local configs = self.game.configModel.configs
+	local audioSettings = configs.settings.audio
+	local uiVolume = configs.iris.uiVolume
+	self.scrollSound:setVolume(audioSettings.volume.master * uiVolume)
 	self.scrollSound:stop()
 	self.scrollSound:play()
 end

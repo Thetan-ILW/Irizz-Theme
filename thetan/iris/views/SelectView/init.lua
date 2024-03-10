@@ -30,7 +30,7 @@ function SelectView:load()
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
-	
+
 	BackgroundView.game = self.game
 end
 
@@ -95,8 +95,11 @@ function SelectView:updateSongSelect(dt)
 	end
 
 	if just.keypressed("return") then
-		local audioSettings = self.game.configModel.configs.settings.audio
-		playSound:setVolume(audioSettings.volume.master * 0.3)
+		local configs = self.game.configModel.configs
+		local audioSettings = configs.settings.audio
+		local uiVolume = configs.iris.uiVolume
+
+		playSound:setVolume(audioSettings.volume.master * uiVolume)
 		playSound:play()
 		self:play()
 	end

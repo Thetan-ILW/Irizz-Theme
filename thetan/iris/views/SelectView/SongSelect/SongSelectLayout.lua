@@ -57,6 +57,9 @@ function _Layout:draw(offset)
 	local _x, _y = love.graphics.inverseTransformPoint(position, 0)
 	local _xw, _yh = love.graphics.inverseTransformPoint(width + position, height)
 
+	local _w, _h = _xw - _x, _yh - _y
+	self:pack("background", _x, _y, _w, _h)
+
 	local gx, gw = gfx_util.layout(_x, _xw, {gap, "*", gap})
 	local gy, gh = gfx_util.layout(_y, _yh, {64, -1, gap})
 

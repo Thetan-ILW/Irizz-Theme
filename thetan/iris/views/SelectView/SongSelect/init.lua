@@ -38,7 +38,7 @@ function ViewConfig:new(game)
 end
 
 local function panels(view)
-	for i, name in pairs(boxes) do
+	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
 		Theme:panel(w, h)
 	end
