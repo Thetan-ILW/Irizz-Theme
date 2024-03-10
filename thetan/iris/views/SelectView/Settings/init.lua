@@ -26,6 +26,8 @@ local tabs = {
 local currentTab = Text.gameplayTab
 
 function ViewConfig:new(game)
+	self.game = game
+
 	Font = Theme:getFonts("settingsViewConfig")
 end
 

@@ -32,32 +32,6 @@ function OsudirectListView:scroll(count)
 	self:playSound()
 end
 
----@param ... any?
-function OsudirectListView:draw(...)
-	ListView.draw(self, ...)
-end
-
-function OsudirectListView:input()
-	if not just.key_over() then
-		return
-	end
-
-	local kp = just.keypressed
-	if kp("up") or kp("left") then
-		self:scroll(-1)
-	elseif kp("down") or kp("right") then
-		self:scroll(1)
-	elseif kp("pageup") then
-		self:scroll(-10)
-	elseif kp("pagedown") then
-		self:scroll(10)
-	elseif kp("home") then
-		self:scroll(-math.huge)
-	elseif kp("end") then
-		self:scroll(math.huge)
-	end
-end
-
 ---@param i number
 ---@param w number
 ---@param h number

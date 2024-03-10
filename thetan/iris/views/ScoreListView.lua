@@ -26,11 +26,11 @@ end
 function ScoreListView:reloadItems()
 	self.stateCounter = self.game.selectModel.scoreStateCounter
 
-	if self.items == self.game.scoreLibraryModel.items then
+	if self.items == self.game.selectModel.scoreLibrary.items then
 		return
 	end
 
-	self.items = self.game.scoreLibraryModel.items
+	self.items = self.game.selectModel.scoreLibrary.items 
 
 	if #self.items == 0 then
 		self.selectedScoreIndex = 1

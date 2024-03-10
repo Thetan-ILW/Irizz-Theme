@@ -19,13 +19,14 @@ function CollectionListView:new(game)
 end
 
 function CollectionListView:reloadItems()
-	self.items = self.game.selectModel.collectionLibrary.items
-	self.selectedCollection = self.game.selectModel.collectionItem
+	self.stateCounter = 0
+	self.items = self.game.selectModel.collectionLibrary.tree.items
 end
 
 ---@return number
 function CollectionListView:getItemIndex()
-	return self.game.selectModel.collectionItemIndex
+	local collectionLibrary = self.game.selectModel.collectionLibrary
+	return collectionLibrary.tree.selected
 end
 
 ---@return table

@@ -19,6 +19,8 @@ end
 local Theme = {}
 
 Theme.sounds = {
+	startSounds = {},
+	startSoundNames = {},
 	scrollSoundLargeList = love.audio.newSource("iris/sounds/hitsound_retro3.wav", "static"),
 	scrollSoundSmallList = love.audio.newSource("iris/sounds/hitsound_retro5.wav", "static"),
 }
@@ -275,6 +277,24 @@ function Theme:border(w, h)
 	love.graphics.setLineWidth(lineWidth)
 	love.graphics.setColor(self.colors.border)
 	love.graphics.rectangle("line", -half, -half, w + lineWidth, h + lineWidth, 8, 8)
+end
+
+function Theme:init()
+	local startSoundNames = love.filesystem.getDirectoryItems("iris/sounds/start")
+
+	local t = {}
+
+	for _, name in ipairs(startSoundNames) do
+		t[name] = love.audio.newSource("iris/sounds/start/" .. name, "static")
+	end
+
+	self.sounds.startSounds = t
+	self.sounds.startSoundNames = startSoundNames
+end
+
+function Theme:getStartSound(game)
+	local config = game.configModel.configs.iris
+	return self.sounds.startSounds[config.startSound]
 end
 
 Theme.version = "0.1.0"

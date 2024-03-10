@@ -21,7 +21,7 @@ function IrisTheme:init()
 		game.ui.resultView.game = game
 		game.resultView = game.ui.resultView
 	end, self)
-
+	
 	local dirs = require("sphere.persistence.dirs")
 
 	modulePatcher:insert("sphere.persistence.Persistence", "load", function(_self)
@@ -32,7 +32,6 @@ function IrisTheme:init()
 		configModel:open("select", true)
 		configModel:open("play", true)
 		configModel:open("input", true)
-		configModel:open("mount", true)
 		configModel:open("online", true)
 		configModel:open("urls")
 		configModel:open("judgements")
@@ -40,6 +39,8 @@ function IrisTheme:init()
 		configModel:open("files")
 		configModel:open("iris", true)
 		configModel:read()
+
+		_self.cacheModel:load()
 	end)
 end
 

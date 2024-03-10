@@ -15,6 +15,7 @@ local textSeparation = 15
 SettingsTab.scroll = 0
 SettingsTab.scrollTarget = 0
 SettingsTab.tween = flux.to(SettingsTab, 0, { scroll = 0 })
+SettingsTab.startSounds = nil
 
 function SettingsTab:reset()
 	self.scroll = 0
@@ -424,6 +425,7 @@ function SettingsTab:UI(view)
 	local settings = configs.settings
 	local s = configs.select
 	local g = settings.graphics
+	local iris = configs.iris
 
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
@@ -472,6 +474,8 @@ function SettingsTab:UI(view)
 	just.next(0, textSeparation)
 	local m = settings.miscellaneous
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
+
+	iris.startSound = imgui.combo("iris.startSound", iris.startSound, Theme.sounds.startSoundNames, nil, "START SOUND !!!")
 end
 
 function SettingsTab:Version(view)

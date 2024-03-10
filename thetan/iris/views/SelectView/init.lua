@@ -22,9 +22,10 @@ SelectView.modalActive = false
 SelectView.screenX = 0
 SelectView.screenXTarget = 0
 
-local playSound = love.audio.newSource("iris/sounds/start.wav", "static")
+local playSound = nil
 
 function SelectView:load()
+	Theme:init()
 	self.game.selectController:load()
 	self.headerView = HeaderView(self.game, "select")
 	self.settingsViewConfig = SettingsViewConfig(self.game)
@@ -32,6 +33,7 @@ function SelectView:load()
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
 
 	BackgroundView.game = self.game
+	playSound = Theme:getStartSound(self.game)
 end
 
 function SelectView:beginUnload()
@@ -66,7 +68,9 @@ function SelectView:openModal(modalName)
 end
 
 ---@param dt number
-function SelectView:updateSettings(dt) end
+function SelectView:updateSettings(dt)
+	playSound = Theme:getStartSound(self.game)
+end
 
 ---@param dt number
 function SelectView:updateSongSelect(dt)
@@ -99,8 +103,11 @@ function SelectView:updateSongSelect(dt)
 		local audioSettings = configs.settings.audio
 		local uiVolume = configs.iris.uiVolume
 
-		playSound:setVolume(audioSettings.volume.master * uiVolume)
-		playSound:play()
+		if playSound ~= nil then
+			playSound:setVolume(audioSettings.volume.master * uiVolume)
+			playSound:play()
+		end
+
 		self:play()
 	end
 
