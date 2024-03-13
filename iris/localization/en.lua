@@ -273,8 +273,8 @@ localization.fonts = {
 	},
 
 	scoreListView = {
-		line1 = { "ZenMaruGothic-Black", 22 },
-		line2 = { "ZenMaruGothic-Black", 20 },
+		line1 = { "ZenMaruGothic-Black", 20 },
+		line2 = { "ZenMaruGothic-Black", 18 },
 		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
@@ -342,7 +342,7 @@ localization.fonts = {
 		hitError = {"ZenMaruGothic-Medium", 16},
 		judgements = {"ZenMaruGothic-Medium", 24},
 		accuracy = {"ZenMaruGothic-Medium", 28},
-		scoreInfo = {"ZenMaruGothic-Medium", 36},
+		scoreInfo = {"ZenMaruGothic-Medium", 30},
 		pauses = {"ZenMaruGothic-Medium", 24},
 		difficulty = { "ZenMaruGothic-Medium", 28 },
 		calculator = { "ZenMaruGothic-Medium", 24 },

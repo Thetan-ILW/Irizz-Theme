@@ -224,6 +224,7 @@ local function info(view)
 	local offset = 1.6
 
 	w, h = Layout:move("info1row1")
+	love.graphics.setFont(font.info)
 	love.graphics.setColor(Color.text)
 	gfx_util.printBaseline(string.format(Text.length, length), 0, h / offset, w, 1, "center")
 	love.graphics.setColor(Color.mutedBorder)

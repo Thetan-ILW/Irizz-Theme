@@ -1,5 +1,6 @@
 local ListView = require("thetan.iris.views.ListView")
 local just = require("just")
+local gfx_util = require("gfx_util")
 local Format = require("sphere.views.Format")
 local time_util = require("time_util")
 
@@ -73,10 +74,16 @@ function ScoreListView:drawItem(i, w, h)
 	end
 
 	self:drawItemBody(w, h, i, i == self.selectedScoreIndex)
-
+	local xIndent = 10
+	local yIndent = 0
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.line1)
-	just.indent(10)
+	gfx_util.printFrame(string.format("#%i %s", i, username), xIndent, yIndent, w, h, "left", "top")
+	gfx_util.printFrame(string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate), -xIndent, yIndent, w, h, "right", "top")
+	love.graphics.setFont(self.font.line2)
+	gfx_util.printFrame(string.format("Score: %i", item.score), xIndent, -yIndent, w, h, "left", "bottom")
+	gfx_util.printFrame(time_util.time_ago_in_words(item.time), -xIndent, -yIndent, w, h, "right", "bottom")
+	--[[just.indent(10)
 	just.text(string.format("#%i %s", i, username), w)
 	just.sameline()
 	just.offset(0)
@@ -88,7 +95,7 @@ function ScoreListView:drawItem(i, w, h)
 	just.sameline()
 	just.offset(0)
 	just.indent(-10)
-	just.text(time_util.time_ago_in_words(item.time), w, true)
+	just.text(time_util.time_ago_in_words(item.time), w, true)]]
 end
 
 return ScoreListView

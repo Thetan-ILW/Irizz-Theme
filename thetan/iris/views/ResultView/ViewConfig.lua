@@ -18,7 +18,7 @@ local ViewConfig = class()
 
 function ViewConfig:new(game)
 	self.scoreListView = ScoreListView(game, true)
-	self.scoreListView.rows = 4
+	self.scoreListView.rows = 5
 	font = Theme:getFonts("resultView")
 end
 
@@ -44,7 +44,15 @@ local lines = {
 local function panel()
 	local w, h = Layout:move("panel")
 	Theme:panel(w, h)
+	
+	local function stencil()
+		love.graphics.rectangle("fill", -100, 0, w + 200, h+100)
+	end
+
+	love.graphics.stencil(stencil, "replace", 1)
+	love.graphics.setStencilTest("greater", 0)
 	Theme:border(w, h)
+	love.graphics.setStencilTest()
 
 	love.graphics.setColor(Color.border)
 	for _, name in ipairs(lines) do
@@ -97,7 +105,7 @@ local _EarlyHitGraph = PointGraphView({
 	draw = drawGraph,
 	radius = pointR,
 	backgroundColor = { 0, 0, 0, 1 },
-	backgroundRadius = pointR + 4,
+	backgroundRadius = 0,
 	point = function(self, point)
 		if not point.base.isEarlyHit then
 			return
@@ -209,10 +217,10 @@ function ViewConfig:judgements(view)
 	--gfx_util.printFrame(("%s %3.2f%%"):format(counterName, judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
 end
 
-local function Footer(view)
-	local noteChartItem = view.game.selectModel.noteChartItem
+local function footer(view)
+	local chartview = view.game.selectModel.chartview
 
-	if not noteChartItem then
+	if not chartview then
 		return
 	end
 
@@ -220,15 +228,14 @@ local function Footer(view)
 	love.graphics.setFont(font.titleAndDifficulty)
 
 	local w, h = Layout:move("footerTitle")
-	just.text(string.format("%s - %s", noteChartItem.artist, noteChartItem.title), w)
-
+	just.text(string.format("%s - %s", chartview.artist, chartview.title), w)
 	w, h = Layout:move("footerChartName")
 	just.text(
 		string.format(
 			"[%s] [%s] %s",
-			Format.inputMode(noteChartItem.inputMode),
-			noteChartItem.creator,
-			noteChartItem.name
+			Format.inputMode(chartview.chartdiff_inputmode),
+			chartview.creator or "",
+			chartview.name
 		),
 		w,
 		true
@@ -359,7 +366,7 @@ function ViewConfig:draw(view)
 	self:pauses(view)
 	self:modifiers(view)
 	HitGraph(view)
-	Footer(view)
+	footer(view)
 end
 
 return ViewConfig
