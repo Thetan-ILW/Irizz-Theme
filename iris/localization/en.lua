@@ -130,6 +130,10 @@ localization.textSettings = {
 	muteOnUnfocus = "Mute game out of focus",
 	autoUpdate = "Auto update",
 	showNonManiaCharts = "Show non-mania charts",
+	difficulty = "Difficulty",
+	sort = "Sort",
+	startSound = "Start sound",
+	staticCursor = "Static cursor in lists"
 }
 
 localization.textSongSelect = {

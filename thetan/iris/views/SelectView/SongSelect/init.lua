@@ -323,6 +323,7 @@ local function footer(view)
 
 	local w, h = Layout:move("footerTitle")
 	just.text(string.format("%s - %s", chartview.artist, chartview.title), w)
+	just.text(string.format("%s - %s", chartview.artist, chartview.title), w)
 	w, h = Layout:move("footerChartName")
 	just.text(
 		string.format(

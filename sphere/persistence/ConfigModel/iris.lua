@@ -4,4 +4,5 @@ return {
     scoreSystem = "soundsphere",
     judge = "",
     health = "",
+    staticCursor = true,
 }

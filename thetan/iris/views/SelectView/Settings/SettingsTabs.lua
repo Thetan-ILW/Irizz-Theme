@@ -25,7 +25,7 @@ function SettingsTab:reset()
 end
 
 function SettingsTab:draw(view, w, h, tab)
-	local scrollLimit = just.height
+	local scrollLimit = math.huge
 
 	local delta = just.wheel_over(tab, just.is_over(w, h))
 	if delta then
@@ -413,12 +413,6 @@ function SettingsTab:Inputs(view)
 	playContext.single = imgui.checkbox("single", playContext.single, Text.singleNoteHandler)
 end
 
----@param f table
----@return string
-local function filter_to_string(f)
-	return f.name
-end
-
 local diff_columns = {
 	"enps_diff",
 	"osu_diff",
@@ -435,9 +429,29 @@ function SettingsTab:UI(view)
 	local ss = settings.select
 	local iris = configs.iris
 
+	just.text(Text.select)
+	just.next(0, textSeparation)
+	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
+	local m = settings.miscellaneous
+	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
+
+	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, Text.difficulty)
+
+	local sortFunction = view.game.configModel.configs.select.sortFunction
+	local sortModel = view.game.selectModel.sortModel
+
+	local a = imgui.spoilerList("SortDropdown", sortModel.names, sortFunction, nil, Text.sort)
+	local name = sortModel.names[a]
+	if name then
+		view.game.selectModel:setSortFunction(name)
+	end
+
+	imgui.separator()
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
+	iris.startSound = imgui.combo("iris.startSound", iris.startSound, Theme.sounds.startSoundNames, nil, Text.startSound)
+	iris.staticCursor = imgui.checkbox("iris.staticCursor", iris.staticCursor, Text.staticCursor)
 	imgui.separator()
 
 	just.text(Text.dim)
@@ -455,37 +469,7 @@ function SettingsTab:UI(view)
 	blur.gameplay = imgui.slider1("blur.gameplay", blur.gameplay, "%d", 0, 20, 1, Text.gameplay)
 	blur.result = imgui.slider1("blur.result", blur.result, "%d", 0, 20, 1, Text.result)
 
-	imgui.separator()
-	just.text(Text.select)
-	just.next(0, textSeparation)
-	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
 
-	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, "difficulty")
-
-	local filters = view.game.configModel.configs.filters.notechart
-	local config = view.game.configModel.configs.select
-	local i = imgui.SpoilerList("NotechartFilterDropdown", 400, 50, filters, config.filterName, filter_to_string)
-	if i then
-		config.filterName = filters[i].name
-		view.game.selectModel:noDebouncePullNoteChartSet()
-	end
-
-	local sortFunction = view.game.configModel.configs.select.sortFunction
-	local sortModel = view.game.selectModel.sortModel
-
-	just.next(0, textSeparation)
-
-	local a = imgui.SpoilerList("SortDropdown", 400, 50, sortModel.names, sortFunction)
-	local name = sortModel.names[a]
-	if name then
-		view.game.selectModel:setSortFunction(name)
-	end
-
-	just.next(0, textSeparation)
-	local m = settings.miscellaneous
-	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
-
-	iris.startSound = imgui.combo("iris.startSound", iris.startSound, Theme.sounds.startSoundNames, nil, "START SOUND !!!")
 end
 
 function SettingsTab:Version(view)

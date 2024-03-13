@@ -25,6 +25,8 @@ ListView.staticCursor = Theme.misc.staticListViewCursor
 
 function ListView:playSound()
 	local configs = self.game.configModel.configs
+	self.staticCursor = configs.iris.staticCursor
+
 	local audioSettings = configs.settings.audio
 	local uiVolume = configs.iris.uiVolume
 	self.scrollSound:setVolume(audioSettings.volume.master * uiVolume)
