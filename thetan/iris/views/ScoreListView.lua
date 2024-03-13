@@ -1,6 +1,5 @@
 local ListView = require("thetan.iris.views.ListView")
 local just = require("just")
-local spherefonts = require("sphere.assets.fonts")
 local Format = require("sphere.views.Format")
 local time_util = require("time_util")
 
@@ -30,7 +29,7 @@ function ScoreListView:reloadItems()
 		return
 	end
 
-	self.items = self.game.selectModel.scoreLibrary.items 
+	self.items = self.game.selectModel.scoreLibrary.items
 
 	if #self.items == 0 then
 		self.selectedScoreIndex = 1
@@ -66,7 +65,7 @@ end
 function ScoreListView:drawItem(i, w, h)
 	local item = self.items[i]
 
-	local scoreSourceName = self.game.scoreLibraryModel.scoreSourceName
+	local scoreSourceName = self.game.selectModel.scoreLibrary.scoreSourceName
 	local username = Text.you
 
 	if scoreSourceName == "online" then

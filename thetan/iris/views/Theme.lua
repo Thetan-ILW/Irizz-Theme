@@ -48,10 +48,10 @@ Theme.colors = {
 	uiPanel = { 0.1, 0.1, 0.1, 0.7 },
 	uiHover = { 0.2, 0.2, 0.2, 0.7 },
 	uiActive = { 0.2, 0.2, 0.2, 0.9 },
-	hitPerfect = {0.25, 0.95, 1, 1},
-	hitBad = {1, 0.92, 0.25, 1},
-	hitVeryBad = {0, 0.86, 0.18, 1}, 
-	hitMiss = {1, 0, 0, 1}
+	hitPerfect = { 0.25, 0.95, 1, 1 },
+	hitBad = { 1, 0.92, 0.25, 1 },
+	hitVeryBad = { 0, 0.86, 0.18, 1 },
+	hitMiss = { 1, 0, 0, 1 }
 }
 
 Theme.layout = {
@@ -91,75 +91,83 @@ local difficultyColors = {
 	{ 0.90, 0.15, 0.91, 1 },
 }
 
-local msdColorRanges = {
-	{ 0, 8 },
-	{ 8, 15 },
-	{ 15, 20 },
-	{ 20, 25 },
-	{ 25, 29 },
-	{ 29, 32 },
-}
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
-local enpsColorRanges = {
-	{ 0, 6 },
-	{ 6, 10 },
-	{ 10, 14 },
-	{ 14, 19 },
-	{ 19, 23 },
-	{ 23, 32 },
+local difficultyRanges = {
+	enps_diff = {
+		{ 0,  6 },
+		{ 6,  10 },
+		{ 10, 14 },
+		{ 14, 19 },
+		{ 19, 23 },
+		{ 23, 32 },
+	},
+	msd_diff = {
+		{ 0,  8 },
+		{ 8,  15 },
+		{ 15, 20 },
+		{ 20, 25 },
+		{ 25, 29 },
+		{ 29, 32 },
+	},
+	user_diff = {
+		{ 0,  6 },
+		{ 6,  8 },
+		{ 8,  12 },
+		{ 12, 17 },
+		{ 17, 19 },
+		{ 19, 23 },
+	},
+	osu_diff = {
+		{ 0, 2 },
+		{ 2, 3.5 },
+		{ 3.5, 5.3 },
+		{ 5.3, 6.2 },
+		{ 6.2, 8 },
+		{ 8, 10 }
+	}
 }
-
-local dupsColorRange = {
-	{ 0, 6 },
-	{ 6, 8 },
-	{ 8, 12 },
-	{ 12, 17 },
-	{ 17, 19 },
-	{ 19, 23 },
-}
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 ---@param difficulty number
----@param calculator string
+---@param calculatorName string
 ---@return table
-function Theme:getDifficultyColor(difficulty, calculator)
-	local colorRanges = calculator == "msd" and dupsColorRange or enpsColorRanges
-
-	if difficulty > colorRanges[#colorRanges][2] then
-		return difficultyColors[#difficultyColors]
-	elseif difficulty < 5 then
-		return difficultyColors[1]
+function Theme:getDifficultyColor(difficulty, calculatorName)
+	local ranges = difficultyRanges[calculatorName]
+	if not ranges then
+		error("Invalid calculator name: " .. calculatorName)
 	end
-	
-	local colorIndex
-	for i, range in pairs(colorRanges) do
-		if difficulty >= range[1] and difficulty <= range[2] then
+
+	local colorIndex = 1
+	for i = #ranges, 1, -1 do
+		local range = ranges[i]
+		if difficulty >= range[1] then
 			colorIndex = i
 			break
 		end
 	end
 
+	local lowerLimit, upperLimit
 	if colorIndex == 1 then
-		colorIndex = 2
+		lowerLimit = 0
+		upperLimit = ranges[1][2]
+	elseif colorIndex == #difficultyColors then
+		return difficultyColors[#difficultyColors]
+	else
+		lowerLimit, upperLimit = ranges[colorIndex][1], ranges[colorIndex][2]
 	end
 
-	local lowerLimit, upperLimit = colorRanges[colorIndex][1], colorRanges[colorIndex][2]
-
-	local color1 = difficultyColors[colorIndex - 1]
-	local color2 = difficultyColors[colorIndex]
+	local color1, color2 = difficultyColors[colorIndex], difficultyColors[colorIndex + 1]
 
 	local mixingRatio = (difficulty - lowerLimit) / (upperLimit - lowerLimit)
 
-	local mixedColor = {
+	return {
 		color1[1] * (1 - mixingRatio) + color2[1] * mixingRatio,
 		color1[2] * (1 - mixingRatio) + color2[2] * mixingRatio,
 		color1[3] * (1 - mixingRatio) + color2[3] * mixingRatio,
 		1,
 	}
-
-	return mixedColor
 end
 
 ---@param list table?
@@ -271,7 +279,7 @@ function Theme:panel(w, h)
 end
 
 local lineWidth = 4
-local half = lineWidth/2
+local half = lineWidth / 2
 function Theme:border(w, h)
 	love.graphics.setLineStyle("smooth")
 	love.graphics.setLineWidth(lineWidth)
@@ -295,6 +303,19 @@ end
 function Theme:getStartSound(game)
 	local config = game.configModel.configs.iris
 	return self.sounds.startSounds[config.startSound]
+end
+
+local diff_columns_names = {
+	enps_diff = "ENPS",
+	osu_diff = "OSU",
+	msd_diff = "MSD",
+	user_diff = "USER",
+}
+
+---@param v number?
+---@return string
+function Theme.formatDiffColumns(v)
+	return diff_columns_names[v] or ""
 end
 
 Theme.version = "0.1.0"

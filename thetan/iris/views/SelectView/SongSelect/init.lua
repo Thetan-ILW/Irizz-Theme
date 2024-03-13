@@ -171,33 +171,54 @@ local function msdDifficulty(view, noteChartItem)
 	gfx_util.printFrame(patterns, -3, 15, w, h, "center", "center")
 end
 
+local function difficulty(view, chartview)
+	local difficulty = chartview.difficulty 
+
+	if not difficulty then
+		difficulty = 0
+	end
+
+	local diffColumn = view.game.configModel.configs.settings.select.diff_column
+	local baseTimeRate = view.game.playContext.rate
+
+	local w, h = Layout:move("difficulty")
+
+	love.graphics.setColor(Theme:getDifficultyColor(difficulty * baseTimeRate, diffColumn))
+	love.graphics.setFont(font.difficulty)
+	gfx_util.printBaseline(string.format("%0.02f", difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
+
+	love.graphics.setFont(font.calculator)
+	local calculator = Theme.formatDiffColumns(diffColumn)
+	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")
+
+	local patterns = chartview.msd_diff_data or Text.noPatterns
+	love.graphics.setColor(Color.text)
+	love.graphics.setFont(font.patterns)
+	w, h = Layout:move("patterns")
+	gfx_util.printFrame(patterns, 0, 0, w, h, "center", "center")
+end
+
 local function info(view)
 	local w, h = Layout:move("difficulty")
 
 	love.graphics.setColor(Color.transparentPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
+	local chartview = view.game.selectModel.chartview
+
 	w, h = Layout:move("difficultyAndInfoLine")
 	love.graphics.setColor(Color.mutedBorder)
 	love.graphics.rectangle("fill", 0, 0, w, h)
+	love.graphics.setFont(font.info)
 
-	local noteChartItem = view.game.selectModel.noteChartItem
-
-	if not noteChartItem then
+	if not chartview then
 		return
 	end
 
-	if noteChartItem.difficulty_data then
-		msdDifficulty(view, noteChartItem)
-	else
-		enpsDifficulty(view, noteChartItem)
-	end
-
-	love.graphics.setFont(font.info)
-
-	local length = time_util.format((noteChartItem.length or 0) / view.game.playContext.rate)
-	local longNoteRatio = noteChartItem.longNoteRatio or 0
-	local inputMode = Format.inputMode(noteChartItem.inputMode)
+	difficulty(view, chartview)
+	local length = time_util.format((chartview.duration or 0) / view.game.playContext.rate)
+	local longNoteRatio = (chartview.long_note_count or 0) / chartview.notes_count
+	local inputMode = Format.inputMode(chartview.chartdiff_inputmode)
 	inputMode = inputMode == "2K" and "TAIKO" or inputMode
 
 	local offset = 1.6
@@ -218,17 +239,17 @@ local function info(view)
 end
 
 local function moreInfo(view)
-	local noteChartItem = view.game.selectModel.noteChartItem
+	local chartview = view.game.selectModel.chartview
 
-	if not noteChartItem then
+	if not chartview then
 		return
 	end
 
 	love.graphics.setFont(font.moreInfo)
 
-	local bpm = (noteChartItem.bpm or 0) * view.game.playContext.rate
-	local noteCount = noteChartItem.noteCount or 0
-	local format = string.upper(noteChartItem.format) or "None"
+	local bpm = (chartview.tempo or 0) * view.game.playContext.rate
+	local noteCount = chartview.notes_count or 0
+	local format = string.upper(chartview.format) or "None"
 
 	local offset = 1.6
 
@@ -290,9 +311,9 @@ local function mods(view)
 end
 
 local function footer(view)
-	local noteChartItem = view.game.selectModel.noteChartItem
+	local chartview = view.game.selectModel.chartview
 
-	if not noteChartItem then
+	if not chartview then
 		return
 	end
 
@@ -300,15 +321,14 @@ local function footer(view)
 	love.graphics.setFont(font.titleAndDifficulty)
 
 	local w, h = Layout:move("footerTitle")
-	just.text(string.format("%s - %s", noteChartItem.artist, noteChartItem.title), w)
-
+	just.text(string.format("%s - %s", chartview.artist, chartview.title), w)
 	w, h = Layout:move("footerChartName")
 	just.text(
 		string.format(
 			"[%s] [%s] %s",
-			Format.inputMode(noteChartItem.inputMode),
-			noteChartItem.creator,
-			noteChartItem.name
+			Format.inputMode(chartview.chartdiff_inputmode),
+			chartview.creator or "",
+			chartview.name
 		),
 		w,
 		true

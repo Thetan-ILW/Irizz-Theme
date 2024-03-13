@@ -419,12 +419,20 @@ local function filter_to_string(f)
 	return f.name
 end
 
+local diff_columns = {
+	"enps_diff",
+	"osu_diff",
+	"msd_diff",
+	"user_diff",
+}
+
 function SettingsTab:UI(view)
 	imgui.separator()
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local s = configs.select
 	local g = settings.graphics
+	local ss = settings.select
 	local iris = configs.iris
 
 	just.text(Text.uiTab)
@@ -451,6 +459,8 @@ function SettingsTab:UI(view)
 	just.text(Text.select)
 	just.next(0, textSeparation)
 	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
+
+	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, "difficulty")
 
 	local filters = view.game.configModel.configs.filters.notechart
 	local config = view.game.configModel.configs.select

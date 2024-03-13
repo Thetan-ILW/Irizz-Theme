@@ -19,7 +19,7 @@ local inputMode = ""
 
 function ViewConfig:createTabs(devices)
 	tabs = devices
-	currentTab = tabs[1]
+	--currentTab = tabs[1]
 end
 
 function ViewConfig:tabs(view)
@@ -87,7 +87,7 @@ function ViewConfig:draw(view)
 
 	inputMode = tostring(view.game.selectController.state.inputMode)
 
-	self:tabs(view)
+	--self:tabs(view)
 	self:inputs(view)
 	self:inputMode(view)
 end

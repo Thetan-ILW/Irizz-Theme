@@ -144,6 +144,7 @@ localization.textSongSelect = {
 	filterPlaceholder = "No filters.",
 	you = "You",
 	score = "Score: %i",
+	noPatterns = "No patterns"
 }
 
 localization.textCollections = {
@@ -198,7 +199,8 @@ localization.textResult = {
 	inputMode = "INPUT MODE",
 	timeRate = "TIME RATE",
 	pauses = "PAUSES",
-	scrollSpeed = "SCROLL SPEED"
+	scrollSpeed = "SCROLL SPEED",
+	noPatterns = "No patterns"
 }
 
 localization.fontFamilyList = {

@@ -206,15 +206,7 @@ function ViewConfig:judgements(view)
 
 	w, h = Layout:move("judgementsAccuracy")
 	love.graphics.setFont(font.accuracy)
-	gfx_util.printFrame(("%s %3.2f%%"):format(counterName, judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
-
-	local osu = scoreEngine.scoreSystem.osu.judges.od9.accuracy
-	local quaver = scoreEngine.scoreSystem.quaver.judges.standard.accuracy
-	local wife = scoreEngine.scoreSystem.wife.judges.j4.accuracy
-
-	gfx_util.printFrame(("osu V2 OD9 %3.2f%%"):format(osu * 100), 0, 60, w, h, "center", "center")
-	gfx_util.printFrame(("quaver %3.2f%%"):format(quaver * 100), 0, 120, w, h, "center", "center")
-	gfx_util.printFrame(("wife J4 %3.2f%%"):format(wife * 100), 0, 180, w, h, "center", "center")
+	--gfx_util.printFrame(("%s %3.2f%%"):format(counterName, judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
 end
 
 local function Footer(view)
@@ -249,21 +241,13 @@ function ViewConfig:scoreInfo(view)
 	local rhythmModel = view.game.rhythmModel
 	local normalscore = rhythmModel.scoreEngine.scoreSystem.normalscore
 
-	local noteChartItem = view.game.selectModel.noteChartItem
+	local chartview = view.game.selectModel.chartview
 	local scoreItem = view.game.selectModel.scoreItem
 	local scoreEngine = rhythmModel.scoreEngine
 	local playContext = view.game.playContext
 
 	if not scoreItem then
 		return
-	end
-
-	local topScoreItem = view.game.scoreLibraryModel.items[1]
-	if topScoreItem == scoreItem then
-		topScoreItem = view.game.scoreLibraryModel.items[2]
-	end
-	if not topScoreItem then
-		topScoreItem = scoreItem
 	end
 
 	local scoreEntry = playContext.scoreEntry
@@ -274,7 +258,6 @@ function ViewConfig:scoreInfo(view)
 	local show = showLoadedScore(view)
 
 	local baseTimeRate = show and playContext.rate or scoreItem.rate
-	local baseInputMode = noteChartItem.inputMode
 
 	local inputMode = show and tostring(rhythmModel.noteChart.inputMode) or scoreItem.inputmode
 	inputMode = Format.inputMode(inputMode)
@@ -283,11 +266,12 @@ function ViewConfig:scoreInfo(view)
 	if score ~= score then
 		score = 0
 	end
-	
+
 	local accuracyValue = show and normalscore.accuracyAdjusted or scoreItem.accuracy
 	local accuracy = Format.accuracy(accuracyValue)
-	
+
 	local w, h = Layout:move("normalscore")
+	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.scoreInfo)
 	gfx_util.printFrame(
 		("%s: %i\n%s: %s\n%s: %s\n%s: %0.02fx"):format(
@@ -299,79 +283,40 @@ function ViewConfig:scoreInfo(view)
 	)
 end
 
----@param view table
----@param noteChartItem table
-local function EnpsDifficulty(view, noteChartItem)
-	if not noteChartItem.difficulty then
-		return
-	end
-
-	local baseTimeRate = view.game.playContext.rate
-
-	local w, h = Layout:move("difficulty")
-
-	love.graphics.setColor(Theme:getDifficultyColor(noteChartItem.difficulty * baseTimeRate, "enps"))
-	love.graphics.setFont(font.difficulty)
-	gfx_util.printBaseline(string.format("%0.02f", noteChartItem.difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
-
-	love.graphics.setFont(font.calculator)
-	gfx_util.printBaseline("ENPS", 0, h / 1.2, w, 1, "center")
-end
-
----@param view table
----@param noteChartItem table
-local function MsdDifficulty(view, noteChartItem)
-	if not noteChartItem.difficulty then
-		return
-	end
-
-	local baseTimeRate = view.game.playContext.rate
-
-	local rate = 1.0
-	if math.abs(baseTimeRate - 1) > 0.00001 then
-		rate = baseTimeRate / 1.04
-	end
-
-	local difficultyData = noteChartItem.difficulty_data or "None"
-	
-	local patterns = ""
-	for key, value in pairs(difficultyData) do
-		patterns = string.format("%s%0.02f %s\n", patterns, value * rate, key)
-	end
-
-	local w, h = Layout:move("difficulty")
-
-	love.graphics.setColor(Theme:getDifficultyColor(noteChartItem.difficulty * baseTimeRate, "msd"))
-	love.graphics.setFont(font.difficulty)
-	gfx_util.printBaseline(string.format("%0.02f", noteChartItem.difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
-
-	love.graphics.setFont(font.calculator)
-	gfx_util.printBaseline("DUPS", 0, h / 1.2, w, 1, "center")
-
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(font.patterns)
-	w, h = Layout:move("patterns")
-	gfx_util.printFrame(patterns, 0, 15, w, h, "center", "center")
-
-end
-
 function ViewConfig:difficulty(view)
 	local w, h = Layout:move("difficulty")
 
 	love.graphics.setColor(Color.transparentPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
-	local noteChartItem = view.game.selectModel.noteChartItem
+	local chartview = view.game.selectModel.chartview
 
-	if not noteChartItem then
+	if not chartview then
 		return
 	end
 
-	if noteChartItem.difficulty_data then
-		MsdDifficulty(view, noteChartItem)
-	else
-		EnpsDifficulty(view, noteChartItem)
+	if not chartview.difficulty then
+		return
 	end
+
+	local diffColumn = view.game.configModel.configs.settings.select.diff_column
+	local baseTimeRate = view.game.playContext.rate
+
+	w, h = Layout:move("difficulty")
+
+	love.graphics.setColor(Theme:getDifficultyColor(chartview.difficulty * baseTimeRate, diffColumn))
+	love.graphics.setFont(font.difficulty)
+	gfx_util.printBaseline(string.format("%0.02f", chartview.difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
+
+	love.graphics.setFont(font.calculator)
+	local calculator = Theme.formatDiffColumns(diffColumn)
+	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")
+
+	local patterns = chartview.msd_diff_data or Text.noPatterns
+	love.graphics.setColor(Color.text)
+	love.graphics.setFont(font.patterns)
+	w, h = Layout:move("patterns")
+	gfx_util.printFrame(patterns, 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:pauses(view)

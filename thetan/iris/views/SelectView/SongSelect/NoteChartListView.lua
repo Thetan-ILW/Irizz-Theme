@@ -59,10 +59,10 @@ function NoteChartListView:drawItem(i, w, h)
 	local baseTimeRate = self.game.playContext.rate
 
 	local difficulty = Format.difficulty((item.difficulty or 0) * baseTimeRate)
-	local inputMode = Format.inputMode(item.inputMode)
+	local inputMode = Format.inputMode(item.chartdiff_inputmode)
 	inputMode = inputMode == "2K" and "TAIKO" or inputMode
 	local name = item.name
-	local creator = item.creator
+	local creator = item.creator or ""
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
