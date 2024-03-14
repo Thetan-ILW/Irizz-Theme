@@ -32,18 +32,24 @@ function InputListView:reloadItems()
 
 	local keys = {}
 
+	local inputModel = self.game.inputModel
+	local bindsCount = inputModel:getBindsCount(self.inputMode)
+
 	for i = 1, #inputs do
 		local virtualKey = inputs[i]
-		local t = { virtualKey, {} }
+		local t = { inputCount = #inputs, virtualKey = virtualKey, inputs = {} }
 
-		for j = 1, 2 do
-			local key = self.game.inputModel:getKey(self.inputMode, virtualKey, self.device, j)
-			table.insert(t[2], key)
+		for j = 1, bindsCount + 1 do
+			local key, device, deviceId = inputModel:getKey(self.inputMode, virtualKey, j)
+
+			if key == nil then
+				key = ""
+			end
+
+			table.insert(t.inputs, key)
 		end
-
 		table.insert(keys, t)
 	end
-
 	self.items = keys
 end
 
@@ -52,17 +58,25 @@ function InputListView:drawItem(i, w, h)
 	self:drawItemBody(w, h, i, false)
 
 	love.graphics.setColor(Color.text)
-	imgui.setSize(w, h, w / 4, h * 0.7)
+	imgui.setSize(w, h, w / 11, h * 0.7)
 
 	just.row(true)
 	love.graphics.translate(15, 10)
-	just.text(Format.inputMode(item[1]), 70)
+	just.text(Format.inputMode(item.virtualKey), 70)
 
-	for index, key in ipairs(item[2]) do
-		local newBind = imgui.hotkey(item[1] .. index, key, "")
+	local inputIdPattern = "input hotkey %s %s"
 
-		if newBind ~= item[2] then
-			self.game.inputModel:setKey(self.inputMode, item[1], self.device, newBind, index)
+	for index, value in ipairs(item.inputs) do
+		local virtualKey = item.virtualKey
+		local hotkeyId = inputIdPattern:format(i, index)
+		local newBind, device, deviceId = imgui.hotkey(hotkeyId, value, "")
+
+		if newBind ~= value then
+			self.game.inputModel:setKey(self.inputMode, virtualKey, index, device, deviceId, newBind)
+			
+			if i + 1 <= item.inputCount and newBind then
+				just.focus(inputIdPattern:format(i + 1, index))
+			end
 		end
 	end
 

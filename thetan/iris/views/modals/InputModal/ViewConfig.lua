@@ -12,36 +12,7 @@ local Layout = require("thetan.iris.views.modals.InputModal.Layout")
 
 local ViewConfig = {}
 
-local currentTab = ""
-local tabs = {}
-
 local inputMode = ""
-
-function ViewConfig:createTabs(devices)
-	tabs = devices
-	--currentTab = tabs[1]
-end
-
-function ViewConfig:tabs(view)
-	local w, h = Layout:move("tabs")
-	Theme:panel(w, h)
-
-	local devices = view.game.inputModel.devices
-	local tabsCount = #devices
-	h = h / tabsCount
-
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.tabs)
-
-	for _, device in ipairs(devices) do
-		if imgui.TextOnlyButton(device, device, w, h, "center", device == currentTab) then
-			currentTab = device
-		end
-	end
-
-	w, h = Layout:move("tabs")
-	Theme:border(w, h)
-end
 
 function ViewConfig:inputs(view)
 	local w, h = Layout:move("inputs")
@@ -52,7 +23,6 @@ function ViewConfig:inputs(view)
 	love.graphics.setFont(Font.inputs)
 
 	self.inputListView.inputMode = inputMode
-	self.inputListView.device = currentTab
 	self.inputListView:draw(w, h, true)
 end
 

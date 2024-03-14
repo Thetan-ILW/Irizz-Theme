@@ -10,7 +10,6 @@ InputModal.viewConfig = ViewConfig
 function InputModal:new(game)
     self.game = game
     ViewConfig.inputListView = InputListView(game)
-    ViewConfig:createTabs(game.inputModel.devices)
 end
 
 return InputModal

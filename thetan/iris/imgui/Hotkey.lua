@@ -6,28 +6,36 @@ local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local cfg = Theme.imgui
 
-return function(id, device, key, w, h)
-	local _key = key
+return function(id, text, w, h)
 	local changed = false
+	local key, device, device_id = text, nil, nil
 
 	if just.focused_id == id then
-		local k = just.next_input(device == "keyboard" and "key" or device, "pressed")
+		local k, dev, dev_id = just.next_input("pressed")
 		if k then
-			key = k
+			key, device, device_id = k, dev, dev_id
 			changed = true
 			just.focus()
 		end
 		if just.keypressed("escape", true) then
 			changed = true
-			key = nil
+			key, device, device_id = nil, nil, nil
 			just.focus()
 		end
 	end
 
 	local _changed, active, hovered = just.button(id, just.is_over(w, h))
+
 	if _changed then
 		just.focus(id)
-		active = true
+	end
+
+	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
+
+	if _changed and ctrlDown then
+		key, device, device_id = nil, nil, nil
+		changed = true
+		just.focus()
 	end
 
 	love.graphics.setColor(just.focused_id == id and Color.uiActive or Color.uiPanel)
@@ -37,10 +45,10 @@ return function(id, device, key, w, h)
 
 	love.graphics.setColor(1, 1, 1, 1)
 
-	local text = just.focused_id == id and "???" or key or "none"
+	text = just.focused_id == id and "???" or text or ""
 	gfx_util.printFrame(text, h * theme.padding, 0, w, h, "left", "center")
 
 	just.next(w + h/10, h + cfg.nextItemOffset)
 
-	return changed, key
+	return changed, key, device, device_id
 end
