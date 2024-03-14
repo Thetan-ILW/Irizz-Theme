@@ -24,8 +24,7 @@ end
 
 function ViewConfig:tabs(view)
 	local w, h = Layout:move("tabs")
-	love.graphics.setColor(Color.panel)
-	love.graphics.rectangle("fill", 0, 0, w, h)
+	Theme:panel(w, h)
 
 	local devices = view.game.inputModel.devices
 	local tabsCount = #devices
@@ -41,17 +40,13 @@ function ViewConfig:tabs(view)
 	end
 
 	w, h = Layout:move("tabs")
-	love.graphics.setColor(Color.border)
-	love.graphics.rectangle("line", 0, 0, w, h)
+	Theme:border(w, h)
 end
 
 function ViewConfig:inputs(view)
 	local w, h = Layout:move("inputs")
-	love.graphics.setColor(Color.panel)
-	love.graphics.rectangle("fill", 0, 0, w, h)
-
-	love.graphics.setColor(Color.border)
-	love.graphics.rectangle("line", 0, 0, w, h)
+	Theme:panel(w, h)
+	Theme:border(w, h)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.inputs)

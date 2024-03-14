@@ -14,24 +14,19 @@ local ViewConfig = {}
 
 function ViewConfig:availableModifierList(view)
 	local w, h = Layout:move("availableMods")
-	love.graphics.setColor(Color.panel)
-	love.graphics.rectangle("fill", 0, 0, w, h)
+	Theme:panel(w, h)
 
 	self.availableModifierListView:draw(w, h, true)
 	w, h = Layout:move("availableMods")
-	love.graphics.setColor(Color.border)
-	love.graphics.rectangle("line", 0, 0, w, h)
+	Theme:border(w, h)
 end
 
 ---@param self table
 function ViewConfig:modifierList(view)
 	local w, h = Layout:move("activeMods")
-	love.graphics.setColor(Color.panel)
-	love.graphics.rectangle("fill", 0, 0, w, h)
-
+	Theme:panel(w, h)
 	self.modifierListView:draw(w, h, true)
-	love.graphics.setColor(Color.border)
-	love.graphics.rectangle("line", 0, 0, w, h)
+	Theme:border(w, h)
 end
 
 function ViewConfig:inputMode(view)
