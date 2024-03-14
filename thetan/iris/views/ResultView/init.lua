@@ -36,6 +36,26 @@ function ResultView:update(dt)
 	if just.keypressed("escape") then
 		self:changeScreen("selectView")
 	end
+
+	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
+
+	if ctrlDown and just.keypressed("r") then
+		self:play("retry")
+		return
+	end
+
+	if ctrlDown and just.keypressed("w") then
+		self:play("replay")
+		return
+	end
+
+	if ctrlDown and just.keypressed("s") then
+		local scoreItem = self.game.selectModel.scoreItem
+		self.game.onlineModel.onlineScoreManager:submit(
+			self.game.selectModel.chartview,
+			scoreItem.replay_hash
+		)
+	end
 end
 
 function ResultView:draw()
@@ -78,15 +98,15 @@ ResultView.play = thread.coro(function(self, mode)
 	if playing then
 		return
 	end
-	
+
 	playing = true
 	local scoreEntry = self.game.selectModel.scoreItem
 	local isResult = self.game.resultController:replayNoteChartAsync(mode, scoreEntry)
-	
+
 	if isResult then
 		return self.view:reload()
 	end
-	
+
 	self:changeScreen("gameplayView")
 	playing = false
 end)
