@@ -89,6 +89,10 @@ function SelectView:updateSongSelect(dt)
 		self:openModal("thetan.iris.views.modals.InputModal")
 	end
 
+	if ctrlDown and just.keypressed("f") then
+		self:openModal("thetan.iris.views.modals.FiltersModal")
+	end
+
 	if self.modalActive then
 		return
 	end

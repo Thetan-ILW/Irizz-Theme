@@ -10,7 +10,12 @@ Modal.name = nil
 Modal.forceClose = false
 Modal.alpha = 0
 
+function Modal:onShow() end
+function Modal:onHide() end
+
 function Modal:show()
+    self:onShow()
+
     if self.hideTween then
         self.hideTween:stop()
         self.hideTween = nil
@@ -20,6 +25,8 @@ function Modal:show()
 end
 
 function Modal:hide()
+    self:onHide()
+
     if self.showTween then
         self.showTween:stop()
         self.showTween = nil

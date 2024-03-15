@@ -1,5 +1,4 @@
 local just = require("just")
-local theme = require("imgui.theme")
 local gfx_util = require("gfx_util")
 
 local Theme = require("thetan.iris.views.Theme")
@@ -17,7 +16,7 @@ return function(id, text, w, h)
 	love.graphics.setColor(1, 1, 1, 1)
 	gfx_util.printFrame(tostring(text), 0, 0, w, cfg.size, "center", "center")
 
-	just.next(w, h)
+	just.next(w, h + cfg.nextItemOffset)
 
 	return changed
 end

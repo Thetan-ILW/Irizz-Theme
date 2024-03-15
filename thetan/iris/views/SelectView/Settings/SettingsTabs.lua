@@ -1,7 +1,6 @@
 local just = require("just")
 local imgui = require("thetan.iris.imgui")
-local flux = require("flux")
-local math_util = require("math_util")
+local Container = require("thetan.gyatt.Container")
 local audio = require("audio")
 local version = require("version")
 
@@ -12,37 +11,22 @@ local cfg = Theme.imgui
 local SettingsTab = {}
 
 local textSeparation = 15
-SettingsTab.scroll = 0
-SettingsTab.scrollTarget = 0
-SettingsTab.tween = flux.to(SettingsTab, 0, { scroll = 0 })
-SettingsTab.startSounds = nil
+SettingsTab.container = Container("settingsContainer")
 
 function SettingsTab:reset()
-	self.scroll = 0
-	self.scrollTarget = 0
-	self.tween:stop()
-	just.reset()
+	self.container:reset()
 end
 
 function SettingsTab:draw(view, w, h, tab)
-	local scrollLimit = math.huge
-
-	local delta = just.wheel_over(tab, just.is_over(w, h))
-	if delta then
-		self.scrollTarget = self.scrollTarget + (delta * 80)
-		self.scrollTarget = math_util.clamp(-scrollLimit, self.scrollTarget, 0)
-		self.tween = flux.to(self, 0.25, { scroll = self.scrollTarget }):ease("quartout")
-	end
-
 	imgui.setSize(w, h, w / 2.5, cfg.size)
-
-	just.clip(love.graphics.rectangle, "fill", 0, 0, w, h)
-	love.graphics.translate(15, self.scroll + 15)
+	local startHeight = just.height
+	self.container:startDraw(w, h)
 
 	Theme:setLines()
-
 	self[tab](self, view)
-	just.clip()
+
+	self.container.scrollLimit = just.height - startHeight - h
+	self.container.stopDraw()
 end
 
 ---@param id any
@@ -114,7 +98,7 @@ function SettingsTab:Gameplay(view)
 	speedModel:set(newSpeed)
 
 	g.speedType = imgui.combo("speedType", g.speedType, speedModel.types, formatSpeedType, Text.speedType)
-
+	
 	g.longNoteShortening = imgui.slider1(
 		"shortening",
 		g.longNoteShortening * 1000,

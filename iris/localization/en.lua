@@ -130,7 +130,6 @@ localization.textSettings = {
 	singleNoteHandler = "Taiko note handler",
 	muteOnUnfocus = "Mute game out of focus",
 	autoUpdate = "Auto update",
-	moddedCharts = "Show modified charts",
 	showNonManiaCharts = "Show non-mania charts",
 	difficulty = "Difficulty",
 	sort = "Sort",
@@ -200,6 +199,11 @@ localization.textOnline = {
 	logout = "Log out",
 	emailPlaceholder = "Email",
 	passwordPlaceholder = "Password",
+}
+
+localization.textFilters = {
+	filters = "Filters",
+	moddedCharts = "Show modified charts",
 }
 
 localization.textResult = {
@@ -344,6 +348,13 @@ localization.fonts = {
 		status = { "ZenMaruGothic-Black", 48 },
 		fields = { "ZenMaruGothic-Medium", 36 },
 		buttons = { "ZenMaruGothic-Medium", 28 },
+	},
+
+	filtersModal = {
+		title = { "ZenMaruGothic-Black", 72 },
+		checkboxes = {"ZenMaruGothic-Medium", 24},
+		headerText = {"ZenMaruGothic-Black", 28},
+		filtersLine = { "ZenMaruGothic-Black", 48 },
 	},
 
 	resultView = {

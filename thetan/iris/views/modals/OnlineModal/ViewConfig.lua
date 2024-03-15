@@ -9,6 +9,7 @@ local Theme = require("thetan.iris.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textOnline
 local Font = Theme:getFonts("onlineModal")
+local cfg = Theme.imgui
 
 local ViewConfig = {}
 
@@ -56,6 +57,7 @@ end
 
 function ViewConfig:logout(view)
 	local w, h = Layout:move("buttonsOnline")
+	imgui.setSize(w, h, w / 2.5, cfg.size)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.buttons)
@@ -69,6 +71,7 @@ end
 
 function ViewConfig:login(view)
 	local w, h = Layout:move("buttons")
+	imgui.setSize(w, h, w / 2.5, cfg.size)
 
 	local imguiSize = Theme.imgui.size
 	local nextItemOffset = Theme.imgui.nextItemOffset

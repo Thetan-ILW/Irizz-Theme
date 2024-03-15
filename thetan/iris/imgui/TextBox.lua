@@ -26,14 +26,14 @@ return function(id, text, index, w, h, password)
 	just.origin()
 	just.row(true)
 
-	love.graphics.setColor(1, 1, 1, 1)
 
+	local textHeight = font:getHeight()
+	Theme:panel(w, textHeight)
+	Theme:border(w, textHeight)
 	local clipw = w - 10
 	just.clip(love.graphics.rectangle, "fill", 0, 0, clipw, lh)
 
-	local textHeight = font:getHeight()
-	Theme:panel(clipw, textHeight)
-	Theme:border(clipw, textHeight)
+	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.translate(math.min(clipw - font:getWidth(text), 0), 0)
 
 	local changed, left, right
