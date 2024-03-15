@@ -55,8 +55,7 @@ function ViewConfig:songSelectButtons(view)
 
 	if just.is_over(songsText, h + 10, x) then
 		if just.mousepressed(1) then
-			view:switchToSongSelect() ---------------------------------------------
-			view:moveScreen(0, true) -----------------------------------------
+			view:switchToSongSelect()
 		end
 	end
 
@@ -69,7 +68,7 @@ function ViewConfig:songSelectButtons(view)
 
 	if just.is_over(collectionsText, h + 10, x) then
 		if just.mousepressed(1) then
-			view:moveScreen(1, true)
+			view:switchToCollections()
 		end
 	end
 end

@@ -169,11 +169,27 @@ function SettingsTab:Gameplay(view)
 	g.lastMeanValues = imgui.intButtons("lastMeanValues", g.lastMeanValues, 1, Text.lastMeanValues)
 end
 
+local formats = {"osu", "qua", "sm", "ksh"}
+local audio_modes = {"bass_sample", "bass_fx_tempo"}
+
+local _formatModes = {
+	bass_sample = "bass sample",
+	bass_fx_tempo = "bass fx tempo",
+}
+
+---@param mode string
+---@return string
+local function formatModes(mode)
+	return _formatModes[mode] or mode
+end
+
 function SettingsTab:Timings(view)
 	imgui.separator()
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local g = settings.gameplay
+	local of = g.offset_format
+	local oam = g.offset_audio_mode
 
 	just.text(Text.timingsTab)
 	just.next(0, textSeparation)
@@ -183,23 +199,30 @@ function SettingsTab:Timings(view)
 	g.offset.visual = intButtonsMs("visual offset", g.offset.visual, Text.visualOffset)
 	g.offsetScale.input = imgui.checkbox("offsetScale.input", g.offsetScale.input, Text.multiplyInputOffset)
 	g.offsetScale.visual = imgui.checkbox("offsetScale.visual", g.offsetScale.visual, Text.multiplyVisualOffset)
+
+	imgui.separator()
+	imgui.text(Text.chartFormatOffsets)
+	just.next(0, textSeparation)
+
+	for _, format in ipairs(formats) do
+		of[format] = intButtonsMs("offset " .. format, of[format], format)
+	end
+
+	imgui.separator()
+	imgui.text(Text.audioModeOffsets)
+	just.next(0, textSeparation)
+
+	for _, audio_mode in ipairs(audio_modes) do
+		oam[audio_mode] = intButtonsMs("offset " .. audio_mode, oam[audio_mode], formatModes(audio_mode))
+	end
 end
 
-local _formatModes = {
-	bass_sample = "bass sample",
-	bass_fx_tempo = "bass fx tempo",
-}
 
 local volumeType = {
 	["linear"] = Text.linearType,
 	["logarithmic"] = Text.logarithmicType,
 }
 
----@param mode string
----@return string
-local function formatModes(mode)
-	return _formatModes[mode] or mode
-end
 
 ---@param mode string
 ---@return string
@@ -431,6 +454,7 @@ function SettingsTab:UI(view)
 
 	just.text(Text.select)
 	just.next(0, textSeparation)
+	ss.chartdiffs_list = imgui.checkbox("ss.chartdiffs_list", ss.chartdiffs_list, Text.moddedCharts)
 	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
 	local m = settings.miscellaneous
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
@@ -445,6 +469,11 @@ function SettingsTab:UI(view)
 	if name then
 		view.game.selectModel:setSortFunction(name)
 	end
+
+	imgui.separator()
+	just.text(Text.collections)
+	just.next(0, textSeparation)
+	ss.locations_in_collections = imgui.checkbox("s.locations_in_collections", ss.locations_in_collections, Text.showLocations)
 
 	imgui.separator()
 	just.text(Text.uiTab)

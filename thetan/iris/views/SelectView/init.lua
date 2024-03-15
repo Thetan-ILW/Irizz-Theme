@@ -125,6 +125,14 @@ function SelectView:updateCollections(dt) end
 
 function SelectView:switchToSongSelect()
 	self.game.selectModel:debouncePullNoteChartSet()
+	self:moveScreen(0, true)
+end
+
+function SelectView:switchToCollections()
+	local config = self.game.configModel.configs.settings.select
+	self.game.selectModel.collectionLibrary:load(config.locations_in_collections)
+
+	self:moveScreen(1, true)
 end
 
 ---@param dt number

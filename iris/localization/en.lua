@@ -98,6 +98,7 @@ localization.textSettings = {
 	dim = "Dim",
 	blur = "Blur",
 	select = "Song Select",
+	collections = "Collections",
 	gameplay = "Gameplay",
 	result = "Result",
 	groupCharts = "Group charts",
@@ -129,11 +130,15 @@ localization.textSettings = {
 	singleNoteHandler = "Taiko note handler",
 	muteOnUnfocus = "Mute game out of focus",
 	autoUpdate = "Auto update",
+	moddedCharts = "Show modified charts",
 	showNonManiaCharts = "Show non-mania charts",
 	difficulty = "Difficulty",
 	sort = "Sort",
 	startSound = "Start sound",
-	staticCursor = "Static cursor in lists"
+	staticCursor = "Static cursor in lists",
+	showLocations = "Show locations",
+	chartFormatOffsets = "Offsets for chart formats",
+	audioModeOffsets = "Offsets for audio modes"
 }
 
 localization.textSongSelect = {
