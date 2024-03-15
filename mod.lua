@@ -1,12 +1,12 @@
-local SelectView = require("thetan.iris.views.SelectView")
-local ResultView = require("thetan.iris.views.ResultView")
-local GameView = require("thetan.iris.views.GameView")
+local SelectView = require("thetan.irizz.views.SelectView")
+local ResultView = require("thetan.irizz.views.ResultView")
+local GameView = require("thetan.irizz.views.GameView")
 
-local IrisTheme = {
-	name = "thetan.IrisTheme",
+local irizzTheme = {
+	name = "thetan.IrizzTheme",
 }
 
-function IrisTheme:init()
+function irizzTheme:init()
 	local modulePatcher = require("ModulePatcher")
 
 	modulePatcher:observe("sphere.controllers.GameController", "load", function(_self, game)
@@ -37,11 +37,11 @@ function IrisTheme:init()
 		configModel:open("judgements")
 		configModel:open("filters")
 		configModel:open("files")
-		configModel:open("iris", true)
+		configModel:open("irizz", true)
 		configModel:read()
 
 		_self.cacheModel:load()
 	end)
 end
 
-return IrisTheme
+return irizzTheme

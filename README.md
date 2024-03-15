@@ -1,2 +1,2 @@
-# Iris Theme
+# irizz Theme
  Theme for soundsphere
