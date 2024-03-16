@@ -204,6 +204,7 @@ localization.textOnline = {
 localization.textFilters = {
 	filters = "Filters",
 	moddedCharts = "Show modified charts",
+	charts = "Charts"
 }
 
 localization.textResult = {

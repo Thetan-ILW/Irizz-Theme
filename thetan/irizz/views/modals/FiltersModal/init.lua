@@ -3,13 +3,10 @@ local ViewConfig = require("thetan.irizz.views.modals.FiltersModal.ViewConfig")
 
 local FiltersModal = Modal + {}
 
-FiltersModal.name = "InputModal"
+FiltersModal.name = "FiltersModal"
 FiltersModal.viewConfig = ViewConfig()
 
 function FiltersModal:onHide()
-	local filterModel = self.game.selectModel.filterModel
-
-	filterModel:apply()
 	self.game.selectModel:noDebouncePullNoteChartSet()
 end
 

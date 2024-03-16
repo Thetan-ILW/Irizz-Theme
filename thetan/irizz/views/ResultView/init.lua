@@ -32,9 +32,14 @@ ResultView.load = thread.coro(function(self)
 	loading = false
 end)
 
+function ResultView:quit()
+	self.game.rhythmModel.audioEngine:unload()
+	self:changeScreen("selectView")
+end
+
 function ResultView:update(dt)
 	if just.keypressed("escape") then
-		self:changeScreen("selectView")
+		self:quit()
 	end
 
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
@@ -111,8 +116,5 @@ ResultView.play = thread.coro(function(self, mode)
 	playing = false
 end)
 
-function ResultView:quit()
-	self:changeScreen("selectView")
-end
 
 return ResultView

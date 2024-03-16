@@ -16,7 +16,6 @@ local TextBox = require("thetan.irizz.imgui.TextBox")
 
 local ViewConfig = class()
 
-local activeFilters = ""
 local lamp = ""
 
 function ViewConfig:new()
@@ -47,7 +46,7 @@ function ViewConfig:filters(view)
 
 	ss.chartdiffs_list = imgui.checkbox("ss.chartdiffs_list", ss.chartdiffs_list, Text.moddedCharts)
 
-	local changed, text = TextBox("filtersLamp", { lamp, "lamp"}, nil, w/2, h, false)
+	local changed, text = TextBox("filtersLamp", { lamp, "lamp" }, nil, w / 2, h, false)
 
 	if changed == "text" then
 		lamp = text
@@ -65,6 +64,8 @@ function ViewConfig:filters(view)
 			local new_is_active = imgui.textcheckbox(filter, is_active, filter.name)
 			if new_is_active ~= is_active then
 				filterModel:setFilter(group.name, filter.name, new_is_active)
+				filterModel:apply()
+				view.game.selectModel:noDebouncePullNoteChartSet()
 			end
 		end
 		just.row()
@@ -79,10 +80,11 @@ end
 function ViewConfig:filterLine(view)
 	local w, h = Layout:move("filterLine")
 
+	local count = #view.game.selectModel.noteChartSetLibrary.items
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.filtersLine)
 
-	gfx_util.printFrame(activeFilters, 0, 0, w, h, "center", "center")
+	gfx_util.printFrame(("%s: %i"):format(Text.charts, count), 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:draw(view)

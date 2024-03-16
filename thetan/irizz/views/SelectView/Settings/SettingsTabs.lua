@@ -434,13 +434,12 @@ function SettingsTab:UI(view)
 	local s = configs.select
 	local g = settings.graphics
 	local ss = settings.select
+	local m = settings.miscellaneous
 	local irizz = configs.irizz
 
 	just.text(Text.select)
 	just.next(0, textSeparation)
-	ss.chartdiffs_list = imgui.checkbox("ss.chartdiffs_list", ss.chartdiffs_list, Text.moddedCharts)
 	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
-	local m = settings.miscellaneous
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
 
 	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, Text.difficulty)
