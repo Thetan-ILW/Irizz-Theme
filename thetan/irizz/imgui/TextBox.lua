@@ -26,10 +26,12 @@ return function(id, text, index, w, h, password)
 	just.origin()
 	just.row(true)
 
+	h = cfg.size
+	love.graphics.setColor(Color.panel)
+	love.graphics.rectangle("fill", 0, 0, w, h, cfg.rounding, cfg.rounding)
+	love.graphics.setColor(Color.border)
+	love.graphics.rectangle("line", 0, 0, w, h, cfg.rounding, cfg.rounding)
 
-	local textHeight = font:getHeight()
-	Theme:panel(w, textHeight)
-	Theme:border(w, textHeight)
 	local clipw = w - 10
 	just.clip(love.graphics.rectangle, "fill", 0, 0, clipw, lh)
 
@@ -72,7 +74,7 @@ return function(id, text, index, w, h, password)
 
 	just.clip()
 	just.pop()
-	just.next(w, textHeight + cfg.nextItemOffset)
+	just.next(w, h + cfg.nextItemOffset)
 
 	return changed, text, index
 end
