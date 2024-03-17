@@ -143,12 +143,12 @@ local function msdDifficulty(view, noteChartItem)
 	end
 
 	local baseTimeRate = view.game.playContext.rate
-	
+
 	local rate = 1.0
 	if math.abs(baseTimeRate - 1) > 0.00001 then
 		rate = baseTimeRate / 1.04
 	end
-	
+
 	local difficultyData = noteChartItem.difficulty_data or nil
 	local patterns = ""
 
@@ -172,7 +172,7 @@ local function msdDifficulty(view, noteChartItem)
 end
 
 local function difficulty(view, chartview)
-	local difficulty = chartview.difficulty 
+	local difficulty = chartview.difficulty
 
 	if not difficulty then
 		difficulty = 0
@@ -217,7 +217,7 @@ local function info(view)
 
 	difficulty(view, chartview)
 	local length = time_util.format((chartview.duration or 0) / view.game.playContext.rate)
-	local longNoteRatio = (chartview.long_note_count or 0) / chartview.notes_count
+	local longNoteRatio = (chartview.long_note_count or 0) / (chartview.notes_count or 0)
 	local inputMode = Format.inputMode(chartview.chartdiff_inputmode)
 	inputMode = inputMode == "2K" and "TAIKO" or inputMode
 
@@ -250,7 +250,7 @@ local function moreInfo(view)
 
 	local bpm = (chartview.tempo or 0) * view.game.playContext.rate
 	local noteCount = chartview.notes_count or 0
-	local format = string.upper(chartview.format) or "None"
+	local format = string.upper(chartview.format or "NONE" )
 
 	local offset = 1.6
 
@@ -321,12 +321,23 @@ local function footer(view)
 	love.graphics.setFont(font.titleAndDifficulty)
 
 	local leftText = string.format("%s - %s", chartview.artist, chartview.title)
-	local rightText = string.format(
+	local rightText
+
+	if not chartview.creator or chartview.creator == "" then
+		rightText = string.format(
+			"[%s] %s",
+			Format.inputMode(chartview.chartdiff_inputmode),
+			chartview.name
+		)
+	else
+		rightText = string.format(
 			"[%s] [%s] %s",
 			Format.inputMode(chartview.chartdiff_inputmode),
 			chartview.creator or "",
 			chartview.name
-	)
+		)
+	end
+
 
 	local w, h = Layout:move("footerTitle")
 	Theme:textWithShadow(leftText, w, h, "left", "top")
