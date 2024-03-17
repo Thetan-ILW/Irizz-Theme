@@ -246,7 +246,7 @@ localization.fontFamilyList = {
 
 localization.fonts = {
 	header = {
-		anyText = { "ZenMaruGothic-Medium", 24 },
+		anyText = { "ZenMaruGothic-Black", 24 },
 	},
 
 	settingsViewConfig = {
