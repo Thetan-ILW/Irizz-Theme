@@ -208,7 +208,11 @@ localization.textFilters = {
 	charts = "Charts",
 	scores = "Scores",
 	scoresSource = "Source of scores",
-	inputMode = "Input mode"
+	inputMode = "Mode",
+	actualInputMode = "Exact mode",
+	format = "Format",
+	scratch = "Scratch",
+	played = "Played"
 }
 
 localization.textResult = {

@@ -12,11 +12,8 @@ local cfg = Theme.imgui
 
 local Layout = require("thetan.irizz.views.modals.FiltersModal.Layout")
 local Container = require("thetan.gyatt.Container")
-local TextBox = require("thetan.irizz.imgui.TextBox")
 
 local ViewConfig = class()
-
-local lamp = ""
 
 function ViewConfig:new()
 	self.container = Container("filtersContainer")
@@ -25,6 +22,14 @@ end
 local function filter_to_string(f)
 	return f.name
 end
+
+local filterAliasses = {
+	["(not) played"] = Text.played,
+	["actual input mode"] = Text.actualInputMode,
+	["original input mode"] = Text.inputMode,
+	format = Text.format,
+	scratch = Text.scratch,
+}
 
 function ViewConfig:filters(view)
 	local filterModel = view.game.selectModel.filterModel
@@ -81,11 +86,18 @@ function ViewConfig:filters(view)
 
 	imgui.separator()
 	for _, group in ipairs(filters) do
+		if group.name == "chartmeta" or group.name == "chartdiff" then
+			goto continue
+		end
+
 		love.graphics.setFont(Font.headerText)
 		love.graphics.setColor(Color.text)
-		just.text(group.name)
-		just.next(0, 15)
+
 		just.row(true)
+		local name = filterAliasses[group.name]
+		just.text(name)
+		just.next(210 - Font.headerText:getWidth(name))
+
 		love.graphics.setFont(Font.checkboxes)
 		for _, filter in ipairs(group) do
 			local is_active = filterModel:isActive(group.name, filter.name)
@@ -97,6 +109,8 @@ function ViewConfig:filters(view)
 			end
 		end
 		just.row()
+
+		::continue::
 	end
 
 	self.container.scrollLimit = just.height - heightStart - h
