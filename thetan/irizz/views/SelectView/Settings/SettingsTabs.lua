@@ -456,7 +456,12 @@ function SettingsTab:UI(view)
 	imgui.separator()
 	just.text(Text.collections)
 	just.next(0, textSeparation)
-	ss.locations_in_collections = imgui.checkbox("s.locations_in_collections", ss.locations_in_collections, Text.showLocations)
+	local changed = false
+	ss.locations_in_collections, changed = imgui.checkbox("s.locations_in_collections", ss.locations_in_collections, Text.showLocations)
+
+	if changed then
+		view.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
+	end
 
 	imgui.separator()
 	just.text(Text.uiTab)

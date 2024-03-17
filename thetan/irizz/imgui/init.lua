@@ -170,13 +170,16 @@ end
 ---@param v boolean|number
 ---@param label string?
 ---@return boolean|number
+---@return boolean
 function imgui.checkbox(id, v, label)
 	local isNumber = type(v) == "number"
 	if isNumber then
 		v = v == 1
 	end
+	local changed = false
 	if imgui.Checkbox(id, v, _h) then
 		v = not v
+		changed = true
 	end
 	just.sameline()
 	love.graphics.setColor(Color.text)
@@ -185,7 +188,7 @@ function imgui.checkbox(id, v, label)
 	if isNumber then
 		v = v and 1 or 0
 	end
-	return v
+	return v, changed
 end
 
 ---@param id any

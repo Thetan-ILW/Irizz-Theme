@@ -288,8 +288,7 @@ localization.fonts = {
 	},
 
 	collectionsListView = {
-		shortPath = { "ZenMaruGothic-Black", 18 },
-		itemCount = { "ZenMaruGothic-Black", 24 },
+		itemCount = { "ZenMaruGothic-Black", 18 },
 		name = { "ZenMaruGothic-Black", 24 },
 		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
