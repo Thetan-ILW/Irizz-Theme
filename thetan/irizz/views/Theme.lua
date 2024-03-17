@@ -1,4 +1,5 @@
 local localization = require("irizz.localization.en")
+local gfx_util = require("gfx_util")
 
 local ModifierEncoder = require("sphere.models.ModifierEncoder")
 local ModifierModel = require("sphere.models.ModifierModel")
@@ -286,6 +287,15 @@ function Theme:border(w, h)
 	love.graphics.setLineWidth(lineWidth)
 	love.graphics.setColor(self.colors.border)
 	love.graphics.rectangle("line", -half, -half, w + lineWidth, h + lineWidth, 8, 8)
+end
+
+local shadowOffset = 3
+function Theme:textWithShadow(text, w, h, ax, ay)
+	local r, g, b, a  = love.graphics.getColor()
+	love.graphics.setColor(self.colors.textShadow)
+	gfx_util.printFrame(text, shadowOffset, shadowOffset, w, h, ax, ay)
+	love.graphics.setColor({r, g, b, a})
+	gfx_util.printFrame(text, 0, 0, w, h, ax, ay)
 end
 
 function Theme:init()

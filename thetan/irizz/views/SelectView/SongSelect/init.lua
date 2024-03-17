@@ -318,22 +318,20 @@ local function footer(view)
 		return
 	end
 
-	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.titleAndDifficulty)
 
-	local w, h = Layout:move("footerTitle")
-	just.text(string.format("%s - %s", chartview.artist, chartview.title), w)
-	w, h = Layout:move("footerChartName")
-	just.text(
-		string.format(
+	local leftText = string.format("%s - %s", chartview.artist, chartview.title)
+	local rightText = string.format(
 			"[%s] [%s] %s",
 			Format.inputMode(chartview.chartdiff_inputmode),
 			chartview.creator or "",
 			chartview.name
-		),
-		w,
-		true
 	)
+
+	local w, h = Layout:move("footerTitle")
+	Theme:textWithShadow(leftText, w, h, "left", "top")
+	w, h = Layout:move("footerChartName")
+	Theme:textWithShadow(rightText, w, h, "right", "top")
 end
 
 function ViewConfig:draw(view, position)

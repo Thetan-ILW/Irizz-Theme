@@ -354,10 +354,7 @@ function ViewConfig:modifiers(view)
 	local w, h = Layout:move("mods")
 	local text = Theme:getModifierString(modifiers) 
 	love.graphics.setFont(font.modifiers)
-	love.graphics.setColor(Color.textShadow)
-	gfx_util.printFrame(text, 3, 3, w, h, "center", "center")
-	love.graphics.setColor(Color.text)
-	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
+	Theme:textWithShadow(text, w, h, "center", "center")
 end
 
 function ViewConfig:draw(view)

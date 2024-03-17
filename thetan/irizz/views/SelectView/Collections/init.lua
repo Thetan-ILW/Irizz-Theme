@@ -168,11 +168,11 @@ function ViewConfig:footer(view)
 
 	if collectionsMode == "Collections" and #self.collectionListView.items > 0 then
 		local name = self.collectionListView:getItem().name
-		just.text(name, w)
+		Theme:textWithShadow(name, w, h, "left", "top")
 	end
 
 	w, h = Layout:move("mode")
-	just.text(collectionsMode, w, true)
+	Theme:textWithShadow(collectionsMode, w, h, "right", "top")
 end
 
 function ViewConfig:draw(view, position)
