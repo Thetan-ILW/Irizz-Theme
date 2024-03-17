@@ -112,7 +112,7 @@ function ViewConfig:resultButtons(view)
 
 	if just.is_over(songsText, h + 10, x) then
 		if just.mousepressed(1) then
-			view:changeScreen("selectView")
+			view.game.resultView:quit()
 		end
 	end
 end
