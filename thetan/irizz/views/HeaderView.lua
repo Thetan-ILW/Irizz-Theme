@@ -35,6 +35,10 @@ function ViewConfig:songSelectButtons(view)
 	just.indent(30)
 	local x = r * 2
 	local y = h - 8
+	local panelHeight = font.anyText:getHeight() + 8
+
+	love.graphics.setColor(Color.headerButtonBackground)
+	love.graphics.rectangle("fill", x - 8, 10, settingsText + 16, panelHeight, 8, 8)
 
 	love.graphics.setColor(view.screenXTarget > 0 and Color.headerSelect or Color.text)
 	gfx_util.printBaseline(Text.settings, x, y, w, 1, "left")
@@ -49,6 +53,9 @@ function ViewConfig:songSelectButtons(view)
 	just.indent(30)
 	x = x + settingsText
 
+	love.graphics.setColor(Color.headerButtonBackground)
+	love.graphics.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
+
 	love.graphics.setColor(view.screenXTarget == 0 and Color.headerSelect or Color.text)
 	gfx_util.printBaseline(Text.songs, x, y, w, 1, "left")
 	love.graphics.rectangle("fill", x, y + 10, songsText, 4)
@@ -61,6 +68,9 @@ function ViewConfig:songSelectButtons(view)
 
 	just.indent(30)
 	x = x + songsText
+
+	love.graphics.setColor(Color.headerButtonBackground)
+	love.graphics.rectangle("fill", x - 8, 10, collectionsText + 16, panelHeight, 8, 8)
 
 	love.graphics.setColor(view.screenXTarget < 0 and Color.headerSelect or Color.text)
 	gfx_util.printBaseline(Text.collections, x, y, w, 1, "left")
@@ -91,6 +101,10 @@ function ViewConfig:resultButtons(view)
 	just.indent(30)
 	local x = r * 2
 	local y = h - 8
+	local panelHeight = font.anyText:getHeight() + 8
+
+	love.graphics.setColor(Color.headerButtonBackground)
+	love.graphics.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
 
 	love.graphics.setColor(Color.text)
 	gfx_util.printBaseline(Text.songs, x, y, w, 1, "left")
@@ -119,6 +133,7 @@ function ViewConfig:rightSide(view)
 	local r = h / 1.4
 	local imageW = (r * 2) / self.avatarImage:getPixelWidth()
 	local imageH = (r * 2) / self.avatarImage:getPixelHeight()
+	local panelHeight = font.anyText:getHeight() + 8
 
 	local function avatarStencil()
 		love.graphics.circle("fill", w - r, r, r)
@@ -130,14 +145,28 @@ function ViewConfig:rightSide(view)
 	love.graphics.setStencilTest()
 	love.graphics.circle("line", w - r, r, r)
 
-	just.indent(-30)
-	gfx_util.printBaseline(username, -r * 2, h - 8, w, 1, "right")
 	local userTextWidth = font.anyText:getWidth(username)
-	love.graphics.rectangle("fill", w + (-r * 2) - userTextWidth, h + 2, userTextWidth, 4)
 	local timeTextWidth = font.anyText:getWidth(time)
+
 	just.indent(-30)
-	gfx_util.printBaseline(time, -r * 2 - userTextWidth, h - 8, w, 1, "right")
-	love.graphics.rectangle("fill", w + (-r * 2) - userTextWidth - timeTextWidth, h + 2, timeTextWidth, 4)
+	local x1 = -r * 2
+	local x2 = w - userTextWidth + x1
+	love.graphics.setColor(Color.headerButtonBackground)
+	love.graphics.rectangle("fill", x2 - 8, 10, userTextWidth + 16, panelHeight, 8, 8)
+
+	love.graphics.setColor(Color.text)
+	gfx_util.printBaseline(username, x1, h - 8, w, 1, "right")
+	love.graphics.rectangle("fill", x2, h + 2, userTextWidth, 4)
+
+	just.indent(-30)
+	x1 = -r * 2 - userTextWidth
+	x2 = w - timeTextWidth + x1
+	love.graphics.setColor(Color.headerButtonBackground)
+	love.graphics.rectangle("fill", x2 - 8, 10, timeTextWidth + 16, panelHeight, 8, 8)
+
+	love.graphics.setColor(Color.text)
+	gfx_util.printBaseline(time, x1, h - 8, w, 1, "right")
+	love.graphics.rectangle("fill", x2, h + 2, timeTextWidth, 4)
 end
 
 function ViewConfig:new(game, screen)

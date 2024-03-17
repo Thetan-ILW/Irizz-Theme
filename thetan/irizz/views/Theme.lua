@@ -32,6 +32,7 @@ Theme.colors = {
 	panel = Hex("#000000AA"),
 	border = Hex("#FFFFFF"),
 	mutedBorder = Hex("#616161"),
+	headerButtonBackground = {0, 0, 0, 0.2},
 	transparentPanel = Hex("#00000077"),
 	accent = Hex("#fc72e3"),
 	darkerAccent = Hex("#bf58ca"),
