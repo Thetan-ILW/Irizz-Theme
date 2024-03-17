@@ -83,19 +83,6 @@ function ScoreListView:drawItem(i, w, h)
 	love.graphics.setFont(self.font.line2)
 	gfx_util.printFrame(string.format("Score: %i", item.score), xIndent, -yIndent, w, h, "left", "bottom")
 	gfx_util.printFrame(time_util.time_ago_in_words(item.time), -xIndent, -yIndent, w, h, "right", "bottom")
-	--[[just.indent(10)
-	just.text(string.format("#%i %s", i, username), w)
-	just.sameline()
-	just.offset(0)
-	just.indent(-10)
-	just.text(string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate), w, true)
-	just.indent(10)
-	love.graphics.setFont(self.font.line2)
-	just.text(string.format("Score: %i", item.score), w)
-	just.sameline()
-	just.offset(0)
-	just.indent(-10)
-	just.text(time_util.time_ago_in_words(item.time), w, true)]]
 end
 
 return ScoreListView

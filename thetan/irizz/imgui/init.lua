@@ -221,7 +221,6 @@ function imgui.combo(id, v, values, to_string, label)
 	local i = imgui.SpoilerList(id, _w, _h, values, fv, to_string)
 	just.sameline()
 	imgui.label(id .. "label", label)
-	just.next(0, cfg.nextItemOffset)
 	return i and values[i] or v
 end
 
@@ -229,7 +228,6 @@ function imgui.spoilerList(id, list, preview, to_string, label)
 	local i, name = imgui.SpoilerList(id, _w, _h, list, preview, to_string)
 	just.sameline()
 	imgui.label(id .. "label", label)
-	just.next(0, cfg.nextItemOffset)
 	return i, name
 end
 

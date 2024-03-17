@@ -22,6 +22,10 @@ function ViewConfig:new()
 	self.container = Container("filtersContainer")
 end
 
+local function filter_to_string(f)
+	return f.name
+end
+
 function ViewConfig:filters(view)
 	local filterModel = view.game.selectModel.filterModel
 	local filters = view.game.configModel.configs.filters.notechart
@@ -34,14 +38,37 @@ function ViewConfig:filters(view)
 	Theme:panel(w, h)
 
 	local heightStart = just.height
+	local uiW = w / 2.5
+	local uiH = cfg.size
+
 	self.container:startDraw(w, h)
-	imgui.setSize(w, h, w / 2.5, cfg.size)
+	imgui.setSize(w, h, uiW, uiH)
 
 	love.graphics.setFont(Font.headerText)
 	love.graphics.setColor(Color.text)
 
 	imgui.separator()
-	just.text(Text.filters)
+	just.text(Text.scores)
+	just.next(0, 15)
+
+	local scoreFilters = view.game.configModel.configs.filters.score
+	local select = view.game.configModel.configs.select
+
+	local f = imgui.spoilerList("ScoreFilterDropdown", scoreFilters, select.scoreFilterName, filter_to_string, Text.inputMode)
+	if f then
+		select.scoreFilterName = scoreFilters[f].name
+		view.game.selectModel:pullScore()
+	end
+
+	local sources = view.game.selectModel.scoreLibrary.scoreSources
+	local i = imgui.spoilerList("ScoreSourceDropdown", sources, select.scoreSourceName, nil, Text.scoresSource)
+	if i then
+		select.scoreSourceName = sources[i]
+		view.game.selectModel:updateScoreOnline()
+	end
+
+	imgui.separator()
+	just.text(Text.charts)
 	just.next(0, 15)
 
 	ss.chartdiffs_list = imgui.checkbox("ss.chartdiffs_list", ss.chartdiffs_list, Text.moddedCharts)
@@ -54,6 +81,7 @@ function ViewConfig:filters(view)
 
 	for _, group in ipairs(filters) do
 		imgui.separator()
+		love.graphics.setFont(Font.headerText)
 		love.graphics.setColor(Color.text)
 		just.text(group.name)
 		just.next(0, 15)
@@ -77,14 +105,17 @@ function ViewConfig:filters(view)
 	Theme:border(w, h)
 end
 
-function ViewConfig:filterLine(view)
+function ViewConfig:chartsLine(view)
 	local w, h = Layout:move("filterLine")
 
 	local count = #view.game.selectModel.noteChartSetLibrary.items
+	local tree = view.game.selectModel.collectionLibrary.tree
+	local path = tree.items[tree.selected].name
+
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.filtersLine)
 
-	gfx_util.printFrame(("%s: %i"):format(Text.charts, count), 0, 0, w, h, "center", "center")
+	gfx_util.printFrame(Text.chartCount:format(count, path), 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:draw(view)
@@ -100,7 +131,7 @@ function ViewConfig:draw(view)
 	gfx_util.printFrame(Text.filters, 0, 0, w, h, "center", "center")
 
 	self:filters(view)
-	self:filterLine(view)
+	self:chartsLine(view)
 end
 
 return ViewConfig

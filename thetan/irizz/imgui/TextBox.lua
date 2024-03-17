@@ -27,9 +27,9 @@ return function(id, text, index, w, h, password)
 	just.row(true)
 
 	h = cfg.size
-	love.graphics.setColor(Color.panel)
+	love.graphics.setColor(Color.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h, cfg.rounding, cfg.rounding)
-	love.graphics.setColor(Color.border)
+	love.graphics.setColor(Color.uiFrames)
 	love.graphics.rectangle("line", 0, 0, w, h, cfg.rounding, cfg.rounding)
 
 	local clipw = w - 10

@@ -204,7 +204,11 @@ localization.textOnline = {
 localization.textFilters = {
 	filters = "Filters",
 	moddedCharts = "Show modified charts",
-	charts = "Charts"
+	chartCount = "%i charts in '%s'",
+	charts = "Charts",
+	scores = "Scores",
+	scoresSource = "Source of scores",
+	inputMode = "Input mode"
 }
 
 localization.textResult = {

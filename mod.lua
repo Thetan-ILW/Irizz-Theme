@@ -50,7 +50,10 @@ function IrizzTheme:init()
 
 		_self:update(0)
 
-		--rhythmModel.audioEngine:unload()
+		if not _self:hasResult() then
+			rhythmModel.audioEngine:unload()
+		end
+
 		timeEngine:play()
 		timeEngine.currentTime = math.huge
 		_self.replayModel:update()

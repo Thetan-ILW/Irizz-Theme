@@ -38,7 +38,7 @@ return function(id, w, h, preview)
 				just.clip(love.graphics.rectangle, "fill", 0, 0, 0, 0)
 				return true
 			end
-			just.next(w + size/10, h)
+			just.next(w + size/10, h + cfg.nextItemOffset)
 			return
 		end
 
@@ -61,7 +61,7 @@ return function(id, w, h, preview)
 
 	h = base_height
 	if open_frame_id then
-		just.next(width + size/10, h)
+		just.next(width + size/10, h + cfg.nextItemOffset)
 		open_frame_id = nil
 		return
 	end
@@ -69,5 +69,5 @@ return function(id, w, h, preview)
 	love.graphics.setColor(Color.accent)
 	love.graphics.rectangle("line", 0, 0, w, height, cfg.rounding)
 
-	just.next(width + size/10, height)
+	just.next(width + size/10, height + cfg.nextItemOffset)
 end
