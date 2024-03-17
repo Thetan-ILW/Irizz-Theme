@@ -28,6 +28,7 @@ end
 
 function ViewConfig:filters(view)
 	local filterModel = view.game.selectModel.filterModel
+	local selectModel = view.game.selectModel
 	local filters = view.game.configModel.configs.filters.notechart
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
@@ -57,14 +58,12 @@ function ViewConfig:filters(view)
 	local f = imgui.spoilerList("ScoreFilterDropdown", scoreFilters, select.scoreFilterName, filter_to_string, Text.inputMode)
 	if f then
 		select.scoreFilterName = scoreFilters[f].name
-		view.game.selectModel:pullScore()
 	end
 
 	local sources = view.game.selectModel.scoreLibrary.scoreSources
 	local i = imgui.spoilerList("ScoreSourceDropdown", sources, select.scoreSourceName, nil, Text.scoresSource)
 	if i then
 		select.scoreSourceName = sources[i]
-		view.game.selectModel:updateScoreOnline()
 	end
 
 	imgui.separator()
@@ -73,14 +72,15 @@ function ViewConfig:filters(view)
 
 	ss.chartdiffs_list = imgui.checkbox("ss.chartdiffs_list", ss.chartdiffs_list, Text.moddedCharts)
 
-	local changed, text = TextBox("filtersLamp", { lamp, "lamp" }, nil, w / 2, h, false)
+	--[[local changed, text = TextBox("filtersLamp", { ss.lampString, "lamp" }, nil, w / 2, h, false)
 
 	if changed == "text" then
-		lamp = text
-	end
+		ss.lampString = text
+		selectModel:debouncePullNoteChartSet()
+	end]]
 
+	imgui.separator()
 	for _, group in ipairs(filters) do
-		imgui.separator()
 		love.graphics.setFont(Font.headerText)
 		love.graphics.setColor(Color.text)
 		just.text(group.name)
