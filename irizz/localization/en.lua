@@ -97,6 +97,7 @@ localization.textSettings = {
 	--
 	dim = "Dim",
 	blur = "Blur",
+	panelBlur = "Blur under panels",
 	select = "Song Select",
 	collections = "Collections",
 	gameplay = "Gameplay",

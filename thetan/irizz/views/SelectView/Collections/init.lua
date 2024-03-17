@@ -35,7 +35,7 @@ local boxes = {
 	"list"
 }
 
-local function panels()
+function ViewConfig.panels()
 	for _, name in ipairs(boxes) do
 		local w, h = Layout:move(name)
 		Theme:panel(w, h)
@@ -175,8 +175,16 @@ function ViewConfig:footer(view)
 	Theme:textWithShadow(collectionsMode, w, h, "right", "top")
 end
 
+function ViewConfig.layoutDraw(position)
+	Layout:draw(position)
+end
+
+function ViewConfig.canDraw(position)
+	return math.abs(position) < 1
+end
+
 function ViewConfig:draw(view, position)
-	if math.abs(position) >= 1 then
+	if not self.canDraw(position) then
 		return
 	end
 
@@ -186,7 +194,7 @@ function ViewConfig:draw(view, position)
 	just.origin()
 	Layout:draw(position)
 
-	panels()
+	self.panels()
 	self:cacheStatus(view)
 	self:osuDirectDownloadQueue(view)
 	self:collectionsList(view)

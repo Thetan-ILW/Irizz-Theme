@@ -37,14 +37,14 @@ function ViewConfig:new(game)
 	font = Theme:getFonts("songSelectViewConfig")
 end
 
-local function panels(view)
+function ViewConfig.panels()
 	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
 		Theme:panel(w, h)
 	end
 end
 
-local function borders(view)
+local function borders()
 	love.graphics.setLineStyle("rough")
 	love.graphics.setLineWidth(4)
 
@@ -250,7 +250,7 @@ local function moreInfo(view)
 
 	local bpm = (chartview.tempo or 0) * view.game.playContext.rate
 	local noteCount = chartview.notes_count or 0
-	local format = string.upper(chartview.format or "NONE" )
+	local format = string.upper(chartview.format or "NONE")
 
 	local offset = 1.6
 
@@ -345,17 +345,23 @@ local function footer(view)
 	Theme:textWithShadow(rightText, w, h, "right", "top")
 end
 
-function ViewConfig:draw(view, position)
+function ViewConfig.layoutDraw(position)
 	Layout:draw(position)
+end
+
+function ViewConfig.canDraw(position)
+	return math.abs(position) < 1
+end
+
+function ViewConfig:draw(view, position)
+	if not self.canDraw(position) then
+		return
+	end
 
 	canUpdate = position == 0
 	canUpdate = canUpdate and not view.modalActive
 
-	if math.abs(position) >= 1 then
-		return
-	end
-
-	panels(view)
+	self.panels()
 	searchField(view)
 	self:noteChartSets(view)
 	self:noteChartList(view)
@@ -364,7 +370,7 @@ function ViewConfig:draw(view, position)
 	moreInfo(view)
 	mods(view)
 	footer(view)
-	borders(view)
+	borders()
 end
 
 return ViewConfig

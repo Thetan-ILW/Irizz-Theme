@@ -36,7 +36,7 @@ local boxes = {
 	"settings",
 }
 
-local function panels(view)
+function ViewConfig.panels()
 	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
 		Theme:panel(w, h)
@@ -71,15 +71,23 @@ function ViewConfig:settings(view)
 	SettingsTab:draw(view, w, h, currentTab)
 end
 
+function ViewConfig.layoutDraw(position)
+	Layout:draw(position)
+end
+
+function ViewConfig.canDraw(position)
+	return math.abs(position) < 1
+end
+
 function ViewConfig:draw(view, position)
-	if math.abs(position) >= 1 then
+	if not self.canDraw(position) then
 		return
 	end
 
 	just.origin()
 	Layout:draw(position)
 
-	panels(view)
+	self.panels()
 	self:tabs(view)
 	self:settings(view)
 	borders(view)

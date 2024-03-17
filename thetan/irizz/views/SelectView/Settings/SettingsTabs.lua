@@ -453,6 +453,8 @@ function SettingsTab:UI(view)
 		view.game.selectModel:setSortFunction(name)
 	end
 
+	irizz.panelBlur = imgui.slider1("irizz.panelBlur", irizz.panelBlur, "%i", 0, 10, 1, Text.panelBlur)
+
 	imgui.separator()
 	just.text(Text.collections)
 	just.next(0, textSeparation)

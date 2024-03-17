@@ -12,6 +12,7 @@ local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.irizz.views.SelectView.SongSelect")
 local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections")
 
+local GaussianBlurView = require("sphere.views.GaussianBlurView")
 local BackgroundView = require("sphere.views.BackgroundView")
 
 ---@class irizz.SelectView: sphere.ScreenView
@@ -187,8 +188,18 @@ function SelectView:draw()
 	Theme:setLines()
 
 	local w, h = Layout:move("background")
-	local dim = self.game.configModel.configs.settings.graphics.dim.select
+	local configs = self.game.configModel.configs
+	local graphics = configs.settings.graphics
+	local irizz = configs.irizz
+
+	local dim = graphics.dim.select
+	local backgroundBlur = graphics.blur.select
+
+	local panelBlur = irizz.panelBlur
+
+	GaussianBlurView:draw(backgroundBlur)
 	BackgroundView:draw(w, h, dim, 0.01)
+	GaussianBlurView:draw(backgroundBlur)
 
 	local alpha = 1
 
@@ -200,16 +211,48 @@ function SelectView:draw()
 		end
 	end
 
+	local position = self.screenX
+	local settings = self.settingsViewConfig
+	local songSelect = self.songSelectViewConfig
+	local collections = self.collectionsViewConfig
+
+	local panels = function ()
+		if songSelect.canDraw(position) then
+			songSelect.layoutDraw(position)
+			songSelect.panels()
+		end
+
+		if settings.canDraw(position - 1) then
+			settings.layoutDraw(position - 1)
+			settings.panels()
+		end
+
+		if collections.canDraw(position + 1) then
+			collections.layoutDraw(position + 1)
+			collections.panels()
+		end
+	end
+
+	love.graphics.stencil(panels, "replace", 1)
+
 	local previousCanvas = love.graphics.getCanvas()
 	local canvas = gfx_util.getCanvas("SelectView")
+	love.graphics.setStencilTest("greater", 0)
+
+	w, h = Layout:move("background")
+	GaussianBlurView:draw(panelBlur)
+	BackgroundView:draw(w, h, dim, 0.01)
+	GaussianBlurView:draw(panelBlur)
+
+	love.graphics.setStencilTest()
 
 	love.graphics.setCanvas({ canvas, stencil = true })
 	love.graphics.clear()
 	love.graphics.setBlendMode("alpha", "alphamultiply")
 	self.headerView:draw(self)
-	self.songSelectViewConfig:draw(self, self.screenX)
-	self.collectionsViewConfig:draw(self, self.screenX + 1)
-	self.settingsViewConfig:draw(self, self.screenX - 1)
+	songSelect:draw(self, position)
+	collections:draw(self, position + 1)
+	settings:draw(self, position - 1)
 	love.graphics.setCanvas(previousCanvas)
 
 
