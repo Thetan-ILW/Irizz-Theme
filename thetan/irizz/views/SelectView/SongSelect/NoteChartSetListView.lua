@@ -1,5 +1,6 @@
 local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
+local time_util = require("time_util")
 local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -44,12 +45,25 @@ end
 function NoteChartSetListView:drawItem(i, w, h)
 	local item = self.items[i]
 
+	local irizz = self.game.configModel.configs.irizz
+	local drawLength = irizz.chartLengthBeforeArtist
+
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
+
+	local length = time_util.format((item.duration or 0) / self.game.playContext.rate)
+	local firstLine
+
+	if drawLength then
+		firstLine = ("[%s] %s"):format(length, item.artist)
+	else
+		firstLine = item.artist
+	end
 
 	love.graphics.setColor(Color.text)
 	love.graphics.translate(0, 4)
 	just.indent(15)
-	TextCellImView(math.huge, h, "left", item.artist, item.title, self.font.artist, self.font.title)
+	
+	TextCellImView(math.huge, h, "left", firstLine, item.title, self.font.artist, self.font.title)
 end
 
 return NoteChartSetListView

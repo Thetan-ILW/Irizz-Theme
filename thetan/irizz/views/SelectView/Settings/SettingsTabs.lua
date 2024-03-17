@@ -441,7 +441,7 @@ function SettingsTab:UI(view)
 	just.next(0, textSeparation)
 	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
-
+	irizz.chartLengthBeforeArtist = imgui.checkbox("irizz.chartLengthBeforeArtist", irizz.chartLengthBeforeArtist, Text.chartLengthBeforeArtist)
 	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, Text.difficulty)
 
 	local sortFunction = view.game.configModel.configs.select.sortFunction

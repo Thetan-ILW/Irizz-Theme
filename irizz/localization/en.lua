@@ -137,7 +137,8 @@ localization.textSettings = {
 	staticCursor = "Static cursor in lists",
 	showLocations = "Show locations",
 	chartFormatOffsets = "Offsets for chart formats",
-	audioModeOffsets = "Offsets for audio modes"
+	audioModeOffsets = "Offsets for audio modes",
+	chartLengthBeforeArtist = "Show chart length in chart list"
 }
 
 localization.textSongSelect = {

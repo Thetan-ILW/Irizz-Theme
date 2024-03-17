@@ -5,4 +5,5 @@ return {
     judge = "",
     health = "",
     staticCursor = true,
+    chartLengthBeforeArtist = false
 }
