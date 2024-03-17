@@ -54,7 +54,7 @@ function _Layout:draw(offset)
 	local x1, w1 = gfx_util.layout(gx[2], gw[2], {-0.5, outerPanelsSize, horizontalPanelGap, innerPanelSize, horizontalPanelGap, outerPanelsSize, -0.5})
 	local y1, h1 = gfx_util.layout(gy[2], gh[2], {gap, -0.1, gap, -0.9, gap, 20, gap})
 
-	self:pack("status", gx[2], y1[2], gw[2], h1[2])
+	self:pack("searchField", gx[2], y1[2], gw[2], h1[2])
 	self:pack("list", x1[4], y1[4], w1[4], h1[4])
 	self:_footer(gx[2], y1[6], gw[2], h1[6])
 	self:_queue(x1[2], y1[4], w1[2], h1[4])

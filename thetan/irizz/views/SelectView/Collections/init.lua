@@ -10,6 +10,7 @@ local Color = Theme.colors
 local Text = Theme.textCollections
 local Font
 
+local TextInput = require("thetan.irizz.imgui.TextInput")
 local CollectionListView = require("thetan.irizz.views.SelectView.Collections.CollectionListView")
 local OsuDirectListView = require("thetan.irizz.views.SelectView.Collections.OsuDirectListView")
 local OsuDirectChartsListView = require("thetan.irizz.views.SelectView.Collections.OsuDirectChartsListView")
@@ -49,26 +50,22 @@ local function borders()
 	end
 end
 
-function ViewConfig:cacheStatus(view)
-	local cacheModel = view.game.cacheModel
-	local shared = cacheModel.shared
-	local state = shared.state
+function ViewConfig:osuDirectSearch(view)
+	local w, h = Layout:move("searchField")
+	love.graphics.setFont(Font.searchField)
 
-	local text = ""
-	if state == 1 then
-		text = (Text.searching):format(shared.noteChartCount)
-	elseif state == 2 then
-		text = (Text.creatingCache):format(shared.cachePercent)
-	elseif state == 3 then
-		text = Text.complete
-	else
-		text = Text.idle
+	if not just.focused_id then
+		just.focus("osuDirectSearchField")
 	end
 
-	local w, h = Layout:move("status")
-	love.graphics.setFont(Font.status)
-	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(text, 0, h / 2, w, 1, "center")
+	local delAll = love.keyboard.isDown("lctrl") and love.keyboard.isDown("backspace")
+
+	local filterString = view.game.osudirectModel.searchString
+	local changed, text = TextInput("osuDirectSearchField", { filterString, Text.osuDirectSearchPlaceholder}, nil, w, h)
+	if changed == "text" then
+		if delAll then text = "" end
+		view.game.osudirectModel:setSearchString(text)
+	end
 end
 
 function ViewConfig:osuDirectDownloadQueue(view)
@@ -195,7 +192,6 @@ function ViewConfig:draw(view, position)
 	Layout:draw(position)
 
 	self.panels()
-	self:cacheStatus(view)
 	self:osuDirectDownloadQueue(view)
 	self:collectionsList(view)
 	self:osuDirectList(view)
@@ -204,6 +200,7 @@ function ViewConfig:draw(view, position)
 		self:collectionsButtons(view)
 	else
 		self:osuDirectButtons(view)
+		self:osuDirectSearch(view)
 	end
 
 	self:osuDirectCharts(view)

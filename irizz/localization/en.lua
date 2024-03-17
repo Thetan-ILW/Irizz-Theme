@@ -167,11 +167,10 @@ localization.textCollections = {
 	mounts = "Mounts",
 	searching = "Status: Searching for charts: %d",
 	creatingCache = "Status: Creating the cache: %0.2f%%",
-	complete = "Status: Complete!",
-	idle = "Status: Doing nothing.",
 	download = "Download",
 	redownload = "Redownload",
 	wait = "Wait...",
+	osuDirectSearchPlaceholder = "Type to search..."
 }
 
 localization.textModifiers = {
@@ -268,7 +267,7 @@ localization.fonts = {
 	},
 
 	collectionsViewConfig = {
-		status = { "ZenMaruGothic-Black", 36 },
+		searchField = { "ZenMaruGothic-Black", 36 },
 		queue = { "ZenMaruGothic-Medium", 32 },
 		osuDirectCharts = { "ZenMaruGothic-Medium", 32 },
 		buttons = { "ZenMaruGothic-Medium", 28 },
