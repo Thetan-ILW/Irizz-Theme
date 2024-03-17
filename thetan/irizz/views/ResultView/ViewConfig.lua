@@ -33,7 +33,7 @@ local function showLoadedScore(view)
 	return scoreItem.id == scoreEntry.id
 end
 
-local lines = {
+local lineList = {
 	"line1",
 	"line2",
 	"line3",
@@ -41,10 +41,19 @@ local lines = {
 	"line5"
 }
 
-local function panel()
+function ViewConfig.panels()
 	local w, h = Layout:move("panel")
 	Theme:panel(w, h)
-	
+	w, h = Layout:move("hitGraph")
+	Theme:panel(w, h)
+end
+
+local function borders()
+	local w, h = Layout:move("hitGraph")
+	Theme:border(w, h)
+
+	w, h = Layout:move("panel")
+
 	local function stencil()
 		love.graphics.rectangle("fill", -100, 0, w + 200, h+100)
 	end
@@ -53,10 +62,12 @@ local function panel()
 	love.graphics.setStencilTest("greater", 0)
 	Theme:border(w, h)
 	love.graphics.setStencilTest()
+end
 
+local function lines()
 	love.graphics.setColor(Color.border)
-	for _, name in ipairs(lines) do
-		w, h = Layout:move(name)
+	for _, name in ipairs(lineList) do
+		local w, h = Layout:move(name)
 		love.graphics.rectangle("fill", 0, 0, w, h)
 	end
 end
@@ -134,7 +145,6 @@ local _MissGraph = PointGraphView({
 ---@param view table
 local function HitGraph(view)
 	local w, h = Layout:move("hitGraph")
-	Theme:panel(w, h)
 	_HitGraph.game = view.game
 	_HitGraph:draw()
 	_EarlyHitGraph.game = view.game
@@ -165,7 +175,6 @@ local function HitGraph(view)
 	just.text(meanText, w)
 	Layout:move("hitGraph")
 	gfx_util.printFrame(maxErrorText, 5, -5, w, h, "left", "bottom")
-	Theme:border(w, h)
 end
 
 ---@param view table
@@ -360,7 +369,9 @@ end
 
 function ViewConfig:draw(view)
 	just.origin()
-	panel()
+	self.panels()
+	lines()
+
 	self:judgements(view)
 	self:scores(view)
 	self:difficulty(view)
@@ -368,6 +379,8 @@ function ViewConfig:draw(view)
 	self:pauses(view)
 	self:modifiers(view)
 	HitGraph(view)
+
+	borders()
 	footer(view)
 end
 

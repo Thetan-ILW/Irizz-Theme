@@ -7,6 +7,7 @@ local BackgroundView = require("sphere.views.BackgroundView")
 local Header = require("thetan.irizz.views.HeaderView")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
+local GaussianBlurView = require("sphere.views.GaussianBlurView")
 
 ---@class thetan.irizz.ResultView: sphere.ScreenView
 ---@operator call: thetan.irizz.ResultView
@@ -66,13 +67,33 @@ end
 function ResultView:draw()
 	Layout:draw()
 
+	local configs = self.game.configModel.configs
+	local graphics = configs.settings.graphics
+	local irizz = configs.irizz
+
+	local dim = graphics.dim.select
+	local backgroundBlur = graphics.blur.select
+
+	local panelBlur = irizz.panelBlur
+
 	local w, h = Layout:move("background")
-	local dim = self.game.configModel.configs.settings.graphics.dim.select
+
 	BackgroundView:draw(w, h, dim, 0.01)
 
 	if not canDraw then
 		return
 	end
+
+	love.graphics.stencil(self.viewConfig.panels, "replace", 1)
+
+	love.graphics.setStencilTest("greater", 0)
+
+	w, h = Layout:move("background")
+	GaussianBlurView:draw(panelBlur)
+	BackgroundView:draw(w, h, dim, 0.01)
+	GaussianBlurView:draw(panelBlur)
+
+	love.graphics.setStencilTest()
 
 	self.header:draw(self)
 	self.viewConfig:draw(self)
