@@ -190,6 +190,16 @@ function SelectView:draw()
 	local dim = self.game.configModel.configs.settings.graphics.dim.select
 	BackgroundView:draw(w, h, dim, 0.01)
 
+	local alpha = 1
+
+	if self.modalActive then
+		alpha = 1 - self.game.gameView.modal.alpha
+
+		if alpha == 0 then
+			return
+		end
+	end
+
 	local previousCanvas = love.graphics.getCanvas()
 	local canvas = gfx_util.getCanvas("SelectView")
 
@@ -202,11 +212,6 @@ function SelectView:draw()
 	self.settingsViewConfig:draw(self, self.screenX - 1)
 	love.graphics.setCanvas(previousCanvas)
 
-	local alpha = 1
-
-	if self.modalActive then
-		alpha = 1 - self.game.gameView.modal.alpha
-	end
 
 	love.graphics.origin()
 	love.graphics.setColor(alpha, alpha, alpha, alpha)
