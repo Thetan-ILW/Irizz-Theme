@@ -213,8 +213,10 @@ function ViewConfig:judgements(view)
 	end
 
 	w, h = Layout:move("judgementsAccuracy")
+	local osuv2 = scoreEngine.scoreSystem.osu.judges.od9.accuracy
 	love.graphics.setFont(font.accuracy)
-	--gfx_util.printFrame(("%s %3.2f%%"):format(counterName, judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
+
+	gfx_util.printFrame(("%s %3.2f%%"):format("osu v2", osuv2 * 100), 0, 0, w, h, "center", "center")
 end
 
 local function footer(view)
@@ -227,19 +229,18 @@ local function footer(view)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.titleAndDifficulty)
 
-	local w, h = Layout:move("footerTitle")
-	just.text(string.format("%s - %s", chartview.artist, chartview.title), w)
-	w, h = Layout:move("footerChartName")
-	just.text(
-		string.format(
+	local leftText = string.format("%s - %s", chartview.artist, chartview.title)
+	local rightText = string.format(
 			"[%s] [%s] %s",
 			Format.inputMode(chartview.chartdiff_inputmode),
 			chartview.creator or "",
 			chartview.name
-		),
-		w,
-		true
 	)
+
+	local w, h = Layout:move("footerTitle")
+	Theme:textWithShadow(leftText, w, h, "left", "top")
+	w, h = Layout:move("footerChartName")
+	Theme:textWithShadow(rightText, w, h, "right", "top")
 end
 
 function ViewConfig:scoreInfo(view)
@@ -352,7 +353,7 @@ function ViewConfig:modifiers(view)
 	end
 
 	local w, h = Layout:move("mods")
-	local text = Theme:getModifierString(modifiers) 
+	local text = Theme:getModifierString(modifiers)
 	love.graphics.setFont(font.modifiers)
 	Theme:textWithShadow(text, w, h, "center", "center")
 end
