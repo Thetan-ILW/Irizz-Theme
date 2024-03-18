@@ -55,7 +55,7 @@ local function borders()
 	w, h = Layout:move("panel")
 
 	local function stencil()
-		love.graphics.rectangle("fill", -100, 0, w + 200, h+100)
+		love.graphics.rectangle("fill", -100, 0, w + 200, h + 100)
 	end
 
 	love.graphics.stencil(stencil, "replace", 1)
@@ -70,6 +70,12 @@ local function lines()
 		local w, h = Layout:move(name)
 		love.graphics.rectangle("fill", 0, 0, w, h)
 	end
+end
+
+local function printKeyValue(key, value, w, h, ay)
+	ay = ay or "top"
+	gfx_util.printFrame(("%s:"):format(key), 15, 15, w, h, "left", ay)
+	gfx_util.printFrame(value, -15, 15, w, h, "right", ay)
 end
 
 function ViewConfig:scores(view)
@@ -195,30 +201,26 @@ function ViewConfig:judgements(view)
 	local judgements = judgement.judgements[counterName]
 	local base = scoreEngine.scoreSystem.base
 
-	local count = counters.all.count
-
-	local perfect = show and counter.perfect or scoreItem.perfect or 0
-	local notPerfect = show and counter["not perfect"] or scoreItem.not_perfect or 0
 	local miss = show and base.missCount or scoreItem.miss or 0
 
 	local w, h = Layout:move("judgements")
-	love.graphics.setFont(font.judgements)
 	love.graphics.setColor(Color.text)
+	love.graphics.setFont(font.judgements)
 
-	local textInterval = 10
+	local textHeight = font.judgements:getHeight()
+	local textIndent = textHeight + 8
 
 	if show then
-		local judgeCount = #judgementLists[counterName] + 1
-		local frameSize = (h - textInterval) / judgeCount
-
-		for i, name in ipairs(judgementLists[counterName]) do
+		for _, name in ipairs(judgementLists[counterName]) do
 			local value = counters[counterName][name]
-			gfx_util.printFrame(("%s: %i"):format(name, value), 0, (i - 1) * frameSize + (textInterval / 2), w, frameSize,
-				"center", "center")
+			printKeyValue(name:upper(), value, w, h)
+			just.next(0, textIndent)
 		end
 
-		gfx_util.printFrame(("%s: %i"):format("MISS", miss), 0, (judgeCount - 1) * frameSize + (textInterval / 2), w, frameSize,
-			"center", "center")
+		w, h = Layout:move("judgements")
+
+		just.next(0, -textHeight + 5)
+		printKeyValue("MISS", miss, w, h, "bottom")
 	end
 
 	w, h = Layout:move("judgementsAccuracy")
@@ -240,10 +242,10 @@ local function footer(view)
 
 	local leftText = string.format("%s - %s", chartview.artist, chartview.title)
 	local rightText = string.format(
-			"[%s] [%s] %s",
-			Format.inputMode(chartview.chartdiff_inputmode),
-			chartview.creator or "",
-			chartview.name
+		"[%s] [%s] %s",
+		Format.inputMode(chartview.chartdiff_inputmode),
+		chartview.creator or "",
+		chartview.name
 	)
 
 	local w, h = Layout:move("footerTitle")
@@ -290,14 +292,18 @@ function ViewConfig:scoreInfo(view)
 	local w, h = Layout:move("normalscore")
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.scoreInfo)
-	gfx_util.printFrame(
-		("%s: %i\n%s: %s\n%s: %s\n%s: %0.02fx"):format(
-			Text.score, score,
-			Text.accuracy, accuracy,
-			Text.inputMode, inputMode,
-			Text.timeRate, baseTimeRate),
-		0, 0, w, h, "center", "center"
-	)
+
+	local textHeight = font.judgements:getHeight()
+	local textIndent = textHeight + 8
+
+	just.next(0, (h / 2)  - ((textIndent * 2) + 15))
+	printKeyValue(Text.score, ("%i"):format(score), w, h)
+	just.next(0, textIndent)
+	printKeyValue(Text.accuracy, accuracy, w, h)
+	just.next(0, textIndent)
+	printKeyValue(Text.inputMode, inputMode, w, h)
+	just.next(0, textIndent)
+	printKeyValue(Text.timeRate, ("%0.02fx"):format(baseTimeRate), w, h)
 end
 
 function ViewConfig:difficulty(view)
@@ -338,20 +344,23 @@ end
 
 function ViewConfig:pauses(view)
 	local scoreItem = view.game.selectModel.scoreItem
-	local rhythmModel = view.game.rhythmModel
-	local scoreEngine = rhythmModel.scoreEngine
 	local playContext = view.game.playContext
 
 	local show = showLoadedScore(view)
 	local const = show and playContext.const or scoreItem.const
 	local scrollSpeed = "X"
 	if const then
-		scrollSpeed = "Constant"
+		scrollSpeed = "Const"
 	end
 
 	local w, h = Layout:move("pauses")
 	love.graphics.setFont(font.pauses)
-	gfx_util.printFrame(("%s: %i\n%s: %s"):format(Text.pauses, scoreItem.pauses, Text.scrollSpeed, scrollSpeed), 0, 0, w, h, "center", "center")
+	local textHeight = font.judgements:getHeight()
+
+	just.next(0, -15)
+	printKeyValue(Text.pauses, scoreItem.pauses, w, h)
+	just.next(0, -textHeight + 30)
+	printKeyValue(Text.scrollSpeed, scrollSpeed, w, h, "bottom")
 end
 
 function ViewConfig:modifiers(view)
