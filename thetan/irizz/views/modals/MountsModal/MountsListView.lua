@@ -1,6 +1,5 @@
 local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
-local gfx_util = require("gfx_util")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -12,7 +11,7 @@ MountsListView.rows = 11
 MountsListView.centerItems = false
 MountsListView.noItemsText = Text.noMounts
 MountsListView.scrollSound = Theme.sounds.scrollSoundLargeList
-MountsListView.selectedItem = nil
+MountsListView.selectedItemIndex = nil
 
 function MountsListView:new(game)
 	self.game = game
@@ -20,21 +19,23 @@ function MountsListView:new(game)
 end
 
 function MountsListView:reloadItems()
-	self.items = self.game.configModel.configs.mount
+	local locationManager = self.game.cacheModel.locationManager
+
+	self.items = locationManager.locations
 
 	if not self.selectedItem then
-		self.selectedItem = self.items[1]
+		self.selectedItemIndex = locationManager.selected_id
 	end
 end
 
----@return number
-function MountsListView:getItemIndex()
-	return self.game.modifierSelectModel.availableModifierIndex
-end
+function MountsListView:mouseClick(w, h, i)
+	local locationManager = self.game.cacheModel.locationManager
 
----@param count number
-function MountsListView:scroll(count)
-	self.game.modifierSelectModel:scrollAvailableModifier(count)
+	if just.is_over(w, h, 0, 0) then
+		if just.mousepressed(1) then
+			locationManager:selectLocation(i)
+		end
+	end
 end
 
 ---@param i number
@@ -43,17 +44,12 @@ end
 function MountsListView:drawItem(i, w, h)
 	local item = self.items[i]
 
-	self:drawItemBody(w, h, i, self.selectedItem == item)
-
-	local changed, active, hovered = just.button("mount" .. i, just.is_over(w, h))
-	if changed then
-		self.selectedItem = item
-	end
+	self:drawItemBody(w, h, i, self.selectedItemIndex == i)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.mountPaths)
 	love.graphics.translate(15, 10)
-	just.text(item[1]:match("^.+/(.+)$"), math.huge)
+	just.text(item.name, math.huge)
 end
 
 return MountsListView

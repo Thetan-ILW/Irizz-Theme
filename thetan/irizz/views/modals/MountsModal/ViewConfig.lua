@@ -18,44 +18,6 @@ function ViewConfig:mounts(view)
 	Theme:border(w, h)
 end
 
-function ViewConfig:buttons(view)
-	local w, h = Layout:move("buttons")
-
-	Theme:panel(w, h)
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.tabs)
-
-	h = h / 2
-
-	local selectedItem = self.mountsListView.selectedItem
-	local items = self.mountsListView.items
-
-	if imgui.TextOnlyButton("openMount", "Open", w, h, "center", false) then
-		if not selectedItem then
-			return
-		end
-
-		love.system.openURL(selectedItem[1])
-	end
-
-	if imgui.TextOnlyButton("removeMount", "Remove", w, h, "center", false) then
-		if not selectedItem then
-			return
-		end
-
-		for i = 1, #items do
-			if items[i] == selectedItem then
-				table.remove(items, i)
-				selectedItem = nil
-				break
-			end
-		end
-	end
-
-	w, h = Layout:move("buttons")
-	Theme:border(w, h)
-end
-
 function ViewConfig:path(view)
 	local w, h = Layout:move("path")
 
@@ -83,8 +45,6 @@ function ViewConfig:draw(view)
 	gfx_util.printFrame(Text.mounts, 0, 0, w, h, "center", "center")
 
 	self:mounts(view)
-	self:buttons(view)
-	self:path(view)
 end
 
 return ViewConfig
