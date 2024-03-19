@@ -7,8 +7,8 @@ local gfx_util = require("gfx_util")
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
 
----@class sphere.irizzTheme.ListView
----@operator call: sphere.irizzTheme.ListView
+---@class irizz.ListView
+---@operator call: irizz.ListView
 local ListView = class()
 
 ListView.centerItems = false

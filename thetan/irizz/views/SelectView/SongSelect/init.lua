@@ -1,10 +1,10 @@
 local class = require("class")
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 local time_util = require("time_util")
-local flux = require("flux")
+
 local TextInput = require("thetan.irizz.imgui.TextInput")
-local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local Format = require("sphere.views.Format")
 local Layout = require("thetan.irizz.views.SelectView.SongSelect.SongSelectLayout")
@@ -85,15 +85,7 @@ function ViewConfig:noteChartSets(view)
 	local list = self.noteChartSetListView
 	list:draw(w, h, canUpdate)
 
-	local count = #list.items - 1
-
-	love.graphics.translate(w - 16, 0)
-
-	local pos = (list.visualItemIndex - 1) / count
-	local newScroll = ScrollBar("ncs_sb", pos, 16, h, count / list.rows)
-	if newScroll then
-		list:scroll(math.floor(count * newScroll + 1) - list.itemIndex)
-	end
+	gyatt.scrollBar(list, w, h)
 end
 
 ---@param view table

@@ -1,5 +1,4 @@
 local just = require("just")
-local theme = require("imgui.theme")
 
 local dragPosition
 
@@ -11,7 +10,6 @@ local function getPosition(h, _h)
 		return 0
 	end
 	local _, y = love.graphics.inverseTransformPoint(love.mouse.getPosition())
-	-- local value = map(y, _h * dragPosition, h - _h * (1 - dragPosition), 0, 1)
 	local value = (y - _h * dragPosition) / (h - _h)
 	return math.min(math.max(value, 0), 1)
 end
@@ -46,7 +44,9 @@ return function(id, value, w, h, overlap)
 		x,
 		x + (h - _h) * value,
 		w - x * 2,
-		_h - x * 2
+		_h - x * 2,
+		4,
+		4
 	)
 	just.next(w, h)
 

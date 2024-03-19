@@ -1,5 +1,6 @@
 local class = require("class")
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
 local gfx_util = require("gfx_util")
 
@@ -70,7 +71,10 @@ end
 
 function ViewConfig:osuDirectDownloadQueue(view)
 	local w, h = Layout:move("queue")
-	self.osuDirectQueueListView:draw(w, h, canUpdate)
+	local list = self.osuDirectQueueListView
+	list:draw(w, h, canUpdate)
+
+	gyatt.scrollBar(list, w, h)
 end
 
 function ViewConfig:osuDirectCharts(view)
@@ -146,7 +150,10 @@ function ViewConfig:collectionsList(view)
 	end
 
 	local w, h = Layout:move("list")
-	self.collectionListView:draw(w, h, canUpdate)
+	local list = self.collectionListView
+
+	list:draw(w, h, canUpdate)
+	gyatt.scrollBar(list, w, h)
 end
 
 function ViewConfig:osuDirectList(view)
@@ -155,7 +162,10 @@ function ViewConfig:osuDirectList(view)
 	end
 
 	local w, h = Layout:move("list")
-	self.osuDirectListView:draw(w, h, canUpdate)
+	local list = self.osuDirectListView
+
+	list:draw(w, h, canUpdate)
+	gyatt.scrollBar(list, w, h)
 end
 
 function ViewConfig:footer(view)
