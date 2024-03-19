@@ -165,6 +165,7 @@ function ViewConfig:uiLock(view)
 	gfx_util.printFrame(Text.processingCharts, 0, 0, w, h, "center", "center")
 
 	w, h = Layout:move("window")
+	w = math.huge
 	love.graphics.setFont(Font.status)
 	gfx_util.printFrame(("%s: %s"):format(Text.path, path), 0, 0, w, h, "center", "top")
 	just.next(0, 50)

@@ -8,7 +8,6 @@ FiltersModal.viewConfig = ViewConfig()
 
 function FiltersModal:onHide()
 	self.game.selectModel:noDebouncePullNoteChartSet()
-	self.game.selectModel:updateScoreOnline()
 	self.game.selectModel:pullScore()
 end
 
