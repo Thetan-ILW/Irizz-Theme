@@ -190,6 +190,12 @@ localization.textInputs = {
 localization.textMounts = {
 	mounts = "Mounts",
 	noMounts = "No mounts!",
+	update = "Update",
+	deleteCache = "Delete cache",
+	processingCharts = "Processing charts...",
+	path = "Path",
+	chartsFound = "Processed / Found",
+	chartsCached = "Charts cached"
 }
 
 localization.textOnline = {
@@ -350,7 +356,10 @@ localization.fonts = {
 		tabs = { "ZenMaruGothic-Medium", 28 },
 		noItems = { "ZenMaruGothic-Medium", 36 },
 		mountPaths = { "ZenMaruGothic-Black", 24 },
+		windowText = {"ZenMaruGothic-Black", 24},
+		fields = { "ZenMaruGothic-Medium", 28 },
 		path = { "ZenMaruGothic-Black", 48 },
+		status = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	onlineModal = {
@@ -361,7 +370,7 @@ localization.fonts = {
 
 	filtersModal = {
 		title = { "ZenMaruGothic-Black", 72 },
-		checkboxes = {"ZenMaruGothic-Medium", 24},
+		checkboxes = {"ZenMaruGothic-Black", 24},
 		headerText = {"ZenMaruGothic-Black", 28},
 		filtersLine = { "ZenMaruGothic-Black", 48 },
 	},

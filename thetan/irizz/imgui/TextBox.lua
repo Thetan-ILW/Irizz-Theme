@@ -1,6 +1,5 @@
-local utf8 = require("utf8")
 local just = require("just")
-local theme = require("imgui.theme")
+local gfx_util = require("gfx_util")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -52,7 +51,7 @@ return function(id, text, index, w, h, password)
 			drawableText = string.rep("*", #text)
 		end
 
-		love.graphics.printf(drawableText, 0, 0, w, "center")
+		gfx_util.printFrame(drawableText, 0, -3, w, h, "center", "center")
 		local offset = just.text(right)
 		just.indent(-offset)
 	else
@@ -64,12 +63,12 @@ return function(id, text, index, w, h, password)
 			drawableText = string.rep("*", #text)
 		end
 
-		love.graphics.printf(drawableText, 0, 0, w, "center")
+		gfx_util.printFrame(drawableText, 0, -3, w, h, "center", "center")
 	end
 
 	if not changed and text == "" then
 		love.graphics.setColor(1, 1, 1, 0.5)
-		love.graphics.printf(placeholder, 0, 0, w, "center")
+		gfx_util.printFrame(placeholder, 0, -3, w, h, "center", "center")
 	end
 
 	just.clip()

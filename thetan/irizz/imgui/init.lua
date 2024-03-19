@@ -62,9 +62,10 @@ end
 ---@param text string
 ---@param url string
 ---@param isLabel boolean?
-function imgui.url(id, text, url, isLabel)
+---@param w number
+function imgui.url(id, text, url, isLabel, w)
 	local font = love.graphics.getFont()
-	local width = font:getWidth(text)
+	local width = w or font:getWidth(text)
 	local height = _h
 	if not isLabel then
 		height = font:getHeight() * font:getLineHeight()
@@ -79,7 +80,8 @@ function imgui.url(id, text, url, isLabel)
 	if active then
 		love.graphics.setColor(0, 0.8, 1)
 	end
-	gfx_util.printFrame(text, 0, 0, width, height, "left", "center")
+
+	gfx_util.printFrame(text, 0, 0, width, height, "left", "top")
 	just.pop()
 
 	if changed then
