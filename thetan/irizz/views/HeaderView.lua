@@ -11,9 +11,23 @@ local Color = Theme.colors
 local Text = Theme.textHeader
 local font
 
-local Logo = require("sphere.views.logo")
-
 local ViewConfig = class()
+
+local function drawImageInCirlce(image, r, x)
+	local imageW = (r * 2) / image:getPixelWidth()
+	local imageH = (r * 2) / image:getPixelHeight()
+
+	local function avatarStencil()
+		love.graphics.circle("fill", x - r, r, r)
+	end
+
+	love.graphics.stencil(avatarStencil)
+	love.graphics.setStencilTest("greater", 0)
+	love.graphics.draw(image, x - (r * 2), 0, 0, imageW, imageH)
+	love.graphics.setStencilTest()
+	love.graphics.circle("line", x - r, r, r)
+
+end
 
 function ViewConfig:songSelectButtons(view)
 	love.graphics.setLineWidth(2)
@@ -22,11 +36,7 @@ function ViewConfig:songSelectButtons(view)
 
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
-	love.graphics.setColor({ 0.08, 0.35, 0.79, 1 })
-	love.graphics.circle("fill", r, r, r)
-	love.graphics.setColor({ 1, 1, 1, 1 })
-	love.graphics.circle("line", r, r, r)
-	Logo.draw("fill", 0, 0, r * 2)
+	drawImageInCirlce(self.gameIcon, r, r * 2)
 
 	local settingsText = font.anyText:getWidth(Text.settings)
 	local songsText = font.anyText:getWidth(Text.songs)
@@ -90,11 +100,7 @@ function ViewConfig:resultButtons(view)
 
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
-	love.graphics.setColor({ 0.08, 0.35, 0.79, 1 })
-	love.graphics.circle("fill", r, r, r)
-	love.graphics.setColor({ 1, 1, 1, 1 })
-	love.graphics.circle("line", r, r, r)
-	Logo.draw("fill", 0, 0, r * 2)
+	drawImageInCirlce(self.gameIcon, r, r * 2)
 
 	local songsText = font.anyText:getWidth(Text.songs)
 
@@ -131,19 +137,9 @@ function ViewConfig:rightSide(view)
 	local time = time_util.format(loop.time - loop.startTime)
 
 	local r = h / 1.4
-	local imageW = (r * 2) / self.avatarImage:getPixelWidth()
-	local imageH = (r * 2) / self.avatarImage:getPixelHeight()
 	local panelHeight = font.anyText:getHeight() + 8
 
-	local function avatarStencil()
-		love.graphics.circle("fill", w - r, r, r)
-	end
-
-	love.graphics.stencil(avatarStencil)
-	love.graphics.setStencilTest("greater", 0)
-	love.graphics.draw(self.avatarImage, w - (r * 2), 0, 0, imageW, imageH)
-	love.graphics.setStencilTest()
-	love.graphics.circle("line", w - r, r, r)
+	drawImageInCirlce(self.avatarImage, r, w)
 
 	local userTextWidth = font.anyText:getWidth(username)
 	local timeTextWidth = font.anyText:getWidth(time)
@@ -172,12 +168,8 @@ end
 function ViewConfig:new(game, screen)
 	font = Theme:getFonts("header")
 
-	local path = "userdata/avatar.png"
-	if love.filesystem.getInfo(path) then
-		self.avatarImage = love.graphics.newImage(path)
-	else
-		self.avatarImage = love.graphics.newImage("irizz/avatar.png")
-	end
+	self.gameIcon = Theme.gameIcon
+	self.avatarImage = Theme.avatarImage
 
 	if screen == "select" then
 		self.buttons = self.songSelectButtons

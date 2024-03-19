@@ -310,6 +310,22 @@ function Theme:init()
 
 	self.sounds.startSounds = t
 	self.sounds.startSoundNames = startSoundNames
+
+	local avatarPath = "userdata/avatar.png"
+	local gameIconPath = "userdata/game_icon.png"
+
+	if love.filesystem.getInfo(avatarPath) then
+		self.avatarImage = love.graphics.newImage(avatarPath)
+	else
+		self.avatarImage = love.graphics.newImage("irizz/avatar.png")
+	end
+
+	if love.filesystem.getInfo(gameIconPath) then
+		self.gameIcon = love.graphics.newImage(gameIconPath)
+	else
+		self.gameIcon = love.graphics.newImage("irizz/game_icon.png")
+	end
+
 end
 
 function Theme:getStartSound(game)
