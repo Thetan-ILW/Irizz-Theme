@@ -195,7 +195,9 @@ localization.textMounts = {
 	processingCharts = "Processing charts...",
 	path = "Path",
 	chartsFound = "Processed / Found",
-	chartsCached = "Charts cached"
+	chartsCached = "Charts cached",
+	create = "Create",
+	delete = "Delete"
 }
 
 localization.textOnline = {
@@ -360,6 +362,7 @@ localization.fonts = {
 		fields = { "ZenMaruGothic-Medium", 28 },
 		path = { "ZenMaruGothic-Black", 48 },
 		status = { "ZenMaruGothic-Medium", 36 },
+		buttons = { "ZenMaruGothic-Medium", 18 },
 	},
 
 	onlineModal = {

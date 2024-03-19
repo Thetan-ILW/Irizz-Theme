@@ -133,7 +133,7 @@ function ListView:draw(w, h, update)
 			_i = i
 		end
 
-		if update then
+		if update and i < self.rows + 1 then
 			self:mouseClick(w, _h, i)
 		end
 

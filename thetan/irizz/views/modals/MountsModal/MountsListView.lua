@@ -11,7 +11,7 @@ MountsListView.rows = 11
 MountsListView.centerItems = false
 MountsListView.noItemsText = Text.noMounts
 MountsListView.scrollSound = Theme.sounds.scrollSoundLargeList
-MountsListView.selectedItemIndex = nil
+MountsListView.selectedItemIndex = 1
 
 function MountsListView:new(game)
 	self.game = game
@@ -22,20 +22,26 @@ function MountsListView:reloadItems()
 	local locationManager = self.game.cacheModel.locationManager
 
 	self.items = locationManager.locations
-
-	if not self.selectedItem then
-		self.selectedItemIndex = locationManager.selected_id
-	end
 end
 
 function MountsListView:mouseClick(w, h, i)
 	local locationManager = self.game.cacheModel.locationManager
 
-	if just.is_over(w, h, 0, 0) then
-		if just.mousepressed(1) then
-			locationManager:selectLocation(i)
-		end
+	if not just.is_over(w, h, 0, 0) then
+		return
 	end
+
+	if not just.mousepressed(1) then
+		return
+	end
+
+	local item = self.items[i]
+	if not item then
+		return
+	end
+
+	locationManager:selectLocation(item.id)
+	self.selectedItemIndex = i
 end
 
 ---@param i number
