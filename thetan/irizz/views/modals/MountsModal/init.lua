@@ -8,6 +8,14 @@ local MountsModal = Modal + {}
 
 MountsModal.viewConfig = ViewConfig
 
+function MountsModal:onHide()
+	local configs = self.game.configModel.configs
+	local settings = configs.settings
+	local ss = settings.select
+
+	self.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
+end
+
 function MountsModal:hide()
 	if self.game.cacheModel.isProcessing then
 		return

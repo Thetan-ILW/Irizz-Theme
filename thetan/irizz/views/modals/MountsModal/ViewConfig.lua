@@ -164,14 +164,14 @@ function ViewConfig:uiLock(view)
 	love.graphics.setFont(Font.title)
 	gfx_util.printFrame(Text.processingCharts, 0, 0, w, h, "center", "center")
 
-	w, h = Layout:move("window")
-	w = math.huge
+	w, h = Layout:move("base")
 	love.graphics.setFont(Font.status)
-	gfx_util.printFrame(("%s: %s"):format(Text.path, path), 0, 0, w, h, "center", "top")
-	just.next(0, 50)
-	gfx_util.printFrame(("%s: %s/%s"):format(Text.chartsFound, current, count), 0, 0, w, h, "center", "top")
-	just.next(0, 50)
-	gfx_util.printFrame(("%s: %0.2f%%"):format(Text.chartsCached, current / count * 100), 0, 0, w, h, "center", "top")
+	local text = ("%s: %s\n%s: %s/%s\n%s: %0.02f%%"):format(
+		Text.path, path,
+		Text.chartsFound, current, count,
+		Text.chartsCached, current / count * 100
+	)
+	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:draw(view)
@@ -185,6 +185,7 @@ function ViewConfig:draw(view)
 		self:uiLock(view)
 		return
 	end
+
 	w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.title)
