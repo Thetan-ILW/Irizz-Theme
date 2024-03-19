@@ -269,8 +269,13 @@ local function mods(view)
 
 	local delta = just.wheel_over("timeRate", just.is_over(w, h))
 	if delta and not view.modalActive then
-		local newRate = view.game.playContext.rate + 0.05 * delta
+		local configs = view.game.configModel.configs
+		local g = configs.settings.gameplay
+
 		local timeRateModel = view.game.timeRateModel
+		local range = timeRateModel.range[g.rate_type]
+
+		local newRate = timeRateModel:get() + range[3] * delta
 
 		if newRate ~= timeRateModel:get() then
 			view.game.modifierSelectModel:change()
@@ -282,7 +287,7 @@ local function mods(view)
 	love.graphics.setFont(font.timeRate)
 
 	local baseTimeRate = view.game.playContext.rate
-	gfx_util.printBaseline(string.format("%0.02f", baseTimeRate), 0, h / 1.5, w, 1, "center")
+	gfx_util.printBaseline(Format.timeRate(baseTimeRate), 0, h / 1.5, w, 1, "center")
 
 	w, h = Layout:move("modsAndInfoLine")
 	love.graphics.setColor(Color.mutedBorder)

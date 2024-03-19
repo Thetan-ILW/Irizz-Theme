@@ -427,15 +427,29 @@ local diff_columns = {
 	"user_diff",
 }
 
+local rateTypes = {
+	linear = Text.linear,
+	exp = Text.exp
+}
+
+---@param v number?
+---@return string
+local function formatRateType(v)
+	return rateTypes[v] or ""
+end
+
 function SettingsTab:UI(view)
 	imgui.separator()
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local s = configs.select
 	local g = settings.graphics
+	local gp = configs.settings.gameplay
 	local ss = settings.select
 	local m = settings.miscellaneous
 	local irizz = configs.irizz
+
+	local timeRateModel = view.game.timeRateModel
 
 	just.text(Text.select)
 	just.next(0, textSeparation)
@@ -451,6 +465,15 @@ function SettingsTab:UI(view)
 	local name = sortModel.names[a]
 	if name then
 		view.game.selectModel:setSortFunction(name)
+	end
+
+	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, "rate type")
+	if rateType ~= gp.rate_type then
+		view.game.modifierSelectModel:change()
+		gp.rate_type = rateType
+
+		local rate = rateType == "exp" and 0 or 1
+		timeRateModel:set(rate)
 	end
 
 	irizz.panelBlur = imgui.slider1("irizz.panelBlur", irizz.panelBlur, "%i", 0, 10, 1, Text.panelBlur)
