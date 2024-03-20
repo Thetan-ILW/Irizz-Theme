@@ -1,4 +1,5 @@
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 local flux = require("flux")
 local math_util = require("math_util")
 local gfx_util = require("gfx_util")
@@ -22,6 +23,8 @@ local SelectView = ScreenView + {}
 SelectView.modalActive = false
 SelectView.screenX = 0
 SelectView.screenXTarget = 0
+
+SelectView.frequencies = nil
 
 local playSound = nil
 
@@ -77,7 +80,6 @@ end
 ---@param dt number
 function SelectView:updateSongSelect(dt)
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-
 
 	if just.keypressed("f1") then
 		self:openModal("thetan.irizz.views.modals.ModifierModal")
@@ -165,6 +167,14 @@ function SelectView:update(dt)
 	elseif self.screenX == -1 then
 		self:updateCollections(dt)
 	end
+
+	if PartyModeActivated then
+		local audio = self.game.previewModel.audio
+
+		if audio then
+			self.frequencies = audio:getData()
+		end
+	end
 end
 
 ---@param event table
@@ -221,12 +231,16 @@ function SelectView:draw()
 		end
 	end
 
+	if PartyModeActivated and self.frequencies then
+		gyatt.specter(self.frequencies, 100, w, h)
+	end
+
 	local position = self.screenX
 	local settings = self.settingsViewConfig
 	local songSelect = self.songSelectViewConfig
 	local collections = self.collectionsViewConfig
 
-	local panels = function ()
+	local panels = function()
 		if songSelect.canDraw(position) then
 			songSelect.layoutDraw(position)
 			songSelect.panels()

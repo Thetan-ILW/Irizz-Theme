@@ -17,4 +17,19 @@ function gyatt.scrollBar(list, w, h)
 	end
 end
 
+---@param frequencies ffi.ctype*
+---@param count number
+---@param w number
+---@param h number
+function gyatt.specter(frequencies, count, w, h)
+	love.graphics.setColor({ 1, 1, 1, 0.5 })
+
+	for i = 0, count, 1 do
+		local freq = frequencies[i]
+		local logFreq = math.log(freq + 1)
+		local logHeight = freq + logFreq ^ 2
+		love.graphics.rectangle("fill", i * (w / count), h, w / count, logHeight * -(h / 2))
+	end
+end
+
 return gyatt
