@@ -24,6 +24,7 @@ SelectView.screenX = 0
 SelectView.screenXTarget = 0
 
 local playSound = nil
+local randomHistory = {}
 
 function SelectView:load()
 	Theme:init()
@@ -68,6 +69,28 @@ function SelectView:openModal(modalName)
 	self.game.gameView:setModal(modal)
 end
 
+function SelectView:scrollRandom()
+	local selectModel = self.game.selectModel
+	local items = selectModel.noteChartSetLibrary.items
+
+	local destination = math.random(1, #items)
+	local currentChart = selectModel.chartview_set_index
+	table.insert(randomHistory, currentChart)
+
+	selectModel:scrollNoteChartSet(nil, destination)
+end
+
+function SelectView:undoRandom()
+	local selectModel = self.game.selectModel
+	local destination = table.remove(randomHistory)
+
+	if destination == nil then
+		return
+	end
+
+	selectModel:scrollNoteChartSet(nil, destination)
+end
+
 ---@param dt number
 function SelectView:updateSettings(dt)
 	playSound = Theme:getStartSound(self.game)
@@ -97,6 +120,16 @@ function SelectView:updateSongSelect(dt)
 	if self.modalActive then
 		return
 	end
+
+	if ctrlDown and just.keypressed("f2") then
+		self:undoRandom()
+		return
+	end
+
+	if just.keypressed("f2") then
+		self:scrollRandom()
+	end
+
 
 	if ctrlDown and just.keypressed("return") then
 		self.game.rhythmModel:setAutoplay(true)
@@ -134,7 +167,6 @@ function SelectView:switchToSongSelect()
 end
 
 function SelectView:switchToCollections()
-
 	self:moveScreen(1, true)
 end
 
