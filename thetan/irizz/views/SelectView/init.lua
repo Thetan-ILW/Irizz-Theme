@@ -232,7 +232,7 @@ function SelectView:draw()
 	end
 
 	if PartyModeActivated and self.frequencies then
-		gyatt.specter(self.frequencies, 100, w, h)
+		gyatt.specter(self.frequencies, 127, w, h)
 	end
 
 	local position = self.screenX

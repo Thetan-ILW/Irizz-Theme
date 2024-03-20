@@ -22,13 +22,20 @@ end
 ---@param w number
 ---@param h number
 function gyatt.specter(frequencies, count, w, h)
-	love.graphics.setColor({ 1, 1, 1, 0.5 })
+	local r = 8
 
+	love.graphics.setColor({ 1, 1, 1, 0.4})
 	for i = 0, count, 1 do
 		local freq = frequencies[i]
-		local logFreq = math.log(freq + 1)
-		local logHeight = freq + logFreq ^ 2
-		love.graphics.rectangle("fill", i * (w / count), h, w / count, logHeight * -(h / 2))
+		local power =  count / (i + 1)
+		local logFreq = math.log(freq + 1, power)
+		local logHeight = freq + logFreq
+
+		local rw = w / (count - 1)
+		local x = i * rw
+		local rh = math.max(r, logHeight * (h /2))
+		local y = h - rh + r
+		love.graphics.rectangle("fill", x, y, rw, rh, r, r)
 	end
 end
 
