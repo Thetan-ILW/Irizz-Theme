@@ -346,6 +346,4 @@ function Theme.formatDiffColumns(v)
 	return diff_columns_names[v] or ""
 end
 
-Theme.version = "0.1.0"
-
 return Theme

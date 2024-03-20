@@ -1,0 +1,5 @@
+require("thetan.irizz.patches.GameController")
+require("thetan.irizz.patches.GameplayController")
+require("thetan.irizz.patches.Persistence")
+require("thetan.irizz.patches.RhythmModel")
+require("thetan.irizz.patches.SelectModel")
