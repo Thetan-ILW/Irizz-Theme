@@ -1,8 +1,16 @@
 local modulePatcher = require("ModulePatcher")
 local path_util = require("path_util")
 
-modulePatcher:insert("sphere.models.SelectModel", "getAudioPathPreview", function(_self)
-	local chartview = _self.chartview
+local module = "sphere.models.SelectModel"
+
+local function insert(name, object)
+	modulePatcher:insert(module, name, object)
+end
+
+local randomHistory = {}
+
+insert("getAudioPathPreview", function(self)
+	local chartview = self.chartview
 	if not chartview then
 		return
 	end
@@ -23,4 +31,24 @@ modulePatcher:insert("sphere.models.SelectModel", "getAudioPathPreview", functio
 	end
 
 	return full_path, preview_time, mode
+end)
+
+insert("scrollRandom", function(self)
+	local items = self.noteChartSetLibrary.items
+
+	local destination = math.random(1, #items)
+	local currentChart = self.chartview_set_index
+	table.insert(randomHistory, currentChart)
+
+	self:scrollNoteChartSet(nil, destination)
+end)
+
+insert("undoRandom", function(self)
+	local destination = table.remove(randomHistory)
+
+	if destination == nil then
+		return
+	end
+
+	self:scrollNoteChartSet(nil, destination)
 end)
