@@ -24,9 +24,9 @@ SelectView.modalActive = false
 SelectView.screenX = 0
 SelectView.screenXTarget = 0
 
+SelectView.filterLine = ""
 SelectView.frequencies = nil
 SelectView.shaders = nil
-
 
 local playSound = nil
 function SelectView:load()
@@ -41,6 +41,7 @@ function SelectView:load()
 	BackgroundView.game = self.game
 	playSound = Theme:getStartSound(self.game)
 	self.shaders = require("irizz.shaders.init")
+	self:updateFilterLine()
 end
 
 function SelectView:beginUnload()
@@ -205,7 +206,30 @@ function SelectView:result()
 	end
 end
 
-local gfx  = love.graphics
+function SelectView:updateFilterLine()
+	local filters = self.game.configModel.configs.filters.notechart
+	local filterModel = self.game.selectModel.filterModel
+	local output = {}
+
+	for _, group in ipairs(filters) do
+		local activeValues = {}
+
+		for _, filter in ipairs(group) do
+			if filterModel:isActive(group.name, filter.name) then
+				table.insert(activeValues, filter.name)
+			end
+		end
+
+		if #activeValues ~= 0 then
+			local groupValues = Theme.formatFilter(group.name) .. ": " .. table.concat(activeValues, ", ")
+			table.insert(output, groupValues)
+		end
+	end
+
+	self.filterLine = table.concat(output, "   ")
+end
+
+local gfx = love.graphics
 
 ---@param canvas love.Canvas
 ---@param config table
@@ -240,7 +264,7 @@ function SelectView:applyShaders(canvas, config)
 	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.draw(canvas)
 
-	gfx.setCanvas({ previousCanvas, stencil = true} )
+	gfx.setCanvas({ previousCanvas, stencil = true })
 	gfx.setShader(previousShader)
 
 	return newCanvas
@@ -280,7 +304,6 @@ function SelectView:spectrum(canvas, w, h, invertColor)
 	gfx.setShader(previousShader)
 end
 
-
 function SelectView:draw()
 	Layout:draw()
 	Theme:setLines()
@@ -310,7 +333,7 @@ function SelectView:draw()
 	GaussianBlurView:draw(backgroundBlur)
 	gfx.origin()
 
-	gfx.setCanvas({ previousCanvas, stencil = true} )
+	gfx.setCanvas({ previousCanvas, stencil = true })
 	gfx.setShader(previousShader)
 	---
 
@@ -357,7 +380,7 @@ function SelectView:draw()
 		end
 	end
 
-	gfx.setCanvas({previousCanvas, stencil = true})
+	gfx.setCanvas({ previousCanvas, stencil = true })
 	gfx.stencil(panelsStencil, "replace", 1)
 	gfx.setStencilTest("equal", 1)
 

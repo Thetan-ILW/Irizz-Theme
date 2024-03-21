@@ -347,4 +347,16 @@ function Theme.formatDiffColumns(v)
 	return diff_columns_names[v] or ""
 end
 
+local filterAliasses = {
+	["(not) played"] = Theme.textFilters.played,
+	["actual input mode"] = Theme.textFilters.actualInputMode,
+	["original input mode"] = Theme.textFilters.inputMode,
+	format = Theme.textFilters.format,
+	scratch = Theme.textFilters.scratch,
+}
+
+function Theme.formatFilter(v)
+	return filterAliasses[v] or v
+end
+
 return Theme

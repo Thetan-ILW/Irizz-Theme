@@ -77,6 +77,11 @@ local function searchField(view)
 		config.filterString = text
 		selectModel:debouncePullNoteChartSet()
 	end
+
+	w, h = Layout:move("search")
+	love.graphics.setFont(font.filterLine)
+	just.next(0, 30)
+	Theme:textWithShadow(view.filterLine, w, h, "center", "center")
 end
 
 function ViewConfig:noteChartSets(view)

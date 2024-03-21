@@ -271,9 +271,10 @@ localization.fonts = {
 
 	songSelectViewConfig = {
 		searchField = { "ZenMaruGothic-Black", 36 },
+		filterLine = { "ZenMaruGothic-Black", 24 },
 		difficulty = { "ZenMaruGothic-Medium", 28 },
 		calculator = { "ZenMaruGothic-Medium", 24 },
-		patterns = { "ZenMaruGothic-Medium", 22},
+		patterns = { "ZenMaruGothic-Medium", 22 },
 		info = { "ZenMaruGothic-Medium", 28 },
 		moreInfo = { "ZenMaruGothic-Medium", 28 },
 		timeRate = { "ZenMaruGothic-Medium", 32 },
@@ -365,7 +366,7 @@ localization.fonts = {
 		tabs = { "ZenMaruGothic-Medium", 28 },
 		noItems = { "ZenMaruGothic-Medium", 36 },
 		mountPaths = { "ZenMaruGothic-Black", 24 },
-		windowText = {"ZenMaruGothic-Black", 24},
+		windowText = { "ZenMaruGothic-Black", 24 },
 		fields = { "ZenMaruGothic-Medium", 28 },
 		path = { "ZenMaruGothic-Black", 48 },
 		status = { "ZenMaruGothic-Medium", 36 },
@@ -380,22 +381,22 @@ localization.fonts = {
 
 	filtersModal = {
 		title = { "ZenMaruGothic-Black", 72 },
-		checkboxes = {"ZenMaruGothic-Black", 24},
-		headerText = {"ZenMaruGothic-Black", 28},
+		checkboxes = { "ZenMaruGothic-Black", 24 },
+		headerText = { "ZenMaruGothic-Black", 28 },
 		filtersLine = { "ZenMaruGothic-Black", 48 },
 	},
 
 	resultView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
-		hitError = {"ZenMaruGothic-Medium", 16},
-		judgements = {"ZenMaruGothic-Medium", 24},
-		accuracy = {"ZenMaruGothic-Medium", 28},
-		scoreInfo = {"ZenMaruGothic-Medium", 30},
-		pauses = {"ZenMaruGothic-Medium", 24},
+		hitError = { "ZenMaruGothic-Medium", 16 },
+		judgements = { "ZenMaruGothic-Medium", 24 },
+		accuracy = { "ZenMaruGothic-Medium", 28 },
+		scoreInfo = { "ZenMaruGothic-Medium", 30 },
+		pauses = { "ZenMaruGothic-Medium", 24 },
 		difficulty = { "ZenMaruGothic-Medium", 28 },
 		calculator = { "ZenMaruGothic-Medium", 24 },
-		patterns = { "ZenMaruGothic-Medium", 22},
-		modifiers = { "ZenMaruGothic-Black", 48}
+		patterns = { "ZenMaruGothic-Medium", 22 },
+		modifiers = { "ZenMaruGothic-Black", 48 }
 	}
 }
 

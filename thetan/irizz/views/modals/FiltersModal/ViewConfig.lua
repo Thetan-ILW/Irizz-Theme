@@ -23,17 +23,8 @@ local function filter_to_string(f)
 	return f.name
 end
 
-local filterAliasses = {
-	["(not) played"] = Text.played,
-	["actual input mode"] = Text.actualInputMode,
-	["original input mode"] = Text.inputMode,
-	format = Text.format,
-	scratch = Text.scratch,
-}
-
 function ViewConfig:filters(view)
 	local filterModel = view.game.selectModel.filterModel
-	local selectModel = view.game.selectModel
 	local filters = view.game.configModel.configs.filters.notechart
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
@@ -94,7 +85,7 @@ function ViewConfig:filters(view)
 		love.graphics.setColor(Color.text)
 
 		just.row(true)
-		local name = filterAliasses[group.name]
+		local name = Theme.formatFilter(group.name)
 		just.text(name)
 		just.next(210 - Font.headerText:getWidth(name))
 
