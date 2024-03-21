@@ -17,13 +17,15 @@ function gyatt.scrollBar(list, w, h)
 	end
 end
 
+local r = 8
+local smoothingFactor = 0.8
+local prevBarHeights = {}
+
 ---@param frequencies ffi.ctype*
 ---@param count number
 ---@param w number
 ---@param h number
-function gyatt.specter(frequencies, count, w, h)
-	local r = 8
-
+function gyatt.spectrum(frequencies, count, w, h)
 	for i = 0, count, 1 do
 		local freq = frequencies[i]
 		local power =  count / (i + 1)
@@ -32,10 +34,17 @@ function gyatt.specter(frequencies, count, w, h)
 
 		local rw = w / (count - 1)
 		local x = i * rw
-		local rh = math.max(r, logHeight * (h /2))
+		local rh = math.max(r, logHeight * (h / 2))
+
+		if prevBarHeights[i] then
+			rh = prevBarHeights[i] * smoothingFactor + rh * (1 - smoothingFactor)
+		end
+		prevBarHeights[i] = rh
+
 		local y = h - rh + r
 		love.graphics.rectangle("fill", x, y, rw, rh, r, r)
 	end
 end
+
 
 return gyatt

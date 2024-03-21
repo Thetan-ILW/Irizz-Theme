@@ -25,9 +25,10 @@ SelectView.screenX = 0
 SelectView.screenXTarget = 0
 
 SelectView.frequencies = nil
+SelectView.shaders = nil
+
 
 local playSound = nil
-local shaders = nil
 function SelectView:load()
 	Theme:init()
 	self.game.selectController:load()
@@ -39,7 +40,7 @@ function SelectView:load()
 
 	BackgroundView.game = self.game
 	playSound = Theme:getStartSound(self.game)
-	shaders = require("irizz.shaders.init")
+	self.shaders = require("irizz.shaders.init")
 end
 
 function SelectView:beginUnload()
@@ -204,6 +205,8 @@ function SelectView:result()
 	end
 end
 
+local gfx  = love.graphics
+
 ---@param canvas love.Canvas
 ---@param config table
 function SelectView:applyShaders(canvas, config)
@@ -215,12 +218,8 @@ function SelectView:applyShaders(canvas, config)
 		return canvas
 	end
 
-	if shaders == nil then
-		return canvas
-	end
-
-	local previousShader = love.graphics.getShader()
-	local previousCanvas = love.graphics.getCanvas()
+	local previousShader = gfx.getShader()
+	local previousCanvas = gfx.getCanvas()
 
 	local freqs = {}
 
@@ -228,20 +227,21 @@ function SelectView:applyShaders(canvas, config)
 		freqs[i * 32 + 1] = self.frequencies[i]
 	end
 
-	shaders.ca:send("ch_ab_intensity", config.chromatic_aberration)
-	shaders.ca:send("distortion_intensity", config.distortion)
-	shaders.ca:send("time", love.timer.getTime())
-	shaders.ca:send("frequencies", unpack(freqs))
+	local ca = self.shaders.ca
+	ca:send("ch_ab_intensity", config.chromatic_aberration)
+	ca:send("distortion_intensity", config.distortion)
+	ca:send("time", love.timer.getTime())
+	ca:send("frequencies", unpack(freqs))
 
 	local newCanvas = gfx_util.getCanvas("effectsCanvas")
 
-	love.graphics.setCanvas({ newCanvas, stencil = true })
-	love.graphics.setShader(shaders.ca)
-	love.graphics.setColor({ 1, 1, 1, 1 })
-	love.graphics.draw(canvas)
+	gfx.setCanvas({ newCanvas, stencil = true })
+	gfx.setShader(ca)
+	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.draw(canvas)
 
-	love.graphics.setCanvas({ previousCanvas, stencil = true} )
-	love.graphics.setShader(previousShader)
+	gfx.setCanvas({ previousCanvas, stencil = true} )
+	gfx.setShader(previousShader)
 
 	return newCanvas
 end
@@ -249,7 +249,8 @@ end
 ---@param canvas love.Canvas
 ---@param w number
 ---@param h number
-function SelectView:spectrum(canvas, w, h)
+---@param invertColor boolean
+function SelectView:spectrum(canvas, w, h, invertColor)
 	if not PartyModeActivated then
 		return
 	end
@@ -258,22 +259,27 @@ function SelectView:spectrum(canvas, w, h)
 		return
 	end
 
-	local function spectrumStencil()
-		gyatt.specter(self.frequencies, 127, w, h)
+	if not invertColor then
+		gfx.setColor(Theme.colors.spectrum)
+		gyatt.spectrum(self.frequencies, 127, w, h)
+		return
 	end
 
-	local previousShader = love.graphics.getShader()
+	local function spectrumStencil()
+		gyatt.spectrum(self.frequencies, 127, w, h)
+	end
 
-	love.graphics.stencil(spectrumStencil, "replace", 1)
-	love.graphics.setStencilTest("equal", 1)
-	love.graphics.setShader(shaders.invert)
-	love.graphics.draw(canvas)
-	love.graphics.setStencilTest()
+	local previousShader = gfx.getShader()
 
-	love.graphics.setShader(previousShader)
+	gfx.stencil(spectrumStencil, "replace", 1)
+	gfx.setStencilTest("equal", 1)
+	gfx.setShader(self.shaders.invert)
+	gfx.draw(canvas)
+	gfx.setStencilTest()
+
+	gfx.setShader(previousShader)
 end
 
-local gfx  = love.graphics
 
 function SelectView:draw()
 	Layout:draw()
@@ -287,8 +293,8 @@ function SelectView:draw()
 	local panelBlur = irizz.panelBlur
 	local backgroundBlur = graphics.blur.select
 
-	local previousShader = love.graphics.getShader()
-	local previousCanvas = love.graphics.getCanvas()
+	local previousShader = gfx.getShader()
+	local previousCanvas = gfx.getCanvas()
 
 	local backgroundBase = gfx_util.getCanvas("selectBackground")
 	local w, h = Layout:move("background")
@@ -313,7 +319,7 @@ function SelectView:draw()
 	--- Fade canvas + Background canvas + Spectrum
 	gfx.setBlendMode("alpha", "premultiplied")
 	gfx.draw(background)
-	self:spectrum(background, gfx.getWidth(), gfx.getHeight()) -- Does not work with w and h
+	self:spectrum(background, gfx.getWidth(), gfx.getHeight(), irizz.spectrum == "inverted") -- Does not work with w and h
 	gfx.setBlendMode("alpha")
 
 	---- Haha

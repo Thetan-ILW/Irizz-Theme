@@ -54,7 +54,8 @@ Theme.colors = {
 	hitPerfect = { 0.25, 0.95, 1, 1 },
 	hitBad = { 1, 0.92, 0.25, 1 },
 	hitVeryBad = { 0, 0.86, 0.18, 1 },
-	hitMiss = { 1, 0, 0, 1 }
+	hitMiss = { 1, 0, 0, 1 },
+	spectrum = Hex("#fc72e3"),
 }
 
 Theme.layout = {
