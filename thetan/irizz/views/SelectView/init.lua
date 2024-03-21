@@ -27,7 +27,7 @@ SelectView.screenXTarget = 0
 SelectView.frequencies = nil
 
 local playSound = nil
-
+local shaders = nil
 function SelectView:load()
 	Theme:init()
 	self.game.selectController:load()
@@ -39,6 +39,7 @@ function SelectView:load()
 
 	BackgroundView.game = self.game
 	playSound = Theme:getStartSound(self.game)
+	shaders = require("irizz.shaders.init")
 end
 
 function SelectView:beginUnload()
@@ -203,23 +204,127 @@ function SelectView:result()
 	end
 end
 
+---@param canvas love.Canvas
+---@param config table
+function SelectView:applyShaders(canvas, config)
+	if not PartyModeActivated then
+		return canvas
+	end
+
+	if not self.frequencies then
+		return canvas
+	end
+
+	if shaders == nil then
+		return canvas
+	end
+
+	local previousShader = love.graphics.getShader()
+	local previousCanvas = love.graphics.getCanvas()
+
+	local freqs = {}
+
+	for i = 0, 32, 1 do
+		freqs[i * 32 + 1] = self.frequencies[i]
+	end
+
+	shaders.ca:send("ch_ab_intensity", config.chromatic_aberration)
+	shaders.ca:send("distortion_intensity", config.distortion)
+	shaders.ca:send("time", love.timer.getTime())
+	shaders.ca:send("frequencies", unpack(freqs))
+
+	local newCanvas = gfx_util.getCanvas("effectsCanvas")
+
+	love.graphics.setCanvas({ newCanvas, stencil = true })
+	love.graphics.setShader(shaders.ca)
+	love.graphics.setColor({ 1, 1, 1, 1 })
+	love.graphics.draw(canvas)
+
+	love.graphics.setCanvas({ previousCanvas, stencil = true} )
+	love.graphics.setShader(previousShader)
+
+	return newCanvas
+end
+
+---@param canvas love.Canvas
+---@param w number
+---@param h number
+function SelectView:spectrum(canvas, w, h)
+	if not PartyModeActivated then
+		return
+	end
+
+	if not self.frequencies then
+		return
+	end
+
+	local function spectrumStencil()
+		gyatt.specter(self.frequencies, 127, w, h)
+	end
+
+	local previousShader = love.graphics.getShader()
+
+	love.graphics.stencil(spectrumStencil, "replace", 1)
+	love.graphics.setStencilTest("equal", 1)
+	love.graphics.setShader(shaders.invert)
+	love.graphics.draw(canvas)
+	love.graphics.setStencilTest()
+
+	love.graphics.setShader(previousShader)
+end
+
+local gfx  = love.graphics
+
 function SelectView:draw()
 	Layout:draw()
 	Theme:setLines()
 
-	local w, h = Layout:move("background")
 	local configs = self.game.configModel.configs
 	local graphics = configs.settings.graphics
 	local irizz = configs.irizz
 
 	local dim = graphics.dim.select
+	local panelBlur = irizz.panelBlur
 	local backgroundBlur = graphics.blur.select
 
-	local panelBlur = irizz.panelBlur
+	local previousShader = love.graphics.getShader()
+	local previousCanvas = love.graphics.getCanvas()
 
+	local backgroundBase = gfx_util.getCanvas("selectBackground")
+	local w, h = Layout:move("background")
+
+	---- Background + blur layer
+	gfx.setShader()
+	gfx.setCanvas({ backgroundBase, stencil = true })
+
+	gfx.clear()
+	gfx.setColor({ 1, 1, 1, 1 })
 	GaussianBlurView:draw(backgroundBlur)
 	BackgroundView:draw(w, h, dim, 0.01)
 	GaussianBlurView:draw(backgroundBlur)
+	gfx.origin()
+
+	gfx.setCanvas({ previousCanvas, stencil = true} )
+	gfx.setShader(previousShader)
+	---
+
+	local background = self:applyShaders(backgroundBase, irizz)
+
+	--- Fade canvas + Background canvas + Spectrum
+	gfx.setBlendMode("alpha", "premultiplied")
+	gfx.draw(background)
+	self:spectrum(background, gfx.getWidth(), gfx.getHeight()) -- Does not work with w and h
+	gfx.setBlendMode("alpha")
+
+	---- Haha
+	local position = self.screenX
+	local settings = self.settingsViewConfig
+	local songSelect = self.songSelectViewConfig
+	local collections = self.collectionsViewConfig
+
+	songSelect.layoutDraw(position)
+	settings.layoutDraw(position - 1)
+	collections.layoutDraw(position + 1)
 
 	local alpha = 1
 
@@ -231,60 +336,52 @@ function SelectView:draw()
 		end
 	end
 
-	if PartyModeActivated and self.frequencies then
-		gyatt.specter(self.frequencies, 127, w, h)
-	end
-
-	local position = self.screenX
-	local settings = self.settingsViewConfig
-	local songSelect = self.songSelectViewConfig
-	local collections = self.collectionsViewConfig
-
-	local panels = function()
+	---- Blur under panels
+	local panelsStencil = function()
 		if songSelect.canDraw(position) then
-			songSelect.layoutDraw(position)
 			songSelect.panels()
 		end
 
 		if settings.canDraw(position - 1) then
-			settings.layoutDraw(position - 1)
 			settings.panels()
 		end
 
 		if collections.canDraw(position + 1) then
-			collections.layoutDraw(position + 1)
 			collections.panels()
 		end
 	end
 
-	love.graphics.stencil(panels, "replace", 1)
+	gfx.setCanvas({previousCanvas, stencil = true})
+	gfx.stencil(panelsStencil, "replace", 1)
+	gfx.setStencilTest("equal", 1)
 
-	local previousCanvas = love.graphics.getCanvas()
-	local canvas = gfx_util.getCanvas("SelectView")
-	love.graphics.setStencilTest("greater", 0)
-
-	w, h = Layout:move("background")
+	gfx.origin()
+	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setBlendMode("alpha", "premultiplied")
 	GaussianBlurView:draw(panelBlur)
-	BackgroundView:draw(w, h, dim, 0.01)
+	gfx.draw(background)
 	GaussianBlurView:draw(panelBlur)
+	gfx.setBlendMode("alpha")
 
-	love.graphics.setStencilTest()
+	gfx.setStencilTest()
+	gfx.setCanvas(previousCanvas)
 
-	love.graphics.setCanvas({ canvas, stencil = true })
-	love.graphics.clear()
-	love.graphics.setBlendMode("alpha", "alphamultiply")
+	---- UI
+	local uiLayer = gfx_util.getCanvas("selectUi")
+	gfx.setCanvas({ uiLayer, stencil = true })
+	gfx.clear()
+	gfx.setBlendMode("alpha", "alphamultiply")
 	self.headerView:draw(self)
 	songSelect:draw(self, position)
 	collections:draw(self, position + 1)
 	settings:draw(self, position - 1)
-	love.graphics.setCanvas(previousCanvas)
+	gfx.setCanvas(previousCanvas)
 
-
-	love.graphics.origin()
-	love.graphics.setColor(alpha, alpha, alpha, alpha)
-	love.graphics.setBlendMode("alpha", "premultiplied")
-	love.graphics.draw(canvas)
-	love.graphics.setBlendMode("alpha")
+	gfx.origin()
+	gfx.setColor(alpha, alpha, alpha, alpha)
+	gfx.setBlendMode("alpha", "premultiplied")
+	gfx.draw(uiLayer)
+	gfx.setBlendMode("alpha")
 end
 
 return SelectView

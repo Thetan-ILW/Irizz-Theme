@@ -432,10 +432,24 @@ local rateTypes = {
 	exp = Text.exp
 }
 
+local colorTypes = {
+	"inverted",
+	"solid"
+}
+
+local _colorTypes = {
+	inverted = Text.invertedColor,
+	solid = Text.solidColor
+}
+
 ---@param v number?
 ---@return string
 local function formatRateType(v)
 	return rateTypes[v] or ""
+end
+
+local function formatColorType(v)
+	return _colorTypes[v] or ""
 end
 
 function SettingsTab:UI(view)
@@ -476,7 +490,13 @@ function SettingsTab:UI(view)
 		timeRateModel:set(rate)
 	end
 
+	imgui.separator()
+	just.text(Text.effects)
+	just.next(0, textSeparation)
 	irizz.panelBlur = imgui.slider1("irizz.panelBlur", irizz.panelBlur, "%i", 0, 10, 1, Text.panelBlur)
+	irizz.chromatic_aberration = imgui.slider1("irizz.ch_ab", irizz.chromatic_aberration * 1000, "%i%%", 0, 100, 1, Text.ch_ab) * 0.001
+	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion) * 0.001
+	irizz.spectrum = imgui.combo("irizz.spectrum", irizz.spectrum, colorTypes, formatColorType, Text.spectrum)
 
 	imgui.separator()
 	just.text(Text.collections)

@@ -24,7 +24,6 @@ end
 function gyatt.specter(frequencies, count, w, h)
 	local r = 8
 
-	love.graphics.setColor({ 1, 1, 1, 0.4})
 	for i = 0, count, 1 do
 		local freq = frequencies[i]
 		local power =  count / (i + 1)
