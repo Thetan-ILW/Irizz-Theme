@@ -115,6 +115,10 @@ localization.textSettings = {
 	commit = "Commit: ",
 	commitDate = "Date: ",
 	--
+	scoring = "Scoring",
+	scoreSystem = "Score system",
+	judgement = "Judgement",
+	--
 	default = "Default",
 	osu = "osu!",
 	average = "Average",
@@ -238,7 +242,8 @@ localization.textResult = {
 	timeRate = "TIME RATE",
 	pauses = "PAUSES",
 	scrollSpeed = "SCROLL SPEED",
-	noPatterns = "No patterns"
+	noPatterns = "No patterns",
+	noAccuracy = "No accuracy"
 }
 
 localization.fontFamilyList = {

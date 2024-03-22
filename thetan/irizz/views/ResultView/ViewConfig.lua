@@ -194,7 +194,12 @@ function ViewConfig:judgements(view)
 		return
 	end
 
-	local counterName = view.game.configModel.configs.select.judgements
+	local configs = view.game.configModel.configs
+	local scoreSystem = configs.irizz.scoreSystem
+	local judge = configs.irizz.judge
+	local prefix = Theme.getPrefix(scoreSystem)
+	local counterName = scoreSystem .. prefix .. judge
+
 	local counters = judgement.counters
 	local judgementLists = judgement.judgementLists
 	local counter = counters[counterName]
@@ -208,7 +213,7 @@ function ViewConfig:judgements(view)
 	love.graphics.setFont(font.judgements)
 
 	local textHeight = font.judgements:getHeight()
-	local textIndent = textHeight + 8
+	local textIndent = textHeight
 
 	if show then
 		for _, name in ipairs(judgementLists[counterName]) do
@@ -224,10 +229,14 @@ function ViewConfig:judgements(view)
 	end
 
 	w, h = Layout:move("judgementsAccuracy")
-	local osuv2 = scoreEngine.scoreSystem.osu.judges.od9.accuracy
 	love.graphics.setFont(font.accuracy)
 
-	gfx_util.printFrame(("%s %3.2f%%"):format("osu v2", osuv2 * 100), 0, 0, w, h, "center", "center")
+	if not judgements.accuracy then
+		gfx_util.printFrame(Text.noAccuracy, 0, 0, w, h, "center", "center")
+		return
+	end
+
+	gfx_util.printFrame(("%s %s %3.2f%%"):format(scoreSystem, prefix..judge, judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
 end
 
 local function footer(view)

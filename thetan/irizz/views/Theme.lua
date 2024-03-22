@@ -359,4 +359,32 @@ function Theme.formatFilter(v)
 	return filterAliasses[v] or v
 end
 
+local scoreSystems = {
+	"soundsphere",
+	"etterna",
+	"osu",
+}
+
+local judges = {
+	etterna = {4, 5, 6, 7},
+	osu = {5, 6, 7, 8, 9, 10}
+}
+
+local judgePrefix = {
+	etterna = "J",
+	osu = "OD"
+}
+
+function Theme.getScoreSystems()
+	return scoreSystems
+end
+
+function Theme.getJudges(name)
+	return judges[name]
+end
+
+function Theme.getPrefix(name)
+	return judgePrefix[name]
+end
+
 return Theme

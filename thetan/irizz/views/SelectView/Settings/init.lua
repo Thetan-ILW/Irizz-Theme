@@ -6,7 +6,6 @@ local Layout = require("thetan.irizz.views.SelectView.Settings.SettingsLayout")
 local SettingsTab = require("thetan.irizz.views.SelectView.Settings.SettingsTabs")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
 local Text = Theme.textSettings
 local Font
 
@@ -16,6 +15,7 @@ local tabs = {
 	Text.gameplayTab,
 	Text.audioTab,
 	Text.videoTab,
+	Text.scoring,
 	Text.timingsTab,
 	Text.keybindsTab,
 	Text.inputsTab,

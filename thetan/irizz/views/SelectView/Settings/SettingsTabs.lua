@@ -98,7 +98,7 @@ function SettingsTab:Gameplay(view)
 	speedModel:set(newSpeed)
 
 	g.speedType = imgui.combo("speedType", g.speedType, speedModel.types, formatSpeedType, Text.speedType)
-	
+
 	g.longNoteShortening = imgui.slider1(
 		"shortening",
 		g.longNoteShortening * 1000,
@@ -153,12 +153,38 @@ function SettingsTab:Gameplay(view)
 	g.lastMeanValues = imgui.intButtons("lastMeanValues", g.lastMeanValues, 1, Text.lastMeanValues)
 end
 
-local formats = {"osu", "qua", "sm", "ksh"}
-local audio_modes = {"bass_sample", "bass_fx_tempo"}
+function SettingsTab:Scoring(view)
+	local configs = view.game.configModel.configs
+	local irizz = configs.irizz
+	local settings = configs.settings
+	local g = settings.gameplay
+
+	imgui.separator()
+	just.text(Text.scoring)
+	just.next(0, textSeparation)
+
+	local prevScoreSystem = irizz.scoreSystem
+	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, Theme.getScoreSystems(), nil, Text.scoreSystem)
+
+	local judges = Theme.getJudges(irizz.scoreSystem)
+
+	if judges then
+		if prevScoreSystem ~= irizz.scoreSystem then
+			irizz.judge = judges[1]
+		end
+
+		irizz.judge = imgui.combo("irizz.judge", irizz.judge, Theme.getJudges(irizz.scoreSystem), nil, Text.judgement)
+	end
+
+	g.ratingHitTimingWindow = intButtonsMs("ratingHitTimingWindow", g.ratingHitTimingWindow, Text.ratingHitWindow)
+end
+
+local formats = { "osu", "qua", "sm", "ksh" }
+local audio_modes = { "bass_sample", "bass_fx_tempo" }
 
 local _formatModes = {
-	bass_sample = "bass sample",
-	bass_fx_tempo = "bass fx tempo",
+	bass_sample = "BASS sample",
+	bass_fx_tempo = "BASS FX tempo",
 }
 
 ---@param mode string
@@ -178,7 +204,6 @@ function SettingsTab:Timings(view)
 	just.text(Text.timingsTab)
 	just.next(0, textSeparation)
 
-	g.ratingHitTimingWindow = intButtonsMs("ratingHitTimingWindow", g.ratingHitTimingWindow, Text.ratingHitWindow)
 	g.offset.input = intButtonsMs("input offset", g.offset.input, Text.inputOffest)
 	g.offset.visual = intButtonsMs("visual offset", g.offset.visual, Text.visualOffset)
 	g.offsetScale.input = imgui.checkbox("offsetScale.input", g.offsetScale.input, Text.multiplyInputOffset)
@@ -200,7 +225,6 @@ function SettingsTab:Timings(view)
 		oam[audio_mode] = intButtonsMs("offset " .. audio_mode, oam[audio_mode], formatModes(audio_mode))
 	end
 end
-
 
 local volumeType = {
 	["linear"] = Text.linearType,
@@ -469,7 +493,8 @@ function SettingsTab:UI(view)
 	just.next(0, textSeparation)
 	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
-	irizz.chartLengthBeforeArtist = imgui.checkbox("irizz.chartLengthBeforeArtist", irizz.chartLengthBeforeArtist, Text.chartLengthBeforeArtist)
+	irizz.chartLengthBeforeArtist = imgui.checkbox("irizz.chartLengthBeforeArtist", irizz.chartLengthBeforeArtist,
+		Text.chartLengthBeforeArtist)
 	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, Text.difficulty)
 
 	local sortFunction = view.game.configModel.configs.select.sortFunction
@@ -494,15 +519,18 @@ function SettingsTab:UI(view)
 	just.text(Text.effects)
 	just.next(0, textSeparation)
 	irizz.panelBlur = imgui.slider1("irizz.panelBlur", irizz.panelBlur, "%i", 0, 10, 1, Text.panelBlur)
-	irizz.chromatic_aberration = imgui.slider1("irizz.ch_ab", irizz.chromatic_aberration * 1000, "%i%%", 0, 100, 1, Text.ch_ab) * 0.001
-	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion) * 0.001
+	irizz.chromatic_aberration = imgui.slider1("irizz.ch_ab", irizz.chromatic_aberration * 1000, "%i%%", 0, 100, 1,
+		Text.ch_ab) * 0.001
+	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion) *
+	0.001
 	irizz.spectrum = imgui.combo("irizz.spectrum", irizz.spectrum, colorTypes, formatColorType, Text.spectrum)
 
 	imgui.separator()
 	just.text(Text.collections)
 	just.next(0, textSeparation)
 	local changed = false
-	ss.locations_in_collections, changed = imgui.checkbox("s.locations_in_collections", ss.locations_in_collections, Text.showLocations)
+	ss.locations_in_collections, changed = imgui.checkbox("s.locations_in_collections", ss.locations_in_collections,
+		Text.showLocations)
 
 	if changed then
 		view.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
@@ -512,7 +540,8 @@ function SettingsTab:UI(view)
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
-	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startSoundNames, nil, Text.startSound)
+	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startSoundNames, nil,
+		Text.startSound)
 	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
 	imgui.separator()
 
@@ -530,8 +559,6 @@ function SettingsTab:UI(view)
 	blur.select = imgui.slider1("blur.select", blur.select, "%d", 0, 20, 1, Text.select)
 	blur.gameplay = imgui.slider1("blur.gameplay", blur.gameplay, "%d", 0, 20, 1, Text.gameplay)
 	blur.result = imgui.slider1("blur.result", blur.result, "%d", 0, 20, 1, Text.result)
-
-
 end
 
 function SettingsTab:Version(view)
