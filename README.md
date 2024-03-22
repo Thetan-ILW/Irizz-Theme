@@ -38,6 +38,9 @@ Note: Customization options are subject to change in future updates, with plans 
 
 ## Screenshots
 
-None
+![Song select screenshot](screenshots/song_select.png?raw=true)
+![Settings screenshot](screenshots/settings.png?raw=true)
+![Result screenshot](screenshots/result.png?raw=true)
+![Modifiers_screenshot](screenshots/modifiers.png?raw=true)
 
 After installation, the Irizz Theme should work without any additional configuration required.
