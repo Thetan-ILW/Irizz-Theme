@@ -24,7 +24,8 @@ SelectView.modalActive = false
 SelectView.screenX = 0
 SelectView.screenXTarget = 0
 
-SelectView.filterLine = ""
+SelectView.chartFilterLine = ""
+SelectView.scoreFilterLine = ""
 SelectView.frequencies = nil
 SelectView.shaders = nil
 
@@ -41,7 +42,7 @@ function SelectView:load()
 	BackgroundView.game = self.game
 	playSound = Theme:getStartSound(self.game)
 	self.shaders = require("irizz.shaders.init")
-	self:updateFilterLine()
+	self:updateFilterLines()
 end
 
 function SelectView:beginUnload()
@@ -206,9 +207,10 @@ function SelectView:result()
 	end
 end
 
-function SelectView:updateFilterLine()
+function SelectView:updateFilterLines()
 	local filters = self.game.configModel.configs.filters.notechart
 	local filterModel = self.game.selectModel.filterModel
+	local select = self.game.configModel.configs.select
 	local output = {}
 
 	for _, group in ipairs(filters) do
@@ -226,7 +228,15 @@ function SelectView:updateFilterLine()
 		end
 	end
 
-	self.filterLine = table.concat(output, "   ")
+	self.chartFilterLine = table.concat(output, "   ")
+
+	local mode = select.scoreFilterName
+	local source = select.scoreSourceName
+
+	mode = mode == "No filter" and "" or mode
+	source = source == "local" and "" or "Online"
+
+	self.scoreFilterLine = ("%s   %s"):format(source, mode)
 end
 
 local gfx = love.graphics

@@ -9,7 +9,7 @@ FiltersModal.viewConfig = ViewConfig()
 function FiltersModal:onHide()
 	self.game.selectModel:noDebouncePullNoteChartSet()
 	self.game.selectModel:pullScore()
-	self.game.selectView:updateFilterLine()
+	self.game.selectView:updateFilterLines()
 end
 
 function FiltersModal:new(game)

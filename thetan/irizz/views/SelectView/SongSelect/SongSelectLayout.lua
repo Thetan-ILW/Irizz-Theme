@@ -73,19 +73,20 @@ function _Layout:draw(offset)
 	self:pack("column2", x2[4], y1[4], w2[4], h1[4])
 	self:pack("column3", x2[6], y1[4], w2[6], h1[4])
 
-	local y2, h2 = gfx_util.layout(y1[4], h1[4], {-0.15, -0.55, verticalPanelGap, -0.3})
+	local y2, h2 = gfx_util.layout(y1[4], h1[4], {-0.15, gap, -0.55, verticalPanelGap, -0.3})
 	local y3, h3 = gfx_util.layout(y1[4], h1[4], {-0.3, verticalPanelGap, -0.55, -0.15})
 
 	local x3, w3 = gfx_util.layout(x2[2], w2[2], {-0.2, -0.8})
 	local x4, w4 = gfx_util.layout(x2[6], w2[6], {-0.8, -0.2})
 
-	self:pack("scores", x2[2], y2[2], w2[2], h2[2])
-	self:pack("infoAndMods", x3[2], y2[4], w3[2], h2[4])
+	self:pack("scoreFilters", x2[2], y2[1], w2[2], h2[1])
+	self:pack("scores", x2[2], y2[3], w2[2], h2[3])
+	self:pack("infoAndMods", x3[2], y2[5], w3[2], h2[5])
 	self:pack("difficultyAndInfo", x4[1], y3[1], w4[1], h3[1])
 	self:pack("charts", x2[6], y3[3], w2[6], h3[3])
 
 	self:_difficultyAndInfo(x4[1], y3[1], w4[1], h3[1])
-	self:_modsAndInfo(x3[2], y2[4], w3[2], h2[4])
+	self:_modsAndInfo(x3[2], y2[5], w3[2], h2[5])
 end
 
 return _Layout

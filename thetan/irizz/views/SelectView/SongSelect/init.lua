@@ -80,8 +80,7 @@ local function searchField(view)
 
 	w, h = Layout:move("search")
 	love.graphics.setFont(font.filterLine)
-	just.next(0, 30)
-	Theme:textWithShadow(view.filterLine, w, h, "center", "center")
+	Theme:textWithShadow(view.chartFilterLine, w, h, "center", "bottom")
 end
 
 function ViewConfig:noteChartSets(view)
@@ -102,7 +101,12 @@ function ViewConfig:noteChartList(view)
 end
 
 function ViewConfig:scores(view)
-	local w, h = Layout:move("scores")
+	local w, h = Layout:move("scoreFilters")
+	love.graphics.setFont(font.filterLine)
+	love.graphics.setColor(Color.text)
+	Theme:textWithShadow(view.scoreFilterLine, w, h, "center", "bottom")
+
+	w, h = Layout:move("scores")
 
 	local list = self.scoreListView
 	list:draw(w, h, canUpdate)
