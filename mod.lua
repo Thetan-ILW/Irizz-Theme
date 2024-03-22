@@ -1,21 +1,20 @@
-local SelectView = require("thetan.iris.views.SelectView")
-local GameView = require("thetan.iris.views.GameView")
-
-local IrisTheme = {
-    name = "thetan.IrisTheme2"
+local IrizzTheme = {
+	name = "thetan.IrizzTheme",
+	verison = "0.1.1"
 }
 
-function IrisTheme:init()
-    local modulePatcher = require("ModulePatcher")
+function IrizzTheme:init(mods)
+	require("thetan.irizz.patches")
 
-    modulePatcher:observe("sphere.controllers.GameController", "load", function(_self, game)
-        game.ui.gameView = GameView(game)
-        game.gameView = game.ui.gameView
-
-        game.ui.selectView = SelectView()
-        game.ui.selectView.game = game
-        game.selectView = game.ui.selectView
-    end, self)
+	PartyModeActivated = false
+	for _, mod in ipairs(mods) do
+		if mod.instance then
+			if mod.instance.name == "thetan.bass" then
+				PartyModeActivated = true
+				break
+			end
+		end
+	end
 end
 
-return IrisTheme
+return IrizzTheme
