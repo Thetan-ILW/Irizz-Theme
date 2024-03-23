@@ -60,15 +60,9 @@ function ViewConfig:tabs(view)
 
 	for _, tab in ipairs(tabs) do
 		if imgui.TextOnlyButton(tab, tab, w, h, "center", tab == currentTab) then
-			local sound = Theme.sounds.tabButtonClick
-
-			if sound then
-				sound:stop()
-				sound:play()
-			end
-
 			currentTab = tab
 			SettingsTab:reset()
+			Theme:playSound("tabButtonClick")
 		end
 	end
 end
