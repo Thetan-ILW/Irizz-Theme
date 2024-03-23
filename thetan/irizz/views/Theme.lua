@@ -20,7 +20,7 @@ end
 local Theme = {}
 
 Theme.sounds = {
-	start= {},
+	start = {},
 	startNames = {},
 }
 
@@ -30,14 +30,14 @@ Theme.colors = {
 	panel = Hex("#000000AA"),
 	border = Hex("#FFFFFF"),
 	mutedBorder = Hex("#616161"),
-	headerButtonBackground = {0, 0, 0, 0.2},
+	headerButtonBackground = { 0, 0, 0, 0.2 },
 	transparentPanel = Hex("#00000077"),
 	accent = Hex("#fc72e3"),
 	darkerAccent = Hex("#bf58ca"),
 	select = Hex("#f669db55"),
 	headerSelect = Hex("#ff8cfa"),
 	text = Hex("#FFFFFF"),
-	textShadow = {0.3, 0.3, 0.3, 0.7},
+	textShadow = { 0.3, 0.3, 0.3, 0.7 },
 	unfocusedText = { 0.75, 0.75, 0.75, 1 },
 	darkText = { 0.2, 0.2, 0.2, 1 },
 	itemDownloaded = { 1, 1, 1, 0.5 },
@@ -123,12 +123,12 @@ local difficultyRanges = {
 		{ 19, 23 },
 	},
 	osu_diff = {
-		{ 0, 2 },
-		{ 2, 3.5 },
+		{ 0,   2 },
+		{ 2,   3.5 },
 		{ 3.5, 5.3 },
 		{ 5.3, 6.2 },
 		{ 6.2, 8 },
-		{ 8, 10 }
+		{ 8,   10 }
 	}
 }
 
@@ -291,14 +291,14 @@ end
 
 local shadowOffset = 3
 function Theme:textWithShadow(text, w, h, ax, ay)
-	local r, g, b, a  = love.graphics.getColor()
+	local r, g, b, a = love.graphics.getColor()
 	love.graphics.setColor(self.colors.textShadow)
 	gfx_util.printFrame(text, shadowOffset, shadowOffset, w, h, ax, ay)
-	love.graphics.setColor({r, g, b, a})
+	love.graphics.setColor({ r, g, b, a })
 	gfx_util.printFrame(text, 0, 0, w, h, ax, ay)
 end
 
-local function getFromUserdata(fileName)
+local function getImage(fileName)
 	local path = "userdata/" .. fileName
 
 	if love.filesystem.getInfo(path) then
@@ -308,7 +308,25 @@ local function getFromUserdata(fileName)
 	return "irizz/" .. fileName
 end
 
-function Theme:init()
+local audioExt = { ".wav", ".ogg", ".mp3" }
+local function getSound(fileName)
+	local userPath, internPath
+
+	for _, ext in ipairs(audioExt) do
+		userPath = "userdata/" .. fileName .. ext
+		internPath = "irizz/" .. fileName .. ext
+
+		if love.filesystem.getInfo(userPath) then
+			return userPath
+		elseif love.filesystem.getInfo(internPath) then
+			return internPath
+		end
+	end
+
+	error("Oopsie woopsie! This sound: " .. fileName .. " does not exist.")
+end
+
+function Theme:init(game)
 	local defaultStartSounds = love.filesystem.getDirectoryItems("irizz/ui_sounds/start")
 	local customStartSounds = love.filesystem.getDirectoryItems("userdata/ui_sounds/start")
 
@@ -326,10 +344,36 @@ function Theme:init()
 
 	local gfx = love.graphics
 	local au = love.audio
-	self.avatarImage = gfx.newImage(getFromUserdata("avatar.png"))
-	self.gameIcon = gfx.newImage(getFromUserdata("game_icon.png"))
-	self.sounds.scrollLargeList = au.newSource(getFromUserdata("ui_sounds/scroll_large_list.wav"), "static")
-	self.sounds.scrollSmallList = au.newSource(getFromUserdata("ui_sounds/scroll_small_list.wav"), "static")
+	self.avatarImage = gfx.newImage(getImage("avatar.png"))
+	self.gameIcon = gfx.newImage(getImage("game_icon.png"))
+	self.sounds.scrollLargeList = au.newSource(getSound("ui_sounds/scroll_large_list"), "static")
+	self.sounds.scrollSmallList = au.newSource(getSound("ui_sounds/scroll_small_list"), "static")
+	self.sounds.checkboxClick = au.newSource(getSound("ui_sounds/checkbox_click"), "static")
+
+	self:updateVolume(game)
+end
+
+function Theme:updateVolume(game)
+	local configs = game.configModel.configs
+	local settings = configs.settings
+	local irizz = configs.irizz
+	local a = settings.audio
+	local v = a.volume
+
+	local volume = irizz.uiVolume * v.master
+	for _, item in pairs(self.sounds) do
+		if type(item) == "table" then
+			for _, sound in pairs(item) do
+				if not sound.setVolume then
+					break
+				end
+
+				sound:setVolume(volume)
+			end
+		else
+			item:setVolume(volume)
+		end
+	end
 end
 
 function Theme:getStartSound(game)
@@ -369,8 +413,8 @@ local scoreSystems = {
 }
 
 local judges = {
-	etterna = {4, 5, 6, 7},
-	osu = {5, 6, 7, 8, 9, 10}
+	etterna = { 4, 5, 6, 7 },
+	osu = { 5, 6, 7, 8, 9, 10 }
 }
 
 local judgePrefix = {

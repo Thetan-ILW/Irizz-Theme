@@ -19,10 +19,27 @@ Irizz Theme is a visually stunning and user-friendly mod for the rhythm game "so
 
 Currently, basic customization is supported through the following methods:
 
+- UI Tab in settings.
 - Replace `userdata/avatar.{imageFormat}` with your desired avatar image.
 - Replace `userdata/game_icon.{imageFormat}` with your custom game icon.
-- Add audio files to `moddedgame/irizz/sounds/start/` to customize the start sound.
+- Add audio files to `userdata/ui_sounds/` to customize the ui sounds. Check `irizz/ui_sounds/` to find all overridable sounds. You can use any audio format.
+- You can add chart start sounds to `userdata/ui_sounds/start/`. You can select them in the UI tab in settings.
 - Add background images to `'userdata/backgrounds/`. If the chart does not have it's own background image, random image from this directory will be loaded instead.
+
+## Shortcuts
+`CTRL + S` - Skins
+`CTRL + I` - Inputs
+`CTRL + F` - Filters
+`CTRL + E` - Editor
+`CTRL + P` - Stop music
+`F1` - Modifiers
+`F2` - Random
+`CTRL + R` - Undo random
+`CTRL + ENTER` - Start chart with auto mod enabled
+`Up arrow` - Previous chart
+`Down arrow` - Next chart
+`Left arrow` - Previous chart set 
+`Right arrow` - Next chart set
 
 ## Installation
 

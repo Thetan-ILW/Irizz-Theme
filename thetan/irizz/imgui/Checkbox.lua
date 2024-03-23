@@ -34,8 +34,11 @@ return function(id, v, size)
 		cfg.rounding/2,
 		cfg.rounding/2
 	)
+	end
 
-
+	if changed then
+		Theme.sounds.checkboxClick:stop()
+		Theme.sounds.checkboxClick:play()
 	end
 
 	just.next(size + size/10, size)

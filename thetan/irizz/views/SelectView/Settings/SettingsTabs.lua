@@ -258,6 +258,10 @@ function SettingsTab:Audio(view)
 		imgui.combo("a.volumeType", a.volumeType, { "linear", "logarithmic" }, formatVolumeType, Text.volumeType)
 
 	local v = a.volume
+
+	local oldMaster = v.master
+	local oldUi = irizz.uiVolume
+
 	if a.volumeType == "linear" then
 		v.master = imgui.slider1("v.master", v.master * 100, "%i%%", 0, 100, 1, Text.master) / 100
 		v.music = imgui.slider1("v.music", v.music * 100, "%i%%", 0, 100, 1, Text.music) / 100
@@ -270,6 +274,10 @@ function SettingsTab:Audio(view)
 		v.effects = imgui.lfslider("v.effects", v.effects, "%ddB", -60, 0, 1, Text.effects)
 		v.metronome = imgui.lfslider("v.metronome", v.metronome, "%ddB", -60, 0, 1, Text.metronome)
 		irizz.uiVolume = imgui.lfslider("irizz.uiVolume", irizz.uiVolume, "%ddB", -60, 0, 1, Text.uiVolume)
+	end
+
+	if v.master ~= oldMaster or irizz.uiVolume ~= oldUi then
+		Theme:updateVolume(view.game)
 	end
 
 	local mode = a.mode

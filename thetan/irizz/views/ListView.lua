@@ -27,9 +27,6 @@ function ListView:playSound()
 	local configs = self.game.configModel.configs
 	self.staticCursor = configs.irizz.staticCursor
 
-	local audioSettings = configs.settings.audio
-	local uiVolume = configs.irizz.uiVolume
-	self.scrollSound:setVolume(audioSettings.volume.master * uiVolume)
 	self.scrollSound:stop()
 	self.scrollSound:play()
 end

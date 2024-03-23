@@ -31,7 +31,7 @@ SelectView.shaders = nil
 
 local playSound = nil
 function SelectView:load()
-	Theme:init()
+	Theme:init(self.game)
 	self.game.selectController:load()
 	self.headerView = HeaderView(self.game, "select")
 	self.settingsViewConfig = SettingsViewConfig(self.game)
@@ -129,15 +129,6 @@ function SelectView:updateSongSelect(dt)
 	end
 
 	if just.keypressed("return") then
-		local configs = self.game.configModel.configs
-		local audioSettings = configs.settings.audio
-		local uiVolume = configs.irizz.uiVolume
-
-		if playSound ~= nil then
-			playSound:setVolume(audioSettings.volume.master * uiVolume)
-			playSound:play()
-		end
-
 		self:play()
 	end
 
@@ -197,6 +188,10 @@ end
 function SelectView:play()
 	if not self.game.selectModel:notechartExists() then
 		return
+	end
+
+	if playSound ~= nil then
+		playSound:play()
 	end
 
 	local multiplayerModel = self.game.multiplayerModel
