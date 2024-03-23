@@ -582,6 +582,7 @@ function SettingsTab:Version(view)
 	m.autoUpdate = imgui.checkbox("autoUpdate", m.autoUpdate, Text.autoUpdate)
 
 	imgui.separator()
+	just.text("Irizz theme: " .. IRIZZ_VERSION)
 	just.text(Text.commit .. version.commit)
 	just.text(Text.commitDate .. version.date)
 end
