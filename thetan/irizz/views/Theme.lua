@@ -322,8 +322,6 @@ local function getSound(fileName)
 			return internPath
 		end
 	end
-
-	error("Oopsie woopsie! This sound: " .. fileName .. " does not exist.")
 end
 
 function Theme:init(game)
@@ -343,13 +341,27 @@ function Theme:init(game)
 	end
 
 	local gfx = love.graphics
-	local au = love.audio
+
+	local function sound(name)
+		local filePath = getSound(name)
+
+		if not filePath then
+			return nil
+		end
+
+		return love.audio.newSource(filePath, "static")
+	end
+
+	local t = self.sounds
 	self.avatarImage = gfx.newImage(getImage("avatar.png"))
 	self.gameIcon = gfx.newImage(getImage("game_icon.png"))
-	self.sounds.scrollLargeList = au.newSource(getSound("ui_sounds/scroll_large_list"), "static")
-	self.sounds.scrollSmallList = au.newSource(getSound("ui_sounds/scroll_small_list"), "static")
-	self.sounds.checkboxClick = au.newSource(getSound("ui_sounds/checkbox_click"), "static")
-
+	t.scrollLargeList = sound("ui_sounds/scroll_large_list")
+	t.scrollSmallList = sound("ui_sounds/scroll_small_list")
+	t.checkboxClick = sound("ui_sounds/checkbox_click")
+	t.buttonClick = sound("ui_sounds/button_click")
+	t.sliderMoved = sound("ui_sounds/slider_moved")
+	t.tabButtonClick = sound("ui_sounds/tab_button_click")
+	t.songSelectScreenChanged = sound("ui_sounds/song_select_screen_changed")
 	self:updateVolume(game)
 end
 
@@ -374,6 +386,17 @@ function Theme:updateVolume(game)
 			item:setVolume(volume)
 		end
 	end
+end
+
+function Theme:playSound(name)
+	local sound = self.sounds[name]
+
+	if not sound then
+		return
+	end
+
+	sound:stop()
+	sound:play()
 end
 
 function Theme:getStartSound(game)

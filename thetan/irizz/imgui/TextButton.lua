@@ -16,6 +16,10 @@ return function(id, text, w, h)
 	love.graphics.setColor(1, 1, 1, 1)
 	gfx_util.printFrame(tostring(text), 0, 0, w, cfg.size, "center", "center")
 
+	if changed then
+		Theme:playSound("buttonClick")
+	end
+
 	just.next(w, h + cfg.nextItemOffset)
 
 	return changed

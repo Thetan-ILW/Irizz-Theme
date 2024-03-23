@@ -123,20 +123,26 @@ end
 ---@return number
 function imgui.slider1(id, v, format, a, b, c, label)
 	local delta = just.wheel_over(id, just.is_over(_w, _h))
+	local _v = v
 	if delta then
-		v = math.min(math.max(v + c * delta, a), b)
+		_v = math.min(math.max(_v + c * delta, a), b)
 	end
 
-	local _v = math_util.map(v, a, b, 0, 1)
+	_v = math_util.map(_v, a, b, 0, 1)
 	_v = imgui.Slider(id, _v, _w, _h, format:format(v)) or _v
 	just.sameline()
 	love.graphics.setColor(Color.text)
 	imgui.label(id .. "label", label)
 	just.next(0, cfg.nextItemOffset)
-	v = math_util.map(_v, 0, 1, a, b)
-	v = math_util.round(v, c)
 
-	return v
+	local newV = math_util.map(_v, 0, 1, a, b)
+	newV = math_util.round(newV, c)
+
+	if newV ~= v then
+		Theme:playSound("sliderMoved")
+	end
+
+	return newV
 end
 
 ---@param id any

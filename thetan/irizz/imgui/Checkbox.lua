@@ -37,8 +37,7 @@ return function(id, v, size)
 	end
 
 	if changed then
-		Theme.sounds.checkboxClick:stop()
-		Theme.sounds.checkboxClick:play()
+		Theme:playSound("checkboxClick")
 	end
 
 	just.next(size + size/10, size)

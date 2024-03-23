@@ -69,6 +69,8 @@ function SelectView:moveScreen(where, exact)
 
 	self.screenXTarget = math_util.clamp(-1, self.screenXTarget, 1)
 	self.tween = flux.to(self, 0.32, { screenX = self.screenXTarget }):ease("quadout")
+
+	Theme:playSound("songSelectScreenChanged")
 end
 
 function SelectView:openModal(modalName)
