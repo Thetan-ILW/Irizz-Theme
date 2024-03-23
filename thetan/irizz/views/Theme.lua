@@ -384,7 +384,7 @@ function Theme.getJudges(name)
 end
 
 function Theme.getPrefix(name)
-	return judgePrefix[name]
+	return judgePrefix[name] or ""
 end
 
 return Theme
