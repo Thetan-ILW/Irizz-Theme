@@ -173,7 +173,7 @@ local function msdDifficulty(view, noteChartItem)
 end
 
 local function difficulty(view, chartview)
-	local difficulty = chartview.difficulty
+	local difficultyValue = chartview.difficulty
 
 	if not difficulty then
 		difficulty = 0
@@ -184,15 +184,20 @@ local function difficulty(view, chartview)
 
 	local w, h = Layout:move("difficulty")
 
-	love.graphics.setColor(Theme:getDifficultyColor(difficulty * baseTimeRate, diffColumn))
+	love.graphics.setColor(Theme:getDifficultyColor(difficultyValue * baseTimeRate, diffColumn))
 	love.graphics.setFont(font.difficulty)
-	gfx_util.printBaseline(string.format("%0.02f", difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
+	gfx_util.printBaseline(string.format("%0.02f", difficultyValue * baseTimeRate), 0, h / 2, w, 1, "center")
 
 	love.graphics.setFont(font.calculator)
 	local calculator = Theme.formatDiffColumns(diffColumn)
 	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")
 
-	local patterns = chartview.msd_diff_data or Text.noPatterns
+	local patterns = chartview.msd_diff_data
+
+	if not patterns then
+		patterns = chartview.level and "Lv."..chartview.level or Text.noPatterns
+	end
+
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
 	w, h = Layout:move("patterns")
