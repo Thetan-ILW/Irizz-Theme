@@ -164,15 +164,20 @@ function SettingsTab:Scoring(view)
 	just.next(0, textSeparation)
 
 	local prevScoreSystem = irizz.scoreSystem
-	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, Theme.getScoreSystems(), nil, Text.scoreSystem)
+	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, Theme.getScoreSystems(), nil,
+		Text.scoreSystem)
 
 	local judges = Theme.getJudges(irizz.scoreSystem)
 
-	if judges then
-		if prevScoreSystem ~= irizz.scoreSystem then
+	if prevScoreSystem ~= irizz.scoreSystem then
+		irizz.judge = ""
+
+		if judges then
 			irizz.judge = judges[1]
 		end
+	end
 
+	if judges then
 		irizz.judge = imgui.combo("irizz.judge", irizz.judge, Theme.getJudges(irizz.scoreSystem), nil, Text.judgement)
 	end
 
@@ -522,7 +527,7 @@ function SettingsTab:UI(view)
 	irizz.chromatic_aberration = imgui.slider1("irizz.ch_ab", irizz.chromatic_aberration * 1000, "%i%%", 0, 100, 1,
 		Text.ch_ab) * 0.001
 	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion) *
-	0.001
+		0.001
 	irizz.spectrum = imgui.combo("irizz.spectrum", irizz.spectrum, colorTypes, formatColorType, Text.spectrum)
 
 	imgui.separator()
