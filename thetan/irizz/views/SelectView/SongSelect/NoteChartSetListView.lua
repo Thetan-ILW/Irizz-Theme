@@ -12,11 +12,11 @@ local NoteChartSetListView = ListView + {}
 NoteChartSetListView.rows = 13
 NoteChartSetListView.centerItems = true
 NoteChartSetListView.noItemsText = Text.noChartSets
-NoteChartSetListView.scrollSound = Theme.sounds.scrollSoundLargeList
 
 function NoteChartSetListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("noteChartSetListView")
+	self.scrollSound = Theme.sounds.scrollLargeList
 end
 
 function NoteChartSetListView:reloadItems()
@@ -62,7 +62,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 	love.graphics.setColor(Color.text)
 	love.graphics.translate(0, 4)
 	just.indent(15)
-	
+
 	TextCellImView(math.huge, h, "left", firstLine, item.title, self.font.artist, self.font.title)
 end
 

@@ -20,10 +20,8 @@ end
 local Theme = {}
 
 Theme.sounds = {
-	startSounds = {},
-	startSoundNames = {},
-	scrollSoundLargeList = love.audio.newSource("irizz/sounds/hitsound_retro3.wav", "static"),
-	scrollSoundSmallList = love.audio.newSource("irizz/sounds/hitsound_retro5.wav", "static"),
+	start= {},
+	startNames = {},
 }
 
 Theme.fontFamilyList = {}
@@ -300,38 +298,43 @@ function Theme:textWithShadow(text, w, h, ax, ay)
 	gfx_util.printFrame(text, 0, 0, w, h, ax, ay)
 end
 
+local function getFromUserdata(fileName)
+	local path = "userdata/" .. fileName
+
+	if love.filesystem.getInfo(path) then
+		return path
+	end
+
+	return "irizz/" .. fileName
+end
+
 function Theme:init()
-	local startSoundNames = love.filesystem.getDirectoryItems("irizz/sounds/start")
+	local defaultStartSounds = love.filesystem.getDirectoryItems("irizz/ui_sounds/start")
+	local customStartSounds = love.filesystem.getDirectoryItems("userdata/ui_sounds/start")
 
-	local t = {}
-
-	for _, name in ipairs(startSoundNames) do
-		t[name] = love.audio.newSource("irizz/sounds/start/" .. name, "static")
+	for _, name in ipairs(defaultStartSounds) do
+		local sound = love.audio.newSource("irizz/ui_sounds/start/" .. name, "static")
+		self.sounds.start[name] = sound
+		table.insert(self.sounds.startNames, name)
 	end
 
-	self.sounds.startSounds = t
-	self.sounds.startSoundNames = startSoundNames
-
-	local avatarPath = "userdata/avatar.png"
-	local gameIconPath = "userdata/game_icon.png"
-
-	if love.filesystem.getInfo(avatarPath) then
-		self.avatarImage = love.graphics.newImage(avatarPath)
-	else
-		self.avatarImage = love.graphics.newImage("irizz/avatar.png")
+	for _, name in ipairs(customStartSounds) do
+		local sound = love.audio.newSource("userdata/ui_sounds/start/" .. name, "static")
+		self.sounds.start[name] = sound
+		table.insert(self.sounds.startNames, name)
 	end
 
-	if love.filesystem.getInfo(gameIconPath) then
-		self.gameIcon = love.graphics.newImage(gameIconPath)
-	else
-		self.gameIcon = love.graphics.newImage("irizz/game_icon.png")
-	end
-
+	local gfx = love.graphics
+	local au = love.audio
+	self.avatarImage = gfx.newImage(getFromUserdata("avatar.png"))
+	self.gameIcon = gfx.newImage(getFromUserdata("game_icon.png"))
+	self.sounds.scrollLargeList = au.newSource(getFromUserdata("ui_sounds/scroll_large_list.wav"), "static")
+	self.sounds.scrollSmallList = au.newSource(getFromUserdata("ui_sounds/scroll_small_list.wav"), "static")
 end
 
 function Theme:getStartSound(game)
 	local config = game.configModel.configs.irizz
-	return self.sounds.startSounds[config.startSound]
+	return self.sounds.start[config.startSound]
 end
 
 local diff_columns_names = {

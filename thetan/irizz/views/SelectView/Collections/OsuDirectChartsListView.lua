@@ -11,11 +11,11 @@ local OsuDirectChartsListView = ListView + {}
 OsuDirectChartsListView.rows = 7
 OsuDirectChartsListView.centerItems = true
 OsuDirectChartsListView.noItemsText = Text.notInOsuDirect
-OsuDirectChartsListView.scrollSound = Theme.sounds.scrollSoundSmallList
 
 function OsuDirectChartsListView:new(game)
-    self.game = game
-    self.font = Theme:getFonts("osuDirectChartsListView")
+	self.game = game
+	self.font = Theme:getFonts("osuDirectChartsListView")
+	self.scrollSound = Theme.sounds.scollSmallList
 end
 
 function OsuDirectChartsListView:scroll(count)
@@ -36,12 +36,13 @@ end
 ---@param h number
 function OsuDirectChartsListView:drawItem(i, w, h)
 	local item = self.items[i]
-    self:drawItemBody(w, h, i, i == self:getItemIndex())
+	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
-    love.graphics.setColor(Color.text)
+	love.graphics.setColor(Color.text)
 	love.graphics.translate(0, 4)
 	just.indent(15)
-	TextCellImView(math.huge, h, "left", item.beatmapset.creator, item.version, self.font.creator, self.font.difficultyName)
+	TextCellImView(math.huge, h, "left", item.beatmapset.creator, item.version, self.font.creator,
+		self.font.difficultyName)
 end
 
 return OsuDirectChartsListView

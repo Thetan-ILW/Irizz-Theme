@@ -545,7 +545,7 @@ function SettingsTab:UI(view)
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
-	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startSoundNames, nil,
+	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil,
 		Text.startSound)
 	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
 	imgui.separator()

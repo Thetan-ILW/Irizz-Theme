@@ -4,17 +4,16 @@ local just = require("just")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textCollections
 
 local OsudirectListView = ListView + {}
 
 OsudirectListView.rows = 11
 OsudirectListView.centerItems = true
-OsudirectListView.scrollSound = Theme.sounds.scrollSoundLargeList
 
 function OsudirectListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("osuDirectListView")
+	self.scrollSound = Theme.sounds.scrollLargeList
 end
 
 function OsudirectListView:reloadItems()

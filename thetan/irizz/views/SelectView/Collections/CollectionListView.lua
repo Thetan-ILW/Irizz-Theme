@@ -11,11 +11,11 @@ local CollectionListView = ListView + {}
 CollectionListView.rows = 13
 CollectionListView.centerItems = true
 CollectionListView.noItemsText = Text.noCollections
-CollectionListView.scrollSound = Theme.sounds.scrollSoundLargeList
 
 function CollectionListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("collectionsListView")
+	self.scrollSound = Theme.sounds.scrollLargeList
 end
 
 function CollectionListView:reloadItems()

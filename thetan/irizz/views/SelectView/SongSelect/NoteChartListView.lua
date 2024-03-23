@@ -12,11 +12,11 @@ local NoteChartListView = ListView + {}
 NoteChartListView.rows = 7
 NoteChartListView.centerItems = true
 NoteChartListView.noItemsText = Text.noCharts
-NoteChartListView.scrollSound = Theme.sounds.scrollSoundSmallList
 
 function NoteChartListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("noteChartListView")
+	self.scrollSound = Theme.sounds.scrollSmallList
 end
 
 function NoteChartListView:reloadItems()
