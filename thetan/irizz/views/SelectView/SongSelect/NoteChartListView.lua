@@ -41,7 +41,11 @@ function NoteChartListView:scroll(count)
 end
 
 function NoteChartListView:input(w, h)
-	ListView.input(self, w, h)
+	local delta = just.wheel_over(self, just.is_over(w, h))
+	if delta then
+		self:scroll(-delta)
+	end
+
 	if just.keypressed("up") then
 		self:scroll(-1)
 	elseif just.keypressed("down") then
