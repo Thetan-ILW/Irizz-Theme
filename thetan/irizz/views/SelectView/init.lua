@@ -266,6 +266,10 @@ local gfx = love.graphics
 ---@param canvas love.Canvas
 ---@param config table
 function SelectView:applyShaders(canvas, config)
+	if not config.backgroundEffects then
+		return canvas
+	end
+
 	if not self.frequencies then
 		return canvas
 	end
@@ -366,7 +370,11 @@ function SelectView:draw()
 	--- Fade canvas + Background canvas + Spectrum
 	gfx.setBlendMode("alpha", "premultiplied")
 	gfx.draw(background)
-	self:spectrum(background, gfx.getWidth(), gfx.getHeight(), irizz.spectrum == "inverted") -- Does not work with w and h
+
+	if irizz.showSpectrum then
+		self:spectrum(background, gfx.getWidth(), gfx.getHeight(), irizz.spectrum == "inverted") -- Does not work with w and h
+	end
+
 	gfx.setBlendMode("alpha")
 
 	---- Haha

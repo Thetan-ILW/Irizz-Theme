@@ -97,6 +97,8 @@ localization.textSettings = {
 	--
 	dim = "Dim",
 	blur = "Blur",
+	showSpectrum = "Show spectrum analyzer",
+	backgroundEffects = "Background effects",
 	panelBlur = "Blur under panels",
 	ch_ab = "Chromatic aberration",
 	distortion = "Distortion",

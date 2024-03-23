@@ -9,5 +9,7 @@ return {
     panelBlur = 4,
     chromatic_aberration = 0.003,
     distortion = 0.003,
-    spectrum = "inverted"
+    spectrum = "inverted",
+    backgroundEffects = true,
+    showSpectrum = true
 }

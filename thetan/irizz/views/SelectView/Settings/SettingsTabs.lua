@@ -531,6 +531,8 @@ function SettingsTab:UI(view)
 	imgui.separator()
 	just.text(Text.effects)
 	just.next(0, textSeparation)
+	irizz.showSpectrum = imgui.checkbox("irizz.showSpectrum", irizz.showSpectrum, Text.showSpectrum)
+	irizz.backgroundEffects = imgui.checkbox("irizz.backgroundEffects", irizz.backgroundEffects, Text.backgroundEffects)
 	irizz.panelBlur = imgui.slider1("irizz.panelBlur", irizz.panelBlur, "%i", 0, 10, 1, Text.panelBlur)
 	irizz.chromatic_aberration = imgui.slider1("irizz.ch_ab", irizz.chromatic_aberration * 1000, "%i%%", 0, 100, 1,
 		Text.ch_ab) * 0.001
