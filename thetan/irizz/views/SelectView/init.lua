@@ -173,13 +173,11 @@ function SelectView:update(dt)
 		self:updateCollections(dt)
 	end
 
-	if PartyModeActivated then
 		local audio = self.game.previewModel.audio
 
 		if audio and audio.getData then
 			self.frequencies = audio:getData()
 		end
-	end
 end
 
 ---@param event table
@@ -268,10 +266,6 @@ local gfx = love.graphics
 ---@param canvas love.Canvas
 ---@param config table
 function SelectView:applyShaders(canvas, config)
-	if not PartyModeActivated then
-		return canvas
-	end
-
 	if not self.frequencies then
 		return canvas
 	end
@@ -309,10 +303,6 @@ end
 ---@param h number
 ---@param invertColor boolean
 function SelectView:spectrum(canvas, w, h, invertColor)
-	if not PartyModeActivated then
-		return
-	end
-
 	if not self.frequencies then
 		return
 	end
