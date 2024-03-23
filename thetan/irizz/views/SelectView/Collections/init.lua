@@ -91,10 +91,6 @@ function ViewConfig:collectionsButtons(view)
 	w, h = Layout:move("button1")
 
 	if imgui.TextOnlyButton("cache", Text.cache, w, h) then
-		view.game.selectController:updateCacheCollection(
-			view.game.selectModel.collectionItem.path,
-			love.keyboard.isDown("lshift")
-		)
 	end
 
 	if imgui.TextOnlyButton("osuDirect", Text.osuDirect, w, h) then
@@ -124,7 +120,7 @@ function ViewConfig:osuDirectButtons(view)
 		local buttonText = set.downloaded and Text.redownload or Text.download
 
 		if imgui.TextOnlyButton("download", buttonText, w, h) then
-			view.game.osudirectModel:downloadBeatmapSet(set)
+			view.game.osudirectModel:download(set)
 		end
 	else
 		imgui.TextOnlyButton("wait", Text.wait, w, h)

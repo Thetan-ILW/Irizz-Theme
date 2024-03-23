@@ -175,7 +175,7 @@ function SelectView:update(dt)
 	if PartyModeActivated then
 		local audio = self.game.previewModel.audio
 
-		if audio then
+		if audio and audio.getData then
 			self.frequencies = audio:getData()
 		end
 	end
