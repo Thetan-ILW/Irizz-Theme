@@ -27,19 +27,19 @@ Currently, basic customization is supported through the following methods:
 - Add background images to `'userdata/backgrounds/`. If the chart does not have it's own background image, random image from this directory will be loaded instead.
 
 ## Shortcuts
-`CTRL + S` - Skins
-`CTRL + I` - Inputs
-`CTRL + F` - Filters
-`CTRL + E` - Editor
-`CTRL + P` - Stop music
-`F1` - Modifiers
-`F2` - Random
-`CTRL + R` - Undo random
-`CTRL + ENTER` - Start chart with auto mod enabled
-`Up arrow` - Previous chart
-`Down arrow` - Next chart
-`Left arrow` - Previous chart set 
-`Right arrow` - Next chart set
+`CTRL + S` - Skins  
+`CTRL + I` - Inputs  
+`CTRL + F` - Filters  
+`CTRL + E` - Editor  
+`CTRL + P` - Stop music  
+`F1` - Modifiers  
+`F2` - Random  
+`CTRL + R` - Undo random  
+`CTRL + ENTER` - Start chart with auto mod enabled  
+`Up arrow` - Previous chart  
+`Down arrow` - Next chart  
+`Left arrow` - Previous chart set  
+`Right arrow` - Next chart set  
 
 ## Installation
 
