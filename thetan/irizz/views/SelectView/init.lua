@@ -120,6 +120,14 @@ function SelectView:updateSongSelect(dt)
 		self:play()
 	end
 
+	if just.keypressed("f5") then
+		self:changeTimeRate(-1)
+	end
+
+	if just.keypressed("f6") then
+		self:changeTimeRate(1)
+	end
+
 	if just.keypressed("return") then
 		local configs = self.game.configModel.configs
 		local audioSettings = configs.settings.audio
@@ -237,6 +245,25 @@ function SelectView:updateFilterLines()
 	source = source == "local" and "" or "Online"
 
 	self.scoreFilterLine = ("%s   %s"):format(source, mode)
+end
+
+function SelectView:changeTimeRate(delta)
+	if self.modalActive then
+		return
+	end
+
+	local configs = self.game.configModel.configs
+	local g = configs.settings.gameplay
+
+	local timeRateModel = self.game.timeRateModel
+	local range = timeRateModel.range[g.rate_type]
+
+	local newRate = timeRateModel:get() + range[3] * delta
+
+	if newRate ~= timeRateModel:get() then
+		self.game.modifierSelectModel:change()
+		timeRateModel:set(newRate)
+	end
 end
 
 local gfx = love.graphics

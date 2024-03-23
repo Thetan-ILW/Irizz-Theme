@@ -277,19 +277,8 @@ local function mods(view)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
 	local delta = just.wheel_over("timeRate", just.is_over(w, h))
-	if delta and not view.modalActive then
-		local configs = view.game.configModel.configs
-		local g = configs.settings.gameplay
-
-		local timeRateModel = view.game.timeRateModel
-		local range = timeRateModel.range[g.rate_type]
-
-		local newRate = timeRateModel:get() + range[3] * delta
-
-		if newRate ~= timeRateModel:get() then
-			view.game.modifierSelectModel:change()
-			timeRateModel:set(newRate)
-		end
+	if delta then
+		view:changeTimeRate(delta)
 	end
 
 	love.graphics.setColor(Color.text)
