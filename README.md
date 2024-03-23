@@ -22,6 +22,7 @@ Currently, basic customization is supported through the following methods:
 - Replace `userdata/avatar.{imageFormat}` with your desired avatar image.
 - Replace `userdata/game_icon.{imageFormat}` with your custom game icon.
 - Add audio files to `moddedgame/irizz/sounds/start/` to customize the start sound.
+- Add background images to `'userdata/background/`. If the chart does not have it's own background image, random image from this directory will be loaded instead.
 
 Note: Customization options are subject to change in future updates, with plans to consolidate all customization within the `userdata` directory and include easier localization and color theme selection.
 
