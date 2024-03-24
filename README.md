@@ -34,7 +34,7 @@ Currently, basic customization is supported through the following methods:
 `CTRL + P` - Stop music  
 `F1` - Modifiers  
 `F2` - Random  
-`CTRL + R` - Undo random  
+`CTRL + F2` - Undo random  
 `CTRL + ENTER` - Start chart with auto mod enabled  
 `Up arrow` - Previous chart  
 `Down arrow` - Next chart  

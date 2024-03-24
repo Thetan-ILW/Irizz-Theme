@@ -250,6 +250,22 @@ localization.textResult = {
 	noAccuracy = "No accuracy"
 }
 
+localization.textMultiplayer = {
+	title = "Multiplayer and players",
+	noPlayers = "Nobody is online.",
+	players = "Players:",
+	noRooms = "No rooms.\nCreate one and invite your friends!",
+	createTip = "Create your own room:",
+	createRoom = "Create a room",
+	playing = "Playing",
+	join = "Join",
+	name = "Name",
+	password = "Password",
+	create = "Create",
+	enterPassword = "Enter password to join the %s",
+	back = "Back"
+}
+
 localization.fontFamilyList = {
 	["Noto Sans"] = {
 		"resources/fonts/NotoSansCJK-Regular.ttc",
@@ -393,6 +409,14 @@ localization.fonts = {
 		checkboxes = { "ZenMaruGothic-Black", 24 },
 		headerText = { "ZenMaruGothic-Black", 28 },
 		filtersLine = { "ZenMaruGothic-Black", 48 },
+	},
+
+	multiplayerModal = {
+		title = { "ZenMaruGothic-Black", 72 },
+		listHeader = { "ZenMaruGothic-Black", 32 },
+		lists = { "ZenMaruGothic-Black", 24 },
+		buttons = { "ZenMaruGothic-Black", 28 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	resultView = {

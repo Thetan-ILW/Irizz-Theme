@@ -70,10 +70,10 @@ function GameView:draw()
 	if self.modal then
 		self.modal:draw()
 
-        if self.modal.alpha < 0 then
-            self.modal = nil
+		if self.modal.alpha < 0 then
+			self.modal = nil
 			self.view.modalActive = false
-        end
+		end
 	end
 
 	if self.contextMenu and ContextMenuImView(self.contextMenuWidth) then
@@ -119,7 +119,7 @@ function GameView:setModal(modal)
 	if not opennedModal then
 		self.modal = modal
 		self.modal.alpha = 0
-        self.modal:show()
+		self.modal:show()
 		self.view.modalActive = true
 		return
 	end
@@ -127,6 +127,13 @@ function GameView:setModal(modal)
 	if opennedModal.name == modal.name then
 		self.modal.forceClose = true
 	end
+end
+
+function GameView:closeModal()
+	if self.modal then
+		self.modal.forceClose = true
+	end
+	self.view.modalActive = false
 end
 
 return GameView

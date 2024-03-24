@@ -103,6 +103,10 @@ function SelectView:updateSongSelect(dt)
 		self:openModal("thetan.irizz.views.modals.FiltersModal")
 	end
 
+	if ctrlDown and just.keypressed("m") then
+		self:openModal("thetan.irizz.views.modals.MultiplayerModal")
+	end
+
 	if self.modalActive then
 		return
 	end
@@ -157,6 +161,12 @@ end
 
 ---@param dt number
 function SelectView:update(dt)
+	if self.game.multiplayerModel.room then
+		self.game.gameView:closeModal()
+		self:changeScreen("multiplayerView")
+		return
+	end
+
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
 
 	self.game.selectController:update()
@@ -173,11 +183,11 @@ function SelectView:update(dt)
 		self:updateCollections(dt)
 	end
 
-		local audio = self.game.previewModel.audio
+	local audio = self.game.previewModel.audio
 
-		if audio and audio.getData then
-			self.frequencies = audio:getData()
-		end
+	if audio and audio.getData then
+		self.frequencies = audio:getData()
+	end
 end
 
 ---@param event table
