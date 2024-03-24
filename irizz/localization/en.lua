@@ -263,7 +263,8 @@ localization.textMultiplayer = {
 	password = "Password",
 	create = "Create",
 	enterPassword = "Enter password to join the %s",
-	back = "Back"
+	back = "Back",
+	notConnected = "Trying to connect.\nStatus: %s"
 }
 
 localization.fontFamilyList = {

@@ -157,8 +157,9 @@ function ViewConfig:draw(view)
 	love.graphics.setColor(0, 0, 0, 0.75)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
-	local room = view.game.multiplayerModel.room
-	local selectedRoom = view.game.multiplayerModel.selectedRoom
+	local multiModel = view.game.multiplayerModel
+	local room = multiModel.room
+	local selectedRoom = multiModel.selectedRoom
 
 	if selectedRoom and not room then
 		self:joinGame(view, selectedRoom)
@@ -169,6 +170,14 @@ function ViewConfig:draw(view)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.title)
 	gfx_util.printFrame(Text.title, 0, 0, w, h, "center", "center")
+
+	local status = multiModel.status
+	if status ~= "connected" then
+		w, h = Layout:move("base")
+		gfx.setFont(Font.noItems)
+		gfx_util.printFrame(Text.notConnected:format(status), 0, 0, w, h, "center", "center")
+		return
+	end
 
 	self:players(view)
 	self:rooms(view)
