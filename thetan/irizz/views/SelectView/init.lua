@@ -422,7 +422,7 @@ function SelectView:draw()
 	gfx.setStencilTest("equal", 1)
 
 	gfx.origin()
-	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setColor({ alpha, alpha, alpha, alpha })
 	gfx.setBlendMode("alpha", "premultiplied")
 	GaussianBlurView:draw(panelBlur)
 	gfx.draw(background)
