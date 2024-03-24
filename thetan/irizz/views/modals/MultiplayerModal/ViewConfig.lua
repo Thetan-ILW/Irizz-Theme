@@ -71,16 +71,25 @@ end
 function ViewConfig:buttons(view)
 	local w, h = Layout:move("buttons")
 
+	Theme:border(w, h)
+	Theme:panel(w, h)
+
 	gfx.setColor(Color.text)
 	gfx.setFont(Font.buttons)
 
-	local changed, text = TextBox("roomName", { roomName, Text.name}, nil, w / 3, h, false)
+	w = w - 20
+	h = h - 20
+	gfx.translate(10, 5)
+
+	gfx_util.printFrame(Text.createRoom, 0, 0, w, h, "center", "top")
+	gfx.translate(0, Font.buttons:getHeight() + 15)
+	local changed, text = TextBox("roomName", { roomName, Text.name}, nil, w, h, false)
 
 	if changed == "text" then
 		roomName = text
 	end
-	just.sameline()
-	changed, text = TextBox("roomPassword", { roomPassword, Text.password }, nil, w / 3, h, true)
+
+	changed, text = TextBox("roomPassword", { roomPassword, Text.password }, nil, w, h, true)
 
 	if changed == "text" then
 		roomPassword = text
@@ -91,9 +100,13 @@ function ViewConfig:buttons(view)
 
 	imgui.setSize(w, h, uiW, uiH)
 
-	just.sameline()
+	local textW = Font.buttons:getWidth(Text.create)
+	gfx.translate((w/2) - (textW + Theme.imgui.size)/2, 10)
+
 	if imgui.button("createRoom", Text.create) then
 		view.game.multiplayerModel:createRoom(roomName, roomPassword)
+		roomName = ""
+		roomPassword = ""
 	end
 end
 
