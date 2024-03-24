@@ -7,6 +7,7 @@ localization.textHeader = {
 	songs = "Songs",
 	collections = "Collections",
 	notLoggedIn = "Offline",
+	online = "Online: %i"
 }
 
 localization.textSettings = {
@@ -97,6 +98,7 @@ localization.textSettings = {
 	--
 	dim = "Dim",
 	blur = "Blur",
+	showOnlineCount = "Show online players count",
 	showSpectrum = "Show spectrum analyzer",
 	backgroundEffects = "Background effects",
 	panelBlur = "Blur under panels",

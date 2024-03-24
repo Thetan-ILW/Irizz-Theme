@@ -13,90 +13,90 @@ local font
 
 local ViewConfig = class()
 
+local gfx = love.graphics
+
 local function drawImageInCirlce(image, r, x)
 	local imageW = (r * 2) / image:getPixelWidth()
 	local imageH = (r * 2) / image:getPixelHeight()
 
 	local function avatarStencil()
-		love.graphics.circle("fill", x - r, r, r)
+		gfx.circle("fill", x - r, r, r)
 	end
 
-	love.graphics.stencil(avatarStencil)
-	love.graphics.setStencilTest("greater", 0)
-	love.graphics.draw(image, x - (r * 2), 0, 0, imageW, imageH)
-	love.graphics.setStencilTest()
-	love.graphics.circle("line", x - r, r, r)
+	gfx.stencil(avatarStencil)
+	gfx.setStencilTest("greater", 0)
+	gfx.draw(image, x - (r * 2), 0, 0, imageW, imageH)
+	gfx.setStencilTest()
+	gfx.circle("line", x - r, r, r)
+end
 
+local buttonOffset = 0
+local function button(text, w, h, panelHeight, rightSide, active)
+	local textW = font.anyText:getWidth(text)
+	local ax = "left"
+	local w2 = buttonOffset
+	local x = w2
+	local indent = 30
+
+	if rightSide then
+		ax = "right"
+		w2 = textW - buttonOffset
+		x = w - w2
+		indent = -30
+	end
+
+	just.indent(indent)
+	gfx.setColor(Color.headerButtonBackground)
+	gfx.rectangle("fill", x - 8, 10, textW + 16, panelHeight, 8, 8)
+
+	gfx.setColor(active and Color.headerSelect or Color.text)
+	gfx_util.printBaseline(text, buttonOffset, h - 8, w, 1, ax)
+	gfx.rectangle("fill", x, h + 2, textW, 4)
+
+	textW = rightSide and -textW or textW
+	buttonOffset = buttonOffset + textW
+
+	if just.is_over(textW, h + 10, x) then
+		if just.mousepressed(1) then
+			return true
+		end
+	end
+
+	return false
 end
 
 function ViewConfig:songSelectButtons(view)
-	love.graphics.setLineWidth(2)
-	love.graphics.setLineStyle("smooth")
-	love.graphics.setFont(font.anyText)
+	gfx.setLineWidth(2)
+	gfx.setLineStyle("smooth")
+	gfx.setFont(font.anyText)
 
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
 	drawImageInCirlce(self.gameIcon, r, r * 2)
 
-	local settingsText = font.anyText:getWidth(Text.settings)
-	local songsText = font.anyText:getWidth(Text.songs)
-	local collectionsText = font.anyText:getWidth(Text.collections)
-
-	just.indent(30)
-	local x = r * 2
-	local y = h - 8
+	buttonOffset = r * 2
 	local panelHeight = font.anyText:getHeight() + 8
 
-	love.graphics.setColor(Color.headerButtonBackground)
-	love.graphics.rectangle("fill", x - 8, 10, settingsText + 16, panelHeight, 8, 8)
-
-	love.graphics.setColor(view.screenXTarget > 0 and Color.headerSelect or Color.text)
-	gfx_util.printBaseline(Text.settings, x, y, w, 1, "left")
-	love.graphics.rectangle("fill", x, y + 10, settingsText, 4)
-
-	if just.is_over(settingsText, h + 10, x) then
-		if just.mousepressed(1) then
-			view:moveScreen(-1, true)
-		end
+	local active = view.screenXTarget > 0
+	if button(Text.settings, w, h, panelHeight, false, active) then
+		view:moveScreen(-1, true)
 	end
 
-	just.indent(30)
-	x = x + settingsText
-
-	love.graphics.setColor(Color.headerButtonBackground)
-	love.graphics.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
-
-	love.graphics.setColor(view.screenXTarget == 0 and Color.headerSelect or Color.text)
-	gfx_util.printBaseline(Text.songs, x, y, w, 1, "left")
-	love.graphics.rectangle("fill", x, y + 10, songsText, 4)
-
-	if just.is_over(songsText, h + 10, x) then
-		if just.mousepressed(1) then
-			view:switchToSongSelect()
-		end
+	active = view.screenXTarget == 0
+	if button(Text.songs, w, h, panelHeight, false, active) then
+		view:moveScreen(0, true)
 	end
 
-	just.indent(30)
-	x = x + songsText
-
-	love.graphics.setColor(Color.headerButtonBackground)
-	love.graphics.rectangle("fill", x - 8, 10, collectionsText + 16, panelHeight, 8, 8)
-
-	love.graphics.setColor(view.screenXTarget < 0 and Color.headerSelect or Color.text)
-	gfx_util.printBaseline(Text.collections, x, y, w, 1, "left")
-	love.graphics.rectangle("fill", x, y + 10, collectionsText, 4)
-
-	if just.is_over(collectionsText, h + 10, x) then
-		if just.mousepressed(1) then
-			view:switchToCollections()
-		end
+	active = view.screenXTarget < 0
+	if button(Text.collections, w, h, panelHeight, false, active) then
+		view:moveScreen(1, true)
 	end
 end
 
 function ViewConfig:resultButtons(view)
-	love.graphics.setLineWidth(2)
-	love.graphics.setLineStyle("smooth")
-	love.graphics.setFont(font.anyText)
+	gfx.setLineWidth(2)
+	gfx.setLineStyle("smooth")
+	gfx.setFont(font.anyText)
 
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
@@ -109,12 +109,12 @@ function ViewConfig:resultButtons(view)
 	local y = h - 8
 	local panelHeight = font.anyText:getHeight() + 8
 
-	love.graphics.setColor(Color.headerButtonBackground)
-	love.graphics.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
+	gfx.setColor(Color.headerButtonBackground)
+	gfx.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
 
-	love.graphics.setColor(Color.text)
+	gfx.setColor(Color.text)
 	gfx_util.printBaseline(Text.songs, x, y, w, 1, "left")
-	love.graphics.rectangle("fill", x, y + 10, songsText, 4)
+	gfx.rectangle("fill", x, y + 10, songsText, 4)
 
 	if just.is_over(songsText, h + 10, x) then
 		if just.mousepressed(1) then
@@ -132,37 +132,28 @@ function ViewConfig:rightSide(view)
 		end
 	end
 
-	love.graphics.setColor(Color.text)
+	local configs = view.game.configModel.configs
+	local drawOnlineCount = configs.irizz.showOnlineCount
+
+	gfx.setColor(Color.text)
 	local username = view.game.configModel.configs.online.user.name or Text.notLoggedIn
 	local time = time_util.format(loop.time - loop.startTime)
+	local onlineCount = #view.game.multiplayerModel.users
+	onlineCount = Text.online:format(onlineCount)
 
 	local r = h / 1.4
 	local panelHeight = font.anyText:getHeight() + 8
 
 	drawImageInCirlce(self.avatarImage, r, w)
 
-	local userTextWidth = font.anyText:getWidth(username)
-	local timeTextWidth = font.anyText:getWidth(time)
+	buttonOffset = -r * 2
+	button(username, w, h, panelHeight, true)
 
-	just.indent(-30)
-	local x1 = -r * 2
-	local x2 = w - userTextWidth + x1
-	love.graphics.setColor(Color.headerButtonBackground)
-	love.graphics.rectangle("fill", x2 - 8, 10, userTextWidth + 16, panelHeight, 8, 8)
+	if drawOnlineCount then
+		button(onlineCount, w, h, panelHeight, true)
+	end
 
-	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(username, x1, h - 8, w, 1, "right")
-	love.graphics.rectangle("fill", x2, h + 2, userTextWidth, 4)
-
-	just.indent(-30)
-	x1 = -r * 2 - userTextWidth
-	x2 = w - timeTextWidth + x1
-	love.graphics.setColor(Color.headerButtonBackground)
-	love.graphics.rectangle("fill", x2 - 8, 10, timeTextWidth + 16, panelHeight, 8, 8)
-
-	love.graphics.setColor(Color.text)
-	gfx_util.printBaseline(time, x1, h - 8, w, 1, "right")
-	love.graphics.rectangle("fill", x2, h + 2, timeTextWidth, 4)
+	button(time, w, h, panelHeight, true)
 end
 
 function ViewConfig:new(game, screen)

@@ -12,5 +12,6 @@ return {
     spectrum = "inverted",
     backgroundEffects = true,
     showSpectrum = true,
-    colorTheme = "Default"
+    colorTheme = "Default",
+    showOnlineCount = true
 }

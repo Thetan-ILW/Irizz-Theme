@@ -504,6 +504,7 @@ function SettingsTab:UI(view)
 
 	just.text(Text.select)
 	just.next(0, textSeparation)
+	irizz.showOnlineCount = imgui.checkbox("irizz.showOnline", irizz.showOnlineCount, Text.showOnlineCount)
 	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
 	irizz.chartLengthBeforeArtist = imgui.checkbox("irizz.chartLengthBeforeArtist", irizz.chartLengthBeforeArtist,

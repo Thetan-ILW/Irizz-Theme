@@ -27,6 +27,7 @@ Irizz Theme is an aesthetically pleasing design for [Soundsphere](https://sounds
 `CTRL + F` - Filters  
 `CTRL + E` - Editor  
 `CTRL + P` - Stop music  
+`CTRL + M` - Multiplayer
 `F1` - Modifiers  
 `F2` - Random  
 `CTRL + F2` - Undo random  
