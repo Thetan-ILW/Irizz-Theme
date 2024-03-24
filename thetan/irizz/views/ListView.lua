@@ -21,7 +21,7 @@ ListView.items = {}
 ListView.scrollSound = nil
 ListView.font = nil
 ListView.noItemsText = "No items!"
-ListView.staticCursor = Theme.misc.staticListViewCursor
+ListView.staticCursor = false
 
 function ListView:playSound()
 	local configs = self.game.configModel.configs

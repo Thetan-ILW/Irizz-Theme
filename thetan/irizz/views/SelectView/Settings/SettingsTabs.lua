@@ -519,7 +519,7 @@ function SettingsTab:UI(view)
 		view.game.selectModel:setSortFunction(name)
 	end
 
-	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, "rate type")
+	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, Text.rateType)
 	if rateType ~= gp.rate_type then
 		view.game.modifierSelectModel:change()
 		gp.rate_type = rateType
@@ -554,6 +554,14 @@ function SettingsTab:UI(view)
 	imgui.separator()
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
+	local colorTheme = irizz.colorTheme
+	local newColorTheme = imgui.combo("irizz.colorTheme", colorTheme, Theme.colorThemes, nil, Text.colorTheme)
+
+	if colorTheme ~= newColorTheme then
+		irizz.colorTheme = newColorTheme
+		Theme:updateColorTheme(newColorTheme)
+	end
+
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
 	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil,
 		Text.startSound)

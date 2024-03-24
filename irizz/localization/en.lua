@@ -110,8 +110,10 @@ localization.textSettings = {
 	gameplay = "Gameplay",
 	result = "Result",
 	groupCharts = "Group charts",
+	rateType = "Time rate type",
 	linear = "Linear",
 	exp = "Exp",
+	colorTheme = "Color theme",
 	--
 	themeVersion = "Theme version: ",
 	commit = "Commit: ",

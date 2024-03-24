@@ -11,5 +11,6 @@ return {
     distortion = 0.003,
     spectrum = "inverted",
     backgroundEffects = true,
-    showSpectrum = true
+    showSpectrum = true,
+    colorTheme = "Default"
 }
