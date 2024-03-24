@@ -41,7 +41,7 @@ Irizz Theme is an aesthetically pleasing design for [Soundsphere](https://sounds
 Currently, basic customization is supported through the following methods:
 
 - UI Tab in settings.
-- Add background images to `'userdata/backgrounds/`. If the chart does not have it's own background image, random image from this directory will be loaded instead.
+- Add background images to `userdata/backgrounds/`. If the chart does not have it's own background image, random image from this directory will be loaded instead.
 - Add color themes to `userdata/color_themes/`. You can find an example in `irizz/color_themes/Default.lua`
 
 Table of overridable files:
@@ -56,6 +56,8 @@ Table of overridable files:
 | Sound | userdata/ui_sounds/slider_moved               |                                                       |
 | Sound | userdata/ui_sounds/tab_button_click           | Switching tabs in settings                            |
 | Sound | userdata/ui_sounds/song_select_screen_changed | Pressing on the screen buttons in the header          |
+
+Note: you should specify the file format. For sound - mp3, wav, ogg. For images - png, jpg.
 
 ## Compatibility and Updates
 

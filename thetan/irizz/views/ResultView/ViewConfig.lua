@@ -163,6 +163,11 @@ local function HitGraph(view)
 	local rhythmModel = view.game.rhythmModel
 	local scoreEngine = rhythmModel.scoreEngine
 	local scoreItem = view.game.selectModel.scoreItem
+	
+	if not scoreItem then
+		return
+	end
+
 	local normalscore = rhythmModel.scoreEngine.scoreSystem.normalscore
 	local mean = show and normalscore.normalscore.mean or scoreItem.mean
 
@@ -354,6 +359,10 @@ end
 function ViewConfig:pauses(view)
 	local scoreItem = view.game.selectModel.scoreItem
 	local playContext = view.game.playContext
+
+	if not scoreItem then
+		return
+	end
 
 	local show = showLoadedScore(view)
 	local const = show and playContext.const or scoreItem.const
