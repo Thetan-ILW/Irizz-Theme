@@ -10,7 +10,7 @@ local Text = Theme.textMultiplayer
 
 local RoomsListView = ListView + {}
 
-RoomsListView.rows = 10
+RoomsListView.rows = 9
 RoomsListView.centerItems = false
 RoomsListView.noItemsText = Text.noRooms
 RoomsListView.scrollSound = Theme.sounds.scrollSoundLargeList

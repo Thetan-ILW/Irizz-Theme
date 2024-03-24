@@ -11,4 +11,12 @@ function MultiplayerModal:new(game)
     self.viewConfig = ViewConfig(game)
 end
 
+function MultiplayerModal:update()
+	if self.game.multiplayerModel.room then
+		self.game.gameView:closeModal()
+		self.game.selectView:changeScreen("multiplayerView")
+		return
+	end
+end
+
 return MultiplayerModal

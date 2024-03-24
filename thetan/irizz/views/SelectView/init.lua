@@ -161,11 +161,6 @@ end
 
 ---@param dt number
 function SelectView:update(dt)
-	if self.game.multiplayerModel.room then
-		self.game.gameView:closeModal()
-		self:changeScreen("multiplayerView")
-		return
-	end
 
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
 

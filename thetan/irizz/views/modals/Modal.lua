@@ -35,7 +35,11 @@ function Modal:hide()
     self.hideTween = flux.to(self, 0.44, {alpha = -1}):ease("quadout")
 end
 
+function Modal:update() end
+
 function Modal:draw(view)
+    self:update()
+
     if (self.forceClose or just.keypressed("escape")) and self.alpha > 0.1 then
         self:hide()
     end
