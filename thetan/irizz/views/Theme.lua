@@ -36,6 +36,8 @@ Theme.imgui = {
 	nextItemOffset = 10,
 }
 
+Theme.actions = {}
+
 assets:init(Theme)
 
 ---@param difficulty number
@@ -166,7 +168,9 @@ function Theme:textWithShadow(text, w, h, ax, ay)
 end
 
 function Theme:init(game)
-	assets:get(game.configModel.configs.irizz, self)
+	local configs = game.configModel.configs
+	assets:get(configs.irizz, self)
+	self.actions = configs.keybinds
 	self:updateVolume(game)
 end
 

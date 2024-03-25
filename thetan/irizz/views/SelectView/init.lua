@@ -16,6 +16,9 @@ local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections"
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
 local BackgroundView = require("sphere.views.BackgroundView")
 
+local action = {}
+local ap = gyatt.actionPressed
+
 ---@class irizz.SelectView: sphere.ScreenView
 ---@operator call: irizz.SelectView
 local SelectView = ScreenView + {}
@@ -41,6 +44,7 @@ function SelectView:load()
 
 	BackgroundView.game = self.game
 	playSound = Theme:getStartSound(self.game)
+	action = Theme.actions.songSelect
 	self.shaders = require("irizz.shaders.init")
 	self:updateFilterLines()
 end
@@ -89,25 +93,23 @@ end
 
 ---@param dt number
 function SelectView:updateSongSelect(dt)
-	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-
-	if just.keypressed("f1") then
+	if ap(action.showMods) then
 		self:openModal("thetan.irizz.views.modals.ModifierModal")
 	end
 
-	if ctrlDown and just.keypressed("s") then
+	if ap(action.showSkins) then
 		self:openModal("thetan.irizz.views.modals.NoteSkinModal")
 	end
 
-	if ctrlDown and just.keypressed("i") then
+	if ap(action.showInputs) then
 		self:openModal("thetan.irizz.views.modals.InputModal")
 	end
 
-	if ctrlDown and just.keypressed("f") then
+	if ap(action.showFilters) then
 		self:openModal("thetan.irizz.views.modals.FiltersModal")
 	end
 
-	if ctrlDown and just.keypressed("m") then
+	if ap(action.showMultiplayer) then
 		self:openModal("thetan.irizz.views.modals.MultiplayerModal")
 	end
 
@@ -115,33 +117,33 @@ function SelectView:updateSongSelect(dt)
 		return
 	end
 
-	if ctrlDown and just.keypressed("f2") then
+	if ap(action.undoRandom) then
 		self.selectModel:undoRandom()
 		return
 	end
 
-	if just.keypressed("f2") then
+	if ap(action.random) then
 		self.selectModel:scrollRandom()
 	end
 
-	if ctrlDown and just.keypressed("return") then
+	if ap(action.autoPlay) then
 		self.game.rhythmModel:setAutoplay(true)
 		self:play()
 	end
 
-	if just.keypressed("f5") then
+	if ap(action.decreaseTimeRate) then
 		self:changeTimeRate(-1)
 	end
 
-	if just.keypressed("f6") then
+	if ap(action.increaseTimeRate) then
 		self:changeTimeRate(1)
 	end
 
-	if just.keypressed("return") then
+	if ap(action.play) then
 		self:play()
 	end
 
-	if ctrlDown and just.keypressed("e") then
+	if ap(action.openEditor) then
 		if not self.game.selectModel:notechartExists() then
 			return
 		end
@@ -159,19 +161,17 @@ end
 
 ---@param dt number
 function SelectView:update(dt)
-	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-
 	self.game.selectController:update()
 
-	if ctrlDown and just.keypressed("left") then
+	if ap(action.moveScreenLeft) then
 		self:moveScreen(-1)
 	end
 
-	if ctrlDown and just.keypressed("right") then
+	if ap(action.moveScreenRight) then
 		self:moveScreen(1)
 	end
 
-	if ctrlDown and just.keypressed("p") then
+	if ap(action.pauseMusic) then
 		self.game.previewModel:stop()
 	end
 

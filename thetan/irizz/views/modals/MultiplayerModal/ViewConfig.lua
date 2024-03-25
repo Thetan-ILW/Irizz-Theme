@@ -42,7 +42,7 @@ function ViewConfig:players(view)
 	gfx.setFont(Font.listHeader)
 
 	just.text(Text.players)
-	just.next(0, 15)
+	just.next(0, 5)
 
 	gfx.setFont(Font.lists)
 
@@ -51,7 +51,6 @@ function ViewConfig:players(view)
 			just.text(user.name)
 		end
 	end
-
 
 	self.playersContainer.scrollLimit = just.height - heightStart - h
 	self.playersContainer.stopDraw()

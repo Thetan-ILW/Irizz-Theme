@@ -1,5 +1,3 @@
-local just = require("just")
-
 local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
 
@@ -8,6 +6,11 @@ local Header = require("thetan.irizz.views.HeaderView")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
+
+local Theme = require("thetan.irizz.views.Theme")
+local gyatt = require("thetan.gyatt")
+local action = {}
+local ap = gyatt.actionPressed
 
 ---@class thetan.irizz.ResultView: sphere.ScreenView
 ---@operator call: thetan.irizz.ResultView
@@ -21,6 +24,7 @@ ResultView.load = thread.coro(function(self)
 	end
 
 	loading = true
+	action = Theme.actions.resultScreen
 	self.game.resultController:load()
 
 	if self.prevView == self.game.selectView then
@@ -39,23 +43,21 @@ function ResultView:quit()
 end
 
 function ResultView:update(dt)
-	if just.keypressed("escape") then
+	if ap(action.songSelect) then
 		self:quit()
 	end
 
-	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-
-	if ctrlDown and just.keypressed("r") then
+	if ap(action.retry) then
 		self:play("retry")
 		return
 	end
 
-	if ctrlDown and just.keypressed("w") then
+	if ap(action.watchReplay) then
 		self:play("replay")
 		return
 	end
 
-	if ctrlDown and just.keypressed("s") then
+	if ap(action.submitScore) then
 		local scoreItem = self.game.selectModel.scoreItem
 		self.game.onlineModel.onlineScoreManager:submit(
 			self.game.selectModel.chartview,

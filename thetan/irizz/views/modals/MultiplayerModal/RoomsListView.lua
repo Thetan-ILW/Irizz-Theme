@@ -1,6 +1,6 @@
 local just = require("just")
 local imgui = require("thetan.irizz.imgui")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 
 local ListView = require("thetan.irizz.views.ListView")
 
@@ -31,14 +31,23 @@ function RoomsListView:drawItem(i, w, h)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.lists)
-	local name = item.name
+	local name = Text.room:format(item.name)
 
 	if item.isPlaying then
 		name = name .. " " .. Text.playing
 	end
 
+	local host
+	for _, v in ipairs(item.users) do
+		if item.host_user_id == v.id then
+			host = Text.host:format(v.name)
+			break
+		end
+	end
+
 	just.indent(15)
-	gfx_util.printFrame(name, 0, 0, w, h, "left", "center")
+	gyatt.frame(host, 0, 0, w, h, "left", "top")
+	gyatt.frame(name, 0, 0, w, h, "left", "bottom")
 
 	if multiplayerModel.room then
 		return

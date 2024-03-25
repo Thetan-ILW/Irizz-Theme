@@ -96,20 +96,21 @@ function ListView:input(w, h)
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
 	if ctrlDown then return end
 
+	local action = Theme.actions.largeList
 	local kd = love.keyboard.isScancodeDown
 	local kp = just.keypressed
 
-	if kd("left") then
-		self:autoScroll(-1, kp("left"))
-	elseif kd("right") then
-		self:autoScroll(1, kp("right"))
-	elseif kp("pageup") then
+	if kd(action.up) then
+		self:autoScroll(-1, kp(action.up))
+	elseif kd(action.down) then
+		self:autoScroll(1, kp(action.down))
+	elseif kp(action.up10) then
 		self:scroll(-10)
-	elseif kp("pagedown") then
+	elseif kp(action.down10) then
 		self:scroll(10)
-	elseif kp("home") then
+	elseif kp(action.toStart) then
 		self:scroll(-math.huge)
-	elseif kp("end") then
+	elseif kp(action.toEnd) then
 		self:scroll(math.huge)
 	end
 end

@@ -1,6 +1,30 @@
+local just = require("just")
+local gfx_util = require("gfx_util")
 local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local gyatt = {}
+
+gyatt.frame = gfx_util.printFrame
+
+---@param action string | table
+---@return boolean
+function gyatt.actionPressed(action)
+	if type(action) == "string" then
+		return just.keypressed(action)
+	end
+
+	local isPressed = false
+
+	for _, item in ipairs(action) do
+		if type(item) == "table" then
+			isPressed = love.keyboard.isScancodeDown(item[1]) or love.keyboard.isScancodeDown(item[2])
+		else
+			isPressed = isPressed and just.keypressed(item)
+		end
+	end
+
+	return isPressed
+end
 
 ---@param list irizz.ListView
 ---@param w number
@@ -28,7 +52,7 @@ local prevBarHeights = {}
 function gyatt.spectrum(frequencies, count, w, h)
 	for i = 0, count, 1 do
 		local freq = frequencies[i]
-		local power =  count / (i + 1)
+		local power = count / (i + 1)
 		local logFreq = math.log(freq + 1, power)
 		local logHeight = freq + logFreq
 
@@ -45,6 +69,5 @@ function gyatt.spectrum(frequencies, count, w, h)
 		love.graphics.rectangle("fill", x, y, rw, rh, r, r)
 	end
 end
-
 
 return gyatt
