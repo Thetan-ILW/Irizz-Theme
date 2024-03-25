@@ -47,11 +47,12 @@ function NoteChartListView:input(w, h)
 	end
 
 	local kd = love.keyboard.isScancodeDown
+	local kp = just.keypressed
 
 	if kd("up") then
-		self:autoScroll(-1)
+		self:autoScroll(-1, kp("up"))
 	elseif kd("down") then
-		self:autoScroll(1)
+		self:autoScroll(1, kp("down"))
 	end
 end
 

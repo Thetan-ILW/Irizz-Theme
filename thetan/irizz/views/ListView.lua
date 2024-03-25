@@ -96,6 +96,9 @@ function ListView:input(w, h)
 		return
 	end
 
+	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
+	if ctrlDown then return end
+
 	local kd = love.keyboard.isScancodeDown
 	local kp = just.keypressed
 

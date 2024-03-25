@@ -32,6 +32,8 @@ Irizz Theme is an aesthetically pleasing design for [Soundsphere](https://sounds
 `F2` - Random  
 `CTRL + F2` - Undo random  
 `CTRL + ENTER` - Start chart with auto mod enabled  
+`CTRL + Left` - Move screen to left  
+`CTRL + Right` - Move screen to right  
 `Up arrow` - Previous chart  
 `Down arrow` - Next chart  
 `Left arrow` - Previous chart set  

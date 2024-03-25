@@ -55,7 +55,7 @@ function SelectView:unload()
 end
 
 ---@param where number
----@param exact boolean
+---@param exact? boolean
 function SelectView:moveScreen(where, exact)
 	if self.game.gameView.modal then
 		return
@@ -69,6 +69,10 @@ function SelectView:moveScreen(where, exact)
 
 	self.screenXTarget = math_util.clamp(-1, self.screenXTarget, 1)
 	self.tween = flux.to(self, 0.32, { screenX = self.screenXTarget }):ease("quadout")
+
+	if self.screenXTarget == 0 then
+		self:switchToSongSelect()
+	end
 
 	Theme:playSound("songSelectScreenChanged")
 end
@@ -120,7 +124,6 @@ function SelectView:updateSongSelect(dt)
 		self.selectModel:scrollRandom()
 	end
 
-
 	if ctrlDown and just.keypressed("return") then
 		self.game.rhythmModel:setAutoplay(true)
 		self:play()
@@ -152,19 +155,21 @@ function SelectView:updateCollections(dt) end
 
 function SelectView:switchToSongSelect()
 	self.game.selectModel:noDebouncePullNoteChartSet()
-	self:moveScreen(0, true)
-end
-
-function SelectView:switchToCollections()
-	self:moveScreen(1, true)
 end
 
 ---@param dt number
 function SelectView:update(dt)
-
 	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
 
 	self.game.selectController:update()
+
+	if ctrlDown and just.keypressed("left") then
+		self:moveScreen(-1)
+	end
+
+	if ctrlDown and just.keypressed("right") then
+		self:moveScreen(1)
+	end
 
 	if ctrlDown and just.keypressed("p") then
 		self.game.previewModel:stop()
