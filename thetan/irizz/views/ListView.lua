@@ -23,8 +23,12 @@ ListView.font = nil
 ListView.noItemsText = "No items!"
 ListView.staticCursor = false
 
-local lastActionTime = 0
-local maxInterval = 0.08
+local nextTime = 0
+local maxInterval = 0.07
+local pressInterval = 0.12
+
+local tweenTime = 0.2
+local ease = "quartout"
 
 function ListView:playSound()
 	local configs = self.game.configModel.configs
@@ -62,14 +66,24 @@ function ListView:drawItemBody(w, h, i, selected)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 end
 
-function ListView:autoScroll(delta)
+function ListView:autoScroll(delta, justPressed)
 	local time = love.timer.getTime()
 
-	if time < lastActionTime + maxInterval then
+	if time < nextTime then
 		return
 	end
 
-	lastActionTime = time
+	local interval = maxInterval
+	ease = "linear"
+
+	if justPressed then
+		ease = "quartout"
+		interval = pressInterval
+	end
+
+	nextTime = time + interval
+	tweenTime = interval
+
 	self:scroll(delta)
 end
 
@@ -77,15 +91,18 @@ function ListView:input(w, h)
 	local delta = just.wheel_over(self, just.is_over(w, h))
 	if delta then
 		self:scroll(-delta)
+		ease = "quartout"
+		tweenTime = 0.2
+		return
 	end
 
 	local kd = love.keyboard.isScancodeDown
 	local kp = just.keypressed
 
 	if kd("left") then
-		self:autoScroll(-1)
+		self:autoScroll(-1, kp("left"))
 	elseif kd("right") then
-		self:autoScroll(1)
+		self:autoScroll(1, kp("right"))
 	elseif kp("pageup") then
 		self:scroll(-10)
 	elseif kp("pagedown") then
@@ -123,7 +140,7 @@ function ListView:draw(w, h, update)
 		if self.tween then
 			self.tween:stop()
 		end
-		self.tween = flux.to(self, 0.2, { visualItemIndex = itemIndex }):ease("quartout")
+		self.tween = flux.to(self, tweenTime, { visualItemIndex = itemIndex }):ease(ease)
 		self.itemIndex = itemIndex
 	end
 
