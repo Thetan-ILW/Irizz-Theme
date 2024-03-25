@@ -32,12 +32,9 @@ function ScoreListView:reloadItems()
 
 	self.items = self.game.selectModel.scoreLibrary.items
 
-	if #self.items == 0 then
-		self.selectedScoreIndex = 1
-		self.selectedScore = self.items[1]
-		self.game.selectModel:scrollScore(nil, 1)
-		return
-	end
+	self.selectedScoreIndex = 1
+	self.selectedScore = self.items[1]
+	self.game.selectModel:scrollScore(nil, 1)
 end
 
 function ScoreListView:mouseClick(w, h, i)
@@ -60,6 +57,8 @@ function ScoreListView:mouseClick(w, h, i)
 	end
 end
 
+function ScoreListView:input() end
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -79,7 +78,8 @@ function ScoreListView:drawItem(i, w, h)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.line1)
 	gfx_util.printFrame(string.format("#%i %s", i, username), xIndent, yIndent, w, h, "left", "top")
-	gfx_util.printFrame(string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate), -xIndent, yIndent, w, h, "right", "top")
+	gfx_util.printFrame(string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate), -xIndent, yIndent, w,
+		h, "right", "top")
 	love.graphics.setFont(self.font.line2)
 	gfx_util.printFrame(string.format("Score: %i", item.score), xIndent, -yIndent, w, h, "left", "bottom")
 	gfx_util.printFrame(time_util.time_ago_in_words(item.time), -xIndent, -yIndent, w, h, "right", "bottom")

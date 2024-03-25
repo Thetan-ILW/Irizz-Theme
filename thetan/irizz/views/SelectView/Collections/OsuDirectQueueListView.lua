@@ -21,6 +21,8 @@ function OsudirectProcessingListView:reloadItems()
 	self.items = self.game.osudirectModel.processing
 end
 
+function OsudirectProcessingListView:input() end
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -30,7 +32,7 @@ function OsudirectProcessingListView:drawItem(i, w, h)
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
 	love.graphics.translate(0, 4)
-    just.indent(15)
+	just.indent(15)
 	love.graphics.setColor(Color.text)
 	TextCellImView(math.huge, h, "left", item.artist, item.title, self.font.artist, self.font.title)
 end

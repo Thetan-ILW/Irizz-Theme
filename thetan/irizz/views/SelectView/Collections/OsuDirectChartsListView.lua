@@ -15,7 +15,7 @@ OsuDirectChartsListView.noItemsText = Text.notInOsuDirect
 function OsuDirectChartsListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("osuDirectChartsListView")
-	self.scrollSound = Theme.sounds.scollSmallList
+	self.scrollSound = Theme.sounds.scrollSmallList
 end
 
 function OsuDirectChartsListView:scroll(count)
@@ -28,6 +28,21 @@ function OsuDirectChartsListView:reloadItems()
 	if self.itemIndex > #self.items then
 		self.targetItemIndex = 1
 		self.stateCounter = (self.stateCounter or 0) + 1
+	end
+end
+
+function OsuDirectChartsListView:input(w, h)
+	local delta = just.wheel_over(self, just.is_over(w, h))
+	if delta then
+		self:scroll(-delta)
+	end
+
+	local kd = love.keyboard.isScancodeDown
+
+	if kd("up") then
+		self:autoScroll(-1)
+	elseif kd("down") then
+		self:autoScroll(1)
 	end
 end
 

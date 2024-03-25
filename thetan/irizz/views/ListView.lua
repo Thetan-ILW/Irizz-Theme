@@ -23,6 +23,9 @@ ListView.font = nil
 ListView.noItemsText = "No items!"
 ListView.staticCursor = false
 
+local lastActionTime = 0
+local maxInterval = 0.08
+
 function ListView:playSound()
 	local configs = self.game.configModel.configs
 	self.staticCursor = configs.irizz.staticCursor
@@ -59,17 +62,30 @@ function ListView:drawItemBody(w, h, i, selected)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 end
 
+function ListView:autoScroll(delta)
+	local time = love.timer.getTime()
+
+	if time < lastActionTime + maxInterval then
+		return
+	end
+
+	lastActionTime = time
+	self:scroll(delta)
+end
+
 function ListView:input(w, h)
 	local delta = just.wheel_over(self, just.is_over(w, h))
 	if delta then
 		self:scroll(-delta)
 	end
 
+	local kd = love.keyboard.isScancodeDown
 	local kp = just.keypressed
-	if kp("left") then
-		self:scroll(-1)
-	elseif kp("right") then
-		self:scroll(1)
+
+	if kd("left") then
+		self:autoScroll(-1)
+	elseif kd("right") then
+		self:autoScroll(1)
 	elseif kp("pageup") then
 		self:scroll(-10)
 	elseif kp("pagedown") then

@@ -7,7 +7,7 @@ local Color = Theme.colors
 
 local OsudirectListView = ListView + {}
 
-OsudirectListView.rows = 11
+OsudirectListView.rows = 13
 OsudirectListView.centerItems = true
 
 function OsudirectListView:new(game)
