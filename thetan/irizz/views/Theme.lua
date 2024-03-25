@@ -1,7 +1,5 @@
-local defaultColorTheme = require("irizz.color_themes.Default")
-local localization = require("irizz.localization.en")
+local assets = require("thetan.irizz.assets")
 local gfx_util = require("gfx_util")
-local table_util = require("table_util")
 
 local ModifierEncoder = require("sphere.models.ModifierEncoder")
 local ModifierModel = require("sphere.models.ModifierModel")
@@ -38,60 +36,7 @@ Theme.imgui = {
 	nextItemOffset = 10,
 }
 
-local function getItems(directory, cutExtension)
-	local internal = love.filesystem.getDirectoryItems("irizz/" .. directory)
-	local userdata = love.filesystem.getDirectoryItems("userdata/" .. directory)
-
-	local t = {}
-	table_util.append(t, internal)
-	table_util.append(t, userdata)
-
-	if cutExtension then
-		for i, v in ipairs(t) do
-			t[i] = v:match("(.+)%..+$")
-		end
-	end
-
-	return t
-end
-
-local function getFilePath(fileName)
-	local userPath = "userdata/" .. fileName
-	local internalPath = "irizz/" .. fileName
-
-	if love.filesystem.getInfo(userPath) then
-		return userPath
-	end
-
-	if love.filesystem.getInfo(internalPath) then
-		return internalPath
-	end
-
-	return nil
-end
-
-local audioExt = { ".wav", ".ogg", ".mp3" }
-local function getSound(fileName)
-	for _, ext in ipairs(audioExt) do
-		local filePath = getFilePath(fileName .. ext)
-
-		if filePath then
-			return filePath
-		end
-	end
-end
-
-table_util.copy(localization, Theme)
-table_util.copy(defaultColorTheme, Theme)
-
-function Theme:updateColorTheme(name)
-	local file = getFilePath("color_themes/" .. name .. ".lua")
-	local colorTheme = love.filesystem.load(file)()
-
-	for k, v in pairs(colorTheme) do
-		table_util.copy(v, self[k])
-	end
-end
+assets:init(Theme)
 
 ---@param difficulty number
 ---@param calculatorName string
@@ -136,46 +81,13 @@ function Theme:getDifficultyColor(difficulty, calculatorName)
 	}
 end
 
----@param list table?
----@return string?
-local function getFirstFile(list)
-	if not list then
-		return
-	end
-	for _, path in ipairs(list) do
-		if love.filesystem.getInfo(path) then
-			return path
-		end
-	end
-end
-
-local instances = {}
-
----@param filename string
----@param size number
----@return love.Font
-local function getFont(filename, size)
-	if instances[filename] and instances[filename][size] then
-		return instances[filename][size]
-	end
-	local f = Theme.fontFamilyList[filename]
-
-	local font = love.graphics.newFont(getFirstFile(f) or filename, size)
-	instances[filename] = instances[filename] or {}
-	instances[filename][size] = font
-	if f and f.height then
-		font:setLineHeight(f.height)
-	end
-	return font
-end
-
 ---@nodiscard
 function Theme:getFonts(objectName)
 	local fonts = self.fonts[objectName]
 	local loadedFonts = {}
 
 	for key, font in pairs(fonts) do
-		loadedFonts[key] = getFont(font[1], font[2])
+		loadedFonts[key] = assets:getFont(self.fontFamilyList, font[1], font[2])
 	end
 
 	return loadedFonts
@@ -254,54 +166,8 @@ function Theme:textWithShadow(text, w, h, ax, ay)
 end
 
 function Theme:init(game)
-	local configs = game.configModel.configs
-	local irizz = configs.irizz
-
-	local startSounds = getItems("ui_sounds/start")
-
-	for _, name in ipairs(startSounds) do
-		local filePath = getFilePath("ui_sounds/start/" .. name)
-		local sound
-
-		if filePath ~= nil then
-			sound = love.audio.newSource(filePath, "static")
-			self.sounds.start[name] = sound
-			table.insert(self.sounds.startNames, name)
-		end
-	end
-
-	local gfx = love.graphics
-
-	local function sound(name)
-		local filePath = getSound(name)
-
-		if not filePath then
-			return nil
-		end
-
-		return love.audio.newSource(filePath, "static")
-	end
-
-	local t = self.sounds
-	self.avatarImage = gfx.newImage(assert(getFilePath("avatar.png")))
-	self.gameIcon = gfx.newImage(assert(getFilePath("game_icon.png")))
-	t.scrollLargeList = sound("ui_sounds/scroll_large_list")
-	t.scrollSmallList = sound("ui_sounds/scroll_small_list")
-	t.checkboxClick = sound("ui_sounds/checkbox_click")
-	t.buttonClick = sound("ui_sounds/button_click")
-	t.sliderMoved = sound("ui_sounds/slider_moved")
-	t.tabButtonClick = sound("ui_sounds/tab_button_click")
-	t.songSelectScreenChanged = sound("ui_sounds/song_select_screen_changed")
+	assets:get(game.configModel.configs.irizz, self)
 	self:updateVolume(game)
-
-	self.colorThemes = getItems("color_themes/", true)
-
-	for _, v in ipairs(self.colorThemes) do
-		if v == irizz.colorTheme then
-			self:updateColorTheme(irizz.colorTheme)
-			break
-		end
-	end
 end
 
 function Theme:updateVolume(game)

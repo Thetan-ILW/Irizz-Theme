@@ -76,10 +76,7 @@ function ListView:autoScroll(delta, justPressed)
 	local interval = maxInterval
 	ease = "linear"
 
-	if justPressed then
-		ease = "quartout"
-		interval = pressInterval
-	end
+	interval = justPressed and pressInterval or maxInterval
 
 	nextTime = time + interval
 	tweenTime = interval

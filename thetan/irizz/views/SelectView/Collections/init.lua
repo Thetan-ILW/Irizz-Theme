@@ -2,7 +2,6 @@ local class = require("class")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
-local gfx_util = require("gfx_util")
 
 local Layout = require("thetan.irizz.views.SelectView.Collections.CollectionsLayout")
 
