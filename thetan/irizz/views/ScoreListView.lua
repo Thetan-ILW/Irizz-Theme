@@ -32,9 +32,10 @@ function ScoreListView:reloadItems()
 
 	self.items = self.game.selectModel.scoreLibrary.items
 
-	self.selectedScoreIndex = 1
-	self.selectedScore = self.items[1]
-	self.game.selectModel:scrollScore(nil, 1)
+	local i = self.game.selectModel.scoreItemIndex
+	self.selectedScoreIndex = i
+	self.selectedScore = self.items[i]
+	self.game.selectModel:scrollScore(nil, i)
 end
 
 function ScoreListView:mouseClick(w, h, i)
