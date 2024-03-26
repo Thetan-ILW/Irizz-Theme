@@ -12,8 +12,9 @@ function _Layout:header(x, y, w, h)
 
     local x1, w1 = gfx_util.layout(x, w, {-1/3, -1/3, -1/3})
     self:pack("headerButtons", x1[1], y, w1[1], h)
-  
+
     self:pack("buttons", x1[1], y, w1[1], h)
+	self:pack("vimMode", x1[2], y, w1[2], h)
     self:pack("user", x1[3], y, w1[3], h)
 end
 

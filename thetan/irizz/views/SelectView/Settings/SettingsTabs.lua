@@ -407,42 +407,6 @@ function SettingsTab:Video(view)
 	p.ry = imgui.checkbox("p.ry", p.ry, Text.allowRotateY)
 end
 
-function SettingsTab:Keybinds(view)
-	imgui.separator()
-	local settings = view.game.configModel.configs.settings
-	local i = settings.input
-
-	just.text(Text.gameplay)
-	just.next(0, textSeparation)
-	i.skipIntro = imgui.hotkey("skipIntro", i.skipIntro, Text.skipIntro)
-	i.quickRestart = imgui.hotkey("quickRestart", i.quickRestart, Text.quickRestart)
-
-	imgui.separator()
-	just.text(Text.uiTab)
-	just.next(0, textSeparation)
-	i.selectRandom = imgui.hotkey("selectRandom", i.selectRandom, Text.selectRandom)
-	i.screenshot.capture = imgui.hotkey("screenshot.capture", i.screenshot.capture, Text.captureScreenshot)
-	i.screenshot.open = imgui.hotkey("screenshot.open", i.screenshot.open, Text.openScreenshot)
-
-	imgui.separator()
-	just.text(Text.offset)
-	just.next(0, textSeparation)
-	i.offset.decrease = imgui.hotkey("offset.decrease", i.offset.decrease, Text.decrease)
-	i.offset.increase = imgui.hotkey("offset.increase", i.offset.increase, Text.increase)
-
-	imgui.separator()
-	just.text(Text.scrollSpeed)
-	just.next(0, textSeparation)
-	i.playSpeed.decrease = imgui.hotkey("playSpeed.decrease", i.playSpeed.decrease, Text.decrease)
-	i.playSpeed.increase = imgui.hotkey("playSpeed.increase", i.playSpeed.increase, Text.increase)
-
-	imgui.separator()
-	just.text(Text.timeRate)
-	just.next(0, textSeparation)
-	i.timeRate.decrease = imgui.hotkey("timeRate.decrease", i.timeRate.decrease, Text.decrease)
-	i.timeRate.increase = imgui.hotkey("timeRate.increase", i.timeRate.increase, Text.increase)
-end
-
 function SettingsTab:Inputs(view)
 	imgui.separator()
 	local configs = view.game.configModel.configs
@@ -555,6 +519,10 @@ function SettingsTab:UI(view)
 	imgui.separator()
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
+	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
+
+	irizz.vimMotions = imgui.checkbox("irizz.vimMotions", irizz.vimMotions, Text.vimMotions)
+
 	local colorTheme = irizz.colorTheme
 	local newColorTheme = imgui.combo("irizz.colorTheme", colorTheme, Theme.colorThemes, nil, Text.colorTheme)
 
@@ -566,7 +534,7 @@ function SettingsTab:UI(view)
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
 	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil,
 		Text.startSound)
-	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
+
 	imgui.separator()
 
 	just.text(Text.dim)

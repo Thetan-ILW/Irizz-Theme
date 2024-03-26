@@ -7,8 +7,8 @@ return {
         increaseTimeRate = "f6",
         undoRandom = { { "lctrl", "rctrl" }, "f2" },
         clearSearch = { { "lctrl", "rctrl" }, "backspace" },
-        moveScreenLeft = { { "lctrl", "rctrl" }, "left" },
-        moveScreenRight = { { "lctrl", "rctrl" }, "right" },
+        moveScreenLeft = { { "lctrl", "rctrl" }, "h" },
+        moveScreenRight = { { "lctrl", "rctrl" }, "l" },
         pauseMusic = { { "lctrl", "rctrl" }, "p" },
         showSkins = { { "lctrl", "rctrl" }, "s" },
         showFilters = { { "lctrl", "rctrl" }, "f" },
@@ -16,8 +16,8 @@ return {
         showMultiplayer = { { "lctrl", "rctrl" }, "m" },
         autoPlay = { { "lctrl", "rctrl" }, "return" },
         openEditor = { { "lctrl", "rctrl" }, "e" },
-        insertMode = "",
-        normalMode = ""
+        insertMode = "i",
+        normalMode = "escape"
     },
     resultScreen = {
         songSelect = "escape",
@@ -26,15 +26,15 @@ return {
         submitScore = "s"
     },
     largeList = {
-        up = "left",
-        down = "right",
-        up10 = "pageup",
-        down10 = "pagedown",
+        up = "k",
+        down = "j",
+        up10 = {{ "lctrl", "rctrl" }, "u"},
+        down10 = {{ "lctrl", "rctrl" }, "d"},
         toStart = "home",
-        toEnd = "end"
+        toEnd = {{"lshift", "rshift"}, "g"}
     },
     smallList = {
-        up = "up",
-        down = "down"
+        up = "h",
+        down = "l"
     }
 }

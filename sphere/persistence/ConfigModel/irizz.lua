@@ -13,5 +13,6 @@ return {
     backgroundEffects = true,
     showSpectrum = true,
     colorTheme = "Default",
-    showOnlineCount = true
+    showOnlineCount = true,
+    vimMotions = false
 }

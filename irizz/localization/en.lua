@@ -116,6 +116,7 @@ localization.textSettings = {
 	linear = "Linear",
 	exp = "Exp",
 	colorTheme = "Color theme",
+	vimMotions = "Vim motions (RESTART REQUIRED)",
 	--
 	themeVersion = "Theme version: ",
 	commit = "Commit: ",

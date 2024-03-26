@@ -17,6 +17,7 @@ modulePatcher:insert("sphere.persistence.Persistence", "load", function(_self)
 	configModel:open("files")
 	configModel:open("irizz", true)
 	configModel:open("keybinds", true)
+	configModel:open("vim_keybinds", true)
 	configModel:read()
 
 	_self.cacheModel:load()

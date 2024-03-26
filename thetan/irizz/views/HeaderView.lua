@@ -1,7 +1,7 @@
 local class = require("class")
 local just = require("just")
 local time_util = require("time_util")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 local loop = require("loop")
 
 local Layout = require("thetan.irizz.views.HeaderLayout")
@@ -50,7 +50,7 @@ local function button(text, w, h, panelHeight, rightSide, active)
 	gfx.rectangle("fill", x - 8, 10, textW + 16, panelHeight, 8, 8)
 
 	gfx.setColor(active and Color.headerSelect or Color.text)
-	gfx_util.printBaseline(text, buttonOffset, h - 8, w, 1, ax)
+	gyatt.baseline(text, buttonOffset, h - 8, w, 1, ax)
 	gfx.rectangle("fill", x, h + 2, textW, 4)
 
 	textW = rightSide and -textW or textW
@@ -113,7 +113,7 @@ function ViewConfig:resultButtons(view)
 	gfx.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
 
 	gfx.setColor(Color.text)
-	gfx_util.printBaseline(Text.songs, x, y, w, 1, "left")
+	gyatt.baseline(Text.songs, x, y, w, 1, "left")
 	gfx.rectangle("fill", x, y + 10, songsText, 4)
 
 	if just.is_over(songsText, h + 10, x) then
@@ -121,6 +121,27 @@ function ViewConfig:resultButtons(view)
 			view.game.resultView:quit()
 		end
 	end
+end
+
+function ViewConfig:vimMode(view)
+	local configs = view.game.configModel.configs
+	local vimMotions = configs.irizz.vimMotions
+
+	if not vimMotions then
+		return
+	end
+
+	local w, h = Layout:move("vimMode")
+
+	gfx.setColor(Color.headerButtonBackground)
+	local textW = font.anyText:getWidth(view.vimMode)
+	local panelHeight = font.anyText:getHeight() + 8
+	gfx.rectangle("fill", w / 2 - textW / 2 - 8, 10, textW + 16, panelHeight, 8, 8)
+
+	gfx.setColor(Color.text)
+	gfx.setFont(font.anyText)
+	gyatt.frame(view.vimMode, 0, 0, w, h, "center", "center")
+	gfx.rectangle("fill", w / 2 - textW / 2, h + 2, textW, 4)
 end
 
 function ViewConfig:rightSide(view)
@@ -156,11 +177,12 @@ function ViewConfig:rightSide(view)
 	button(time, w, h, panelHeight, true)
 end
 
-function ViewConfig:new(game, screen)
+function ViewConfig:new(screen)
 	font = Theme:getFonts("header")
 
 	self.gameIcon = Theme.gameIcon
 	self.avatarImage = Theme.avatarImage
+	self.screen = screen
 
 	if screen == "select" then
 		self.buttons = self.songSelectButtons
@@ -172,6 +194,11 @@ end
 function ViewConfig:draw(view)
 	Layout:draw()
 	self:buttons(view)
+
+	if self.screen == "select" then
+		self:vimMode(view)
+	end
+
 	self:rightSide(view)
 end
 

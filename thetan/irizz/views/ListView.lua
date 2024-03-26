@@ -2,8 +2,7 @@ local just = require("just")
 local flux = require("flux")
 local class = require("class")
 
-local gfx_util = require("gfx_util")
-
+local gyatt = require("thetan.gyatt")
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
 
@@ -93,24 +92,21 @@ function ListView:input(w, h)
 		return
 	end
 
-	local ctrlDown = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-	if ctrlDown then return end
-
 	local action = Theme.actions.largeList
-	local kd = love.keyboard.isScancodeDown
-	local kp = just.keypressed
+	local ap = gyatt.actionPressed
+	local ad = gyatt.actionDown
 
-	if kd(action.up) then
-		self:autoScroll(-1, kp(action.up))
-	elseif kd(action.down) then
-		self:autoScroll(1, kp(action.down))
-	elseif kp(action.up10) then
-		self:scroll(-10)
-	elseif kp(action.down10) then
-		self:scroll(10)
-	elseif kp(action.toStart) then
+	if ad(action.up) then
+		self:autoScroll(-1, ap(action.up))
+	elseif ad(action.down) then
+		self:autoScroll(1, ap(action.down))
+	elseif ad(action.up10) then
+		self:autoScroll(-10, ap(action.up10))
+	elseif ad(action.down10) then
+		self:autoScroll(10, ap(action.down10))
+	elseif ap(action.toStart) then
 		self:scroll(-math.huge)
-	elseif kp(action.toEnd) then
+	elseif ap(action.toEnd) then
 		self:scroll(math.huge)
 	end
 end
@@ -181,7 +177,7 @@ function ListView:draw(w, h, update)
 	if #self.items == 0 then
 		love.graphics.setColor(Color.text)
 		love.graphics.setFont(self.font.noItems)
-		gfx_util.printBaseline(self.noItemsText, 0, h / 2, w, 1, "center")
+		gyatt.frame(self.noItemsText, 0, 0, w, h, "center", "center")
 		return
 	end
 

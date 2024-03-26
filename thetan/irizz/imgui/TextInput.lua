@@ -40,7 +40,7 @@ return function(id, text, index, w, h)
 		just.indent(-offset)
 	else
 		index = utf8.len(text) + 1
-		just.text(text)
+		love.graphics.printf(text, 0, 0, w, "center")
 	end
 
 	if not changed and text == "" then

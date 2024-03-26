@@ -1,4 +1,3 @@
-local just = require("just")
 local gyatt = require("thetan.gyatt")
 local flux = require("flux")
 local math_util = require("math_util")
@@ -16,9 +15,6 @@ local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections"
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
 local BackgroundView = require("sphere.views.BackgroundView")
 
-local action = {}
-local ap = gyatt.actionPressed
-
 ---@class irizz.SelectView: sphere.ScreenView
 ---@operator call: irizz.SelectView
 local SelectView = ScreenView + {}
@@ -32,11 +28,13 @@ SelectView.scoreFilterLine = ""
 SelectView.frequencies = nil
 SelectView.shaders = nil
 
+SelectView.vimMode = "Normal"
+
 local playSound = nil
 function SelectView:load()
 	Theme:init(self.game)
 	self.game.selectController:load()
-	self.headerView = HeaderView(self.game, "select")
+	self.headerView = HeaderView("select")
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
@@ -44,7 +42,9 @@ function SelectView:load()
 
 	BackgroundView.game = self.game
 	playSound = Theme:getStartSound(self.game)
-	action = Theme.actions.songSelect
+
+	self.inputMap = require("thetan.irizz.views.SelectView.InputMap")(self)
+
 	self.shaders = require("irizz.shaders.init")
 	self:updateFilterLines()
 end
@@ -93,63 +93,15 @@ end
 
 ---@param dt number
 function SelectView:updateSongSelect(dt)
-	if ap(action.showMods) then
-		self:openModal("thetan.irizz.views.modals.ModifierModal")
-	end
-
-	if ap(action.showSkins) then
-		self:openModal("thetan.irizz.views.modals.NoteSkinModal")
-	end
-
-	if ap(action.showInputs) then
-		self:openModal("thetan.irizz.views.modals.InputModal")
-	end
-
-	if ap(action.showFilters) then
-		self:openModal("thetan.irizz.views.modals.FiltersModal")
-	end
-
-	if ap(action.showMultiplayer) then
-		self:openModal("thetan.irizz.views.modals.MultiplayerModal")
+	if self.inputMap:call("selectModals") then
+		return
 	end
 
 	if self.modalActive then
 		return
 	end
 
-	if ap(action.undoRandom) then
-		self.selectModel:undoRandom()
-		return
-	end
-
-	if ap(action.random) then
-		self.selectModel:scrollRandom()
-	end
-
-	if ap(action.autoPlay) then
-		self.game.rhythmModel:setAutoplay(true)
-		self:play()
-	end
-
-	if ap(action.decreaseTimeRate) then
-		self:changeTimeRate(-1)
-	end
-
-	if ap(action.increaseTimeRate) then
-		self:changeTimeRate(1)
-	end
-
-	if ap(action.play) then
-		self:play()
-	end
-
-	if ap(action.openEditor) then
-		if not self.game.selectModel:notechartExists() then
-			return
-		end
-
-		self:changeScreen("editorView")
-	end
+	self.inputMap:call("select")
 end
 
 ---@param dt number
@@ -163,17 +115,7 @@ end
 function SelectView:update(dt)
 	self.game.selectController:update()
 
-	if ap(action.moveScreenLeft) then
-		self:moveScreen(-1)
-	end
-
-	if ap(action.moveScreenRight) then
-		self:moveScreen(1)
-	end
-
-	if ap(action.pauseMusic) then
-		self.game.previewModel:stop()
-	end
+	self.inputMap:call("screen")
 
 	if self.screenX == 0 then
 		self:updateSongSelect(dt)

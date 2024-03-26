@@ -56,7 +56,9 @@ end
 
 ---@param view table
 local function searchField(view)
-	if not just.focused_id then
+	local vimMotions = view.game.configModel.configs.irizz.vimMotions
+
+	if view.vimMode == "Insert" or not vimMotions then
 		just.focus("SearchField")
 	end
 
@@ -117,68 +119,8 @@ function ViewConfig:scores(view)
 	end
 end
 
----@param view table
----@param noteChartItem table
-local function enpsDifficulty(view, noteChartItem)
-	if not noteChartItem.difficulty then
-		return
-	end
-
-	local baseTimeRate = view.game.playContext.rate
-
-	local w, h = Layout:move("difficulty")
-
-	love.graphics.setColor(Theme:getDifficultyColor(noteChartItem.difficulty * baseTimeRate, "enps"))
-	love.graphics.setFont(font.difficulty)
-	gfx_util.printBaseline(string.format("%0.02f", noteChartItem.difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
-
-	love.graphics.setFont(font.calculator)
-	gfx_util.printBaseline("ENPS", 0, h / 1.2, w, 1, "center")
-end
-
----@param view table
----@param noteChartItem table
-local function msdDifficulty(view, noteChartItem)
-	if not noteChartItem.difficulty then
-		return
-	end
-
-	local baseTimeRate = view.game.playContext.rate
-
-	local rate = 1.0
-	if math.abs(baseTimeRate - 1) > 0.00001 then
-		rate = baseTimeRate / 1.04
-	end
-
-	local difficultyData = noteChartItem.difficulty_data or nil
-	local patterns = ""
-
-	for key, value in pairs(difficultyData) do
-		patterns = string.format("%s%0.02f %s\n", patterns, value * rate, key)
-	end
-
-	local w, h = Layout:move("difficulty")
-
-	love.graphics.setColor(Theme:getDifficultyColor(noteChartItem.difficulty * baseTimeRate, "msd"))
-	love.graphics.setFont(font.difficulty)
-	gfx_util.printBaseline(string.format("%0.02f", noteChartItem.difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
-
-	love.graphics.setFont(font.calculator)
-	gfx_util.printBaseline("DUPS", 0, h / 1.2, w, 1, "center")
-
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(font.patterns)
-	w, h = Layout:move("patterns")
-	gfx_util.printFrame(patterns, -3, 15, w, h, "center", "center")
-end
-
 local function difficulty(view, chartview)
-	local difficultyValue = chartview.difficulty
-
-	if not difficulty then
-		difficulty = 0
-	end
-
+	local difficultyValue = chartview.difficulty or 0
 	local diffColumn = view.game.configModel.configs.settings.select.diff_column
 	local baseTimeRate = view.game.playContext.rate
 
@@ -360,6 +302,7 @@ function ViewConfig:draw(view, position)
 
 	canUpdate = position == 0
 	canUpdate = canUpdate and not view.modalActive
+	canUpdate = canUpdate and view.vimMode == "Normal"
 
 	self.panels()
 	searchField(view)

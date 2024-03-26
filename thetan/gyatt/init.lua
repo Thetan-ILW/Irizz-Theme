@@ -4,6 +4,7 @@ local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local gyatt = {}
 
+gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
 
 ---@param action string | table
@@ -24,6 +25,26 @@ function gyatt.actionPressed(action)
 	end
 
 	return isPressed
+end
+
+---@param action string | table
+---@return boolean
+function gyatt.actionDown(action)
+	if type(action) == "string" then
+		return love.keyboard.isScancodeDown(action)
+	end
+
+	local isDown = false
+
+	for _, item in ipairs(action) do
+		if type(item) == "table" then
+			isDown = love.keyboard.isScancodeDown(item[1]) or love.keyboard.isScancodeDown(item[2])
+		else
+			isDown = isDown and love.keyboard.isScancodeDown(item)
+		end
+	end
+
+	return isDown
 end
 
 ---@param list irizz.ListView

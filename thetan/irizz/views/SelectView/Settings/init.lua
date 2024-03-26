@@ -17,7 +17,6 @@ local tabs = {
 	Text.videoTab,
 	Text.scoring,
 	Text.timingsTab,
-	Text.keybindsTab,
 	Text.inputsTab,
 	Text.uiTab,
 	Text.versionTab,
