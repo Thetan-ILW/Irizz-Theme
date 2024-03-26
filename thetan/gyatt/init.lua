@@ -1,52 +1,135 @@
-local just = require("just")
 local gfx_util = require("gfx_util")
 local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local gyatt = {}
 
 gyatt.vimMode = "Normal"
-
 gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
+
+local modKeysList = {
+	lctrl = true,
+	rctrl = true,
+	lshift = true,
+	rshift = true
+}
+
+local modKeysDown = {}
+local keysDown = {}
+local keyPressTimestamps = {}
+local bufferTime = 0.8
+
+function gyatt.inputchanged(event)
+    local key = event[3]
+    local state = event[4]
+
+	if modKeysList[key] then
+		modKeysDown[key] = state
+		return
+	end
+
+	keysDown[key] = state
+end
+
+function gyatt.keypressed(event)
+	keyPressTimestamps[event[1]] = event.time
+end
+
+function gyatt.isModKeyDown()
+	local isDown = false
+
+	for _, down in pairs(modKeysDown) do
+		isDown = isDown or down
+	end
+
+	return isDown
+end
 
 ---@param action string | table
 ---@return boolean
 function gyatt.actionPressed(action)
+	local currentTime = love.timer.getTime()
+
 	if type(action) == "string" then
-		return just.keypressed(action)
-	end
+        local timeStamp = keyPressTimestamps[action]
+        local pressed = timeStamp and currentTime - timeStamp <= bufferTime
 
-	local isPressed = false
-
-	for _, item in ipairs(action) do
-		if type(item) == "table" then
-			isPressed = love.keyboard.isScancodeDown(item[1]) or love.keyboard.isScancodeDown(item[2])
-		else
-			isPressed = isPressed and just.keypressed(item)
+		if pressed then
+			keyPressTimestamps[action] = -1
+			return true
 		end
+
+		return false
+    end
+
+	local modKeys = action[1]
+	local modKeyDown = false
+    for _, k in ipairs(modKeys) do
+        modKeyDown = modKeyDown or modKeysDown[k]
+    end
+
+	if not modKeyDown then
+		return false
 	end
 
-	return isPressed
+	local regularKeysDown = true
+    for _, key in ipairs(action) do
+        if type(key) == "string" then
+            local timeStamp = keyPressTimestamps[key] or -1
+            regularKeysDown = regularKeysDown and currentTime - timeStamp <= bufferTime
+
+            if not regularKeysDown then
+                return false
+            end
+        end
+    end
+
+	if modKeyDown and regularKeysDown then
+		for _, key in ipairs(action) do
+			if type(key) == "string" then
+				keyPressTimestamps[key] = -1
+			end
+		end
+
+		return true
+	end
+
+	return false
 end
 
 ---@param action string | table
 ---@return boolean
 function gyatt.actionDown(action)
 	if type(action) == "string" then
-		return love.keyboard.isScancodeDown(action)
+		if gyatt.isModKeyDown() then
+			return false
+		end
+
+		return keysDown[action]
 	end
 
-	local isDown = false
+	local modKeys = action[1]
+	local modKeyDown = false
+    for _, k in ipairs(modKeys) do
+        modKeyDown = modKeyDown or modKeysDown[k]
+    end
 
-	for _, item in ipairs(action) do
-		if type(item) == "table" then
-			isDown = love.keyboard.isScancodeDown(item[1]) or love.keyboard.isScancodeDown(item[2])
-		else
-			isDown = isDown and love.keyboard.isScancodeDown(item)
+	if not modKeyDown then
+		return false
+	end
+
+	local isDown = true
+	for _, key in ipairs(action) do
+		if type(key) == "string" then
+			isDown = isDown and keysDown[key]
 		end
 	end
 
-	return isDown
+	if modKeyDown and isDown then
+		return true
+	end
+
+	return false
 end
 
 ---@param list irizz.ListView

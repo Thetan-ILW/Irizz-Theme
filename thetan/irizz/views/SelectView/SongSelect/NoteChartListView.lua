@@ -1,5 +1,6 @@
 local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
 local Format = require("sphere.views.Format")
 
@@ -47,8 +48,8 @@ function NoteChartListView:input(w, h)
 	end
 
 	local action = Theme.actions.smallList
-	local kd = love.keyboard.isScancodeDown
-	local kp = just.keypressed
+	local kd = gyatt.actionDown
+	local kp = gyatt.actionPressed
 
 	if kd(action.up) then
 		self:autoScroll(-1, kp(action.up))

@@ -51,7 +51,7 @@ function InputMap:createBindings(sv, a)
 		end
 	}
 
-	self.screen = {
+	self.view = {
 		[a.insertMode] = function()
 			gyatt.vimMode = "Insert"
 		end,

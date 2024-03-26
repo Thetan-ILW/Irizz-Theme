@@ -90,8 +90,7 @@ function SelectView:updateSettings(dt)
 	playSound = Theme:getStartSound(self.game)
 end
 
----@param dt number
-function SelectView:updateSongSelect(dt)
+function SelectView:songSelectInputs()
 	if self.inputMap:call("selectModals") then
 		return
 	end
@@ -103,9 +102,6 @@ function SelectView:updateSongSelect(dt)
 	self.inputMap:call("select")
 end
 
----@param dt number
-function SelectView:updateCollections(dt) end
-
 function SelectView:switchToSongSelect()
 	self.game.selectModel:noDebouncePullNoteChartSet()
 end
@@ -114,14 +110,8 @@ end
 function SelectView:update(dt)
 	self.game.selectController:update()
 
-	self.inputMap:call("screen")
-
-	if self.screenX == 0 then
-		self:updateSongSelect(dt)
-	elseif self.screenX == 1 then
+	if self.screenX == 1 then
 		self:updateSettings(dt)
-	elseif self.screenX == -1 then
-		self:updateCollections(dt)
 	end
 
 	local audio = self.game.previewModel.audio
@@ -129,11 +119,6 @@ function SelectView:update(dt)
 	if audio and audio.getData then
 		self.frequencies = audio:getData()
 	end
-end
-
----@param event table
-function SelectView:receive(event)
-	self.game.selectController:receive(event)
 end
 
 function SelectView:play()
@@ -210,6 +195,20 @@ function SelectView:changeTimeRate(delta)
 		self.game.modifierSelectModel:change()
 		timeRateModel:set(newRate)
 	end
+end
+
+function SelectView:receive(event)
+	if event.name == "keypressed" then
+		if self.inputMap:call("view") then
+			return
+		end
+
+		if self.screenX == 0 then
+			self:songSelectInputs()
+		end
+	end
+
+	self.game.selectController:receive(event)
 end
 
 local gfx = love.graphics

@@ -36,14 +36,6 @@ ResultView.load = thread.coro(function(self)
 	loading = false
 end)
 
-function ResultView:quit()
-	self.game.rhythmModel.audioEngine:unload()
-	self:changeScreen("selectView")
-end
-
-function ResultView:update()
-	self.inputMap:call("view")
-end
 
 function ResultView:draw()
 	Layout:draw()
@@ -80,12 +72,27 @@ function ResultView:draw()
 	self.viewConfig:draw(self)
 end
 
+function ResultView:inputs()
+	self.inputMap:call("view")
+end
+
+function ResultView:receive(event)
+	if event.name == "keypressed" then
+		self:inputs()
+	end
+end
+
 function ResultView:submitScore()
 	local scoreItem = self.game.selectModel.scoreItem
 	self.game.onlineModel.onlineScoreManager:submit(
 		self.game.selectModel.chartview,
 		scoreItem.replay_hash
 	)
+end
+
+function ResultView:quit()
+	self.game.rhythmModel.audioEngine:unload()
+	self:changeScreen("selectView")
 end
 
 ResultView.loadScore = thread.coro(function(self, itemIndex)

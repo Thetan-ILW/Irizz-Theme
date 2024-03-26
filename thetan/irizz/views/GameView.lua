@@ -1,4 +1,5 @@
 local class = require("class")
+local gyatt = require("thetan.gyatt")
 local FadeTransition = require("sphere.views.FadeTransition")
 local FrameTimeView = require("sphere.views.FrameTimeView")
 local AsyncTasksView = require("sphere.views.AsyncTasksView")
@@ -103,6 +104,16 @@ function GameView:receive(event)
 	if not self.view then
 		return
 	end
+
+
+	if event.name == "inputchanged" then
+		gyatt.inputchanged(event)
+	end
+
+	if event.name == "keypressed" then
+		gyatt.keypressed(event)
+	end
+
 	self.view:receive(event)
 end
 
