@@ -14,6 +14,7 @@ local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections"
 
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
 local BackgroundView = require("sphere.views.BackgroundView")
+local InputMap = require("thetan.irizz.views.SelectView.InputMap")
 
 ---@class irizz.SelectView: sphere.ScreenView
 ---@operator call: irizz.SelectView
@@ -41,7 +42,7 @@ function SelectView:load()
 	BackgroundView.game = self.game
 	playSound = Theme:getStartSound(self.game)
 
-	self.inputMap = require("thetan.irizz.views.SelectView.InputMap")(self)
+	self.inputMap = InputMap(self, Theme.actions.songSelect)
 
 	self.shaders = require("irizz.shaders.init")
 	self:updateFilterLines()

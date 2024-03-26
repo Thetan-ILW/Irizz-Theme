@@ -7,10 +7,8 @@ local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
 
+local InputMap = require("thetan.irizz.views.ResultView.InputMap")
 local Theme = require("thetan.irizz.views.Theme")
-local gyatt = require("thetan.gyatt")
-local action = {}
-local ap = gyatt.actionPressed
 
 ---@class thetan.irizz.ResultView: sphere.ScreenView
 ---@operator call: thetan.irizz.ResultView
@@ -24,8 +22,9 @@ ResultView.load = thread.coro(function(self)
 	end
 
 	loading = true
-	action = Theme.actions.resultScreen
+
 	self.game.resultController:load()
+	self.inputMap = InputMap(self, Theme.actions.resultScreen)
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
@@ -42,28 +41,8 @@ function ResultView:quit()
 	self:changeScreen("selectView")
 end
 
-function ResultView:update(dt)
-	if ap(action.songSelect) then
-		self:quit()
-	end
-
-	if ap(action.retry) then
-		self:play("retry")
-		return
-	end
-
-	if ap(action.watchReplay) then
-		self:play("replay")
-		return
-	end
-
-	if ap(action.submitScore) then
-		local scoreItem = self.game.selectModel.scoreItem
-		self.game.onlineModel.onlineScoreManager:submit(
-			self.game.selectModel.chartview,
-			scoreItem.replay_hash
-		)
-	end
+function ResultView:update()
+	self.inputMap:call("view")
 end
 
 function ResultView:draw()
@@ -99,6 +78,14 @@ function ResultView:draw()
 
 	self.header:draw(self)
 	self.viewConfig:draw(self)
+end
+
+function ResultView:submitScore()
+	local scoreItem = self.game.selectModel.scoreItem
+	self.game.onlineModel.onlineScoreManager:submit(
+		self.game.selectModel.chartview,
+		scoreItem.replay_hash
+	)
 end
 
 ResultView.loadScore = thread.coro(function(self, itemIndex)

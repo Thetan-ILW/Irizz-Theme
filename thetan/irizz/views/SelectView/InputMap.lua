@@ -1,8 +1,6 @@
 local InputMap = require("thetan.gyatt.InputMap")
 local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
-
 local SelectInputMap = InputMap + {}
 
 function InputMap:createBindings(sv, a)
@@ -72,12 +70,6 @@ function InputMap:createBindings(sv, a)
 			sv.game.previewModel:stop()
 		end
 	}
-end
-
-function InputMap:new(selectView)
-	local actions = Theme.actions.songSelect
-	self.selectView = selectView
-	self:createBindings(selectView, actions)
 end
 
 return SelectInputMap
