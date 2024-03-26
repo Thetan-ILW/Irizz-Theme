@@ -28,8 +28,6 @@ SelectView.scoreFilterLine = ""
 SelectView.frequencies = nil
 SelectView.shaders = nil
 
-SelectView.vimMode = "Normal"
-
 local playSound = nil
 function SelectView:load()
 	Theme:init(self.game)

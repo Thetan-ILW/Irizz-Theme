@@ -4,6 +4,8 @@ local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local gyatt = {}
 
+gyatt.vimMode = "Normal"
+
 gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
 

@@ -1,14 +1,11 @@
-local class = require("class")
+local InputMap = require("thetan.gyatt.InputMap")
 local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
 
-local InputMap = class()
-InputMap.bindings = {}
+local SelectInputMap = InputMap + {}
 
-local a = Theme.actions.songSelect
-
-function InputMap:createBindings(sv)
+function InputMap:createBindings(sv, a)
 	self.selectModals = {
 		[a.showMods] = function()
 			sv:openModal("thetan.irizz.views.modals.ModifierModal")
@@ -58,10 +55,10 @@ function InputMap:createBindings(sv)
 
 	self.screen = {
 		[a.insertMode] = function()
-			sv.vimMode = "Insert"
+			gyatt.vimMode = "Insert"
 		end,
 		[a.normalMode] = function()
-			sv.vimMode = "Normal"
+			gyatt.vimMode = "Normal"
 			local selectModel = sv.game.selectModel
 			selectModel:debouncePullNoteChartSet()
 		end,
@@ -78,21 +75,9 @@ function InputMap:createBindings(sv)
 end
 
 function InputMap:new(selectView)
+	local actions = Theme.actions.songSelect
 	self.selectView = selectView
-	self:createBindings(selectView)
+	self:createBindings(selectView, actions)
 end
 
-function InputMap:call(group)
-	local bindings = self[group]
-
-	for k, v in pairs(bindings) do
-		if gyatt.actionPressed(k) then
-			v()
-			return true
-		end
-	end
-
-	return false
-end
-
-return InputMap
+return SelectInputMap

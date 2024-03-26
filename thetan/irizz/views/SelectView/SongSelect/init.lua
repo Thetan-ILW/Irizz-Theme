@@ -58,7 +58,7 @@ end
 local function searchField(view)
 	local vimMotions = view.game.configModel.configs.irizz.vimMotions
 
-	if view.vimMode == "Insert" or not vimMotions then
+	if gyatt.vimMode == "Insert" or not vimMotions then
 		just.focus("SearchField")
 	end
 
@@ -302,7 +302,7 @@ function ViewConfig:draw(view, position)
 
 	canUpdate = position == 0
 	canUpdate = canUpdate and not view.modalActive
-	canUpdate = canUpdate and view.vimMode == "Normal"
+	canUpdate = canUpdate and gyatt.vimMode == "Normal"
 
 	self.panels()
 	searchField(view)
