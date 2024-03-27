@@ -11,7 +11,6 @@ local count = 1
 
 function vim.clear()
 	operations = ""
-	count = 1
 end
 
 function vim.updateOperation(key)

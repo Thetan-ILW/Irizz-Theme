@@ -79,7 +79,7 @@ local function actionPressed(action)
 
 	if action.op then
 		if not gyatt.isModKeyDown() then
-			if action.op == gyatt.vimOperations then
+			if action.op == gyatt.vim.getOperation() then
 				vim.clear()
 				return true
 			end
