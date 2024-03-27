@@ -79,9 +79,19 @@ local function actionPressed(action)
 		return false
 	end
 
-	local modKeys = action[1]
+	if action.op then
+		if not gyatt.isModKeyDown() then
+			if action.op == gyatt.vimOperations then
+				gyatt.vimOperations = ""
+				return true
+			end
+		end
+
+		return false
+	end
+
 	local modKeyDown = false
-	for _, k in ipairs(modKeys) do
+	for _, k in ipairs(action.mod) do
 		modKeyDown = modKeyDown or modKeysDown[k]
 	end
 
@@ -125,9 +135,8 @@ local function actionDown(action)
 		return keysDown[action]
 	end
 
-	local modKeys = action[1]
 	local modKeyDown = false
-	for _, k in ipairs(modKeys) do
+	for _, k in ipairs(action.mod) do
 		modKeyDown = modKeyDown or modKeysDown[k]
 	end
 
