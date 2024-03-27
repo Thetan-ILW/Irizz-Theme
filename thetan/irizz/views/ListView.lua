@@ -95,15 +95,16 @@ function ListView:input(w, h)
 	local action = Theme.actions.largeList
 	local ap = gyatt.actionPressed
 	local ad = gyatt.actionDown
+	local oc = gyatt.getOperationCount
 
 	if ad(action.up) then
-		self:autoScroll(-1, ap(action.up))
+		self:autoScroll(-1 * oc(), ap(action.up))
 	elseif ad(action.down) then
-		self:autoScroll(1, ap(action.down))
+		self:autoScroll(1 * oc(), ap(action.down))
 	elseif ad(action.up10) then
-		self:autoScroll(-10, ap(action.up10))
+		self:autoScroll(-10 * oc(), ap(action.up10))
 	elseif ad(action.down10) then
-		self:autoScroll(10, ap(action.down10))
+		self:autoScroll(10 * oc(), ap(action.down10))
 	elseif ap(action.toStart) then
 		self:scroll(-math.huge)
 	elseif ap(action.toEnd) then

@@ -4,6 +4,8 @@ local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 local gyatt = {}
 
 gyatt.vimMode = "Normal"
+gyatt.vimOperations = ""
+gyatt.vimCount = 1
 gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
 
@@ -11,17 +13,21 @@ local modKeysList = {
 	lctrl = true,
 	rctrl = true,
 	lshift = true,
-	rshift = true
+	rshift = true,
+	lgui = true,
+	lalt = true,
+	ralt = true,
+	space = true
 }
 
 local modKeysDown = {}
 local keysDown = {}
 local keyPressTimestamps = {}
-local bufferTime = 0.8
+local bufferTime = 0.2
 
 function gyatt.inputchanged(event)
-    local key = event[3]
-    local state = event[4]
+	local key = event[3]
+	local state = event[4]
 
 	if modKeysList[key] then
 		modKeysDown[key] = state
@@ -33,6 +39,13 @@ end
 
 function gyatt.keypressed(event)
 	keyPressTimestamps[event[1]] = event.time
+
+	if gyatt.isModKeyDown() then
+		return false
+	end
+
+	gyatt.vimCount = tonumber(gyatt.vimOperations) or 1
+	gyatt.vimOperations = gyatt.vimOperations .. event[1]
 end
 
 function gyatt.isModKeyDown()
@@ -47,12 +60,16 @@ end
 
 ---@param action string | table
 ---@return boolean
-function gyatt.actionPressed(action)
+local function actionPressed(action)
 	local currentTime = love.timer.getTime()
 
 	if type(action) == "string" then
-        local timeStamp = keyPressTimestamps[action]
-        local pressed = timeStamp and currentTime - timeStamp <= bufferTime
+		if gyatt.isModKeyDown() then
+			return false
+		end
+
+		local timeStamp = keyPressTimestamps[action]
+		local pressed = timeStamp and currentTime - timeStamp <= bufferTime
 
 		if pressed then
 			keyPressTimestamps[action] = -1
@@ -60,29 +77,29 @@ function gyatt.actionPressed(action)
 		end
 
 		return false
-    end
+	end
 
 	local modKeys = action[1]
 	local modKeyDown = false
-    for _, k in ipairs(modKeys) do
-        modKeyDown = modKeyDown or modKeysDown[k]
-    end
+	for _, k in ipairs(modKeys) do
+		modKeyDown = modKeyDown or modKeysDown[k]
+	end
 
 	if not modKeyDown then
 		return false
 	end
 
 	local regularKeysDown = true
-    for _, key in ipairs(action) do
-        if type(key) == "string" then
-            local timeStamp = keyPressTimestamps[key] or -1
-            regularKeysDown = regularKeysDown and currentTime - timeStamp <= bufferTime
+	for _, key in ipairs(action) do
+		if type(key) == "string" then
+			local timeStamp = keyPressTimestamps[key] or -1
+			regularKeysDown = regularKeysDown and currentTime - timeStamp <= bufferTime
 
-            if not regularKeysDown then
-                return false
-            end
-        end
-    end
+			if not regularKeysDown then
+				return false
+			end
+		end
+	end
 
 	if modKeyDown and regularKeysDown then
 		for _, key in ipairs(action) do
@@ -99,7 +116,7 @@ end
 
 ---@param action string | table
 ---@return boolean
-function gyatt.actionDown(action)
+local function actionDown(action)
 	if type(action) == "string" then
 		if gyatt.isModKeyDown() then
 			return false
@@ -110,9 +127,9 @@ function gyatt.actionDown(action)
 
 	local modKeys = action[1]
 	local modKeyDown = false
-    for _, k in ipairs(modKeys) do
-        modKeyDown = modKeyDown or modKeysDown[k]
-    end
+	for _, k in ipairs(modKeys) do
+		modKeyDown = modKeyDown or modKeysDown[k]
+	end
 
 	if not modKeyDown then
 		return false
@@ -130,6 +147,32 @@ function gyatt.actionDown(action)
 	end
 
 	return false
+end
+
+function gyatt.actionPressed(action)
+	local isPressed = actionPressed(action)
+
+	if isPressed then
+		gyatt.vimOperations = ""
+	end
+
+	return isPressed
+end
+
+function gyatt.actionDown(action)
+	local isDown = actionDown(action)
+
+	if isDown then
+		gyatt.vimOperations = ""
+	end
+
+	return isDown
+end
+
+function gyatt.getOperationCount()
+	local operations = gyatt.vimCount
+	gyatt.vimCount = 1
+	return operations
 end
 
 ---@param list irizz.ListView

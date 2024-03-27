@@ -133,14 +133,16 @@ function ViewConfig:vimMode(view)
 
 	local w, h = Layout:move("vimMode")
 
+	local text = gyatt.vimMode
+
 	gfx.setColor(Color.headerButtonBackground)
-	local textW = font.anyText:getWidth(gyatt.vimMode)
+	local textW = font.anyText:getWidth(text)
 	local panelHeight = font.anyText:getHeight() + 8
 	gfx.rectangle("fill", w / 2 - textW / 2 - 8, 10, textW + 16, panelHeight, 8, 8)
 
 	gfx.setColor(Color.text)
 	gfx.setFont(font.anyText)
-	gyatt.frame(gyatt.vimMode, 0, 0, w, h, "center", "center")
+	gyatt.frame(text, 0, 0, w, h, "center", "center")
 	gfx.rectangle("fill", w / 2 - textW / 2, h + 2, textW, 4)
 end
 
@@ -194,11 +196,7 @@ end
 function ViewConfig:draw(view)
 	Layout:draw()
 	self:buttons(view)
-
-	if self.screen == "select" then
-		self:vimMode(view)
-	end
-
+	self:vimMode(view)
 	self:rightSide(view)
 end
 

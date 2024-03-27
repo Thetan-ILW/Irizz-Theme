@@ -105,7 +105,6 @@ function GameView:receive(event)
 		return
 	end
 
-
 	if event.name == "inputchanged" then
 		gyatt.inputchanged(event)
 	end
