@@ -14,6 +14,7 @@ OsuDirectChartsListView.centerItems = true
 OsuDirectChartsListView.noItemsText = Text.notInOsuDirect
 
 function OsuDirectChartsListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("osuDirectChartsListView")
 	self.scrollSound = Theme.sounds.scrollSmallList

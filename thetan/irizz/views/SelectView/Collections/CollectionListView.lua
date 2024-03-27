@@ -13,6 +13,7 @@ CollectionListView.centerItems = true
 CollectionListView.noItemsText = Text.noCollections
 
 function CollectionListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("collectionsListView")
 	self.scrollSound = Theme.sounds.scrollLargeList

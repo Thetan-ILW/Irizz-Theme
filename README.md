@@ -5,6 +5,7 @@ Irizz Theme is an aesthetically pleasing design for [Soundsphere](https://sounds
 
 ## Features
 
+- Vim motions.
 - Completely redesigned user interface for various game screens, including Song Select, Collections, Settings, and Result screen.
 - New UI elements such as buttons, checkboxes, and more, redesigned for improved usability and visual appeal.
 - Stylish and eye-catching visuals that provide a modern and polished look without being overwhelming.
@@ -21,29 +22,12 @@ Irizz Theme is an aesthetically pleasing design for [Soundsphere](https://sounds
 3. Copy the "ModulePatcher" and "Irizz-theme" mods into the `moddedgame` directory within the game's root folder. If the `moddedgame` directory does not exist, create it.
 4. Done. Launch the game.
 
-## Shortcuts
-`CTRL + S` - Skins  
-`CTRL + I` - Inputs  
-`CTRL + F` - Filters  
-`CTRL + E` - Editor  
-`CTRL + P` - Stop music  
-`CTRL + M` - Multiplayer  
-`F1` - Modifiers  
-`F2` - Random  
-`CTRL + F2` - Undo random  
-`CTRL + ENTER` - Start chart with auto mod enabled  
-`CTRL + Left` - Move screen to left  
-`CTRL + Right` - Move screen to right  
-`Up arrow` - Previous chart  
-`Down arrow` - Next chart  
-`Left arrow` - Previous chart set  
-`Right arrow` - Next chart set  
-
 ## Customization
 
 Currently, basic customization is supported through the following methods:
 
 - UI Tab in settings.
+- Customize controls in `userdata/keybinds.lua` or `userdata/vim_keybinds.lua`.
 - Add background images to `userdata/backgrounds/`. If the chart does not have it's own background image, random image from this directory will be loaded instead.
 - Add color themes to `userdata/color_themes/`. You can find an example in `irizz/color_themes/Default.lua`
 

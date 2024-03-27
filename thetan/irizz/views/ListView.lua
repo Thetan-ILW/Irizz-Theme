@@ -25,13 +25,23 @@ ListView.staticCursor = false
 local nextTime = 0
 local maxInterval = 0.07
 local pressInterval = 0.12
+local acceleration = 0
 
 local tweenTime = 0.2
 local ease = "quartout"
 
+function ListView:new(game)
+	local configs = game.configModel.configs
+
+	self.game = game
+	self.config = configs.irizz
+	self.staticCursor = self.config.staticCursor
+end
+
 function ListView:playSound()
-	local configs = self.game.configModel.configs
-	self.staticCursor = configs.irizz.staticCursor
+	if acceleration > 0.04 then
+		return
+	end
 
 	self.scrollSound:stop()
 	self.scrollSound:play()
@@ -72,13 +82,17 @@ function ListView:autoScroll(delta, justPressed)
 		return
 	end
 
+	maxInterval = self.config.scrollHoldSpeed
+    pressInterval = maxInterval + self.config.scrollClickExtraTime
+
 	local interval = maxInterval
 	ease = "linear"
 
 	interval = justPressed and pressInterval or maxInterval
 
-	nextTime = time + interval
+	nextTime = time + interval - acceleration
 	tweenTime = interval
+	acceleration = math.min(acceleration + 0.001, maxInterval)
 
 	self:scroll(delta)
 end
@@ -90,6 +104,10 @@ function ListView:input(w, h)
 		ease = "quartout"
 		tweenTime = 0.2
 		return
+	end
+
+	if not self.config.scrollAcceleration then
+		acceleration = 0
 	end
 
 	local action = Theme.actions.largeList
@@ -109,6 +127,8 @@ function ListView:input(w, h)
 		self:scroll(-math.huge)
 	elseif ap(action.toEnd) then
 		self:scroll(math.huge)
+	else
+		acceleration = 0
 	end
 end
 
@@ -116,6 +136,7 @@ function ListView:mouseClick(w, h, i) end
 
 function ListView:update(w, h)
 	self:input(w, h)
+
 	local stateCounter = self.stateCounter
 	self:reloadItems()
 	if stateCounter ~= self.stateCounter then

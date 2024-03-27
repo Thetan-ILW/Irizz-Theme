@@ -11,6 +11,7 @@ OsudirectListView.rows = 13
 OsudirectListView.centerItems = true
 
 function OsudirectListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("osuDirectListView")
 	self.scrollSound = Theme.sounds.scrollLargeList

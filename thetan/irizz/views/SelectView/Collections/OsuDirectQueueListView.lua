@@ -13,6 +13,7 @@ OsudirectProcessingListView.centerItems = false
 OsudirectProcessingListView.noItemsText = Text.queueEmpty
 
 function OsudirectProcessingListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("osuDirectQueueListView")
 end

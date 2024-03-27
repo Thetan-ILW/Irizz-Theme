@@ -15,6 +15,7 @@ NoteChartListView.centerItems = true
 NoteChartListView.noItemsText = Text.noCharts
 
 function NoteChartListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("noteChartListView")
 	self.scrollSound = Theme.sounds.scrollSmallList

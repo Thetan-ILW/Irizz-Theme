@@ -519,9 +519,12 @@ function SettingsTab:UI(view)
 	imgui.separator()
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
-	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
 
 	irizz.vimMotions = imgui.checkbox("irizz.vimMotions", irizz.vimMotions, Text.vimMotions)
+
+	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
+	irizz.scrollAcceleration = imgui.checkbox("irizz.scrollAcceleration", irizz.scrollAcceleration, Text.scrollAcceleration)
+	irizz.scrollClickExtraTime = imgui.slider1("irizz.scrollClickExtraTime", irizz.scrollClickExtraTime, "%0.2f", 0, 0.25, 0.01, Text.scrollClickExtraTime)
 
 	local colorTheme = irizz.colorTheme
 	local newColorTheme = imgui.combo("irizz.colorTheme", colorTheme, Theme.colorThemes, nil, Text.colorTheme)

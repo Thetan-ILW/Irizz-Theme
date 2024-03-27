@@ -117,6 +117,8 @@ localization.textSettings = {
 	exp = "Exp",
 	colorTheme = "Color theme",
 	vimMotions = "Vim motions (RESTART REQUIRED)",
+	scrollAcceleration = "Scroll acceleration",
+    scrollClickExtraTime = "Scroll click extra time",
 	--
 	themeVersion = "Theme version: ",
 	commit = "Commit: ",

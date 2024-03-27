@@ -14,5 +14,8 @@ return {
     showSpectrum = true,
     colorTheme = "Default",
     showOnlineCount = true,
-    vimMotions = false
+    vimMotions = false,
+    scrollAcceleration = false,
+    scrollHoldSpeed = 0.07,
+    scrollClickExtraTime = 0.05
 }
