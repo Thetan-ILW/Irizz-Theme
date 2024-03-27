@@ -22,6 +22,8 @@ ListView.font = nil
 ListView.noItemsText = "No items!"
 ListView.staticCursor = false
 
+local action = {}
+
 local nextTime = 0
 local maxInterval = 0.07
 local pressInterval = 0.12
@@ -36,6 +38,9 @@ function ListView:new(game)
 	self.game = game
 	self.config = configs.irizz
 	self.staticCursor = self.config.staticCursor
+
+	local actionModel = self.game.actionModel
+	action = actionModel:getGroup("largeList")
 end
 
 function ListView:playSound()
@@ -83,7 +88,7 @@ function ListView:autoScroll(delta, justPressed)
 	end
 
 	maxInterval = self.config.scrollHoldSpeed
-    pressInterval = maxInterval + self.config.scrollClickExtraTime
+	pressInterval = maxInterval + self.config.scrollClickExtraTime
 
 	local interval = maxInterval
 	ease = "linear"
@@ -110,10 +115,9 @@ function ListView:input(w, h)
 		acceleration = 0
 	end
 
-	local action = Theme.actions.largeList
 	local ap = gyatt.actionPressed
 	local ad = gyatt.actionDown
-	local oc = gyatt.getOperationCount
+	local oc = gyatt.vim.getCount
 
 	if ad(action.up) then
 		self:autoScroll(-1 * oc(), ap(action.up))

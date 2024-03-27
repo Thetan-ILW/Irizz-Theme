@@ -133,7 +133,7 @@ function ViewConfig:vimMode(view)
 
 	local w, h = Layout:move("vimMode")
 
-	local text = gyatt.vimMode
+	local text = gyatt.vim.getMode() .. " " .. gyatt.vim.getOperation()
 
 	gfx.setColor(Color.headerButtonBackground)
 	local textW = font.anyText:getWidth(text)

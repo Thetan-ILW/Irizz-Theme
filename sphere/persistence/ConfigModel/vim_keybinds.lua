@@ -1,4 +1,8 @@
 return {
+    global = {
+        insertMode = "i",
+        normalMode = "escape"
+    },
     songSelect = {
         play = "return",
         showMods = "f1",
@@ -6,7 +10,7 @@ return {
         decreaseTimeRate = "f5",
         increaseTimeRate = "f6",
         undoRandom = { mod = { "lctrl", "rctrl" }, "f2" },
-        clearSearch = { mod = { "lctrl", "rctrl" }, "backspace" },
+        clearSearch = { op = "dd" },
         moveScreenLeft = { mod = { "lctrl", "rctrl" }, "h" },
         moveScreenRight = { mod = { "lctrl", "rctrl" }, "l" },
         pauseMusic = { mod = { "lctrl", "rctrl" }, "p" },
@@ -16,8 +20,6 @@ return {
         showMultiplayer = { mod = { "lctrl", "rctrl" }, "m" },
         autoPlay = { mod = { "lctrl", "rctrl" }, "return" },
         openEditor = { mod = { "lctrl", "rctrl" }, "e" },
-        insertMode = "i",
-        normalMode = "escape"
     },
     resultScreen = {
         songSelect = "escape",

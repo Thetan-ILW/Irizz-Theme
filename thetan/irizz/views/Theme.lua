@@ -167,18 +167,9 @@ function Theme:textWithShadow(text, w, h, ax, ay)
 	gfx_util.printFrame(text, 0, 0, w, h, ax, ay)
 end
 
-function Theme:updateActions(configs)
-	if configs.irizz.vimMotions then
-		self.actions = configs.vim_keybinds
-	else
-		self.actions = configs.keybinds
-	end
-end
-
 function Theme:init(game)
 	local configs = game.configModel.configs
 	assets:get(configs.irizz, self)
-	self:updateActions(configs)
 	self:updateVolume(game)
 end
 

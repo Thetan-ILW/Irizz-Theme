@@ -13,11 +13,16 @@ OsuDirectChartsListView.rows = 7
 OsuDirectChartsListView.centerItems = true
 OsuDirectChartsListView.noItemsText = Text.notInOsuDirect
 
+local action = {}
+
 function OsuDirectChartsListView:new(game)
 	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("osuDirectChartsListView")
 	self.scrollSound = Theme.sounds.scrollSmallList
+
+	local actionModel = self.game.actionModel
+	action = actionModel:getGroup("smallList")
 end
 
 function OsuDirectChartsListView:scroll(count)
@@ -39,7 +44,6 @@ function OsuDirectChartsListView:input(w, h)
 		self:scroll(-delta)
 	end
 
-	local action = Theme.actions.smallList
 	local kd = gyatt.actionDown
 	local kp = gyatt.actionPressed
 

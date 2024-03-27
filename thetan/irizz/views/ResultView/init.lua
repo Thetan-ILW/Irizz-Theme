@@ -24,7 +24,9 @@ ResultView.load = thread.coro(function(self)
 	loading = true
 
 	self.game.resultController:load()
-	self.inputMap = InputMap(self, Theme.actions.resultScreen)
+
+	local actionModel = self.game.actionModel
+	self.inputMap = InputMap(self, actionModel:getGroup("resultScreen"))
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)

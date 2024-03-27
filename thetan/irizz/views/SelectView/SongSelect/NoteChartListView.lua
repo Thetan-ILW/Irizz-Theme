@@ -14,11 +14,16 @@ NoteChartListView.rows = 7
 NoteChartListView.centerItems = true
 NoteChartListView.noItemsText = Text.noCharts
 
+local action
+
 function NoteChartListView:new(game)
 	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("noteChartListView")
 	self.scrollSound = Theme.sounds.scrollSmallList
+
+	local actionModel = self.game.actionModel
+	action = actionModel:getGroup("smallList")
 end
 
 function NoteChartListView:reloadItems()
@@ -48,7 +53,6 @@ function NoteChartListView:input(w, h)
 		self:scroll(-delta)
 	end
 
-	local action = Theme.actions.smallList
 	local kd = gyatt.actionDown
 	local kp = gyatt.actionPressed
 

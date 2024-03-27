@@ -5,6 +5,8 @@ local FrameTimeView = require("sphere.views.FrameTimeView")
 local AsyncTasksView = require("sphere.views.AsyncTasksView")
 local TextTooltipImView = require("sphere.imviews.TextTooltipImView")
 local ContextMenuImView = require("sphere.imviews.ContextMenuImView")
+local InputMap = require("thetan.irizz.views.GameViewInputMap")
+local Theme = require("thetan.irizz.views.Theme")
 
 ---@class sphere.GameView
 ---@operator call: sphere.GameView
@@ -18,11 +20,16 @@ function GameView:new(game)
 end
 
 function GameView:load()
+	Theme:init(self.game)
+
 	self.frameTimeView.game = self.game
 
 	self.frameTimeView:load()
 
 	self:setView(self.game.selectView)
+
+	local actionModel = self.game.actionModel
+	self.inputMap = InputMap(self, actionModel:getGroup("global"))
 end
 
 ---@param view sphere.ScreenView
@@ -111,6 +118,8 @@ function GameView:receive(event)
 
 	if event.name == "keypressed" then
 		gyatt.keypressed(event)
+
+		self.inputMap:call("global")
 	end
 
 	self.view:receive(event)

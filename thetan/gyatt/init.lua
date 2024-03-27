@@ -1,11 +1,10 @@
 local gfx_util = require("gfx_util")
+local vim = require("thetan.gyatt.vim")
 local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local gyatt = {}
 
-gyatt.vimMode = "Normal"
-gyatt.vimOperations = ""
-gyatt.vimCount = 1
+gyatt.vim = vim
 gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
 
@@ -44,8 +43,7 @@ function gyatt.keypressed(event)
 		return false
 	end
 
-	gyatt.vimCount = tonumber(gyatt.vimOperations) or 1
-	gyatt.vimOperations = gyatt.vimOperations .. event[1]
+	vim.updateOperation(event[1])
 end
 
 function gyatt.isModKeyDown()
@@ -82,7 +80,7 @@ local function actionPressed(action)
 	if action.op then
 		if not gyatt.isModKeyDown() then
 			if action.op == gyatt.vimOperations then
-				gyatt.vimOperations = ""
+				vim.clear()
 				return true
 			end
 		end
@@ -162,7 +160,7 @@ function gyatt.actionPressed(action)
 	local isPressed = actionPressed(action)
 
 	if isPressed then
-		gyatt.vimOperations = ""
+		vim.clear()
 	end
 
 	return isPressed
@@ -172,16 +170,10 @@ function gyatt.actionDown(action)
 	local isDown = actionDown(action)
 
 	if isDown then
-		gyatt.vimOperations = ""
+		vim.clear()
 	end
 
 	return isDown
-end
-
-function gyatt.getOperationCount()
-	local operations = gyatt.vimCount
-	gyatt.vimCount = 1
-	return operations
 end
 
 ---@param list irizz.ListView

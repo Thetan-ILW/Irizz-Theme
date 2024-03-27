@@ -28,9 +28,11 @@ local boxes = {
 
 local ViewConfig = class()
 
+local action = {}
 local canUpdate = false
 
 function ViewConfig:new(game)
+	action = game.actionModel:getGroup("songSelect")
 	self.noteChartSetListView = NoteChartSetListView(game)
 	self.noteChartListView = NoteChartListView(game)
 	self.scoreListView = ScoreListView(game)
@@ -58,26 +60,25 @@ end
 local function searchField(view)
 	local vimMotions = view.game.configModel.configs.irizz.vimMotions
 
-	if gyatt.vimMode == "Insert" or not vimMotions then
+	if not vimMotions or gyatt.vim.isInsertMode() then
 		just.focus("SearchField")
 	end
 
 	local w, h = Layout:move("search")
 
-	local delAll = love.keyboard.isDown("lctrl") and love.keyboard.isDown("backspace")
-
 	local config = view.game.configModel.configs.select
-	local selectModel = view.game.selectModel
 
 	love.graphics.setFont(font.searchField)
 	local changed, text = TextInput("SearchField", { config.filterString, Text.searchPlaceholder }, nil, w, h)
 
 	if changed == "text" then
-		if delAll then
-			text = ""
-		end
-		config.filterString = text
-		selectModel:debouncePullNoteChartSet()
+		view:updateSearch(text)
+	end
+
+	local delAll = gyatt.actionPressed(action.clearSearch)
+
+	if delAll then
+		view:updateSearch("")
 	end
 
 	w, h = Layout:move("search")
@@ -302,7 +303,7 @@ function ViewConfig:draw(view, position)
 
 	canUpdate = position == 0
 	canUpdate = canUpdate and not view.modalActive
-	canUpdate = canUpdate and gyatt.vimMode == "Normal"
+	canUpdate = canUpdate and gyatt.vim.isNormalMode
 
 	self.panels()
 	searchField(view)

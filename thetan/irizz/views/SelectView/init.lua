@@ -31,7 +31,6 @@ SelectView.shaders = nil
 
 local playSound = nil
 function SelectView:load()
-	Theme:init(self.game)
 	self.game.selectController:load()
 	self.headerView = HeaderView("select")
 	self.settingsViewConfig = SettingsViewConfig(self.game)
@@ -42,7 +41,8 @@ function SelectView:load()
 	BackgroundView.game = self.game
 	playSound = Theme:getStartSound(self.game)
 
-	self.inputMap = InputMap(self, Theme.actions.songSelect)
+	local actionModel = self.game.actionModel
+	self.inputMap = InputMap(self, actionModel:getGroup("songSelect"))
 
 	self.shaders = require("irizz.shaders.init")
 	self:updateFilterLines()
@@ -183,6 +183,13 @@ function SelectView:changeTimeRate(delta)
 		self.game.modifierSelectModel:change()
 		timeRateModel:set(newRate)
 	end
+end
+
+function SelectView:updateSearch(text)
+	local config = self.game.configModel.configs.select
+	local selectModel = self.game.selectModel
+	config.filterString = text
+	selectModel:debouncePullNoteChartSet()
 end
 
 function SelectView:songSelectInputs()

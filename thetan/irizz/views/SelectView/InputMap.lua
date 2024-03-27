@@ -52,14 +52,6 @@ function InputMap:createBindings(sv, a)
 	}
 
 	self.view = {
-		[a.insertMode] = function()
-			gyatt.vimMode = "Insert"
-		end,
-		[a.normalMode] = function()
-			gyatt.vimMode = "Normal"
-			local selectModel = sv.game.selectModel
-			selectModel:debouncePullNoteChartSet()
-		end,
 		[a.moveScreenLeft] = function()
 			sv:moveScreen(-1)
 		end,
