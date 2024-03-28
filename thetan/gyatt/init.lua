@@ -37,13 +37,14 @@ function gyatt.inputchanged(event)
 end
 
 function gyatt.keypressed(event)
-	keyPressTimestamps[event[1]] = event.time
+	local key = event[2]
+	keyPressTimestamps[key] = event.time
 
 	if gyatt.isModKeyDown() then
 		return false
 	end
 
-	vim.updateOperation(event[1])
+	vim.updateOperation(key)
 end
 
 function gyatt.isModKeyDown()
