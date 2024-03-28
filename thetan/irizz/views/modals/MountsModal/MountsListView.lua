@@ -14,6 +14,7 @@ MountsListView.scrollSound = Theme.sounds.scrollSoundLargeList
 MountsListView.selectedItemIndex = 1
 
 function MountsListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("mountsModal")
 end

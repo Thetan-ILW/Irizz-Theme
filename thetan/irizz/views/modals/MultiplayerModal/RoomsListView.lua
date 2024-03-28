@@ -16,6 +16,7 @@ RoomsListView.noItemsText = Text.noRooms
 RoomsListView.scrollSound = Theme.sounds.scrollSoundLargeList
 
 function RoomsListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("multiplayerModal")
 end

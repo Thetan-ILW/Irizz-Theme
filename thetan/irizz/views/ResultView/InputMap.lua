@@ -4,9 +4,6 @@ local ResultInputMap = InputMap + {}
 
 function ResultInputMap:createBindings(view, a)
 	self.view = {
-		[a.songSelect] = function()
-			view:quit()
-		end,
 		[a.retry] = function()
 			view:play("retry")
 		end,

@@ -1,13 +1,12 @@
 local class = require("class")
 local flux = require("flux")
 
-local just = require("just")
 local gfx_util = require("gfx_util")
 
 local Modal = class()
 
 Modal.name = nil
-Modal.forceClose = false
+Modal.shouldClose = false
 Modal.alpha = 0
 
 function Modal:onShow() end
@@ -35,12 +34,16 @@ function Modal:hide()
     self.hideTween = flux.to(self, 0.44, {alpha = -1}):ease("quadout")
 end
 
+function Modal:quit()
+    self.shouldClose = true
+end
+
 function Modal:update() end
 
 function Modal:draw(view)
     self:update()
 
-    if (self.forceClose or just.keypressed("escape")) and self.alpha > 0.1 then
+    if self.shouldClose and self.alpha > 0.1 then
         self:hide()
     end
 

@@ -5,15 +5,28 @@ vim.mode = {
 	insert = "Insert"
 }
 
+local enabled = true
 local mode = vim.mode.normal
 local operations = ""
 local count = 1
+
+function vim.enable()
+	enabled = true
+end
+
+function vim.disable()
+	enabled = false
+end
 
 function vim.clear()
 	operations = ""
 end
 
 function vim.updateOperation(key)
+	if not enabled then
+		return
+	end
+
 	count = tonumber(operations) or 1
 	operations = operations .. key
 end

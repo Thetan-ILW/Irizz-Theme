@@ -5,6 +5,9 @@ local GameViewInputMap = InputMap + {}
 
 function GameViewInputMap:createBindings(gv, a)
 	self.global = {
+		[a.quit] = function()
+			gv:sendQuitSignal()
+		end,
 		[a.insertMode] = function()
 			gyatt.vim.setMode(gyatt.vim.mode.insert)
 		end,

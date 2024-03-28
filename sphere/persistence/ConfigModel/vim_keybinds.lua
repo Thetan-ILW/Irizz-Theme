@@ -1,7 +1,8 @@
 return {
     global = {
         insertMode = "i",
-        normalMode = "escape"
+        normalMode = "escape",
+        quit = {mod = {"lshift", "rshift"}, "escape"}
     },
     songSelect = {
         play = "return",
@@ -22,7 +23,6 @@ return {
         openEditor = { mod = { "lctrl", "rctrl" }, "e" },
     },
     resultScreen = {
-        songSelect = "escape",
         watchReplay = "w",
         retry = "r",
         submitScore = "s"

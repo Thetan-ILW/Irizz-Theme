@@ -17,6 +17,7 @@ NoteSkinListView.selectedNoteSkin = nil
 NoteSkinListView.inputMode = ""
 
 function NoteSkinListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("noteSkinModal")
 end

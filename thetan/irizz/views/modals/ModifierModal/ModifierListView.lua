@@ -17,6 +17,7 @@ ModifierListView.noItemsText = Text.noMods
 ModifierListView.scrollSound = Theme.sounds.scrollSoundLargeList
 
 function ModifierListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("modifiersModal")
 end

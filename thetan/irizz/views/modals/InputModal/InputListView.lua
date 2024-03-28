@@ -18,6 +18,7 @@ InputListView.device = ""
 InputListView.inputMode = ""
 
 function InputListView:new(game)
+	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("inputsModal")
 end

@@ -1,5 +1,6 @@
 local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
+local gyatt = require("thetan.gyatt")
 
 local BackgroundView = require("sphere.views.BackgroundView")
 local Header = require("thetan.irizz.views.HeaderView")
@@ -8,7 +9,6 @@ local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
 
 local InputMap = require("thetan.irizz.views.ResultView.InputMap")
-local Theme = require("thetan.irizz.views.Theme")
 
 ---@class thetan.irizz.ResultView: sphere.ScreenView
 ---@operator call: thetan.irizz.ResultView
@@ -27,6 +27,7 @@ ResultView.load = thread.coro(function(self)
 
 	local actionModel = self.game.actionModel
 	self.inputMap = InputMap(self, actionModel:getGroup("resultScreen"))
+	gyatt.vim.enable()
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
@@ -37,7 +38,6 @@ ResultView.load = thread.coro(function(self)
 	canDraw = true
 	loading = false
 end)
-
 
 function ResultView:draw()
 	Layout:draw()

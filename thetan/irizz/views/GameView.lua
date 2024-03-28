@@ -144,15 +144,26 @@ function GameView:setModal(modal)
 	end
 
 	if opennedModal.name == modal.name then
-		self.modal.forceClose = true
+		self.modal.shouldClose = true
 	end
 end
 
 function GameView:closeModal()
 	if self.modal then
-		self.modal.forceClose = true
+		self.modal.shouldClose = true
 	end
 	self.view.modalActive = false
+end
+
+function GameView:sendQuitSignal()
+	if self.modal then
+		self.modal:quit()
+		return
+	end
+
+	if self.view.quit then
+		self.view:quit()
+	end
 end
 
 return GameView

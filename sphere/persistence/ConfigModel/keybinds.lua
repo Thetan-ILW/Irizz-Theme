@@ -1,4 +1,9 @@
 return {
+    global = {
+        insertMode = "",
+        normalMode = "",
+        quit = "escape"
+    },
     songSelect = {
         play = "return",
         showMods = "f1",
@@ -16,11 +21,8 @@ return {
         showMultiplayer = { mod = { "lctrl", "rctrl" }, "m" },
         autoPlay = { mod = { "lctrl", "rctrl" }, "return" },
         openEditor = { mod = { "lctrl", "rctrl" }, "e" },
-        insertMode = "",
-        normalMode = ""
     },
     resultScreen = {
-        songSelect = "escape",
         watchReplay = "w",
         retry = "r",
         submitScore = "s"
