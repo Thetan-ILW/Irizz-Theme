@@ -66,10 +66,10 @@ function ScoreListView:input() end
 function ScoreListView:drawItem(i, w, h)
 	local item = self.items[i]
 
-	local scoreSourceName = self.game.selectModel.scoreLibrary.scoreSourceName
+	local source = self.game.configModel.configs.select.scoreSourceName
 	local username = Text.you
 
-	if scoreSourceName == "online" then
+	if source == "online" then
 		username = item.user.name
 	end
 
