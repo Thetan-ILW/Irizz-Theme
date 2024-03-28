@@ -349,7 +349,10 @@ function ViewConfig:difficulty(view)
 	local calculator = Theme.formatDiffColumns(diffColumn)
 	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")
 
-	local patterns = chartview.msd_diff_data or Text.noPatterns
+	local patterns
+	if not patterns then
+		patterns = chartview.level and "Lv."..chartview.level or Text.noPatterns
+	end
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
 	w, h = Layout:move("patterns")
