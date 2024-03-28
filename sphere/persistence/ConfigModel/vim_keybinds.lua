@@ -19,6 +19,7 @@ return {
         showFilters = { mod = { "lctrl", "rctrl" }, "f" },
         showInputs = { mod = { "lctrl", "rctrl" }, "i" },
         showMultiplayer = { mod = { "lctrl", "rctrl" }, "m" },
+        showKeybinds = { mod = { "lctrl", "rctrl" }, "k" },
         autoPlay = { mod = { "lctrl", "rctrl" }, "return" },
         openEditor = { mod = { "lctrl", "rctrl" }, "e" },
     },

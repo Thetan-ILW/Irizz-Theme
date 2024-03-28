@@ -166,4 +166,16 @@ function GameView:sendQuitSignal()
 	end
 end
 
+function GameView:getViewName()
+	local t = {
+		[self.game.selectView] = "select",
+		[self.game.resultView] = "result",
+		[self.game.gameplayView] = "gameplay",
+		[self.game.multiplayerView] = "multiplayer",
+		[self.game.editorView] = "editor"
+	}
+
+	return t[self.view]
+end
+
 return GameView

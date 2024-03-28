@@ -19,6 +19,9 @@ function InputMap:createBindings(sv, a)
 		end,
 		[a.showMultiplayer] = function()
 			sv:openModal("thetan.irizz.views.modals.MultiplayerModal")
+		end,
+		[a.showKeybinds] = function ()
+			sv:openModal("thetan.irizz.views.modals.KeybindModal")
 		end
 	}
 
