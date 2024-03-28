@@ -166,7 +166,7 @@ local function info(view)
 
 	difficulty(view, chartview)
 	local length = time_util.format((chartview.duration or 0) / view.game.playContext.rate)
-	local longNoteRatio = (chartview.long_note_count or 0) / (chartview.notes_count or 0)
+	local longNoteRatio = (chartview.long_notes_count or 0) / (chartview.notes_count or 0) * 100
 	local inputMode = Format.inputMode(chartview.chartdiff_inputmode)
 	inputMode = inputMode == "2K" and "TAIKO" or inputMode
 
