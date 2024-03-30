@@ -47,13 +47,12 @@ local function getSound(fileName)
 	end
 end
 
-
-function Assets:updateColorTheme(name)
+function Assets:updateColorTheme(name, theme)
 	local file = assert(getFilePath("color_themes/" .. name .. ".lua"))
 	local colorTheme = love.filesystem.load(file)()
 
 	for k, v in pairs(colorTheme) do
-		table_util.copy(v, self[k])
+		table_util.copy(v, theme[k])
 	end
 end
 
@@ -137,7 +136,7 @@ function Assets:get(config, theme)
 
 	for _, v in ipairs(theme.colorThemes) do
 		if v == config.colorTheme then
-			self:updateColorTheme(config.colorTheme)
+			self:updateColorTheme(config.colorTheme, theme)
 			break
 		end
 	end
