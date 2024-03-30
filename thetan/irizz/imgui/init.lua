@@ -21,7 +21,7 @@ end
 function imgui.separator()
 	just.emptyline(8)
 	local r, g, b, a = love.graphics.getColor()
-	love.graphics.setColor(Color.mutedBorder)
+	love.graphics.setColor(Color.separator)
 	love.graphics.line(0, 0, w - 30, 0)
 	love.graphics.setColor({r, g, b, a})
 	just.emptyline(8)

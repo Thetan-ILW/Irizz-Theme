@@ -13,33 +13,33 @@ end
 -- Good luck with creating a color theme, even I don't understand what the hell is happening here and in the internal code
 
 ColorTheme.colors = {
-	panel = Hex("#000000AA"),
-	border = Hex("#FFFFFF"),
-	mutedBorder = Hex("#616161"),
-	headerButtonBackground = { 0, 0, 0, 0.2 },
-	transparentPanel = Hex("#00000077"),
+	-- COLORS
 	accent = Hex("#fc72e3"),
 	darkerAccent = Hex("#bf58ca"),
-	select = Hex("#f669db55"),
 	headerSelect = Hex("#ff8cfa"),
+	-- TEXT
 	text = Hex("#FFFFFF"),
 	textShadow = { 0.3, 0.3, 0.3, 0.7 },
 	unfocusedText = { 0.75, 0.75, 0.75, 1 },
 	darkText = { 0.2, 0.2, 0.2, 1 },
+	-- PANELS
+	panel = Hex("#00000099"),
+	border = Hex("#FFFFFF"),
+	-- LINES AND RECTANGLES IN PANELS
+	separator = Hex("#616161"),
+	innerPanel = Hex("#00000077"),
+	-- LISTS
 	itemDownloaded = { 1, 1, 1, 0.5 },
 	listItemOdd = { 0, 0, 0, 0 },
 	listItemEven = { 0.5, 0.5, 0.5, 0.15 },
+	-- UI 
+	select = Hex("#f669db55"),
 	button = { 0, 0, 0, 0 },
 	buttonHover = { 1, 1, 1, 0.2 },
 	uiFrames = { 1, 1, 1, 0.8 },
 	uiPanel = { 0.1, 0.1, 0.1, 0.7 },
 	uiHover = { 0.2, 0.2, 0.2, 0.7 },
 	uiActive = { 0.2, 0.2, 0.2, 0.9 },
-	hitPerfect = { 0.25, 0.95, 1, 1 },
-	hitBad = { 1, 0.92, 0.25, 1 },
-	hitVeryBad = { 0, 0.86, 0.18, 1 },
-	hitMiss = { 1, 0, 0, 1 },
-	spectrum = Hex("#fc72e3"),
 }
 
 ColorTheme.difficultyColors = {

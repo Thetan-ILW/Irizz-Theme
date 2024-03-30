@@ -46,7 +46,7 @@ local function button(text, w, h, panelHeight, rightSide, active)
 	end
 
 	just.indent(indent)
-	gfx.setColor(Color.headerButtonBackground)
+	gfx.setColor(Color.panel)
 	gfx.rectangle("fill", x - 8, 10, textW + 16, panelHeight, 8, 8)
 
 	gfx.setColor(active and Color.headerSelect or Color.text)
@@ -109,7 +109,7 @@ function ViewConfig:resultButtons(view)
 	local y = h - 8
 	local panelHeight = font.anyText:getHeight() + 8
 
-	gfx.setColor(Color.headerButtonBackground)
+	gfx.setColor(Color.panel)
 	gfx.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
 
 	gfx.setColor(Color.text)
@@ -135,7 +135,7 @@ function ViewConfig:vimMode(view)
 
 	local text = gyatt.vim.getMode()
 
-	gfx.setColor(Color.headerButtonBackground)
+	gfx.setColor(Color.panel)
 	local textW = font.anyText:getWidth(text)
 	local panelHeight = font.anyText:getHeight() + 8
 	gfx.rectangle("fill", w / 2 - textW / 2 - 8, 10, textW + 16, panelHeight, 8, 8)

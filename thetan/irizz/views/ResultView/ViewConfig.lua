@@ -323,7 +323,7 @@ end
 function ViewConfig:difficulty(view)
 	local w, h = Layout:move("difficulty")
 
-	love.graphics.setColor(Color.transparentPanel)
+	love.graphics.setColor(Color.innerPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
 	local chartview = view.game.selectModel.chartview

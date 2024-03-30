@@ -270,7 +270,7 @@ function SelectView:spectrum(canvas, w, h, invertColor)
 	end
 
 	if not invertColor then
-		gfx.setColor(Theme.colors.spectrum)
+		gfx.setColor(Theme.colors.accent)
 		gyatt.spectrum(self.frequencies, 127, w, h)
 		return
 	end

@@ -13,7 +13,7 @@ return function(id, text, w, h, align, active)
 	color = active and Color.select or color
 	love.graphics.setColor(color)
 	love.graphics.rectangle("fill", 0, 2, w, h-2)
-	love.graphics.setColor(Color.mutedBorder)
+	love.graphics.setColor(Color.separator)
 	love.graphics.rectangle("fill", w/2 - w/4, h-2, w/2, 4)
 
 	local font = love.graphics.getFont()

@@ -25,7 +25,7 @@ function ViewConfig:mounts(view)
 	self.mountsListView:draw(w, h, true)
 
 	w, h = Layout:move("listLine")
-	love.graphics.setColor(Color.mutedBorder)
+	love.graphics.setColor(Color.separator)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
 	w, h = Layout:move("listButton")
