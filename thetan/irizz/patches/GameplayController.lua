@@ -15,10 +15,13 @@ modulePatcher:insert("sphere.controllers.GameplayController", "skip", function(_
 	_self.replayModel:update()
 	rhythmModel.logicEngine:update()
 	rhythmModel.scoreEngine:update()
+
 end)
 
 modulePatcher:insert("sphere.controllers.GameplayController", "unload", function(_self)
+	local rhythmModel = _self.rhythmModel
 	_self.loaded = false
+	rhythmModel.audioEngine.loaded = false
 
 	_self.discordModel:setPresence({})
 	_self:skip()
@@ -27,7 +30,6 @@ modulePatcher:insert("sphere.controllers.GameplayController", "unload", function
 		_self:saveScore()
 	end
 
-	local rhythmModel = _self.rhythmModel
 	rhythmModel:unloadAllEngines(true)
 	rhythmModel.inputManager:setMode("external")
 	_self.replayModel:setMode("record")
@@ -36,4 +38,5 @@ modulePatcher:insert("sphere.controllers.GameplayController", "unload", function
 	_self.windowModel:setVsyncOnSelect(true)
 
 	_self.multiplayerModel:setIsPlaying(false)
+
 end)
