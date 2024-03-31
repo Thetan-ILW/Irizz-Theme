@@ -4,6 +4,7 @@ local Container = require("thetan.gyatt.Container")
 local audio = require("audio")
 local version = require("version")
 
+local assets = require("thetan.irizz.assets")
 local Theme = require("thetan.irizz.views.Theme")
 local Text = Theme.textSettings
 local cfg = Theme.imgui
@@ -571,7 +572,7 @@ function SettingsTab:UI(view)
 
 	if colorTheme ~= newColorTheme then
 		irizz.colorTheme = newColorTheme
-		Theme:updateColorTheme(newColorTheme)
+		assets:updateColorTheme(newColorTheme, Theme)
 	end
 
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
