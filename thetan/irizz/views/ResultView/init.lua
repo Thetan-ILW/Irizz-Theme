@@ -1,6 +1,7 @@
 local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
 local gyatt = require("thetan.gyatt")
+local table_util = require("table_util")
 
 local BackgroundView = require("sphere.views.BackgroundView")
 local Header = require("thetan.irizz.views.HeaderView")
@@ -35,9 +36,42 @@ ResultView.load = thread.coro(function(self)
 
 	self.header = Header(self.game, "result")
 	self.viewConfig = ViewConfig(self.game)
+
+	self:updateJudgements()
+
+	local config = self.game.configModel.configs.select
+	local selectedJudgement = config.judgements
+
+	if not self.judgements[selectedJudgement] then
+		local k, _ = next(self.judgements)
+		config.judgements = k
+	end
+
 	canDraw = true
 	loading = false
 end)
+
+function ResultView:updateJudgements()
+	local scoreSystems = self.game.rhythmModel.scoreEngine.scoreSystem
+	self.selectors = {
+		scoreSystems["soundsphere"].metadata,
+		scoreSystems["quaver"].metadata,
+		scoreSystems["osuMania"].metadata,
+		scoreSystems["etterna"].metadata
+	}
+
+	self.judgements = {}
+
+	for _, scoreSystem in pairs(scoreSystems) do
+		table_util.copy(scoreSystem.judges, self.judgements)
+	end
+
+	local judgementScoreSystem = scoreSystems["judgement"]
+	for _, judge in ipairs(judgementScoreSystem.judgementList) do
+		table.insert(self.selectors, judge)
+		table_util.copy(judgementScoreSystem.judges[judge.name], self.judgements)
+	end
+end
 
 function ResultView:draw()
 	Layout:draw()
@@ -112,6 +146,7 @@ ResultView.loadScore = thread.coro(function(self, itemIndex)
 
 	if itemIndex then
 		self.game.selectModel:scrollScore(nil, itemIndex)
+		self:updateJudgements()
 	end
 
 	loading = false

@@ -4,7 +4,6 @@ local Container = require("thetan.gyatt.Container")
 local audio = require("audio")
 local version = require("version")
 
-local assets = require("thetan.irizz.assets")
 local Theme = require("thetan.irizz.views.Theme")
 local Text = Theme.textSettings
 local cfg = Theme.imgui
@@ -154,8 +153,43 @@ function SettingsTab:Gameplay(view)
 	g.lastMeanValues = imgui.intButtons("lastMeanValues", g.lastMeanValues, 1, Text.lastMeanValues)
 end
 
+local soundsphere = require("sphere.models.RhythmModel.ScoreEngine.SoundsphereScoring")
+local osuMania = require("sphere.models.RhythmModel.ScoreEngine.OsuManiaScoring")
+local quaver = require("sphere.models.RhythmModel.ScoreEngine.QuaverScoring")
+local etterna = require("sphere.models.RhythmModel.ScoreEngine.EtternaScoring")
+
+local scoreSystems = {
+	"Soundsphere",
+	"osu!mania",
+	"Quaver",
+	"Etterna"
+}
+
+local metadata = {
+	["Soundsphere"] = soundsphere.metadata,
+	["osu!mania"] = osuMania.metadata,
+	["Quaver"] = quaver.metadata,
+	["Etterna"] = etterna.metadata
+}
+
+local function getJudges(range)
+	local t = {}
+
+	for i = range[1], range[2], 1 do
+		table.insert(t, i)
+	end
+
+	return t
+end
+
+local allJudges = {
+	["osu!mania"] = getJudges(osuMania.metadata.range),
+	["Etterna"] = getJudges(etterna.metadata.range)
+}
+
 function SettingsTab:Scoring(view)
 	local configs = view.game.configModel.configs
+	local select = configs.select
 	local irizz = configs.irizz
 	local settings = configs.settings
 	local g = settings.gameplay
@@ -165,21 +199,26 @@ function SettingsTab:Scoring(view)
 	just.next(0, textSeparation)
 
 	local prevScoreSystem = irizz.scoreSystem
-	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, Theme.getScoreSystems(), nil,
+	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, scoreSystems, nil,
 		Text.scoreSystem)
 
-	local judges = Theme.getJudges(irizz.scoreSystem)
-
-	if prevScoreSystem ~= irizz.scoreSystem then
-		irizz.judge = ""
-
-		if judges then
-			irizz.judge = judges[1]
-		end
-	end
+	local judges = allJudges[irizz.scoreSystem]
 
 	if judges then
-		irizz.judge = imgui.combo("irizz.judge", irizz.judge, Theme.getJudges(irizz.scoreSystem), nil, Text.judgement)
+		if prevScoreSystem ~= irizz.scoreSystem then
+			irizz.judge = judges[1]
+		end
+
+		irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, nil, Text.judgement)
+		select.judgements = metadata[irizz.scoreSystem].name:format(irizz.judge)
+	else
+		local md = metadata[irizz.scoreSystem]
+
+		if not md then
+			md = metadata["Soundsphere"]
+		end
+
+		select.judgements = md.name
 	end
 
 	g.ratingHitTimingWindow = intButtonsMs("ratingHitTimingWindow", g.ratingHitTimingWindow, Text.ratingHitWindow)
@@ -532,7 +571,7 @@ function SettingsTab:UI(view)
 
 	if colorTheme ~= newColorTheme then
 		irizz.colorTheme = newColorTheme
-		assets:updateColorTheme(newColorTheme, Theme)
+		Theme:updateColorTheme(newColorTheme)
 	end
 
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)

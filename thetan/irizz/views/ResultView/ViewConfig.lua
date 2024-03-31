@@ -163,7 +163,7 @@ local function HitGraph(view)
 	local rhythmModel = view.game.rhythmModel
 	local scoreEngine = rhythmModel.scoreEngine
 	local scoreItem = view.game.selectModel.scoreItem
-	
+
 	if not scoreItem then
 		return
 	end
@@ -193,22 +193,16 @@ function ViewConfig:judgements(view)
 	local show = showLoadedScore(view)
 	local scoreEngine = view.game.rhythmModel.scoreEngine
 	local scoreItem = view.game.selectModel.scoreItem
-	local judgement = scoreEngine.scoreSystem.judgement
 
-	if not judgement or not scoreItem then
+	if not scoreItem then
 		return
 	end
 
 	local configs = view.game.configModel.configs
-	local scoreSystem = configs.irizz.scoreSystem
-	local judge = configs.irizz.judge
-	local prefix = Theme.getPrefix(scoreSystem)
-	local counterName = scoreSystem .. prefix .. judge
-
-	local counters = judgement.counters
-	local judgementLists = judgement.judgementLists
-	local counter = counters[counterName]
-	local judgements = judgement.judgements[counterName]
+	local judgeName = configs.select.judgements
+	local judge = view.judgements[judgeName]
+	local counters = judge.counters
+	local judgementLists = judge:getOrderedCounterNames()
 	local base = scoreEngine.scoreSystem.base
 
 	local miss = show and base.missCount or scoreItem.miss or 0
@@ -221,8 +215,8 @@ function ViewConfig:judgements(view)
 	local textIndent = textHeight
 
 	if show then
-		for _, name in ipairs(judgementLists[counterName]) do
-			local value = counters[counterName][name]
+		for _, name in ipairs(judgementLists) do
+			local value = counters[name]
 			printKeyValue(name:upper(), value, w, h)
 			just.next(0, textIndent)
 		end
@@ -236,12 +230,12 @@ function ViewConfig:judgements(view)
 	w, h = Layout:move("judgementsAccuracy")
 	love.graphics.setFont(font.accuracy)
 
-	if not judgements.accuracy then
+	if not judge.accuracy then
 		gfx_util.printFrame(Text.noAccuracy, 0, 0, w, h, "center", "center")
 		return
 	end
 
-	gfx_util.printFrame(("%s %s %3.2f%%"):format(scoreSystem, prefix..judge, judgements.accuracy(counter) * 100), 0, 0, w, h, "center", "center")
+	gfx_util.printFrame(("%s %3.2f%%"):format(judgeName, judge.accuracy * 100), 0, 0, w, h, "center", "center")
 end
 
 local function footer(view)
