@@ -39,7 +39,7 @@ function _Layout:draw()
 	)
 	local x1, w1 =
 		gfx_util.layout(gx2[2], gw2[2], { 50, -1 / 3, horizontalPanelGap, -1 / 3, horizontalPanelGap, -1 / 3, 50 })
-	local y1, h1 = gfx_util.layout(gy[2], gh[2], { gap, -0.2, gap, -0.6, -0.2, gap, 20, gap })
+	local y1, h1 = gfx_util.layout(gy[2], gh[2], { gap, -0.2, gap, -0.6, -0.2 })
 
 	local y2, h2 = gfx_util.layout(y1[2], h1[2], { -0.2, -0.3, -0.3, -0.2 })
 	self:pack("title", gx[2], y2[2], gw[2], h2[2])
