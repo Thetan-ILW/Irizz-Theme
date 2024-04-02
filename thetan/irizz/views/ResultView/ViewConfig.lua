@@ -177,12 +177,13 @@ local function HitGraph(view)
 	local fontHeight = font.hitError:getBaseline()
 	Theme:panel(font.hitError:getWidth(meanText) + 10, fontHeight + 10)
 
-	local fontWidth = font.hitError:getWidth(maxErrorText)
-	love.graphics.rectangle("fill", 0, h - fontHeight - 10, fontWidth + 10, fontHeight + 10)
+	love.graphics.translate(0, h - fontHeight - 10)
+	Theme:panel(font.hitError:getWidth(maxErrorText) + 10, fontHeight + 10)
 
 	just.indent(5)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.hitError)
+	Layout:move("hitGraph")
 	just.text(meanText, w)
 	Layout:move("hitGraph")
 	gfx_util.printFrame(maxErrorText, 5, -5, w, h, "left", "bottom")
@@ -396,6 +397,7 @@ function ViewConfig:draw(view)
 	title(view)
 
 	self.panels()
+	HitGraph(view)
 	lines()
 
 	self:judgements(view)
@@ -404,7 +406,6 @@ function ViewConfig:draw(view)
 	self:scoreInfo(view)
 	self:pauses(view)
 	self:modifiers(view)
-	HitGraph(view)
 
 	borders()
 end
