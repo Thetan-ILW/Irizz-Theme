@@ -6,7 +6,7 @@ local FiltersModal = Modal + {}
 FiltersModal.name = "FiltersModal"
 FiltersModal.viewConfig = ViewConfig()
 
-function FiltersModal:onHide()
+function FiltersModal:onQuit()
 	self.game.selectModel:noDebouncePullNoteChartSet()
 	self.game.selectModel:pullScore()
 	self.game.selectView:updateFilterLines()

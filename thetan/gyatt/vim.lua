@@ -2,7 +2,7 @@ local vim = {}
 
 vim.mode = {
 	normal = "Normal",
-	insert = "Insert"
+	insert = "Insert",
 }
 
 local enabled = true
@@ -29,6 +29,7 @@ function vim.updateOperation(key)
 
 	count = tonumber(operations) or 1
 	operations = operations .. key
+	print(operations)
 end
 
 function vim.getOperation()
