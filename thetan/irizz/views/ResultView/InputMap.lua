@@ -12,7 +12,7 @@ function ResultInputMap:createBindings(view, a)
 		end,
 		[a.submitScore] = function()
 			view:submitScore()
-		end
+		end,
 	}
 end
 

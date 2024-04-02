@@ -5,6 +5,9 @@ local GameViewInputMap = InputMap + {}
 
 function GameViewInputMap:createBindings(gv, a)
 	self.global = {
+		[a.showKeybinds] = function()
+			gv:openModal("thetan.irizz.views.modals.KeybindModal")
+		end,
 		[a.quit] = function()
 			gv:sendQuitSignal()
 		end,

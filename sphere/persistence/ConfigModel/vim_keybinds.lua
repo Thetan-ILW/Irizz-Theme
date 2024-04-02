@@ -3,6 +3,7 @@ return {
 		insertMode = "i",
 		normalMode = "escape",
 		quit = { mod = { "lshift", "rshift" }, "escape" },
+		showKeybinds = { op = "ok" },
 	},
 	songSelect = {
 		play = "return",
@@ -19,7 +20,6 @@ return {
 		showFilters = { op = "of" },
 		showInputs = { op = "oi" },
 		showMultiplayer = { op = "op" },
-		showKeybinds = { op = "ok" },
 		openEditor = { op = "oe" },
 		autoPlay = { mod = { "lctrl", "rctrl" }, "return" },
 	},

@@ -45,6 +45,7 @@ function gyatt.keypressed(event)
 	end
 
 	if key == "escape" then
+		vim.clear()
 		return
 	end
 

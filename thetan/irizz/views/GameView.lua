@@ -155,6 +155,11 @@ function GameView:closeModal()
 	self.view.modalActive = false
 end
 
+function GameView:openModal(modalName)
+	local modal = require(modalName)(self.game)
+	self:setModal(modal)
+end
+
 function GameView:sendQuitSignal()
 	if self.modal then
 		self.modal:quit()
@@ -172,7 +177,7 @@ function GameView:getViewName()
 		[self.game.resultView] = "result",
 		[self.game.gameplayView] = "gameplay",
 		[self.game.multiplayerView] = "multiplayer",
-		[self.game.editorView] = "editor"
+		[self.game.editorView] = "editor",
 	}
 
 	return t[self.view]

@@ -80,11 +80,6 @@ function SelectView:moveScreen(where, exact)
 	Theme:playSound("songSelectScreenChanged")
 end
 
-function SelectView:openModal(modalName)
-	local modal = require(modalName)(self.game)
-	self.game.gameView:setModal(modal)
-end
-
 ---@param dt number
 function SelectView:updateSettings(dt)
 	playSound = Theme:getStartSound(self.game)
@@ -165,6 +160,10 @@ function SelectView:updateFilterLines()
 	source = source == "local" and "" or "Online"
 
 	self.scoreFilterLine = ("%s   %s"):format(source, mode)
+end
+
+function SelectView:openModal(name)
+	self.game.gameView:openModal(name)
 end
 
 function SelectView:changeTimeRate(delta)
