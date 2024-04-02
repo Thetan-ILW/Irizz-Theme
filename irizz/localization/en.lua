@@ -7,7 +7,7 @@ localization.textHeader = {
 	songs = "Songs",
 	collections = "Collections",
 	notLoggedIn = "Offline",
-	online = "Online: %i"
+	online = "Online: %i",
 }
 
 localization.textSettings = {
@@ -127,6 +127,15 @@ localization.textSettings = {
 	scoring = "Scoring",
 	scoreSystem = "Score system",
 	judgement = "Judgement",
+	nearest = "Closest note scoring",
+	noteHitWindow = "Note hit window",
+	noteMissWindow = "Note miss window",
+	lnHitWindow = "LN hit window",
+	lnMissWindow = "LN miss window",
+	early = " (Early)",
+	late = " (Late)",
+	releaseHitWindow = "Release hit window",
+	releaseMissWindow = "Release miss window",
 	--
 	default = "Default",
 	osu = "osu!",
@@ -159,7 +168,7 @@ localization.textSettings = {
 	showLocations = "Show locations",
 	chartFormatOffsets = "Offsets for chart formats",
 	audioModeOffsets = "Offsets for audio modes",
-	chartLengthBeforeArtist = "Show chart length in chart list"
+	chartLengthBeforeArtist = "Show chart length in chart list",
 }
 
 localization.textSongSelect = {
@@ -174,7 +183,7 @@ localization.textSongSelect = {
 	filterPlaceholder = "No filters.",
 	you = "You",
 	score = "Score: %i",
-	noPatterns = "No patterns"
+	noPatterns = "No patterns",
 }
 
 localization.textCollections = {
@@ -190,7 +199,7 @@ localization.textCollections = {
 	download = "Download",
 	redownload = "Redownload",
 	wait = "Wait...",
-	osuDirectSearchPlaceholder = "Type to search..."
+	osuDirectSearchPlaceholder = "Type to search...",
 }
 
 localization.textModifiers = {
@@ -217,7 +226,7 @@ localization.textMounts = {
 	chartsFound = "Processed / Found",
 	chartsCached = "Charts cached",
 	create = "Create",
-	delete = "Delete"
+	delete = "Delete",
 }
 
 localization.textOnline = {
@@ -241,7 +250,7 @@ localization.textFilters = {
 	actualInputMode = "Exact mode",
 	format = "Format",
 	scratch = "Scratch",
-	played = "Played"
+	played = "Played",
 }
 
 localization.textResult = {
@@ -252,7 +261,7 @@ localization.textResult = {
 	pauses = "PAUSES",
 	scrollSpeed = "SCROLL SPEED",
 	noPatterns = "No patterns",
-	noAccuracy = "No accuracy"
+	noAccuracy = "No accuracy",
 }
 
 localization.textMultiplayer = {
@@ -271,61 +280,60 @@ localization.textMultiplayer = {
 	back = "Back",
 	notConnected = "Trying to connect.\nStatus: %s",
 	room = "Room: %s",
-	host = "Host: %s"
+	host = "Host: %s",
 }
 
 localization.textKeybinds = {
 	keybindsFor = "Key binds for: %s",
 	select = "song select",
-	result = "result screen"
+	result = "result screen",
 }
 
 localization.keybindsGlobal = {
 	insertMode = "Insert mode",
 	normalMode = "Normal mode",
-	quit = "Close a window or quit from a screen"
+	quit = "Close a window or quit from a screen",
 }
 
 localization.keybindsLargeList = {
-    up = "Move up in the list",
-    down = "Move down in the list",
-    up10 = "Move up 10 items in the list",
-    down10 = "Move down 10 items in the list",
-    toStart = "Move to the start of the list",
-    toEnd = "Move to the end of the list"
+	up = "Move up in the list",
+	down = "Move down in the list",
+	up10 = "Move up 10 items in the list",
+	down10 = "Move down 10 items in the list",
+	toStart = "Move to the start of the list",
+	toEnd = "Move to the end of the list",
 }
 
 localization.keybindsSmallList = {
-    up = "Move up in the small list",
-    down = "Move down in the small list"
+	up = "Move up in the small list",
+	down = "Move down in the small list",
 }
 
 localization.keybindsSongSelect = {
-    play = "Play the selected chart",
-    showMods = "Show song modifications",
-    random = "Randomize the chart selection",
-    decreaseTimeRate = "Decrease the music time rate",
-    increaseTimeRate = "Increase the music time rate",
-    undoRandom = "Undo the random chart selection",
-    clearSearch = "Clear the search field",
-    moveScreenLeft = "Move the screen to the left",
-    moveScreenRight = "Move the screen to the right",
-    pauseMusic = "Pause the music",
-    showSkins = "Show available skins",
-    showFilters = "Show chart and score filters",
-    showInputs = "Show input settings",
-    showMultiplayer = "Show multiplayer window or return to lobby",
-    showKeybinds = "Show keybind table (You are here)",
-    autoPlay = "Start chart in auto-play mode",
-    openEditor = "Open the chart editor"
+	play = "Play the selected chart",
+	showMods = "Show song modifications",
+	random = "Randomize the chart selection",
+	decreaseTimeRate = "Decrease the music time rate",
+	increaseTimeRate = "Increase the music time rate",
+	undoRandom = "Undo the random chart selection",
+	clearSearch = "Clear the search field",
+	moveScreenLeft = "Move the screen to the left",
+	moveScreenRight = "Move the screen to the right",
+	pauseMusic = "Pause the music",
+	showSkins = "Show available skins",
+	showFilters = "Show chart and score filters",
+	showInputs = "Show input settings",
+	showMultiplayer = "Show multiplayer window or return to lobby",
+	showKeybinds = "Show keybind table (You are here)",
+	autoPlay = "Start chart in auto-play mode",
+	openEditor = "Open the chart editor",
 }
 
 localization.keybindsResult = {
-    watchReplay = "Watch the replay",
-    retry = "Retry the chart",
-    submitScore = "(Re)submit your score"
+	watchReplay = "Watch the replay",
+	retry = "Retry the chart",
+	submitScore = "(Re)submit your score",
 }
-
 
 localization.fontFamilyList = {
 	["Noto Sans"] = {
@@ -490,13 +498,13 @@ localization.fonts = {
 		difficulty = { "ZenMaruGothic-Medium", 28 },
 		calculator = { "ZenMaruGothic-Medium", 24 },
 		patterns = { "ZenMaruGothic-Medium", 22 },
-		modifiers = { "ZenMaruGothic-Black", 48 }
+		modifiers = { "ZenMaruGothic-Black", 48 },
 	},
 
 	keybindsModal = {
 		title = { "ZenMaruGothic-Black", 72 },
 		keybinds = { "ZenMaruGothic-Black", 18 },
-	}
+	},
 }
 
 return localization

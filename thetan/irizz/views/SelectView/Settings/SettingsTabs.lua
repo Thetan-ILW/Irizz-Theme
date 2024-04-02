@@ -133,14 +133,6 @@ function SettingsTab:Gameplay(view)
 	playContext.const = imgui.checkbox("const", playContext.const, Text.const)
 
 	imgui.separator()
-	just.text(Text.hp)
-	just.next(0, textSeparation)
-	g.hp.shift = imgui.checkbox("hp.shift", g.hp.shift, Text.hpShift)
-	g.hp.notes = math.min(math.max(imgui.intButtons("hp.notes", g.hp.notes, 1, Text.hpNotes), 0), 100)
-	g.actionOnFail =
-		imgui.combo("actionOnFail", g.actionOnFail, { "none", "pause", "quit" }, formatActionOnFail, Text.actionOnFail)
-
-	imgui.separator()
 	just.text(Text.waitTime)
 	just.next(0, textSeparation)
 	g.time.prepare = imgui.slider1("time.prepare", g.time.prepare, "%0.1f", 0.5, 3, 0.1, Text.prepare)
@@ -233,6 +225,25 @@ local function scoreSystem(updated, selectedScoreSystem, irizz, select, playCont
 	end
 end
 
+local function noteTiming(value, minimum, positive, label)
+	value = math.abs(value * 1000)
+	value = imgui.intButtons(label, value, 1, label)
+	value = math.max(value / 1000, math.abs(minimum))
+
+	if not positive then
+		value = -value
+	end
+
+	return value
+end
+
+local function noteTimingGroup(note, hitLabel, missLabel)
+	note.hit[1] = noteTiming(note.hit[1], 0, false, hitLabel .. Text.early)
+	note.miss[1] = noteTiming(note.miss[1], note.hit[1], false, missLabel .. Text.early)
+	note.hit[2] = noteTiming(note.hit[2], 0, true, hitLabel .. Text.late)
+	note.miss[2] = noteTiming(note.miss[2], note.hit[2], true, missLabel .. Text.late)
+end
+
 function SettingsTab:Scoring(view)
 	local configs = view.game.configModel.configs
 	local select = configs.select
@@ -248,7 +259,31 @@ function SettingsTab:Scoring(view)
 	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, scoreSystems, nil, Text.scoreSystem)
 
 	scoreSystem(prevScoreSystem ~= irizz.scoreSystem, irizz.scoreSystem, irizz, select, view.game.playContext)
+	local noteTimings = view.game.playContext.timings
+	noteTimings.nearest = imgui.checkbox("timings.nearest", noteTimings.nearest, Text.nearest)
 
+	local note = noteTimings.ShortNote
+	local ln = noteTimings.LongNoteStart
+	local release = noteTimings.LongNoteEnd
+
+	imgui.separator()
+	noteTimingGroup(note, Text.noteHitWindow, Text.noteMissWindow)
+	imgui.separator()
+	noteTimingGroup(ln, Text.lnHitWindow, Text.lnMissWindow)
+	imgui.separator()
+	noteTimingGroup(release, Text.releaseHitWindow, Text.releaseMissWindow)
+
+	imgui.separator()
+	just.text(Text.hp)
+	just.next(0, textSeparation)
+	g.hp.shift = imgui.checkbox("hp.shift", g.hp.shift, Text.hpShift)
+	g.hp.notes = math.min(math.max(imgui.intButtons("hp.notes", g.hp.notes, 1, Text.hpNotes), 0), 100)
+	g.actionOnFail =
+		imgui.combo("actionOnFail", g.actionOnFail, { "none", "pause", "quit" }, formatActionOnFail, Text.actionOnFail)
+
+	imgui.separator()
+	just.text(Text.other)
+	just.next(0, textSeparation)
 	g.ratingHitTimingWindow = intButtonsMs("ratingHitTimingWindow", g.ratingHitTimingWindow, Text.ratingHitWindow)
 end
 
