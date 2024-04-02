@@ -38,7 +38,7 @@ local lineList = {
 	"line2",
 	"line3",
 	"line4",
-	"line5"
+	"line5",
 }
 
 function ViewConfig.panels()
@@ -115,7 +115,7 @@ local _HitGraph = PointGraphView({
 		local color = Theme:getHitColor(point.misc.deltaTime, false)
 		return y, unpack(color)
 	end,
-	show = showLoadedScore
+	show = showLoadedScore,
 })
 
 local _EarlyHitGraph = PointGraphView({
@@ -130,7 +130,7 @@ local _EarlyHitGraph = PointGraphView({
 		local y = getPointY(point)
 		return y, unpack(Theme:getHitColor(0, true))
 	end,
-	show = showLoadedScore
+	show = showLoadedScore,
 })
 
 local _MissGraph = PointGraphView({
@@ -145,7 +145,7 @@ local _MissGraph = PointGraphView({
 		local y = getPointY(point)
 		return y, unpack(Theme:getHitColor(0, true))
 	end,
-	show = showLoadedScore
+	show = showLoadedScore,
 })
 
 ---@param view table
@@ -238,7 +238,7 @@ function ViewConfig:judgements(view)
 	gfx_util.printFrame(("%s %3.2f%%"):format(judgeName, judge.accuracy * 100), 0, 0, w, h, "center", "center")
 end
 
-local function footer(view)
+local function title(view)
 	local chartview = view.game.selectModel.chartview
 
 	if not chartview then
@@ -256,10 +256,10 @@ local function footer(view)
 		chartview.name
 	)
 
-	local w, h = Layout:move("footerTitle")
-	Theme:textWithShadow(leftText, w, h, "left", "top")
-	w, h = Layout:move("footerChartName")
-	Theme:textWithShadow(rightText, w, h, "right", "top")
+	local w, h = Layout:move("title")
+	Theme:textWithShadow(leftText, w, h, "center", "top")
+	w, h = Layout:move("chartName")
+	Theme:textWithShadow(rightText, w, h, "center", "bottom")
 end
 
 function ViewConfig:scoreInfo(view)
@@ -288,8 +288,8 @@ function ViewConfig:scoreInfo(view)
 
 	local inputMode = show and tostring(rhythmModel.noteChart.inputMode) or scoreItem.inputmode
 	inputMode = Format.inputMode(inputMode)
-	local score = not show and scoreItem.score or
-		erfunc.erf(ratingHitTimingWindow / (normalscore.accuracyAdjusted * math.sqrt(2))) * 10000
+	local score = not show and scoreItem.score
+		or erfunc.erf(ratingHitTimingWindow / (normalscore.accuracyAdjusted * math.sqrt(2))) * 10000
 	if score ~= score then
 		score = 0
 	end
@@ -304,7 +304,7 @@ function ViewConfig:scoreInfo(view)
 	local textHeight = font.judgements:getHeight()
 	local textIndent = textHeight + 8
 
-	just.next(0, (h / 2)  - ((textIndent * 2) + 15))
+	just.next(0, (h / 2) - ((textIndent * 2) + 15))
 	printKeyValue(Text.score, ("%i"):format(score), w, h)
 	just.next(0, textIndent)
 	printKeyValue(Text.accuracy, accuracy, w, h)
@@ -345,7 +345,7 @@ function ViewConfig:difficulty(view)
 
 	local patterns
 	if not patterns then
-		patterns = chartview.level and "Lv."..chartview.level or Text.noPatterns
+		patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
 	end
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
@@ -393,6 +393,8 @@ end
 
 function ViewConfig:draw(view)
 	just.origin()
+	title(view)
+
 	self.panels()
 	lines()
 
@@ -405,7 +407,6 @@ function ViewConfig:draw(view)
 	HitGraph(view)
 
 	borders()
-	footer(view)
 end
 
 return ViewConfig
