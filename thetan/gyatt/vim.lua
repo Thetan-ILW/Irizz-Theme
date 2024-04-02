@@ -29,7 +29,6 @@ function vim.updateOperation(key)
 
 	count = tonumber(operations) or 1
 	operations = operations .. key
-	print(operations)
 end
 
 function vim.getOperation()

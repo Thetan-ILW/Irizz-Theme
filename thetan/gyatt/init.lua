@@ -16,7 +16,7 @@ local modKeysList = {
 	lgui = true,
 	lalt = true,
 	ralt = true,
-	space = true
+	space = true,
 }
 
 local modKeysDown = {}
@@ -42,6 +42,10 @@ function gyatt.keypressed(event)
 
 	if gyatt.isModKeyDown() then
 		return false
+	end
+
+	if key == "escape" then
+		return
 	end
 
 	vim.updateOperation(key)
@@ -158,6 +162,10 @@ local function actionDown(action)
 end
 
 function gyatt.actionPressed(action)
+	if vim.getOperation():len() > 1 and not action.op then
+		return
+	end
+
 	local isPressed = actionPressed(action)
 
 	if isPressed then

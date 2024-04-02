@@ -20,9 +20,9 @@ function InputMap:createBindings(sv, a)
 		[a.showMultiplayer] = function()
 			sv:openModal("thetan.irizz.views.modals.MultiplayerModal")
 		end,
-		[a.showKeybinds] = function ()
+		[a.showKeybinds] = function()
 			sv:openModal("thetan.irizz.views.modals.KeybindModal")
-		end
+		end,
 	}
 
 	self.select = {
@@ -51,7 +51,7 @@ function InputMap:createBindings(sv, a)
 			end
 
 			sv:changeScreen("editorView")
-		end
+		end,
 	}
 
 	self.view = {
@@ -63,7 +63,7 @@ function InputMap:createBindings(sv, a)
 		end,
 		[a.pauseMusic] = function()
 			sv.game.previewModel:stop()
-		end
+		end,
 	}
 end
 

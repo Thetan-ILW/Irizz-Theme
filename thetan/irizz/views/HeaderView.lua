@@ -134,6 +134,11 @@ function ViewConfig:vimMode(view)
 	local w, h = Layout:move("vimMode")
 
 	local text = gyatt.vim.getMode()
+	local operations = gyatt.vim.getOperation()
+
+	if operations:len() > 1 then
+		text = text .. (" [%s]"):format(operations)
+	end
 
 	gfx.setColor(Color.panel)
 	local textW = font.anyText:getWidth(text)
