@@ -2,7 +2,7 @@ IRIZZ_VERSION = "0.1.9a-alpha"
 
 local IrizzTheme = {
 	name = "thetan.IrizzTheme",
-	version = IRIZZ_VERSION
+	version = IRIZZ_VERSION,
 }
 
 function IrizzTheme:init(mods)

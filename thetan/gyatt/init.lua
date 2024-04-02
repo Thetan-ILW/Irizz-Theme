@@ -19,6 +19,11 @@ local modKeysList = {
 	space = true,
 }
 
+local ignoreKey = {
+	escape = true,
+	["return"] = true,
+}
+
 local modKeysDown = {}
 local keysDown = {}
 local keyPressTimestamps = {}
@@ -44,7 +49,7 @@ function gyatt.keypressed(event)
 		return false
 	end
 
-	if key == "escape" then
+	if ignoreKey[key] then
 		vim.clear()
 		return
 	end
@@ -86,7 +91,6 @@ local function actionPressed(action)
 	if action.op then
 		if not gyatt.isModKeyDown() then
 			if action.op == gyatt.vim.getOperation() then
-				vim.clear()
 				return true
 			end
 		end

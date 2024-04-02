@@ -1,5 +1,6 @@
 local just = require("just")
 local imgui = require("thetan.irizz.imgui")
+local table_util = require("table_util")
 local Container = require("thetan.gyatt.Container")
 local audio = require("audio")
 local version = require("version")
@@ -159,18 +160,20 @@ local osuMania = require("sphere.models.RhythmModel.ScoreEngine.OsuManiaScoring"
 local quaver = require("sphere.models.RhythmModel.ScoreEngine.QuaverScoring")
 local etterna = require("sphere.models.RhythmModel.ScoreEngine.EtternaScoring")
 
+local timings = require("sphere.models.RhythmModel.ScoreEngine.timings")
+
 local scoreSystems = {
 	"Soundsphere",
 	"osu!mania",
 	"Quaver",
-	"Etterna"
+	"Etterna",
 }
 
 local metadata = {
 	["Soundsphere"] = soundsphere.metadata,
 	["osu!mania"] = osuMania.metadata,
 	["Quaver"] = quaver.metadata,
-	["Etterna"] = etterna.metadata
+	["Etterna"] = etterna.metadata,
 }
 
 local function getJudges(range)
@@ -185,8 +188,50 @@ end
 
 local allJudges = {
 	["osu!mania"] = getJudges(osuMania.metadata.range),
-	["Etterna"] = getJudges(etterna.metadata.range)
+	["Etterna"] = getJudges(etterna.metadata.range),
 }
+
+local function scoreSystem(updated, selectedScoreSystem, irizz, select, playContext)
+	local judges = allJudges[selectedScoreSystem]
+
+	if judges then
+		if updated then
+			irizz.judge = judges[1]
+		end
+
+		local prevJudge = irizz.judge
+		irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, nil, Text.judgement)
+		select.judgements = metadata[irizz.scoreSystem].name:format(irizz.judge)
+
+		if prevJudge ~= irizz.judge then
+			updated = true
+		end
+	else
+		local md = metadata[irizz.scoreSystem]
+
+		if not md then
+			md = metadata["Soundsphere"]
+		end
+
+		select.judgements = md.name
+	end
+
+	if not updated then
+		return
+	end
+
+	local ss = irizz.scoreSystem
+
+	if ss == "Soundsphere" then
+		playContext.timings = table_util.deepcopy(timings.soundsphere)
+	elseif ss == "osu!mania" then
+		playContext.timings = table_util.deepcopy(timings.osu(irizz.judge))
+	elseif ss == "Etterna" then
+		playContext.timings = table_util.deepcopy(timings.etterna(irizz.judge))
+	elseif ss == "Quaver" then
+		playContext.timings = table_util.deepcopy(timings.quaver)
+	end
+end
 
 function SettingsTab:Scoring(view)
 	local configs = view.game.configModel.configs
@@ -200,27 +245,9 @@ function SettingsTab:Scoring(view)
 	just.next(0, textSeparation)
 
 	local prevScoreSystem = irizz.scoreSystem
-	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, scoreSystems, nil,
-		Text.scoreSystem)
+	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, scoreSystems, nil, Text.scoreSystem)
 
-	local judges = allJudges[irizz.scoreSystem]
-
-	if judges then
-		if prevScoreSystem ~= irizz.scoreSystem then
-			irizz.judge = judges[1]
-		end
-
-		irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, nil, Text.judgement)
-		select.judgements = metadata[irizz.scoreSystem].name:format(irizz.judge)
-	else
-		local md = metadata[irizz.scoreSystem]
-
-		if not md then
-			md = metadata["Soundsphere"]
-		end
-
-		select.judgements = md.name
-	end
+	scoreSystem(prevScoreSystem ~= irizz.scoreSystem, irizz.scoreSystem, irizz, select, view.game.playContext)
 
 	g.ratingHitTimingWindow = intButtonsMs("ratingHitTimingWindow", g.ratingHitTimingWindow, Text.ratingHitWindow)
 end
@@ -276,7 +303,6 @@ local volumeType = {
 	["linear"] = Text.linearType,
 	["logarithmic"] = Text.logarithmicType,
 }
-
 
 ---@param mode string
 ---@return string
@@ -471,17 +497,17 @@ local diff_columns = {
 
 local rateTypes = {
 	linear = Text.linear,
-	exp = Text.exp
+	exp = Text.exp,
 }
 
 local colorTypes = {
 	"inverted",
-	"solid"
+	"solid",
 }
 
 local _colorTypes = {
 	inverted = Text.invertedColor,
-	solid = Text.solidColor
+	solid = Text.solidColor,
 }
 
 ---@param v number?
@@ -512,8 +538,8 @@ function SettingsTab:UI(view)
 	irizz.showOnlineCount = imgui.checkbox("irizz.showOnline", irizz.showOnlineCount, Text.showOnlineCount)
 	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
-	irizz.chartLengthBeforeArtist = imgui.checkbox("irizz.chartLengthBeforeArtist", irizz.chartLengthBeforeArtist,
-		Text.chartLengthBeforeArtist)
+	irizz.chartLengthBeforeArtist =
+		imgui.checkbox("irizz.chartLengthBeforeArtist", irizz.chartLengthBeforeArtist, Text.chartLengthBeforeArtist)
 	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, Text.difficulty)
 
 	local sortFunction = view.game.configModel.configs.select.sortFunction
@@ -540,18 +566,25 @@ function SettingsTab:UI(view)
 	irizz.showSpectrum = imgui.checkbox("irizz.showSpectrum", irizz.showSpectrum, Text.showSpectrum)
 	irizz.backgroundEffects = imgui.checkbox("irizz.backgroundEffects", irizz.backgroundEffects, Text.backgroundEffects)
 	irizz.panelBlur = imgui.slider1("irizz.panelBlur", irizz.panelBlur, "%i", 0, 10, 1, Text.panelBlur)
-	irizz.chromatic_aberration = imgui.slider1("irizz.ch_ab", irizz.chromatic_aberration * 1000, "%i%%", 0, 100, 1,
-		Text.ch_ab) * 0.001
-	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion) *
-		0.001
+	irizz.chromatic_aberration = imgui.slider1(
+		"irizz.ch_ab",
+		irizz.chromatic_aberration * 1000,
+		"%i%%",
+		0,
+		100,
+		1,
+		Text.ch_ab
+	) * 0.001
+	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion)
+		* 0.001
 	irizz.spectrum = imgui.combo("irizz.spectrum", irizz.spectrum, colorTypes, formatColorType, Text.spectrum)
 
 	imgui.separator()
 	just.text(Text.collections)
 	just.next(0, textSeparation)
 	local changed = false
-	ss.locations_in_collections, changed = imgui.checkbox("s.locations_in_collections", ss.locations_in_collections,
-		Text.showLocations)
+	ss.locations_in_collections, changed =
+		imgui.checkbox("s.locations_in_collections", ss.locations_in_collections, Text.showLocations)
 
 	if changed then
 		view.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
@@ -564,8 +597,17 @@ function SettingsTab:UI(view)
 	irizz.vimMotions = imgui.checkbox("irizz.vimMotions", irizz.vimMotions, Text.vimMotions)
 
 	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
-	irizz.scrollAcceleration = imgui.checkbox("irizz.scrollAcceleration", irizz.scrollAcceleration, Text.scrollAcceleration)
-	irizz.scrollClickExtraTime = imgui.slider1("irizz.scrollClickExtraTime", irizz.scrollClickExtraTime, "%0.2f", 0, 0.25, 0.01, Text.scrollClickExtraTime)
+	irizz.scrollAcceleration =
+		imgui.checkbox("irizz.scrollAcceleration", irizz.scrollAcceleration, Text.scrollAcceleration)
+	irizz.scrollClickExtraTime = imgui.slider1(
+		"irizz.scrollClickExtraTime",
+		irizz.scrollClickExtraTime,
+		"%0.2f",
+		0,
+		0.25,
+		0.01,
+		Text.scrollClickExtraTime
+	)
 
 	local colorTheme = irizz.colorTheme
 	local newColorTheme = imgui.combo("irizz.colorTheme", colorTheme, Theme.colorThemes, nil, Text.colorTheme)
@@ -576,8 +618,7 @@ function SettingsTab:UI(view)
 	end
 
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
-	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil,
-		Text.startSound)
+	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil, Text.startSound)
 
 	imgui.separator()
 
