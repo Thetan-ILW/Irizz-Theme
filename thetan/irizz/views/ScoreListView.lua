@@ -16,11 +16,59 @@ ScoreListView.selectedScore = nil
 ScoreListView.openResult = false
 ScoreListView.oneClickOpen = false
 ScoreListView.noItemsText = Text.noScores
+ScoreListView.modLines = {}
 
 function ScoreListView:new(game, oneClickOpen)
 	self.game = game
 	self.oneClickOpen = oneClickOpen or false
 	self.font = Theme:getFonts("scoreListView")
+end
+
+local modOrder = {
+	{ id = 19, label = "FLN%i", format = true },
+	{ id = 9, label = "NLN" },
+	{ id = 20, label = "MLL%0.01f", format = true },
+	{ id = 23, label = "LC%i", format = true },
+	{ id = 24, label = "CH%i", format = true },
+	{ id = 18, label = "BS" },
+	{ id = 17, label = "RND" },
+	{ id = 16, label = "MR" },
+}
+
+function ScoreListView:getModifiers(modifiers)
+	if #modifiers == 0 then
+		return Text.you
+	end
+
+	local max = 3
+	local current = 0
+	local modLine = ""
+
+	for _, mod in ipairs(modOrder) do
+		for _, enabledMod in ipairs(modifiers) do
+			if mod.id == enabledMod.id then
+				if mod.format then
+					modLine = modLine .. mod.label:format(enabledMod.value)
+				else
+					modLine = modLine .. mod.label
+				end
+
+				modLine = modLine .. " "
+
+				current = current + 1
+
+				if current == max then
+					return modLine
+				end
+			end
+		end
+	end
+
+	if modLine:len() == 0 then
+		modLine = Text.you
+	end
+
+	return modLine
 end
 
 function ScoreListView:reloadItems()
@@ -31,6 +79,11 @@ function ScoreListView:reloadItems()
 	end
 
 	self.items = self.game.selectModel.scoreLibrary.items
+	self.modLines = {}
+
+	for i, item in ipairs(self.items) do
+		self.modLines[i] = self:getModifiers(item.modifiers)
+	end
 
 	local i = self.game.selectModel.scoreItemIndex
 	self.selectedScoreIndex = i
@@ -67,7 +120,7 @@ function ScoreListView:drawItem(i, w, h)
 	local item = self.items[i]
 
 	local source = self.game.configModel.configs.select.scoreSourceName
-	local username = Text.you
+	local username = self.modLines[i]
 
 	if source == "online" then
 		username = item.user.name
@@ -79,8 +132,15 @@ function ScoreListView:drawItem(i, w, h)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.line1)
 	gfx_util.printFrame(string.format("#%i %s", i, username), xIndent, yIndent, w, h, "left", "top")
-	gfx_util.printFrame(string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate), -xIndent, yIndent, w,
-		h, "right", "top")
+	gfx_util.printFrame(
+		string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate),
+		-xIndent,
+		yIndent,
+		w,
+		h,
+		"right",
+		"top"
+	)
 	love.graphics.setFont(self.font.line2)
 	gfx_util.printFrame(string.format("Score: %i", item.score), xIndent, -yIndent, w, h, "left", "bottom")
 	gfx_util.printFrame(time_util.time_ago_in_words(item.time), -xIndent, -yIndent, w, h, "right", "bottom")
