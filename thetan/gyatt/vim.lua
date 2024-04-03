@@ -10,10 +10,6 @@ local mode = vim.mode.normal
 local operations = ""
 local count = 1
 
-function vim.isEnabled()
-	return enabled
-end
-
 function vim.enable()
 	enabled = true
 end

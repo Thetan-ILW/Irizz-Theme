@@ -4,6 +4,7 @@ local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local gyatt = {}
 
+gyatt.inputMode = "keyboard"
 gyatt.vim = vim
 gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
@@ -49,7 +50,7 @@ function gyatt.keypressed(event)
 		return false
 	end
 
-	if vim.isEnabled() then
+	if gyatt.inputMode == "keyboard" then
 		return
 	end
 

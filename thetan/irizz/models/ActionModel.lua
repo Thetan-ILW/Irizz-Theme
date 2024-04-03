@@ -1,4 +1,5 @@
 local class = require("class")
+local gyatt = require("thetan.gyatt")
 
 local ActionModel = class()
 
@@ -12,8 +13,10 @@ function ActionModel:load()
 	local configs = self.configModel.configs
 
 	if configs.irizz.vimMotions then
+		gyatt.inputMode = "vim"
 		actions = configs.vim_keybinds
 	else
+		gyatt.inputMode = "keyboard"
 		actions = configs.keybinds
 	end
 end
@@ -28,7 +31,7 @@ local modFormat = {
 	lshift = "SHIFT",
 	rshift = "SHIFT",
 	lalt = "ALT",
-	ralt = "ALT"
+	ralt = "ALT",
 }
 
 function ActionModel:formatGroup(groupName, formatTable)
