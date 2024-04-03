@@ -49,6 +49,10 @@ function gyatt.keypressed(event)
 		return false
 	end
 
+	if vim.isEnabled() then
+		return
+	end
+
 	if ignoreKey[key] then
 		vim.clear()
 		return
