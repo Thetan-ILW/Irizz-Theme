@@ -4,6 +4,7 @@ return {
 		normalMode = "escape",
 		quit = { mod = { "lshift", "rshift" }, "escape" },
 		showKeybinds = { op = "ok" },
+		showChartInfo = { op = "oc" },
 	},
 	songSelect = {
 		play = "return",

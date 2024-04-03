@@ -283,6 +283,24 @@ localization.textMultiplayer = {
 	host = "Host: %s",
 }
 
+localization.textChartInfo = {
+	chartInfo = "Chart info",
+	artist = "Artist",
+	title = "Title",
+	chartName = "Name",
+	bpm = "BPM",
+	tags = "Tags",
+	source = "Source",
+	chartFormat = "Format",
+	setName = "Set name",
+	path = "Path",
+	audioPath = "Audio path",
+	backgroundPath = "Background path",
+	mode = "Mode",
+	chartFileName = "Chart file name",
+	hash = "MD5 hash",
+}
+
 localization.textKeybinds = {
 	keybindsFor = "Key binds for: %s",
 	select = "song select",
@@ -293,6 +311,8 @@ localization.keybindsGlobal = {
 	insertMode = "Insert mode",
 	normalMode = "Normal mode",
 	quit = "Close a window or quit from a screen",
+	showChartInfo = "Show all information about the selected chart",
+	showKeybinds = "Show keybind table (You are here)",
 }
 
 localization.keybindsLargeList = {
@@ -324,7 +344,6 @@ localization.keybindsSongSelect = {
 	showFilters = "Show chart and score filters",
 	showInputs = "Show input settings",
 	showMultiplayer = "Show multiplayer window or return to lobby",
-	showKeybinds = "Show keybind table (You are here)",
 	autoPlay = "Start chart in auto-play mode",
 	openEditor = "Open the chart editor",
 }
@@ -504,6 +523,11 @@ localization.fonts = {
 	keybindsModal = {
 		title = { "ZenMaruGothic-Black", 72 },
 		keybinds = { "ZenMaruGothic-Black", 18 },
+	},
+
+	chartInfoModal = {
+		title = { "ZenMaruGothic-Black", 72 },
+		info = { "ZenMaruGothic-Black", 24 },
 	},
 }
 

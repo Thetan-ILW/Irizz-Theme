@@ -8,10 +8,10 @@ function GameViewInputMap:createBindings(gv, a)
 		[a.showKeybinds] = function()
 			gv:openModal("thetan.irizz.views.modals.KeybindModal")
 		end,
+		[a.showChartInfo] = function()
+			gv:openModal("thetan.irizz.views.modals.ChartInfoModal")
+		end,
 		[a.quit] = function()
-			if gv:getViewName() == "gameplay" then
-				return
-			end
 			gv:sendQuitSignal()
 		end,
 		[a.insertMode] = function()

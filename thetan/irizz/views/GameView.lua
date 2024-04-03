@@ -119,7 +119,9 @@ function GameView:receive(event)
 	if event.name == "keypressed" then
 		gyatt.keypressed(event)
 
-		self.inputMap:call("global")
+		if self:getViewName() ~= "gameplay" then
+			self.inputMap:call("global")
+		end
 	end
 
 	self.view:receive(event)

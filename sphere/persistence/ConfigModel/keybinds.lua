@@ -4,6 +4,7 @@ return {
 		normalMode = "",
 		quit = "escape",
 		showKeybinds = { mod = { "lctrl", "rctrl" }, "k" },
+		showChartInfo = { mod = { "lctrl", "rctrl" }, "c" },
 	},
 	songSelect = {
 		play = "return",

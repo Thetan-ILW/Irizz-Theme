@@ -28,6 +28,7 @@ end
 
 local function getResultKeybinds(self)
 	local groups = {
+		global = Theme.keybindsGlobal,
 		resultScreen = Theme.keybindsResult,
 	}
 
