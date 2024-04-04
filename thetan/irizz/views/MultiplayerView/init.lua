@@ -1,9 +1,12 @@
 local ScreenView = require("sphere.views.ScreenView")
 
+local LayersView = require("thetan.irizz.views.LayersView")
+
 local MultiplayerView = ScreenView + {}
 
 function MultiplayerView:load()
 	self.game.selectModel:setChanged()
+	self.layersView = LayersView(self.game)
 end
 
 ---@param dt number
@@ -16,8 +19,16 @@ function MultiplayerView:update(dt)
 	elseif multiplayerModel.isPlaying then
 		self:changeScreen("gameplayView")
 	end
+
+	self.layersView:update()
 end
 
-function MultiplayerView:draw() end
+function MultiplayerView:panels() end
+
+function MultiplayerView:UI() end
+
+function MultiplayerView:draw()
+	self.layersView:draw(self.panels, self.UI)
+end
 
 return MultiplayerView

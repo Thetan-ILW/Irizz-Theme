@@ -10,11 +10,11 @@ local BackgroundView = require("sphere.views.BackgroundView")
 
 local LayersView = class()
 
-LayersView.frequencies = nil
-
 local chromaticAberration = 0
 local distortion = 0
 local spectrumType = "inverted"
+local frequencies = nil
+local shaders = {}
 
 local uiAlpha = 1
 local dim = 0
@@ -23,12 +23,13 @@ local panelBlur = 0
 
 local showSpectrum = false
 local applyShaders = false
+local modalActive = false
 
 local gfx = love.graphics
 
 function LayersView:new(game)
 	self.game = game
-	self.shaders = require("irizz.shaders.init")
+	shaders = require("irizz.shaders.init")
 
 	BackgroundView.game = game
 end
@@ -39,7 +40,7 @@ function LayersView:applyShaders(canvas)
 		return canvas
 	end
 
-	if not self.frequencies then
+	if not frequencies then
 		return canvas
 	end
 
@@ -49,10 +50,10 @@ function LayersView:applyShaders(canvas)
 	local freqs = {}
 
 	for i = 0, 32, 1 do
-		freqs[i * 32 + 1] = self.frequencies[i]
+		freqs[i * 32 + 1] = frequencies[i]
 	end
 
-	local ca = self.shaders.ca
+	local ca = shaders.ca
 	ca:send("ch_ab_intensity", chromaticAberration)
 	ca:send("distortion_intensity", distortion)
 	ca:send("time", love.timer.getTime())
@@ -76,25 +77,25 @@ end
 ---@param h number
 ---@param invertColor boolean
 function LayersView:spectrum(canvas, w, h, invertColor)
-	if not self.frequencies then
+	if not frequencies then
 		return
 	end
 
 	if not invertColor then
 		gfx.setColor(Theme.colors.accent)
-		gyatt.spectrum(self.frequencies, 127, w, h)
+		gyatt.spectrum(frequencies, 127, w, h)
 		return
 	end
 
 	local function spectrumStencil()
-		gyatt.spectrum(self.frequencies, 127, w, h)
+		gyatt.spectrum(frequencies, 127, w, h)
 	end
 
 	local previousShader = gfx.getShader()
 
 	gfx.stencil(spectrumStencil, "replace", 1)
 	gfx.setStencilTest("equal", 1)
-	gfx.setShader(self.shaders.invert)
+	gfx.setShader(shaders.invert)
 	gfx.draw(canvas)
 	gfx.setStencilTest()
 
@@ -190,6 +191,14 @@ function LayersView:update()
 
 	applyShaders = irizz.backgroundEffects
 	showSpectrum = irizz.showSpectrum
+
+	local audio = self.game.previewModel.audio
+
+	if audio and audio.getData then
+		frequencies = audio:getData()
+	end
+
+	modalActive = self.game.gameView.modal ~= nil
 end
 
 function LayersView:draw(panelsStencil, ui)
@@ -198,7 +207,7 @@ function LayersView:draw(panelsStencil, ui)
 
 	local background = self:drawBackground()
 
-	if self.modalActive then
+	if modalActive then
 		uiAlpha = 1 - self.game.gameView.modal.alpha
 
 		if uiAlpha == 0 then

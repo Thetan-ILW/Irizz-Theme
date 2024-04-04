@@ -91,13 +91,6 @@ function SelectView:update(dt)
 		self:updateSettings(dt)
 	end
 
-	local audio = self.game.previewModel.audio
-
-	if audio and audio.getData then
-		self.layersView.frequencies = audio:getData()
-	end
-
-	self.layersView.modalActive = self.modalActive
 	self.layersView:update()
 end
 
