@@ -1,26 +1,26 @@
 local ActionModel = require("thetan.irizz.models.ActionModel")
 local SelectView = require("thetan.irizz.views.SelectView")
 local ResultView = require("thetan.irizz.views.ResultView")
+local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
 local GameView = require("thetan.irizz.views.GameView")
 
 local modulePatcher = require("ModulePatcher")
-local module= "sphere.controllers.GameController"
+local module = "sphere.controllers.GameController"
 
 modulePatcher:insert(module, "load", function(self)
-	self.actionModel = ActionModel(
-		self.persistence.configModel
-	)
+	self.actionModel = ActionModel(self.persistence.configModel)
 
 	self.ui.gameView = GameView(self)
 	self.gameView = self.ui.gameView
 
-	self.ui.selectView = SelectView()
-	self.ui.selectView.game = self
+	self.ui.selectView = SelectView(self)
 	self.selectView = self.ui.selectView
 
-	self.ui.resultView = ResultView()
-	self.ui.resultView.game = self
+	self.ui.resultView = ResultView(self)
 	self.resultView = self.ui.resultView
+
+	self.ui.multiplayerView = MultiplayerView(self)
+	self.multiplayerView = self.ui.multiplayerView
 
 	self.persistence:load()
 	self.app:load()
