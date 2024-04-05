@@ -7,7 +7,7 @@ local InputMap = class()
 
 ---@param view sphere.ScreenView
 ---@param actions table
-function InputMap:createBindings(view, actions)	end
+function InputMap:createBindings(view, actions) end
 
 ---@param view sphere.ScreenView
 ---@param actions table

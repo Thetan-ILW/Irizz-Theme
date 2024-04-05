@@ -1,4 +1,5 @@
 local class = require("class")
+local just = require("just")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -44,6 +45,8 @@ end
 
 function ViewConfig:draw(view)
 	Layout:draw()
+
+	just.origin()
 	self:footer(view)
 end
 
