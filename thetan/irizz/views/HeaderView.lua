@@ -118,7 +118,7 @@ function ViewConfig:resultButtons(view)
 
 	if just.is_over(songsText, h + 10, x) then
 		if just.mousepressed(1) then
-			view.game.resultView:quit()
+			view.game.gameView:sendQuitSignal()
 		end
 	end
 end
@@ -156,7 +156,7 @@ function ViewConfig:rightSide(view)
 
 	if just.is_over(w, h) then
 		if just.mousepressed(1) then
-			view:openModal("thetan.irizz.views.modals.OnlineModal")
+			view.game.gameView:openModal("thetan.irizz.views.modals.OnlineModal")
 		end
 	end
 

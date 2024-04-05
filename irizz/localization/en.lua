@@ -520,6 +520,10 @@ localization.fonts = {
 		modifiers = { "ZenMaruGothic-Black", 48 },
 	},
 
+	multiplayerView = {
+		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
+	},
+
 	keybindsModal = {
 		title = { "ZenMaruGothic-Black", 72 },
 		keybinds = { "ZenMaruGothic-Black", 18 },
