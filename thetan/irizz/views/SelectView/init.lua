@@ -110,7 +110,6 @@ function SelectView:play()
 		return
 	end
 
-	gyatt.vim.disable()
 	self:changeScreen("gameplayView")
 end
 

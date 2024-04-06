@@ -28,7 +28,6 @@ ResultView.load = thread.coro(function(self)
 
 	local actionModel = self.game.actionModel
 	self.inputMap = InputMap(self, actionModel:getGroup("resultScreen"))
-	gyatt.vim.enable()
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
@@ -57,7 +56,7 @@ function ResultView:updateJudgements()
 		scoreSystems["soundsphere"].metadata,
 		scoreSystems["quaver"].metadata,
 		scoreSystems["osuMania"].metadata,
-		scoreSystems["etterna"].metadata
+		scoreSystems["etterna"].metadata,
 	}
 
 	self.judgements = {}
@@ -120,10 +119,7 @@ end
 
 function ResultView:submitScore()
 	local scoreItem = self.game.selectModel.scoreItem
-	self.game.onlineModel.onlineScoreManager:submit(
-		self.game.selectModel.chartview,
-		scoreItem.replay_hash
-	)
+	self.game.onlineModel.onlineScoreManager:submit(self.game.selectModel.chartview, scoreItem.replay_hash)
 end
 
 function ResultView:quit()
@@ -169,6 +165,5 @@ ResultView.play = thread.coro(function(self, mode)
 	self:changeScreen("gameplayView")
 	playing = false
 end)
-
 
 return ResultView

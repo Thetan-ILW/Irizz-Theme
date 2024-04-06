@@ -2,8 +2,6 @@ local gfx_util = require("gfx_util")
 
 local Layout = require("sphere.views.Layout")
 
-local Theme = require("thetan.irizz.views.Theme")
-
 local _Layout = Layout()
 
 local outerPanelsSize = 350
@@ -29,9 +27,9 @@ function _Layout:draw()
 	local gx, gw = gfx_util.layout(_x, _xw, { gap, "*", gap })
 	local gy, gh = gfx_util.layout(_y, _yh, { 64, -1, gap })
 
-	local y1, h1 = gfx_util.layout(gy[2], gh[2], { gap, -0.1, gap, -0.9, gap, 20, gap })
+	local y1, h1 = gfx_util.layout(gy[2], gh[2], { -0.05, gap, -0.9, -0.05, 20, gap })
 
-	self:_footer(gx[2], y1[6], gw[2], h1[6])
+	self:_footer(gx[2], y1[5], gw[2], h1[5])
 
 	local x2, w2 = gfx_util.layout(
 		gx[2],
@@ -39,9 +37,10 @@ function _Layout:draw()
 		{ -0.5, outerPanelsSize, horizontalPanelGap, innerPanelSize, horizontalPanelGap, outerPanelsSize, -0.5 }
 	)
 
-	self:pack("column1", x2[2], y1[4], w2[2], h1[4])
-	self:pack("column2", x2[4], y1[4], w2[4], h1[4])
-	self:pack("column3", x2[6], y1[4], w2[6], h1[4])
+	local y2, h2 = gfx_util.layout(y1[3], h1[3], { 100, verticalPanelGap, -1 })
+
+	self:pack("roomInfo", x2[2], y2[1], w2[2], h2[1])
+	self:pack("chat", x2[2], y2[3], w2[2], h2[3])
 end
 
 return _Layout

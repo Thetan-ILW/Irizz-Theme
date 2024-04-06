@@ -19,8 +19,8 @@ modulePatcher:insert(module, "load", function(self)
 	self.ui.resultView = ResultView(self)
 	self.resultView = self.ui.resultView
 
-	self.ui.multiplayerView = MultiplayerView(self)
-	self.multiplayerView = self.ui.multiplayerView
+	--self.ui.multiplayerView = MultiplayerView(self)
+	--self.multiplayerView = self.ui.multiplayerView
 
 	self.persistence:load()
 	self.app:load()

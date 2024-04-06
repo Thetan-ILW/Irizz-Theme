@@ -283,6 +283,11 @@ localization.textMultiplayer = {
 	host = "Host: %s",
 }
 
+localization.textMultiplayerScreen = {
+	roomName = "Room name: %s",
+	playerCount = "Players: %i",
+}
+
 localization.textChartInfo = {
 	chartInfo = "Chart info",
 	artist = "Artist",
@@ -522,6 +527,7 @@ localization.fonts = {
 
 	multiplayerView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
+		roomInfo = { "ZenMaruGothic-Black", 24 },
 	},
 
 	keybindsModal = {

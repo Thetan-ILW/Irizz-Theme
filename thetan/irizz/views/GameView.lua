@@ -40,6 +40,13 @@ function GameView:_setView(view)
 	view.prevView = self.view
 	self.view = view
 	self.view:load()
+
+	if self:getViewName() ~= "gameplay" then
+		gyatt.vim.enable()
+		return
+	end
+
+	gyatt.vim.disable()
 end
 
 ---@param view sphere.ScreenView

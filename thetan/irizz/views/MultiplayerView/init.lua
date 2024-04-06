@@ -2,6 +2,7 @@ local ScreenView = require("sphere.views.ScreenView")
 
 local LayersView = require("thetan.irizz.views.LayersView")
 local ViewConfig = require("thetan.irizz.views.MultiplayerView.ViewConfig")
+local Layout = require("thetan.irizz.views.MultiplayerView.Layout")
 local HeaderView = require("thetan.irizz.views.HeaderView")
 
 local InputMap = require("thetan.irizz.views.MultiplayerView.InputMap")
@@ -14,6 +15,8 @@ MultiplayerView.noRoom = {
 
 MultiplayerView.isHost = false
 MultiplayerView.room = MultiplayerView.noRoom
+MultiplayerView.users = nil
+MultiplayerView.messages = nil
 
 local viewConfig = {}
 local headerView = {}
@@ -43,7 +46,9 @@ function MultiplayerView:update(dt)
 	self.layersView:update()
 
 	self.room = multiplayerModel.room or self.noRoom
+	self.users = multiplayerModel.roomUsers or {}
 	self.isHost = multiplayerModel:isHost()
+	self.messages = multiplayerModel.roomMessages
 end
 
 function MultiplayerView:receive(event)
@@ -66,7 +71,11 @@ function MultiplayerView:quit()
 end
 
 function MultiplayerView:draw()
-	local function panels() end
+	Layout:draw()
+
+	local function panels()
+		viewConfig.panels()
+	end
 
 	local function UI()
 		headerView:draw(self)
