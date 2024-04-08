@@ -111,7 +111,13 @@ function ScoreListView:mouseClick(w, h, i)
 	end
 end
 
-function ScoreListView:input() end
+function ScoreListView:input(w, h)
+	local delta = just.wheel_over(self, just.is_over(w, h))
+	if delta then
+		self:scroll(-delta)
+		return
+	end
+end
 
 ---@param i number
 ---@param w number

@@ -322,6 +322,7 @@ function ViewConfig:difficulty(view)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
 	local chartview = view.game.selectModel.chartview
+	local chartdiff = view.game.playContext.chartdiff
 
 	if not chartview then
 		return
@@ -332,13 +333,19 @@ function ViewConfig:difficulty(view)
 	end
 
 	local diffColumn = view.game.configModel.configs.settings.select.diff_column
-	local baseTimeRate = view.game.playContext.rate
+	local timeRate = view.game.playContext.rate
+
+	local difficulty = chartview.difficulty * timeRate
+
+	if diffColumn == "msd_diff" then
+		difficulty = chartdiff.msd_diff
+	end
 
 	w, h = Layout:move("difficulty")
 
-	love.graphics.setColor(Theme:getDifficultyColor(chartview.difficulty * baseTimeRate, diffColumn))
+	love.graphics.setColor(Theme:getDifficultyColor(difficulty, diffColumn))
 	love.graphics.setFont(font.difficulty)
-	gfx_util.printBaseline(string.format("%0.02f", chartview.difficulty * baseTimeRate), 0, h / 2, w, 1, "center")
+	gfx_util.printBaseline(string.format("%0.02f", difficulty), 0, h / 2, w, 1, "center")
 
 	love.graphics.setFont(font.calculator)
 	local calculator = Theme.formatDiffColumns(diffColumn)

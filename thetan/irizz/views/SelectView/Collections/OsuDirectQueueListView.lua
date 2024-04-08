@@ -1,6 +1,7 @@
 local ListView = require("thetan.irizz.views.ListView")
 local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -31,10 +32,13 @@ function OsudirectProcessingListView:drawItem(i, w, h)
 	local item = self.items[i]
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
-
 	love.graphics.translate(0, 4)
-	just.indent(15)
 	love.graphics.setColor(Color.text)
+	love.graphics.setFont(self.font.status)
+	just.indent(-15)
+	gyatt.frame(item.status, 0, 0, w, h, "right", "top")
+
+	just.indent(30)
 	TextCellImView(math.huge, h, "left", item.artist, item.title, self.font.artist, self.font.title)
 end
 

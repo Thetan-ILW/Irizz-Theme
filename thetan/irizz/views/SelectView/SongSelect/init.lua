@@ -125,6 +125,10 @@ local function difficulty(view, chartview)
 	local diffColumn = view.game.configModel.configs.settings.select.diff_column
 	local baseTimeRate = view.game.playContext.rate
 
+	if diffColumn == "msd_diff" then
+		difficultyValue = chartview.msd_diff or 0
+	end
+
 	local w, h = Layout:move("difficulty")
 
 	love.graphics.setColor(Theme:getDifficultyColor(difficultyValue * baseTimeRate, diffColumn))
@@ -138,7 +142,7 @@ local function difficulty(view, chartview)
 	local patterns = chartview.msd_diff_data
 
 	if not patterns then
-		patterns = chartview.level and "Lv."..chartview.level or Text.noPatterns
+		patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
 	end
 
 	love.graphics.setColor(Color.text)
@@ -267,11 +271,7 @@ local function footer(view)
 	local rightText
 
 	if not chartview.creator or chartview.creator == "" then
-		rightText = string.format(
-			"[%s] %s",
-			Format.inputMode(chartview.chartdiff_inputmode),
-			chartview.name
-		)
+		rightText = string.format("[%s] %s", Format.inputMode(chartview.chartdiff_inputmode), chartview.name)
 	else
 		rightText = string.format(
 			"[%s] [%s] %s",
@@ -280,7 +280,6 @@ local function footer(view)
 			chartview.name
 		)
 	end
-
 
 	local w, h = Layout:move("footerTitle")
 	Theme:textWithShadow(leftText, w, h, "left", "top")

@@ -219,7 +219,7 @@ local diff_columns_names = {
 	user_diff = "USER",
 }
 
----@param v number?
+---@param v string?
 ---@return string
 function Theme.formatDiffColumns(v)
 	return diff_columns_names[v] or ""

@@ -10,12 +10,12 @@ end
 
 local function Hex(rgba)
 	local r, g, b, a = HexToRgba(rgba)
-	return { r, g, b, a}
+	return { r, g, b, a }
 end
 
 local function HexA(rgb, a)
 	local r, g, b, _ = HexToRgba(rgb)
-	return { r, g, b, a}
+	return { r, g, b, a }
 end
 
 -- You can use either tables of 4 values (R, G, B, A), or use the Hex funttion
@@ -42,7 +42,7 @@ ColorTheme.colors = {
 	listItemOdd = { 0, 0, 0, 0 },
 	listItemEven = { 0.5, 0.5, 0.5, 0.4 },
 	select = HexA("#FFFFFF", 0.2),
-	-- UI 
+	-- UI
 	button = { 0, 0, 0, 0 },
 	buttonHover = { 1, 1, 1, 0.2 },
 	uiFrames = { 1, 1, 1, 0.8 },
@@ -62,37 +62,37 @@ ColorTheme.difficultyColors = {
 
 ColorTheme.difficultyRanges = {
 	enps_diff = {
-		{ 0,  6 },
-		{ 6,  10 },
+		{ 0, 6 },
+		{ 6, 10 },
 		{ 10, 14 },
 		{ 14, 19 },
 		{ 19, 23 },
 		{ 23, 32 },
 	},
 	msd_diff = {
-		{ 0,  8 },
-		{ 8,  15 },
-		{ 15, 20 },
-		{ 20, 25 },
-		{ 25, 29 },
+		{ 0, 8 },
+		{ 8, 15 },
+		{ 15, 23 },
+		{ 23, 29 },
 		{ 29, 32 },
+		{ 32, 36 },
 	},
 	user_diff = {
-		{ 0,  6 },
-		{ 6,  8 },
-		{ 8,  12 },
+		{ 0, 6 },
+		{ 6, 8 },
+		{ 8, 12 },
 		{ 12, 17 },
 		{ 17, 19 },
 		{ 19, 23 },
 	},
 	osu_diff = {
-		{ 0,   2 },
-		{ 2,   3.5 },
+		{ 0, 2 },
+		{ 2, 3.5 },
 		{ 3.5, 5.3 },
 		{ 5.3, 6.2 },
 		{ 6.2, 8 },
-		{ 8,   10 }
-	}
+		{ 8, 10 },
+	},
 }
 
 ColorTheme.hitColors = {

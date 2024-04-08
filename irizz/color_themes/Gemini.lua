@@ -13,38 +13,38 @@ end
 -- Good luck with creating a color theme, even I don't understand what the hell is happening here and in the internal code
 
 ColorTheme.colors = {
-  -- COLORS
-  accent = Hex("#29b673"),   -- Forest Green
-  darkerAccent = Hex("#19794e"),  -- Darker Green
-  headerSelect = Hex("#90e0cc"),   -- Light Blue
+	-- COLORS
+	accent = Hex("#29b673"), -- Forest Green
+	darkerAccent = Hex("#19794e"), -- Darker Green
+	headerSelect = Hex("#90e0cc"), -- Light Blue
 
-  -- TEXT
-  text = Hex("#000000"),        -- Black
-  textShadow = Hex("#aaaaaa"),
-  unfocusedText = Hex("#222222"),
-  darkText = { 0.2, 0.2, 0.2, 1 },
+	-- TEXT
+	text = Hex("#000000"), -- Black
+	textShadow = Hex("#aaaaaa"),
+	unfocusedText = Hex("#222222"),
+	darkText = { 0.2, 0.2, 0.2, 1 },
 
-  -- PANELS
-  panel = Hex("#f2f2f2aa"),      -- Light Gray with transparency
-  border = Hex("#cccccc"),       -- Light Gray
-  
-  -- LINES AND RECTANGLES IN PANELS
-  separator = Hex("#dddddd"),    -- Lighter Gray
-  innerPanel = Hex("#e0e0e0aa"),   -- Light Gray with transparency
+	-- PANELS
+	panel = Hex("#f2f2f2aa"), -- Light Gray with transparency
+	border = Hex("#cccccc"), -- Light Gray
 
-  -- LISTS
-  itemDownloaded = { 1, 1, 1, 0.5 },
-  listItemOdd = { 0.9, 0.9, 0.9, 0.15 },  -- Very Light Gray
-  listItemEven = { 0.85, 0.85, 0.85, 0.15 }, -- Lighter Gray
+	-- LINES AND RECTANGLES IN PANELS
+	separator = Hex("#dddddd"), -- Lighter Gray
+	innerPanel = Hex("#e0e0e0aa"), -- Light Gray with transparency
 
-  -- UI 
-  select = Hex("#29b67355"),     -- Transparent Forest Green
-  button = { 0, 0, 0, 0.1 },      -- Very transparent black
-  buttonHover = { 1, 1, 1, 0.2 },
-  uiFrames = { 1, 1, 1, 0.8 },
-  uiPanel = { 0.9, 0.9, 0.9, 0.7 },   -- Light Gray
-  uiHover = { 0.85, 0.85, 0.85, 0.7 },  -- Lighter Gray
-  uiActive = { 0.8, 0.8, 0.8, 0.9 },     -- Even Lighter Gray
+	-- LISTS
+	itemDownloaded = { 1, 1, 1, 0.5 },
+	listItemOdd = { 0.9, 0.9, 0.9, 0.15 }, -- Very Light Gray
+	listItemEven = { 0.85, 0.85, 0.85, 0.15 }, -- Lighter Gray
+
+	-- UI
+	select = Hex("#29b67355"), -- Transparent Forest Green
+	button = { 0, 0, 0, 0.1 }, -- Very transparent black
+	buttonHover = { 1, 1, 1, 0.2 },
+	uiFrames = { 1, 1, 1, 0.8 },
+	uiPanel = { 0.9, 0.9, 0.9, 0.7 }, -- Light Gray
+	uiHover = { 0.85, 0.85, 0.85, 0.7 }, -- Lighter Gray
+	uiActive = { 0.8, 0.8, 0.8, 0.9 }, -- Even Lighter Gray
 }
 
 ColorTheme.difficultyColors = {
@@ -58,37 +58,37 @@ ColorTheme.difficultyColors = {
 
 ColorTheme.difficultyRanges = {
 	enps_diff = {
-		{ 0,  6 },
-		{ 6,  10 },
+		{ 0, 6 },
+		{ 6, 10 },
 		{ 10, 14 },
 		{ 14, 19 },
 		{ 19, 23 },
 		{ 23, 32 },
 	},
 	msd_diff = {
-		{ 0,  8 },
-		{ 8,  15 },
-		{ 15, 20 },
-		{ 20, 25 },
-		{ 25, 29 },
+		{ 0, 8 },
+		{ 8, 15 },
+		{ 15, 23 },
+		{ 23, 29 },
 		{ 29, 32 },
+		{ 32, 36 },
 	},
 	user_diff = {
-		{ 0,  6 },
-		{ 6,  8 },
-		{ 8,  12 },
+		{ 0, 6 },
+		{ 6, 8 },
+		{ 8, 12 },
 		{ 12, 17 },
 		{ 17, 19 },
 		{ 19, 23 },
 	},
 	osu_diff = {
-		{ 0,   2 },
-		{ 2,   3.5 },
+		{ 0, 2 },
+		{ 2, 3.5 },
 		{ 3.5, 5.3 },
 		{ 5.3, 6.2 },
 		{ 6.2, 8 },
-		{ 8,   10 }
-	}
+		{ 8, 10 },
+	},
 }
 
 ColorTheme.hitColors = {

@@ -177,7 +177,7 @@ function ListView:draw(w, h, update)
 	just.clip(love.graphics.rectangle, "fill", 0, 0, w, h)
 	love.graphics.translate(0, deltaItemIndex * _h)
 
-	for i = math.floor(visualItemIndex), self.rows + math.ceil(visualItemIndex) + 1 do
+	for i = math.floor(visualItemIndex), self.rows + math.floor(visualItemIndex) do
 		local _i = 0
 
 		if self.centerItems then
@@ -186,7 +186,7 @@ function ListView:draw(w, h, update)
 			_i = i
 		end
 
-		if update and i < self.rows + 1 then
+		if update and _i < self.rows + math.floor(visualItemIndex) then
 			self:mouseClick(w, _h, i)
 		end
 
