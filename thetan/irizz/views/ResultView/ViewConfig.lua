@@ -351,7 +351,7 @@ function ViewConfig:difficulty(view)
 	local calculator = Theme.formatDiffColumns(diffColumn)
 	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")
 
-	local patterns
+	local patterns = chartview.msd_diff_data
 	if not patterns then
 		patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
 	end
