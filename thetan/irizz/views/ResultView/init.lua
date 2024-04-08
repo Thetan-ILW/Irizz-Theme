@@ -1,13 +1,11 @@
 local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
-local gyatt = require("thetan.gyatt")
 local table_util = require("table_util")
 
-local BackgroundView = require("sphere.views.BackgroundView")
 local Header = require("thetan.irizz.views.HeaderView")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
-local GaussianBlurView = require("sphere.views.GaussianBlurView")
+local LayersView = require("thetan.irizz.views.LayersView")
 
 local InputMap = require("thetan.irizz.views.ResultView.InputMap")
 
@@ -28,6 +26,14 @@ ResultView.load = thread.coro(function(self)
 
 	local actionModel = self.game.actionModel
 	self.inputMap = InputMap(self, actionModel:getGroup("resultScreen"))
+
+	local audioSource = "preview"
+
+	if self.game.gameView:getViewName(self.prevView) == "gameplay" then
+		audioSource = "gameplay"
+	end
+
+	self.layersView = LayersView(self.game, "result", audioSource)
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
@@ -72,39 +78,27 @@ function ResultView:updateJudgements()
 	end
 end
 
+function ResultView:update()
+	self.layersView:update()
+end
+
 function ResultView:draw()
 	Layout:draw()
-
-	local configs = self.game.configModel.configs
-	local graphics = configs.settings.graphics
-	local irizz = configs.irizz
-
-	local dim = graphics.dim.select
-	local backgroundBlur = graphics.blur.select
-
-	local panelBlur = irizz.panelBlur
-
-	local w, h = Layout:move("background")
-
-	BackgroundView:draw(w, h, dim, 0.01)
 
 	if not canDraw then
 		return
 	end
 
-	love.graphics.stencil(self.viewConfig.panels, "replace", 1)
+	local function panels()
+		self.viewConfig.panels()
+	end
 
-	love.graphics.setStencilTest("greater", 0)
+	local function UI()
+		self.header:draw(self)
+		self.viewConfig:draw(self)
+	end
 
-	w, h = Layout:move("background")
-	GaussianBlurView:draw(panelBlur)
-	BackgroundView:draw(w, h, dim, 0.01)
-	GaussianBlurView:draw(panelBlur)
-
-	love.graphics.setStencilTest()
-
-	self.header:draw(self)
-	self.viewConfig:draw(self)
+	self.layersView:draw(panels, UI)
 end
 
 function ResultView:inputs()

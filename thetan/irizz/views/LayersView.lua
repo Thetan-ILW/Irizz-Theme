@@ -10,12 +10,15 @@ local BackgroundView = require("sphere.views.BackgroundView")
 
 local LayersView = class()
 
+local audioSourceName = "preview"
+local audioSource = nil
 local chromaticAberration = 0
 local distortion = 0
 local spectrumType = "inverted"
 local frequencies = nil
 local shaders = {}
 
+local screen = "select"
 local uiAlpha = 1
 local dim = 0
 local backgroundBlur = 0
@@ -27,11 +30,21 @@ local modalActive = false
 
 local gfx = love.graphics
 
-function LayersView:new(game)
+function LayersView:new(game, screenName, sourceName)
 	self.game = game
+	screen = screenName
+	audioSourceName = sourceName
 	shaders = require("irizz.shaders.init")
 
 	BackgroundView.game = game
+
+	if sourceName == "gameplay" then
+		local container = self.game.rhythmModel.audioEngine.backgroundContainer
+		for k in pairs(container.sources) do
+			audioSource = k
+			return
+		end
+	end
 end
 
 ---@param canvas love.Canvas
@@ -41,6 +54,10 @@ function LayersView:applyShaders(canvas)
 	end
 
 	if not frequencies then
+		return canvas
+	end
+
+	if dim == 1 then
 		return canvas
 	end
 
@@ -182,17 +199,27 @@ function LayersView:update()
 	local graphics = configs.settings.graphics
 	local irizz = configs.irizz
 
-	dim = graphics.dim.select
-	panelBlur = irizz.panelBlur
-	backgroundBlur = graphics.blur.select
+	if screen == "select" then
+		dim = graphics.dim.select
+		backgroundBlur = graphics.blur.select
+	elseif screen == "result" then
+		dim = graphics.dim.result
+		backgroundBlur = graphics.blur.result
+	end
 
+	panelBlur = irizz.panelBlur
 	chromaticAberration = irizz.chromatic_aberration
 	distortion = irizz.distortion
 
 	applyShaders = irizz.backgroundEffects
 	showSpectrum = irizz.showSpectrum
+	spectrumType = irizz.spectrum
 
-	local audio = self.game.previewModel.audio
+	local audio = audioSource
+
+	if audioSourceName == "preview" then
+		audio = self.game.previewModel.audio
+	end
 
 	if audio and audio.getData then
 		frequencies = audio:getData()

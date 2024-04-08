@@ -39,7 +39,7 @@ function SelectView:load()
 	self.inputMap = InputMap(self, actionModel:getGroup("songSelect"))
 
 	self:updateFilterLines()
-	self.layersView = LayersView(self.game)
+	self.layersView = LayersView(self.game, "select", "preview")
 end
 
 function SelectView:beginUnload()

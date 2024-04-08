@@ -180,7 +180,7 @@ function GameView:sendQuitSignal()
 	end
 end
 
-function GameView:getViewName()
+function GameView:getViewName(view)
 	local t = {
 		[self.game.selectView] = "select",
 		[self.game.resultView] = "result",
@@ -188,6 +188,10 @@ function GameView:getViewName()
 		[self.game.multiplayerView] = "multiplayer",
 		[self.game.editorView] = "editor",
 	}
+
+	if view then
+		return t[view]
+	end
 
 	return t[self.view]
 end
