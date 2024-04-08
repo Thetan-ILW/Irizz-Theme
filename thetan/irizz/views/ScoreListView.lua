@@ -37,7 +37,7 @@ local modOrder = {
 
 function ScoreListView:getModifiers(modifiers)
 	if #modifiers == 0 then
-		return Text.you
+		return Text.noMods
 	end
 
 	local max = 3
@@ -65,7 +65,7 @@ function ScoreListView:getModifiers(modifiers)
 	end
 
 	if modLine:len() == 0 then
-		modLine = Text.you
+		modLine = Text.hasMods
 	end
 
 	return modLine

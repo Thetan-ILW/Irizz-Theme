@@ -181,7 +181,8 @@ localization.textSongSelect = {
 	ln = "%i%% LN",
 	searchPlaceholder = "Type to search...",
 	filterPlaceholder = "No filters.",
-	you = "You",
+	noMods = "No mods",
+	hasMods = "Has mods",
 	score = "Score: %i",
 	noPatterns = "No patterns",
 }
