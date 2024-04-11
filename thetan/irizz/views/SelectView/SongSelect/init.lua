@@ -39,6 +39,32 @@ function ViewConfig:new(game)
 	font = Theme:getFonts("songSelectViewConfig")
 end
 
+local diffColumn = ""
+local difficultyValue = 0
+local patterns = ""
+local calculator = ""
+local difficultyColor = Color.text
+
+function ViewConfig:notechartSelected(view)
+	local chartview = view.game.selectModel.chartview
+	local timeRate = view.game.playContext.rate
+
+	if not chartview then
+		return
+	end
+
+	diffColumn = view.game.configModel.configs.settings.select.diff_column
+	difficultyValue = (chartview.difficulty or 0) * timeRate
+	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
+
+	if diffColumn == "msd_diff" and chartview.msd_diff_data then
+		patterns = Theme.getMaxAndSecondFromSsr(chartview.msd_diff_data)
+	end
+
+	difficultyColor = Theme:getDifficultyColor(difficultyValue, diffColumn)
+	calculator = Theme.formatDiffColumns(diffColumn)
+end
+
 function ViewConfig.panels()
 	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
@@ -121,29 +147,16 @@ function ViewConfig:scores(view)
 end
 
 local function difficulty(view, chartview)
-	local difficultyValue = chartview.difficulty or 0
-	local diffColumn = view.game.configModel.configs.settings.select.diff_column
 	local baseTimeRate = view.game.playContext.rate
-
-	if diffColumn == "msd_diff" then
-		difficultyValue = chartview.msd_diff or 0
-	end
 
 	local w, h = Layout:move("difficulty")
 
-	love.graphics.setColor(Theme:getDifficultyColor(difficultyValue * baseTimeRate, diffColumn))
+	love.graphics.setColor(difficultyColor)
 	love.graphics.setFont(font.difficulty)
 	gfx_util.printBaseline(string.format("%0.02f", difficultyValue * baseTimeRate), 0, h / 2, w, 1, "center")
 
 	love.graphics.setFont(font.calculator)
-	local calculator = Theme.formatDiffColumns(diffColumn)
 	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")
-
-	local patterns = chartview.msd_diff_data
-
-	if not patterns then
-		patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
-	end
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)

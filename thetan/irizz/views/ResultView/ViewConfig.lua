@@ -16,10 +16,34 @@ local PointGraphView = require("sphere.views.GameplayView.PointGraphView")
 
 local ViewConfig = class()
 
+local difficulty = 0
+local patterns = ""
+local calculator = ""
+local difficultyColor = Color.text
+
 function ViewConfig:new(game)
 	self.scoreListView = ScoreListView(game, true)
 	self.scoreListView.rows = 5
 	font = Theme:getFonts("resultView")
+end
+
+function ViewConfig:loadScore(view)
+	local chartview = view.game.selectModel.chartview
+	local chartdiff = view.game.playContext.chartdiff
+
+	local diffColumn = view.game.configModel.configs.settings.select.diff_column
+	local timeRate = view.game.playContext.rate
+
+	difficulty = (chartview.difficulty or 0) * timeRate
+	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
+
+	if diffColumn == "msd_diff" then
+		difficulty = chartdiff.msd_diff
+		patterns = Theme.getMaxAndSecondFromSsr(chartdiff.msd_diff_data)
+	end
+
+	difficultyColor = Theme:getDifficultyColor(difficulty, diffColumn)
+	calculator = Theme.formatDiffColumns(diffColumn)
 end
 
 ---@param view table
@@ -321,40 +345,15 @@ function ViewConfig:difficulty(view)
 	love.graphics.setColor(Color.innerPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
-	local chartview = view.game.selectModel.chartview
-	local chartdiff = view.game.playContext.chartdiff
-
-	if not chartview then
-		return
-	end
-
-	if not chartview.difficulty then
-		return
-	end
-
-	local diffColumn = view.game.configModel.configs.settings.select.diff_column
-	local timeRate = view.game.playContext.rate
-
-	local difficulty = chartview.difficulty * timeRate
-
-	if diffColumn == "msd_diff" then
-		difficulty = chartdiff.msd_diff
-	end
-
 	w, h = Layout:move("difficulty")
 
-	love.graphics.setColor(Theme:getDifficultyColor(difficulty, diffColumn))
+	love.graphics.setColor(difficultyColor)
 	love.graphics.setFont(font.difficulty)
 	gfx_util.printBaseline(string.format("%0.02f", difficulty), 0, h / 2, w, 1, "center")
 
 	love.graphics.setFont(font.calculator)
-	local calculator = Theme.formatDiffColumns(diffColumn)
 	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")
 
-	local patterns = chartview.msd_diff_data
-	if not patterns then
-		patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
-	end
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
 	w, h = Layout:move("patterns")

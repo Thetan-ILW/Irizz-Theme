@@ -1,4 +1,5 @@
 local assets = require("thetan.irizz.assets")
+local etterna_ssr = require("libchart.libchart.etterna_ssr")
 local gfx_util = require("gfx_util")
 
 local ModifierEncoder = require("sphere.models.ModifierEncoder")
@@ -223,6 +224,44 @@ local diff_columns_names = {
 ---@return string
 function Theme.formatDiffColumns(v)
 	return diff_columns_names[v] or ""
+end
+
+function Theme.getMaxAndSecondFromSsr(ssrStr)
+	local ssr = etterna_ssr:decodePatterns(ssrStr)
+
+	local maxValue = 0
+	local secondValue = 0
+	local maxKey = nil
+	local secondKey = nil
+
+	for key, value in pairs(ssr) do
+		value = tonumber(value)
+		if value > maxValue then
+			maxValue = value
+			maxKey = key
+		end
+	end
+
+	local threshold = maxValue * 0.93
+	for key, value in pairs(ssr) do
+		value = tonumber(value)
+		if value < maxValue and value >= threshold and value > secondValue then
+			secondValue = tonumber(value)
+			secondKey = key
+		end
+	end
+
+	local output = maxKey
+	if secondKey then
+		output = output .. "\n" .. secondKey
+	end
+
+	return output
+end
+
+function Theme.getPatterns(ssrStr)
+	local ssr = etterna_ssr:decodePatterns(ssrStr)
+	return ssr
 end
 
 local filterAliasses = {

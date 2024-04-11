@@ -52,6 +52,8 @@ ResultView.load = thread.coro(function(self)
 		config.judgements = k
 	end
 
+	self.viewConfig:loadScore(self)
+
 	canDraw = true
 	loading = false
 end)
@@ -138,6 +140,8 @@ ResultView.loadScore = thread.coro(function(self, itemIndex)
 		self.game.selectModel:scrollScore(nil, itemIndex)
 		self:updateJudgements()
 	end
+
+	self.viewConfig:loadScore(self)
 
 	loading = false
 end)

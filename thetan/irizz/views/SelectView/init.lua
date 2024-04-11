@@ -26,7 +26,7 @@ SelectView.scoreFilterLine = ""
 
 local playSound = nil
 function SelectView:load()
-	self.game.selectController:load()
+	self.game.selectController:load(self)
 	self.headerView = HeaderView("select")
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
@@ -92,6 +92,10 @@ function SelectView:update(dt)
 	end
 
 	self.layersView:update()
+end
+
+function SelectView:notechartChanged()
+	self.songSelectViewConfig:notechartSelected(self)
 end
 
 function SelectView:play()
