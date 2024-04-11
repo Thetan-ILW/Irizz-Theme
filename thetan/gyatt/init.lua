@@ -1,5 +1,6 @@
 local gfx_util = require("gfx_util")
 local imgui = require("thetan.irizz.imgui")
+local just = require("just")
 local vim = require("thetan.gyatt.vim")
 local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
@@ -196,6 +197,11 @@ function gyatt.actionDown(action)
 	end
 
 	return isDown
+end
+
+function gyatt.text(text, w, ax)
+	gyatt.frame(text, 0, 0, w, math.huge, ax, "top")
+	just.next(0, love.graphics.getFont():getHeight())
 end
 
 ---@param list irizz.ListView

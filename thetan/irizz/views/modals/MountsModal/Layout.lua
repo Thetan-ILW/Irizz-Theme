@@ -21,8 +21,8 @@ function _Layout:draw()
 
 	local x1, w1 = gfx_util.layout(gx[2], gw[2], { -0.5, 250, 20, 500, 20, 250 - 0.5 })
 	local y1, h1 = gfx_util.layout(gy[2], gh[2], { 200, -1, 200 })
-	local y2, h2 = gfx_util.layout(y1[2], h1[2], { -0.2, -0.2, -0.6 })
-	local y3, h3 = gfx_util.layout(y1[2], h1[2], {-1, 4, 50})
+	local y2, h2 = gfx_util.layout(y1[2], h1[2], { -0.1, -0.2, -0.7 })
+	local y3, h3 = gfx_util.layout(y1[2], h1[2], { -1, 4, 50 })
 
 	self:pack("modalName", gx[2], y1[1], gw[2], h1[1])
 	self:pack("listPanel", x1[2], y1[2], w1[2], h1[2])
@@ -35,4 +35,3 @@ function _Layout:draw()
 end
 
 return _Layout
-

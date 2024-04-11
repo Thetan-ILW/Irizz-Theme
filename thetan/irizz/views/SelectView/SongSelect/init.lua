@@ -58,7 +58,7 @@ function ViewConfig:notechartSelected(view)
 	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
 
 	if diffColumn == "msd_diff" and chartview.msd_diff_data then
-		patterns = Theme.getMaxAndSecondFromSsr(chartview.msd_diff_data)
+		patterns = Theme.getMaxAndSecondFromSsr(chartview.msd_diff_data) or Text.noPatterns
 	end
 
 	difficultyColor = Theme:getDifficultyColor(difficultyValue, diffColumn)

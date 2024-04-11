@@ -228,6 +228,13 @@ localization.textMounts = {
 	chartsCached = "Charts cached",
 	create = "Create",
 	delete = "Delete",
+	locations = "Locations",
+	database = "Database",
+	chartdiffs = "Chart difficulty / rating",
+	chartmetas = "Chart metadata",
+	compute = "Compute",
+	delete = "Delete",
+	computed = "Computed: %i",
 }
 
 localization.textOnline = {
@@ -309,8 +316,6 @@ localization.textChartInfo = {
 
 localization.textKeybinds = {
 	keybinds = "Key binds",
-	select = "song select",
-	result = "result screen",
 }
 
 localization.keybindsGlobal = {
@@ -485,12 +490,13 @@ localization.fonts = {
 		title = { "ZenMaruGothic-Black", 72 },
 		tabs = { "ZenMaruGothic-Medium", 28 },
 		noItems = { "ZenMaruGothic-Medium", 36 },
+		textHeader = { "ZenMaruGothic-Medium", 28 },
 		mountPaths = { "ZenMaruGothic-Black", 24 },
-		windowText = { "ZenMaruGothic-Black", 24 },
+		windowText = { "ZenMaruGothic-Medium", 24 },
 		fields = { "ZenMaruGothic-Medium", 28 },
 		path = { "ZenMaruGothic-Black", 48 },
 		status = { "ZenMaruGothic-Medium", 36 },
-		buttons = { "ZenMaruGothic-Medium", 18 },
+		buttons = { "ZenMaruGothic-Medium", 28 },
 	},
 
 	onlineModal = {

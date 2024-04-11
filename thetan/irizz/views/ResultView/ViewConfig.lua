@@ -39,7 +39,7 @@ function ViewConfig:loadScore(view)
 
 	if diffColumn == "msd_diff" then
 		difficulty = chartdiff.msd_diff
-		patterns = Theme.getMaxAndSecondFromSsr(chartdiff.msd_diff_data)
+		patterns = Theme.getMaxAndSecondFromSsr(chartdiff.msd_diff_data) or Text.noPatterns
 	end
 
 	difficultyColor = Theme:getDifficultyColor(difficulty, diffColumn)

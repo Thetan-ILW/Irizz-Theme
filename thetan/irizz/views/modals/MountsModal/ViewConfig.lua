@@ -1,6 +1,7 @@
 local gfx_util = require("gfx_util")
 local imgui = require("thetan.irizz.imgui")
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 
 local TextBox = require("thetan.irizz.imgui.TextBox")
 
@@ -12,6 +13,8 @@ local Text = Theme.textMounts
 local Font = Theme:getFonts("mountsModal")
 
 local ViewConfig = {}
+
+local tab = Text.locations
 
 function ViewConfig:mounts(view)
 	local locationsRepo = view.game.cacheModel.locationsRepo
@@ -80,7 +83,7 @@ function ViewConfig:mounts(view)
 	Theme:border(w, h)
 end
 
-function ViewConfig:window(view)
+function ViewConfig:locations(view)
 	local locationsRepo = view.game.cacheModel.locationsRepo
 	local locationManager = view.game.cacheModel.locationManager
 	local selected_loc = locationManager.selected_loc
@@ -150,6 +153,54 @@ function ViewConfig:window(view)
 	end
 end
 
+function ViewConfig:database(view)
+	local w, h = Layout:move("window")
+	local cacheModel = view.game.cacheModel
+	local cacheStatus = view.game.cacheModel.cacheStatus
+
+	Theme:panel(w, h)
+
+	love.graphics.translate(15, 15)
+	imgui.separator()
+
+	love.graphics.setColor(Color.text)
+	love.graphics.setFont(Font.textHeader)
+	gyatt.text(Text.chartdiffs, w, "left")
+
+	love.graphics.setFont(Font.windowText)
+	gyatt.text(Text.computed:format(cacheStatus.chartdiffs), w, "left")
+	love.graphics.translate(0, 15)
+
+	if imgui.button("computeScores", Text.compute) then
+		cacheModel:computeChartdiffs()
+		cacheStatus:update()
+	end
+
+	just.sameline()
+	just.indent(15)
+
+	if imgui.button("delete chartdiffs", Text.delete) then
+		view.game.cacheModel.chartdiffsRepo:deleteChartdiffs()
+		cacheStatus:update()
+	end
+
+	imgui.separator()
+	love.graphics.setFont(Font.textHeader)
+	gyatt.text(Text.chartmetas, w, "left")
+
+	love.graphics.setFont(Font.windowText)
+	gyatt.text(Text.computed:format(cacheStatus.chartmetas), w, "left")
+	love.graphics.translate(0, 15)
+
+	if imgui.button("delete chartmetas", Text.delete) then
+		view.game.cacheModel.chartmetasRepo:deleteChartmetas()
+		cacheStatus:update()
+	end
+
+	Layout:move("window")
+	Theme:border(w, h)
+end
+
 function ViewConfig:uiLock(view)
 	local cacheModel = view.game.cacheModel
 	local locationManager = view.game.cacheModel.locationManager
@@ -167,11 +218,32 @@ function ViewConfig:uiLock(view)
 	w, h = Layout:move("base")
 	love.graphics.setFont(Font.status)
 	local text = ("%s: %s\n%s: %s/%s\n%s: %0.02f%%"):format(
-		Text.path, path,
-		Text.chartsFound, current, count,
-		Text.chartsCached, current / count * 100
+		Text.path,
+		path,
+		Text.chartsFound,
+		current,
+		count,
+		Text.chartsCached,
+		current / count * 100
 	)
 	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
+end
+
+function ViewConfig:tabButtons()
+	local w, h = Layout:move("buttons")
+	love.graphics.setFont(Font.buttons)
+	Theme:panel(w, h)
+
+	if imgui.TextOnlyButton("locationsTab", Text.locations, w, h / 2, "center", tab == Text.locations) then
+		tab = Text.locations
+	end
+
+	if imgui.TextOnlyButton("databaseTab", Text.database, w, h / 2, "center", tab == Text.database) then
+		tab = Text.database
+	end
+
+	Layout:move("buttons")
+	Theme:border(w, h)
 end
 
 function ViewConfig:draw(view)
@@ -192,7 +264,16 @@ function ViewConfig:draw(view)
 	gfx_util.printFrame(Text.mounts, 0, 0, w, h, "center", "center")
 
 	self:mounts(view)
-	self:window(view)
+
+	if tab == Text.locations then
+		self:locations(view)
+	else
+		local cacheStatus = view.game.cacheModel.cacheStatus
+		cacheStatus:update()
+		self:database(view)
+	end
+
+	self:tabButtons()
 end
 
 return ViewConfig
