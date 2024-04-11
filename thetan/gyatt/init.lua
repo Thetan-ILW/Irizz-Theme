@@ -1,4 +1,5 @@
 local gfx_util = require("gfx_util")
+local imgui = require("thetan.irizz.imgui")
 local vim = require("thetan.gyatt.vim")
 local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
@@ -8,6 +9,8 @@ gyatt.inputMode = "keyboard"
 gyatt.vim = vim
 gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
+gyatt.separator = imgui.separator
+gyatt.setSize = imgui.setSize
 
 local modKeysList = {
 	lctrl = true,

@@ -5,7 +5,7 @@ local Theme = require("thetan.irizz.views.Theme")
 local KeybindModal = Modal + {}
 
 KeybindModal.name = "KeybindModal"
-KeybindModal.viewConfig = ViewConfig
+KeybindModal.viewConfig = ViewConfig()
 KeybindModal.keybinds = {
 	view = "none",
 	viewName = "",
@@ -17,6 +17,7 @@ local function getSelectKeybinds(self)
 		songSelect = Theme.keybindsSongSelect,
 		largeList = Theme.keybindsLargeList,
 		smallList = Theme.keybindsSmallList,
+		global = Theme.keybindsGlobal,
 	}
 
 	for name, format in pairs(groups) do

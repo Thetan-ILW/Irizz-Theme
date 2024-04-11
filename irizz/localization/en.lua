@@ -308,7 +308,7 @@ localization.textChartInfo = {
 }
 
 localization.textKeybinds = {
-	keybindsFor = "Key binds for: %s",
+	keybinds = "Key binds",
 	select = "song select",
 	result = "result screen",
 }
@@ -350,6 +350,7 @@ localization.keybindsSongSelect = {
 	showFilters = "Show chart and score filters",
 	showInputs = "Show input settings",
 	showMultiplayer = "Show multiplayer window or return to lobby",
+	showKeybinds = "Show keybinds window",
 	autoPlay = "Start chart in auto-play mode",
 	openEditor = "Open the chart editor",
 }
@@ -533,7 +534,7 @@ localization.fonts = {
 
 	keybindsModal = {
 		title = { "ZenMaruGothic-Black", 72 },
-		keybinds = { "ZenMaruGothic-Black", 18 },
+		keybinds = { "ZenMaruGothic-Black", 24 },
 	},
 
 	chartInfoModal = {

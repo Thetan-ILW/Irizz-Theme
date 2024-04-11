@@ -1,5 +1,7 @@
 local class = require("class")
 local gyatt = require("thetan.gyatt")
+local just = require("just")
+local Container = require("thetan.gyatt.Container")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -9,50 +11,50 @@ local Layout = require("thetan.irizz.views.modals.KeybindModal.Layout")
 
 local ViewConfig = class()
 
+function ViewConfig:new()
+	self.container = Container("keybindsContainer")
+end
+
 function ViewConfig:keybinds(view)
-    local w, h = Layout:move("keybinds")
+	local w, h = Layout:move("keybinds")
 
-    local groups = view.keybinds.formattedGroups
+	local groups = view.keybinds.formattedGroups
 
-    local groupCount = 0
-    for _, _ in pairs(groups) do
-        groupCount = groupCount + 1
-    end
+	local heightStart = just.height
+	gyatt.setSize(w, h)
 
-    local groupW = w / groupCount
-    love.graphics.setFont(Font.keybinds)
-    love.graphics.setColor(Color.text)
-    local i = 0
+	Theme:panel(w, h)
+	self.container:startDraw(w, h)
 
-    for _, group in pairs(groups) do
-        local x = groupW * i
-        i = i + 1
+	love.graphics.setColor(Color.text)
+	for _, group in pairs(groups) do
+		gyatt.separator()
+		love.graphics.setFont(Font.keybinds)
+		for description, bind in pairs(group) do
+			gyatt.frame(description, -30, 0, w, h, "right", "top")
+			just.text(bind)
+		end
+	end
 
-        for description, bind in pairs(group) do
-            gyatt.frame(bind, x + 15, 0, groupW, h, "left", "top")
-            gyatt.frame(description, x - 15, 0, groupW, h, "right", "top")
-            love.graphics.translate(0, 40)
-        end
+	self.container.scrollLimit = just.height - heightStart - h
+	self.container:stopDraw()
 
-        w, h = Layout:move("keybinds")
-        love.graphics.rectangle("fill", x, 0, 4, h)
-    end
+	Theme:border(w, h)
 end
 
 function ViewConfig:draw(view)
-    Layout:draw()
+	Layout:draw()
 
-    local w, h = Layout:move("base")
-    love.graphics.setColor(0, 0, 0, 0.75)
-    love.graphics.rectangle("fill", 0, 0, w, h)
+	local w, h = Layout:move("base")
+	love.graphics.setColor(0, 0, 0, 0.75)
+	love.graphics.rectangle("fill", 0, 0, w, h)
 
-    w, h = Layout:move("modalName")
-    love.graphics.setColor(Color.text)
-    love.graphics.setFont(Font.title)
-    local text = Text.keybindsFor:format(Text[view.keybinds.view])
-    gyatt.frame(text, 0, 0, w, h, "center", "center")
+	w, h = Layout:move("modalName")
+	love.graphics.setColor(Color.text)
+	love.graphics.setFont(Font.title)
+	gyatt.frame(Text.keybinds, 0, 0, w, h, "center", "center")
 
-    self:keybinds(view)
+	self:keybinds(view)
 end
 
 return ViewConfig

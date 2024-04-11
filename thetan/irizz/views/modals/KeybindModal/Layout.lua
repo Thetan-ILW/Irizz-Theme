@@ -19,10 +19,11 @@ function _Layout:draw()
 	local gx, gw = gfx_util.layout(_x, _xw, { 20, "*", 20 })
 	local gy, gh = gfx_util.layout(_y, _yh, { 20, "*", 20 })
 
+	local x1, w1 = gfx_util.layout(gx[2], gw[2], { -0.5, 1000, -0.5 })
 	local y1, h1 = gfx_util.layout(gy[2], gh[2], { 200, -1, 200 })
 
 	self:pack("modalName", gx[2], y1[1], gw[2], h1[1])
-        self:pack("keybinds", gx[2], y1[2], gw[2], h1[2])
+	self:pack("keybinds", x1[2], y1[2], w1[2], h1[2])
 end
 
 return _Layout
