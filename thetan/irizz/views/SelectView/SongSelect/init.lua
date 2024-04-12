@@ -45,6 +45,7 @@ local difficultyValue = 0
 local patterns = ""
 local calculator = ""
 local difficultyColor = Color.text
+local longNoteRatio = 0
 
 function ViewConfig:updateInfo(view)
 	local chartview = view.game.selectModel.chartview
@@ -66,6 +67,10 @@ function ViewConfig:updateInfo(view)
 
 	difficultyColor = Theme:getDifficultyColor(difficultyValue, diffColumn)
 	calculator = Theme.formatDiffColumns(diffColumn)
+
+	if chartview.notes_count and chartview.notes_count ~= 0 then
+		longNoteRatio = ((chartview.long_notes_count or 0) / chartview.notes_count) * 100
+	end
 
 	self.noteChartListView:reloadItems()
 	self.noteChartSetListView:reloadItems()
@@ -188,7 +193,6 @@ local function info(view)
 
 	difficulty(view, chartview)
 	local length = time_util.format((chartview.duration or 0) / view.game.playContext.rate)
-	local longNoteRatio = (chartview.long_notes_count or 0) / (chartview.notes_count or 0) * 100
 	local inputMode = Format.inputMode(chartview.chartdiff_inputmode)
 	inputMode = inputMode == "2K" and "TAIKO" or inputMode
 
