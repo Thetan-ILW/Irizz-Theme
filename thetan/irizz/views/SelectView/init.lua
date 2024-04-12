@@ -95,7 +95,7 @@ function SelectView:update(dt)
 end
 
 function SelectView:notechartChanged()
-	self.songSelectViewConfig:notechartSelected(self)
+	self.songSelectViewConfig:updateInfo(self)
 end
 
 function SelectView:play()
@@ -175,6 +175,7 @@ function SelectView:changeTimeRate(delta)
 	if newRate ~= timeRateModel:get() then
 		self.game.modifierSelectModel:change()
 		timeRateModel:set(newRate)
+		self.songSelectViewConfig:updateInfo(self)
 	end
 end
 

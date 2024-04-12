@@ -37,7 +37,7 @@ function ViewConfig:loadScore(view)
 	difficulty = (chartview.difficulty or 0) * timeRate
 	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
 
-	if diffColumn == "msd_diff" then
+	if diffColumn == "msd_diff" and chartdiff.msd_diff_data then
 		difficulty = chartdiff.msd_diff
 		patterns = Theme.getMaxAndSecondFromSsr(chartdiff.msd_diff_data) or Text.noPatterns
 	end

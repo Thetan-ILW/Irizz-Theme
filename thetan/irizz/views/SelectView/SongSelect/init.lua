@@ -3,6 +3,7 @@ local just = require("just")
 local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 local time_util = require("time_util")
+local etterna_ssr = require("libchart.libchart.etterna_ssr")
 
 local TextInput = require("thetan.irizz.imgui.TextInput")
 
@@ -45,7 +46,7 @@ local patterns = ""
 local calculator = ""
 local difficultyColor = Color.text
 
-function ViewConfig:notechartSelected(view)
+function ViewConfig:updateInfo(view)
 	local chartview = view.game.selectModel.chartview
 	local timeRate = view.game.playContext.rate
 
@@ -54,10 +55,12 @@ function ViewConfig:notechartSelected(view)
 	end
 
 	diffColumn = view.game.configModel.configs.settings.select.diff_column
-	difficultyValue = (chartview.difficulty or 0) * timeRate
+	local diff = (chartview.difficulty or 0)
+	difficultyValue = diff * timeRate
 	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
 
 	if diffColumn == "msd_diff" and chartview.msd_diff_data then
+		difficultyValue = Theme.getApproximate(diff, chartview.msd_diff_data, timeRate)
 		patterns = Theme.getMaxAndSecondFromSsr(chartview.msd_diff_data) or Text.noPatterns
 	end
 
@@ -147,13 +150,11 @@ function ViewConfig:scores(view)
 end
 
 local function difficulty(view, chartview)
-	local baseTimeRate = view.game.playContext.rate
-
 	local w, h = Layout:move("difficulty")
 
 	love.graphics.setColor(difficultyColor)
 	love.graphics.setFont(font.difficulty)
-	gfx_util.printBaseline(string.format("%0.02f", difficultyValue * baseTimeRate), 0, h / 2, w, 1, "center")
+	gfx_util.printBaseline(string.format("%0.02f", difficultyValue), 0, h / 2, w, 1, "center")
 
 	love.graphics.setFont(font.calculator)
 	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")

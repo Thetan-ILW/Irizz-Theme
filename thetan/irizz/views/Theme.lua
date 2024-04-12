@@ -264,6 +264,78 @@ function Theme.getPatterns(ssrStr)
 	return ssr
 end
 
+local startRate = 5
+local endRate = 20
+
+local rates = {
+	[5] = -9.596700450446,
+	[6] = -7.5957415414244,
+	[7] = -5.6011114260133,
+	[8] = -3.6665763668184,
+	[9] = -1.8159235652606,
+	[10] = 0,
+	[11] = 1.8084870281745,
+	[12] = 3.5579764407329,
+	[13] = 5.226905998569,
+	[14] = 6.7957089410407,
+	[15] = 8.242713109125,
+	[16] = 9.518206709407,
+	[17] = 10.62611215231,
+	[18] = 11.578847354464,
+	[19] = 12.382336869914,
+	[20] = 13.073366502886,
+}
+
+local patternWeight = {
+	stream = 1.04,
+	jumpstream = 1.035,
+	handstream = 1,
+	stamina = 1,
+	jackspeed = 1.04,
+	chordjack = 1.072,
+	technical = 1,
+}
+
+local function interpolate(x1, y1, x2, y2, x)
+	return y1 + (x - x1) * (y2 - y1) / (x2 - x1)
+end
+
+function Theme.getApproximate(overall, patterns, timeRate)
+	local index = math.floor(timeRate * 10)
+	local fraction = (timeRate * 10) - index
+
+	local ssr = etterna_ssr:decodePatterns(patterns)
+	local maxValue = 0
+	local maxKey = nil
+
+	for key, value in pairs(ssr) do
+		value = tonumber(value)
+		if value > maxValue then
+			maxValue = value
+			maxKey = key
+		end
+	end
+
+	local additional = patternWeight[maxKey]
+	local approximate = 0
+
+	if index < startRate then
+		approximate = rates[startRate]
+	elseif index >= endRate then
+		approximate = rates[endRate]
+	elseif fraction == 0 then
+		approximate = rates[index]
+	else
+		local x1 = index / 10
+		local y1 = rates[index]
+		local x2 = (index + 1) / 10
+		local y2 = rates[index + 1]
+		approximate = interpolate(x1, y1, x2, y2, timeRate)
+	end
+
+	return (overall + approximate) * additional
+end
+
 local filterAliasses = {
 	["(not) played"] = Theme.textFilters.played,
 	["actual input mode"] = Theme.textFilters.actualInputMode,
