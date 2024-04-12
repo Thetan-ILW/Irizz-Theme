@@ -44,6 +44,9 @@ end
 function ViewConfig:draw(view)
 	Layout:draw()
 
+	self.availableModifierListView:reloadItems()
+	self.modifierListView:reloadItems()
+
 	local w, h = Layout:move("base")
 	love.graphics.setColor(0, 0, 0, 0.75)
 	love.graphics.rectangle("fill", 0, 0, w, h)
@@ -61,4 +64,3 @@ function ViewConfig:draw(view)
 end
 
 return ViewConfig
-

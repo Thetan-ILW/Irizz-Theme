@@ -82,7 +82,7 @@ function ViewConfig:buttons(view)
 
 	gfx_util.printFrame(Text.createRoom, 0, 0, w, h, "center", "top")
 	gfx.translate(0, Font.buttons:getHeight() + 15)
-	local changed, text = TextBox("roomName", { roomName, Text.name}, nil, w, h, false)
+	local changed, text = TextBox("roomName", { roomName, Text.name }, nil, w, h, false)
 
 	if changed == "text" then
 		roomName = text
@@ -100,7 +100,7 @@ function ViewConfig:buttons(view)
 	imgui.setSize(w, h, uiW, uiH)
 
 	local textW = Font.buttons:getWidth(Text.create)
-	gfx.translate((w/2) - (textW + Theme.imgui.size)/2, 10)
+	gfx.translate((w / 2) - (textW + Theme.imgui.size) / 2, 10)
 
 	if imgui.button("createRoom", Text.create) then
 		view.game.multiplayerModel:createRoom(roomName, roomPassword)
@@ -134,11 +134,11 @@ function ViewConfig:joinGame(view, room)
 		password = text
 	end
 
-	gfx.translate(w/2 - (button1Size + button2Size), 50)
+	gfx.translate(w / 2 - (button1Size + button2Size), 50)
 
 	if imgui.button("backToRooms", Text.back) then
-			multiModel.selectedRoom = nil
-			just.focus()
+		multiModel.selectedRoom = nil
+		just.focus()
 	end
 
 	just.sameline()
@@ -151,6 +151,8 @@ end
 
 function ViewConfig:draw(view)
 	Layout:draw()
+
+	self.roomsListView:reloadItems()
 
 	local w, h = Layout:move("base")
 	love.graphics.setColor(0, 0, 0, 0.75)

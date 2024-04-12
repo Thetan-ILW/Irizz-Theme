@@ -53,6 +53,7 @@ ResultView.load = thread.coro(function(self)
 	end
 
 	self.viewConfig:loadScore(self)
+	self.viewConfig.scoreListView:reloadItems()
 
 	canDraw = true
 	loading = false

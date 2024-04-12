@@ -249,6 +249,8 @@ end
 function ViewConfig:draw(view)
 	Layout:draw()
 
+	self.mountsListView:reloadItems()
+
 	local w, h = Layout:move("base")
 	love.graphics.setColor(0, 0, 0, 0.75)
 	love.graphics.rectangle("fill", 0, 0, w, h)

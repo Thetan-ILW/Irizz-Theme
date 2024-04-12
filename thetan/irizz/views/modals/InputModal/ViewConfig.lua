@@ -22,7 +22,6 @@ function ViewConfig:inputs(view)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.inputs)
 
-	self.inputListView.inputMode = inputMode
 	self.inputListView:draw(w, h, true)
 end
 
@@ -50,12 +49,10 @@ function ViewConfig:draw(view)
 	love.graphics.setFont(Font.title)
 	gfx_util.printFrame(Text.inputs, 0, 0, w, h, "center", "center")
 
-	inputMode = tostring(view.game.selectController.state.inputMode)
+	inputMode = view.inputMode
 
-	--self:tabs(view)
 	self:inputs(view)
 	self:inputMode(view)
 end
 
 return ViewConfig
-

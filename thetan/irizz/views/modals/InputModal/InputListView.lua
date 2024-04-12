@@ -74,7 +74,7 @@ function InputListView:drawItem(i, w, h)
 
 		if newBind ~= value then
 			self.game.inputModel:setKey(self.inputMode, virtualKey, index, device, deviceId, newBind)
-			
+
 			if i + 1 <= item.inputCount and newBind then
 				just.focus(inputIdPattern:format(i + 1, index))
 			end
@@ -85,4 +85,3 @@ function InputListView:drawItem(i, w, h)
 end
 
 return InputListView
-
