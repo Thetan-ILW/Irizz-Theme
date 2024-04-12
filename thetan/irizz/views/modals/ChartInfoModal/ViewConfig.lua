@@ -11,39 +11,21 @@ local Font = Theme:getFonts("chartInfoModal")
 
 local ViewConfig = class()
 
-local orderedInfo = {
-	{ "artist", Text.artist },
-	{ "title", Text.title },
-	{ "name", Text.chartName },
-	{ "tempo", Text.bpm },
-	{ "tags", Text.tags },
-	{ "source", Text.source },
-	{ "format", Text.chartFormat },
-	{ "set_name", Text.setName },
-	{ "real_dir", Text.path },
-	{ "audio_path", Text.audioPath },
-	{ "background_path", Text.backgroundPath },
-	{ "chartdiff_inputmode", Text.mode },
-	{ "chartfile_name", Text.chartFileName },
-	{ "hash", Text.hash },
-}
-
 function ViewConfig:info(view)
-	if not view.item then
-		return
-	end
-
 	Layout:move("info")
 
 	just.next(0, 15)
 	love.graphics.setFont(Font.info)
 	love.graphics.setColor(Color.text)
-	for _, field in ipairs(orderedInfo) do
+
+	for _, text in ipairs(view.infoCache) do
 		just.indent(15)
-		just.text(("%s: %s"):format(field[2], tostring(view.item[field[1]])))
+		just.text(text)
+		just.next(0, 10)
 	end
 
-	Layout:move("info")
+	local w, _ = Layout:move("info")
+	gyatt.text(view.ssrCache, w, "right")
 end
 
 function ViewConfig:draw(view)

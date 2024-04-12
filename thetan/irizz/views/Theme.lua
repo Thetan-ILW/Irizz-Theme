@@ -1,6 +1,6 @@
 local assets = require("thetan.irizz.assets")
-local etterna_ssr = require("libchart.libchart.etterna_ssr")
 local gfx_util = require("gfx_util")
+local _, etterna_ssr = pcall(require, "libchart.libchart.etterna_ssr")
 
 local ModifierEncoder = require("sphere.models.ModifierEncoder")
 local ModifierModel = require("sphere.models.ModifierModel")
@@ -259,9 +259,13 @@ function Theme.getMaxAndSecondFromSsr(ssrStr)
 	return output
 end
 
-function Theme.getPatterns(ssrStr)
+function Theme.getSsrPatterns(ssrStr)
 	local ssr = etterna_ssr:decodePatterns(ssrStr)
 	return ssr
+end
+
+function Theme.getSsrPatternNames()
+	return etterna_ssr.orderedPatterns
 end
 
 local startRate = 5

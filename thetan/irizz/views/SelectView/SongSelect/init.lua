@@ -3,7 +3,6 @@ local just = require("just")
 local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 local time_util = require("time_util")
-local etterna_ssr = require("libchart.libchart.etterna_ssr")
 
 local TextInput = require("thetan.irizz.imgui.TextInput")
 

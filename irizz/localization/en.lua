@@ -545,7 +545,7 @@ localization.fonts = {
 
 	chartInfoModal = {
 		title = { "ZenMaruGothic-Black", 72 },
-		info = { "ZenMaruGothic-Black", 24 },
+		info = { "ZenMaruGothic-Medium", 24 },
 	},
 }
 
