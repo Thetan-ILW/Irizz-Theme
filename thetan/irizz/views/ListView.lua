@@ -142,7 +142,6 @@ function ListView:update(w, h)
 	self:input(w, h)
 
 	local stateCounter = self.stateCounter
-	self:reloadItems()
 	if stateCounter ~= self.stateCounter then
 		local itemIndex = assert(self:getItemIndex())
 		self.itemIndex = itemIndex

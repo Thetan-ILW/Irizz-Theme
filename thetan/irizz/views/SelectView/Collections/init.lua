@@ -33,7 +33,7 @@ local boxes = {
 	"queue",
 	"charts",
 	"buttons",
-	"list"
+	"list",
 }
 
 function ViewConfig.panels()
@@ -61,9 +61,12 @@ function ViewConfig:osuDirectSearch(view)
 	local delAll = love.keyboard.isDown("lctrl") and love.keyboard.isDown("backspace")
 
 	local filterString = view.game.osudirectModel.searchString
-	local changed, text = TextInput("osuDirectSearchField", { filterString, Text.osuDirectSearchPlaceholder}, nil, w, h)
+	local changed, text =
+		TextInput("osuDirectSearchField", { filterString, Text.osuDirectSearchPlaceholder }, nil, w, h)
 	if changed == "text" then
-		if delAll then text = "" end
+		if delAll then
+			text = ""
+		end
 		view.game.osudirectModel:setSearchString(text)
 	end
 end
@@ -192,6 +195,13 @@ function ViewConfig:draw(view, position)
 
 	canUpdate = position == 0
 	canUpdate = canUpdate and not view.modalActive
+
+	if canUpdate then
+		self.collectionListView:reloadItems()
+		self.osuDirectListView:reloadItems()
+		self.osuDirectChartsListView:reloadItems()
+		self.osuDirectQueueListView:reloadItems()
+	end
 
 	just.origin()
 	Layout:draw(position)

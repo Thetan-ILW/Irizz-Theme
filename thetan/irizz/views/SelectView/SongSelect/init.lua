@@ -66,6 +66,10 @@ function ViewConfig:updateInfo(view)
 
 	difficultyColor = Theme:getDifficultyColor(difficultyValue, diffColumn)
 	calculator = Theme.formatDiffColumns(diffColumn)
+
+	self.noteChartListView:reloadItems()
+	self.noteChartSetListView:reloadItems()
+	self.scoreListView:reloadItems()
 end
 
 function ViewConfig.panels()

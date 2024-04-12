@@ -287,13 +287,13 @@ local rates = {
 }
 
 local patternWeight = {
-	stream = 1.04,
-	jumpstream = 1.035,
+	stream = 1.08,
+	jumpstream = 1.2,
 	handstream = 1,
-	stamina = 1,
-	jackspeed = 1.04,
-	chordjack = 1.072,
-	technical = 1,
+	stamina = 1.02,
+	jackspeed = 1.2,
+	chordjack = 1.4,
+	technical = 0.99,
 }
 
 local function interpolate(x1, y1, x2, y2, x)
@@ -316,6 +316,10 @@ function Theme.getApproximate(overall, patterns, timeRate)
 		end
 	end
 
+	if not maxKey then
+		return 0
+	end
+
 	local additional = patternWeight[maxKey]
 	local approximate = 0
 
@@ -333,7 +337,7 @@ function Theme.getApproximate(overall, patterns, timeRate)
 		approximate = interpolate(x1, y1, x2, y2, timeRate)
 	end
 
-	return (overall + approximate) * additional
+	return overall + (approximate * additional)
 end
 
 local filterAliasses = {

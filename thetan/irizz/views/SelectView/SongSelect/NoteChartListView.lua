@@ -13,6 +13,7 @@ local NoteChartListView = ListView + {}
 NoteChartListView.rows = 7
 NoteChartListView.centerItems = true
 NoteChartListView.noItemsText = Text.noCharts
+NoteChartListView.chartInfo = {}
 
 local action
 
@@ -29,6 +30,39 @@ end
 function NoteChartListView:reloadItems()
 	self.stateCounter = self.game.selectModel.noteChartStateCounter
 	self.items = self.game.selectModel.noteChartLibrary.items
+	self.chartInfo = {}
+
+	local timeRate = self.game.playContext.rate
+	local diffColumn = self.game.configModel.configs.settings.select.diff_column
+
+	for i, item in ipairs(self.items) do
+		local diff = item.difficulty or 0
+
+		if diffColumn == "msd_diff" and item.msd_diff_data then
+			diff = Theme.getApproximate(diff, item.msd_diff_data, timeRate)
+		else
+			diff = diff * timeRate
+		end
+
+		local difficulty = Format.difficulty(diff)
+
+		if diff == 0 then
+			difficulty = item.level and "Lv." .. item.level or difficulty
+		end
+
+		local inputMode = Format.inputMode(item.chartdiff_inputmode)
+		inputMode = inputMode == "2K" and "TAIKO" or inputMode
+
+		local name = item.name or ""
+		local creator = item.creator or ""
+
+		self.chartInfo[i] = {
+			inputMode = string.format("[%s]", inputMode),
+			difficulty = difficulty,
+			creator = creator,
+			name = name,
+		}
+	end
 end
 
 ---@return number
@@ -67,16 +101,7 @@ end
 ---@param w number
 ---@param h number
 function NoteChartListView:drawItem(i, w, h)
-	local items = self.items
-	local item = items[i]
-
-	local baseTimeRate = self.game.playContext.rate
-
-	local difficulty = Format.difficulty((item.difficulty or 0) * baseTimeRate)
-	local inputMode = Format.inputMode(item.chartdiff_inputmode)
-	inputMode = inputMode == "2K" and "TAIKO" or inputMode
-	local name = item.name
-	local creator = item.creator or ""
+	local item = self.chartInfo[i]
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
@@ -84,19 +109,11 @@ function NoteChartListView:drawItem(i, w, h)
 	love.graphics.translate(0, 4)
 
 	just.indent(15)
-	TextCellImView(
-		50,
-		h,
-		"left",
-		string.format("[%s]", inputMode),
-		difficulty,
-		self.font.inputMode,
-		self.font.difficulty
-	)
+	TextCellImView(50, h, "left", item.inputMode, item.difficulty, self.font.inputMode, self.font.difficulty)
 
 	just.sameline()
 	just.indent(20)
-	TextCellImView(math.huge, h, "left", creator, name, self.font.creator, self.font.name)
+	TextCellImView(math.huge, h, "left", item.creator, item.name, self.font.creator, self.font.name)
 end
 
 return NoteChartListView
