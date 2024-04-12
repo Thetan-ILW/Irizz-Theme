@@ -33,6 +33,7 @@ function ViewConfig:keybinds(view)
 		for description, bind in pairs(group) do
 			gyatt.frame(description, -30, 0, w, h, "right", "top")
 			just.text(bind)
+			just.next(0, 10)
 		end
 	end
 
