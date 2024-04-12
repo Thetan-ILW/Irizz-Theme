@@ -260,6 +260,10 @@ function Theme.getMaxAndSecondFromSsr(ssrStr)
 end
 
 function Theme.getSsrPatterns(ssrStr)
+	if type(etterna_ssr) ~= "table" then
+		return nil
+	end
+
 	local ssr = etterna_ssr:decodePatterns(ssrStr)
 	return ssr
 end
