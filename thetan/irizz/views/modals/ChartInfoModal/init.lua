@@ -49,6 +49,10 @@ function ChartInfoModal:onShow()
 		table.insert(self.infoCache, ("%s: %s"):format(field[2], tostring(item[field[1]])))
 	end
 
+	if not item.msd_diff_data then
+		return
+	end
+
 	local ssr = Theme.getSsrPatterns(item.msd_diff_data)
 
 	if not ssr then
