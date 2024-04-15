@@ -16,12 +16,14 @@ NoteChartListView.noItemsText = Text.noCharts
 NoteChartListView.chartInfo = {}
 
 local action
+local config
 
 function NoteChartListView:new(game)
 	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("noteChartListView")
 	self.scrollSound = Theme.sounds.scrollSmallList
+	config = game.configModel.configs.irizz
 
 	local actionModel = self.game.actionModel
 	action = actionModel:getGroup("smallList")
@@ -50,7 +52,9 @@ function NoteChartListView:reloadItems()
 			difficulty = item.level and "Lv." .. item.level or difficulty
 		end
 
-		local inputMode = Format.inputMode(item.chartdiff_inputmode)
+		local _inputMode = config.alwaysShowOriginalMode and item.inputmode or item.chartdiff_inputmode
+
+		local inputMode = Format.inputMode(_inputMode)
 		inputMode = inputMode == "2K" and "TAIKO" or inputMode
 
 		local name = item.name or ""

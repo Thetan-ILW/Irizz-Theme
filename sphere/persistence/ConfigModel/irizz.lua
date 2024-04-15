@@ -19,4 +19,5 @@ return {
 	scrollHoldSpeed = 0.07,
 	scrollClickExtraTime = 0.05,
 	language = "English",
+	alwaysShowOriginalMode = false,
 }

@@ -112,6 +112,7 @@ localization.textSettings = {
 	gameplay = "Gameplay",
 	result = "Result",
 	groupCharts = "Group charts",
+	alwaysShowOriginalMode = "Always show original input mode",
 	rateType = "Time rate type",
 	linear = "Linear",
 	exp = "Exp",
