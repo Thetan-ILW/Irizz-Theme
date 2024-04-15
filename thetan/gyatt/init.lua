@@ -63,6 +63,10 @@ function gyatt.keypressed(event)
 		return
 	end
 
+	if vim.isInsertMode() then
+		return
+	end
+
 	vim.updateOperation(key)
 end
 
