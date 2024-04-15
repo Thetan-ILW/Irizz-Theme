@@ -1,6 +1,8 @@
 local gyatt = require("thetan.gyatt")
 local InputMap = require("thetan.gyatt.InputMap")
 
+local Theme = require("thetan.irizz.views.Theme")
+
 local GameViewInputMap = InputMap + {}
 
 function GameViewInputMap:createBindings(gv, a)
@@ -13,6 +15,12 @@ function GameViewInputMap:createBindings(gv, a)
 		end,
 		[a.quit] = function()
 			gv:sendQuitSignal()
+		end,
+		[a.increaseVolume] = function()
+			Theme:changeVolume(gv.game, 1)
+		end,
+		[a.decreaseVolume] = function()
+			Theme:changeVolume(gv.game, -1)
 		end,
 		[a.insertMode] = function()
 			gyatt.vim.setMode(gyatt.vim.mode.insert)

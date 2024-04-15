@@ -5,6 +5,8 @@ return {
 		quit = { mod = { "lshift", "rshift" }, "escape" },
 		showKeybinds = { op = "ok" },
 		showChartInfo = { op = "oc" },
+		increaseVolume = "'",
+		decreaseVolume = ";",
 	},
 	songSelect = {
 		play = "return",

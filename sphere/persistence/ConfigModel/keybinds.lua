@@ -5,6 +5,8 @@ return {
 		quit = "escape",
 		showKeybinds = { mod = { "lctrl", "rctrl" }, "k" },
 		showChartInfo = { mod = { "lctrl", "rctrl" }, "c" },
+		increaseVolume = { mod = { "lctrl", "rctrl" }, "'" },
+		decreaseVolume = { mod = { "lctrl", "rctrl" }, ";" },
 	},
 	songSelect = {
 		play = "return",
