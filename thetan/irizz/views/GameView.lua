@@ -131,6 +131,10 @@ function GameView:receive(event)
 		end
 	end
 
+	if event.name == "focus" then
+		gyatt.resetInputs()
+	end
+
 	self.view:receive(event)
 end
 

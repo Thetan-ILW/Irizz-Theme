@@ -136,7 +136,7 @@ function ViewConfig:osuDirectButtons(view)
 	end
 
 	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
-		view.gameView:setModal(require("sphere.views.MountsView"))
+		view:openModal("thetan.irizz.views.modals.MountsModal")
 	end
 
 	w, h = Layout:move("buttons")

@@ -199,6 +199,12 @@ function gyatt.actionDown(action)
 	return isDown
 end
 
+function gyatt.resetInputs()
+	modKeysDown = {}
+	keysDown = {}
+	keyPressTimestamps = {}
+end
+
 function gyatt.text(text, w, ax)
 	gyatt.frame(text, 0, 0, w, math.huge, ax, "top")
 	just.next(0, love.graphics.getFont():getHeight())
