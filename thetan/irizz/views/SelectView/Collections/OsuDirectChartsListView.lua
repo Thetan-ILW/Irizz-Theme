@@ -5,13 +5,12 @@ local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textCollections
 
 local OsuDirectChartsListView = ListView + {}
 
 OsuDirectChartsListView.rows = 7
 OsuDirectChartsListView.centerItems = true
-OsuDirectChartsListView.noItemsText = Text.notInOsuDirect
+OsuDirectChartsListView.text = Theme.textOsuDirectList
 
 local action = {}
 
@@ -64,8 +63,15 @@ function OsuDirectChartsListView:drawItem(i, w, h)
 	love.graphics.setColor(Color.text)
 	love.graphics.translate(0, 4)
 	just.indent(15)
-	TextCellImView(math.huge, h, "left", item.beatmapset.creator, item.version, self.font.creator,
-		self.font.difficultyName)
+	TextCellImView(
+		math.huge,
+		h,
+		"left",
+		item.beatmapset.creator,
+		item.version,
+		self.font.creator,
+		self.font.difficultyName
+	)
 end
 
 return OsuDirectChartsListView

@@ -5,14 +5,13 @@ local ListView = require("thetan.irizz.views.ListView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textNoteSkins
 
 local NoteSkinListView = ListView + {}
 
 NoteSkinListView.rows = 11
 NoteSkinListView.centerItems = false
-NoteSkinListView.noItemsText = Text.noSettings
 NoteSkinListView.scrollSound = Theme.sounds.scrollSoundLargeList
+NoteSkinListView.text = Theme.textNoteSkinsList
 NoteSkinListView.selectedNoteSkin = nil
 NoteSkinListView.inputMode = ""
 
@@ -56,4 +55,3 @@ function NoteSkinListView:drawItem(i, w, h)
 end
 
 return NoteSkinListView
-

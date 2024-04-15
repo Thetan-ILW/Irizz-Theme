@@ -361,15 +361,15 @@ function Theme.getApproximate(overall, patterns, timeRate)
 end
 
 local filterAliasses = {
-	["(not) played"] = Theme.textFilters.played,
-	["actual input mode"] = Theme.textFilters.actualInputMode,
-	["original input mode"] = Theme.textFilters.inputMode,
-	format = Theme.textFilters.format,
-	scratch = Theme.textFilters.scratch,
+	["(not) played"] = "played",
+	["actual input mode"] = "actualInputMode",
+	["original input mode"] = "inputMode",
+	format = "format",
+	scratch = "scratch",
 }
 
 function Theme.formatFilter(v)
-	return filterAliasses[v] or v
+	return Theme.textFilters[filterAliasses[v]] or v
 end
 
 return Theme

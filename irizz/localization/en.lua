@@ -174,35 +174,79 @@ localization.textSettings = {
 }
 
 localization.textSongSelect = {
-	noCharts = "No charts!",
-	noChartSets = "No chart sets!",
-	noScores = "No scores!",
 	length = "%s LENGTH",
 	notes = "%s NOTES",
 	bpm = "%i BPM",
 	ln = "%i%% LN",
 	searchPlaceholder = "Type to search...",
 	filterPlaceholder = "No filters.",
-	noMods = "No mods",
-	hasMods = "Has mods",
 	score = "Score: %i",
 	noPatterns = "No patterns",
 }
 
 localization.textCollections = {
-	queueEmpty = "Queue is empty!",
-	notInOsuDirect = "Not in osu!direct mode!",
-	noCollections = "No collections!",
 	cache = "Cache",
 	collections = "Collections",
 	osuDirect = "osu!direct",
 	mounts = "Mounts",
-	searching = "Status: Searching for charts: %d",
-	creatingCache = "Status: Creating the cache: %0.2f%%",
 	download = "Download",
 	redownload = "Redownload",
 	wait = "Wait...",
 	osuDirectSearchPlaceholder = "Type to search...",
+}
+
+localization.textChartList = {
+	noItems = "No charts!",
+}
+
+localization.textScoreList = {
+	noItems = "No scores!",
+	noMods = "No mods",
+	hasMods = "Has mods",
+}
+
+localization.textChartSetsList = {
+	noItems = "No chart sets!",
+}
+
+localization.textQueueList = {
+	noItems = "Queue is empty!",
+}
+
+localization.textOsuDirectList = {
+	noItems = "Not in osu!direct mode!",
+}
+
+localization.textCollectionsList = {
+	noItems = "No collections!",
+}
+
+localization.textModifiersList = {
+	noItems = "No selected mods!",
+}
+
+localization.textAvailableModifiersList = {
+	noItems = "Your game is broken if you see this.",
+}
+
+localization.textInputsList = {
+	noItems = "No chart selected.\nCannot determine input mode.",
+}
+
+localization.textNoteSkinsList = {
+	noItems = "No note skins.",
+}
+
+localization.textRoomsList = {
+	noItems = "No rooms.\nCreate one and invite your friends!",
+	playing = "Playing",
+	join = "Join",
+	host = "Host: %s",
+	room = "Room: %s",
+}
+
+localization.textMountsList = {
+	noItems = "No mounts!",
 }
 
 localization.textModifiers = {
@@ -216,12 +260,10 @@ localization.textNoteSkins = {
 
 localization.textInputs = {
 	inputs = "Inputs",
-	noInputs = "No chart selected.\nCannot determine input mode.",
 }
 
 localization.textMounts = {
 	mounts = "Mounts",
-	noMounts = "No mounts!",
 	update = "Update",
 	deleteCache = "Delete cache",
 	processingCharts = "Processing charts...",
@@ -277,19 +319,14 @@ localization.textMultiplayer = {
 	title = "Multiplayer and players",
 	noPlayers = "Nobody is online.",
 	players = "Players:",
-	noRooms = "No rooms.\nCreate one and invite your friends!",
 	createTip = "Create your own room:",
 	createRoom = "Create a room",
-	playing = "Playing",
-	join = "Join",
 	name = "Name",
 	password = "Password",
 	create = "Create",
 	enterPassword = "Enter password to join the %s",
 	back = "Back",
 	notConnected = "Trying to connect.\nStatus: %s",
-	room = "Room: %s",
-	host = "Host: %s",
 }
 
 localization.textMultiplayerScreen = {

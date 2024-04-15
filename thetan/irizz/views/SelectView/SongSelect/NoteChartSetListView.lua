@@ -5,13 +5,12 @@ local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textSongSelect
 
 local NoteChartSetListView = ListView + {}
 
 NoteChartSetListView.rows = 13
 NoteChartSetListView.centerItems = true
-NoteChartSetListView.noItemsText = Text.noChartSets
+NoteChartSetListView.text = Theme.textChartSetsList
 
 function NoteChartSetListView:new(game)
 	ListView:new(game)

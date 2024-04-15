@@ -7,14 +7,13 @@ local ModifierModel = require("sphere.models.ModifierModel")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textModifiers
 
 local ModifierListView = ListView + {}
 
 ModifierListView.rows = 11
 ModifierListView.centerItems = true
-ModifierListView.noItemsText = Text.noMods
 ModifierListView.scrollSound = Theme.sounds.scrollSoundLargeList
+ModifierListView.text = Theme.textModifiersList
 
 function ModifierListView:new(game)
 	ListView:new(game)
@@ -55,7 +54,15 @@ function ModifierListView:drawItem(i, w, h)
 
 	just.row(true)
 	just.indent(44)
-	TextCellImView(w2 - 44, 72, "left", "", ModifierModel.Modifiers[item.id], self.font.modifierName, self.font.modifierName)
+	TextCellImView(
+		w2 - 44,
+		72,
+		"left",
+		"",
+		ModifierModel.Modifiers[item.id],
+		self.font.modifierName,
+		self.font.modifierName
+	)
 
 	local modifier = ModifierModel:getModifier(item.id)
 	if not modifier then

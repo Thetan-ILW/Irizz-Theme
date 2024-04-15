@@ -1,19 +1,16 @@
 local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
 local gfx_util = require("gfx_util")
-local spherefonts = require("sphere.assets.fonts")
 local ModifierModel = require("sphere.models.ModifierModel")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
-local Text = Theme.textModifiers
 
 local AvailableModifierListView = ListView + {}
 
 AvailableModifierListView.rows = 11
 AvailableModifierListView.centerItems = false
-AvailableModifierListView.noItemsText = Text.noMods
 AvailableModifierListView.scrollSound = Theme.sounds.scrollSoundLargeList
+AvailableModifierListView.text = Theme.textAvailableModifiersList
 
 function AvailableModifierListView:new(game)
 	self.game = game

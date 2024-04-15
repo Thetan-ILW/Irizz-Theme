@@ -6,14 +6,13 @@ local ListView = require("thetan.irizz.views.ListView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textMultiplayer
 
 local RoomsListView = ListView + {}
 
 RoomsListView.rows = 9
 RoomsListView.centerItems = false
-RoomsListView.noItemsText = Text.noRooms
 RoomsListView.scrollSound = Theme.sounds.scrollSoundLargeList
+RoomsListView.text = Theme.textRoomsList
 
 function RoomsListView:new(game)
 	ListView:new(game)
@@ -32,16 +31,16 @@ function RoomsListView:drawItem(i, w, h)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.lists)
-	local name = Text.room:format(item.name)
+	local name = self.text.room:format(item.name)
 
 	if item.isPlaying then
-		name = name .. " " .. Text.playing
+		name = name .. " " .. self.text.playing
 	end
 
 	local host
 	for _, v in ipairs(item.users) do
 		if item.host_user_id == v.id then
-			host = Text.host:format(v.name)
+			host = self.text.host:format(v.name)
 			break
 		end
 	end
@@ -60,7 +59,7 @@ function RoomsListView:drawItem(i, w, h)
 	just.offset(w - 108)
 	love.graphics.translate(0, 10)
 	imgui.setSize(w, h, uiW, uiH)
-	if imgui.button("joinGame" .. i, Text.join) then
+	if imgui.button("joinGame" .. i, self.text.join) then
 		multiplayerModel.selectedRoom = item
 		multiplayerModel:joinRoom("")
 		just.focus()

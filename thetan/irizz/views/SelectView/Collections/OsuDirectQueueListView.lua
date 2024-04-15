@@ -5,13 +5,12 @@ local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textCollections
 
 local OsudirectProcessingListView = ListView + {}
 
 OsudirectProcessingListView.rows = 11
 OsudirectProcessingListView.centerItems = false
-OsudirectProcessingListView.noItemsText = Text.queueEmpty
+OsudirectProcessingListView.text = Theme.textQueueList
 
 function OsudirectProcessingListView:new(game)
 	ListView:new(game)

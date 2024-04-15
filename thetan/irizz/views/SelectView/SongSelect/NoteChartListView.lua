@@ -6,14 +6,13 @@ local Format = require("sphere.views.Format")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textSongSelect
 
 local NoteChartListView = ListView + {}
 
 NoteChartListView.rows = 7
 NoteChartListView.centerItems = true
-NoteChartListView.noItemsText = Text.noCharts
 NoteChartListView.chartInfo = {}
+NoteChartListView.text = Theme.textChartList
 
 local action
 local config

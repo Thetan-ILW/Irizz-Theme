@@ -19,7 +19,6 @@ ListView.rows = 3
 ListView.items = {}
 ListView.scrollSound = nil
 ListView.font = nil
-ListView.noItemsText = "No items!"
 ListView.staticCursor = false
 
 local action = {}
@@ -202,7 +201,7 @@ function ListView:draw(w, h, update)
 	if #self.items == 0 then
 		love.graphics.setColor(Color.text)
 		love.graphics.setFont(self.font.noItems)
-		gyatt.frame(self.noItemsText, 0, 0, w, h, "center", "center")
+		gyatt.frame(self.text.noItems, 0, 0, w, h, "center", "center")
 		return
 	end
 

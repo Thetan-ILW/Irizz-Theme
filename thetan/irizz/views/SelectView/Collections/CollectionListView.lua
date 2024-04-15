@@ -4,13 +4,12 @@ local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textCollections
 
 local CollectionListView = ListView + {}
 
 CollectionListView.rows = 13
 CollectionListView.centerItems = true
-CollectionListView.noItemsText = Text.noCollections
+CollectionListView.text = Theme.textOsuDirectList
 
 function CollectionListView:new(game)
 	ListView:new(game)
@@ -60,7 +59,15 @@ function CollectionListView:drawItem(i, w, h)
 	love.graphics.setColor(Color.text)
 	love.graphics.translate(0, 4)
 	just.indent(15)
-	TextCellImView(math.huge, h, "left", item.count ~= 0 and item.count or "", name, self.font.itemCount, self.font.name)
+	TextCellImView(
+		math.huge,
+		h,
+		"left",
+		item.count ~= 0 and item.count or "",
+		name,
+		self.font.itemCount,
+		self.font.name
+	)
 end
 
 return CollectionListView

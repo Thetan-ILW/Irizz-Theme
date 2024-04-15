@@ -6,7 +6,6 @@ local time_util = require("time_util")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textSongSelect
 
 local ScoreListView = ListView + {}
 
@@ -15,8 +14,8 @@ ScoreListView.selectedScoreIndex = 1
 ScoreListView.selectedScore = nil
 ScoreListView.openResult = false
 ScoreListView.oneClickOpen = false
-ScoreListView.noItemsText = Text.noScores
 ScoreListView.modLines = {}
+ScoreListView.text = Theme.textScoreList
 
 function ScoreListView:new(game, oneClickOpen)
 	self.game = game
@@ -37,7 +36,7 @@ local modOrder = {
 
 function ScoreListView:getModifiers(modifiers)
 	if #modifiers == 0 then
-		return Text.noMods
+		return self.text.noMods
 	end
 
 	local max = 3
@@ -65,7 +64,7 @@ function ScoreListView:getModifiers(modifiers)
 	end
 
 	if modLine:len() == 0 then
-		modLine = Text.hasMods
+		modLine = self.text.hasMods
 	end
 
 	return modLine

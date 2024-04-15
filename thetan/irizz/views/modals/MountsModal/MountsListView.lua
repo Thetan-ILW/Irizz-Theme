@@ -3,14 +3,13 @@ local just = require("just")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textMounts
 
 local MountsListView = ListView + {}
 
 MountsListView.rows = 11
 MountsListView.centerItems = false
-MountsListView.noItemsText = Text.noMounts
 MountsListView.scrollSound = Theme.sounds.scrollSoundLargeList
+MountsListView.text = Theme.textMountsList
 MountsListView.selectedItemIndex = 1
 
 function MountsListView:new(game)

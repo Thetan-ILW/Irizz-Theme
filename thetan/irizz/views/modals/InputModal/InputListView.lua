@@ -6,14 +6,13 @@ local ListView = require("thetan.irizz.views.ListView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textInputs
 
 local InputListView = ListView + {}
 
 InputListView.rows = 11
 InputListView.centerItems = false
-InputListView.noItemsText = Text.noInputs
 InputListView.scrollSound = Theme.sounds.scrollSoundLargeList
+InputListView.text = Theme.textInputsList
 InputListView.device = ""
 InputListView.inputMode = ""
 

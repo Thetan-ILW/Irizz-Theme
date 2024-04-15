@@ -9,6 +9,7 @@ local OsudirectListView = ListView + {}
 
 OsudirectListView.rows = 13
 OsudirectListView.centerItems = true
+OsudirectListView.text = Theme.textOsuDirectList
 
 function OsudirectListView:new(game)
 	ListView:new(game)
