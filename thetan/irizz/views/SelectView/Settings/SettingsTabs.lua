@@ -555,6 +555,10 @@ local function formatColorType(v)
 	return _colorTypes[v] or ""
 end
 
+local function formatLocalization(v)
+	return v.name
+end
+
 function SettingsTab:UI(view)
 	imgui.separator()
 	local configs = view.game.configModel.configs
@@ -576,6 +580,15 @@ function SettingsTab:UI(view)
 	irizz.chartLengthBeforeArtist =
 		imgui.checkbox("irizz.chartLengthBeforeArtist", irizz.chartLengthBeforeArtist, Text.chartLengthBeforeArtist)
 	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, Text.difficulty)
+
+	local currentLanguage = irizz.language
+	local newLanguage =
+		imgui.combo("irizz.language", irizz.language, Theme.localizations, formatLocalization, Text.language)
+
+	if currentLanguage ~= newLanguage then
+		irizz.language = newLanguage.name
+		assets:loadLocalization(newLanguage.fileName, Theme)
+	end
 
 	local sortFunction = view.game.configModel.configs.select.sortFunction
 	local sortModel = view.game.selectModel.sortModel

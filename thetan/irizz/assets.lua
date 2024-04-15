@@ -1,5 +1,5 @@
 local defaultColorTheme = require("irizz.color_themes.Default")
-local localization = require("irizz.localization.en")
+local defaultLocalization = require("irizz.localization.en")
 local table_util = require("table_util")
 
 local Assets = {}
@@ -90,8 +90,29 @@ function Assets:getFont(fontFamilyList, filename, size)
 	return font
 end
 
+function Assets:loadLocalization(file, theme)
+	local localization = file
+
+	if type(file) == "string" then
+		localization = love.filesystem.load(file)()
+	end
+
+	for groupName, group in pairs(localization) do
+		if groupName == "fonts" or groupName == "fontFamilyList" or groupName == "language" then
+			theme[groupName] = group
+			goto continue
+		end
+
+		for k, v in pairs(group) do
+			theme[groupName][k] = v
+		end
+
+		::continue::
+	end
+end
+
 function Assets:init(theme)
-	table_util.copy(localization, theme)
+	table_util.copy(defaultLocalization, theme)
 	table_util.copy(defaultColorTheme, theme)
 end
 
@@ -138,6 +159,22 @@ function Assets:get(config, theme)
 		if v == config.colorTheme then
 			self:updateColorTheme(config.colorTheme, theme)
 			break
+		end
+	end
+
+	local localizations = getItems("localization")
+	theme.localizations = {}
+
+	for _, v in ipairs(localizations) do
+		local fileName = getFilePath("localization/" .. v)
+
+		if fileName then
+			local file = love.filesystem.load(fileName)()
+			table.insert(theme.localizations, { name = file.language, fileName = fileName })
+
+			if file.language == config.language then
+				self:loadLocalization(file, theme)
+			end
 		end
 	end
 end
