@@ -593,15 +593,6 @@ function SettingsTab:UI(view)
 		assets:loadLocalization(newLanguage.fileName, Theme)
 	end
 
-	local sortFunction = view.game.configModel.configs.select.sortFunction
-	local sortModel = view.game.selectModel.sortModel
-
-	local a = imgui.spoilerList("SortDropdown", sortModel.names, sortFunction, nil, Text.sort)
-	local name = sortModel.names[a]
-	if name then
-		view.game.selectModel:setSortFunction(name)
-	end
-
 	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, Text.rateType)
 	if rateType ~= gp.rate_type then
 		view.game.modifierSelectModel:change()

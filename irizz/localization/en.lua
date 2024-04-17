@@ -164,7 +164,6 @@ localization.textSettings = {
 	autoUpdate = "Auto update",
 	showNonManiaCharts = "Show non-mania charts",
 	difficulty = "Difficulty",
-	sort = "Sort",
 	startSound = "Start sound",
 	staticCursor = "Static cursor in lists",
 	showLocations = "Show locations",
@@ -302,6 +301,7 @@ localization.textFilters = {
 	format = "Format",
 	scratch = "Scratch",
 	played = "Played",
+	sort = "Sort",
 }
 
 localization.textResult = {

@@ -51,7 +51,8 @@ function ViewConfig:filters(view)
 	local scoreFilters = view.game.configModel.configs.filters.score
 	local select = view.game.configModel.configs.select
 
-	local f = imgui.spoilerList("ScoreFilterDropdown", scoreFilters, select.scoreFilterName, filter_to_string, Text.inputMode)
+	local f =
+		imgui.spoilerList("ScoreFilterDropdown", scoreFilters, select.scoreFilterName, filter_to_string, Text.inputMode)
 	if f then
 		select.scoreFilterName = scoreFilters[f].name
 	end
@@ -68,12 +69,14 @@ function ViewConfig:filters(view)
 
 	ss.chartdiffs_list = imgui.checkbox("ss.chartdiffs_list", ss.chartdiffs_list, Text.moddedCharts)
 
-	--[[local changed, text = TextBox("filtersLamp", { ss.lampString, "lamp" }, nil, w / 2, h, false)
+	local sortFunction = view.game.configModel.configs.select.sortFunction
+	local sortModel = view.game.selectModel.sortModel
 
-	if changed == "text" then
-		ss.lampString = text
-		selectModel:debouncePullNoteChartSet()
-	end]]
+	local a = imgui.spoilerList("SortDropdown", sortModel.names, sortFunction, nil, Text.sort)
+	local name = sortModel.names[a]
+	if name then
+		view.game.selectModel:setSortFunction(name)
+	end
 
 	imgui.separator()
 	for _, group in ipairs(filters) do
