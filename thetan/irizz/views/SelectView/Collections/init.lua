@@ -20,6 +20,7 @@ local ViewConfig = class()
 
 local canUpdate = false
 local collectionsMode = "Collections"
+local action
 
 function ViewConfig:new(game)
 	self.collectionListView = CollectionListView(game)
@@ -27,6 +28,7 @@ function ViewConfig:new(game)
 	self.osuDirectChartsListView = OsuDirectChartsListView(game)
 	self.osuDirectQueueListView = OsuDirectQueueListView(game)
 	Font = Theme:getFonts("collectionsViewConfig")
+	action = game.actionModel:getGroup("songSelect")
 end
 
 local boxes = {
@@ -54,19 +56,23 @@ function ViewConfig:osuDirectSearch(view)
 	local w, h = Layout:move("searchField")
 	love.graphics.setFont(Font.searchField)
 
-	if not just.focused_id then
+	local vimMotions = view.game.configModel.configs.irizz.vimMotions
+
+	if not vimMotions or gyatt.vim.isInsertMode() then
 		just.focus("osuDirectSearchField")
 	end
-
-	local delAll = love.keyboard.isDown("lctrl") and love.keyboard.isDown("backspace")
 
 	local filterString = view.game.osudirectModel.searchString
 	local changed, text =
 		TextInput("osuDirectSearchField", { filterString, Text.osuDirectSearchPlaceholder }, nil, w, h)
+
+	local delAll = gyatt.actionPressed(action.clearSearch)
+
+	if delAll then
+		view.game.osudirectModel:setSearchString("")
+	end
+
 	if changed == "text" then
-		if delAll then
-			text = ""
-		end
 		view.game.osudirectModel:setSearchString(text)
 	end
 end
