@@ -180,6 +180,10 @@ function ViewConfig:footer(view)
 	Theme:textWithShadow(collectionsMode, w, h, "right", "top")
 end
 
+function ViewConfig:getModeName()
+	return collectionsMode
+end
+
 function ViewConfig.layoutDraw(position)
 	Layout:draw(position)
 end

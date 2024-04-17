@@ -15,6 +15,8 @@ local Container = require("thetan.gyatt.Container")
 
 local ViewConfig = class()
 
+ViewConfig.osuDirect = false
+
 function ViewConfig:new()
 	self.container = Container("filtersContainer")
 end
@@ -113,6 +115,43 @@ function ViewConfig:filters(view)
 	Theme:border(w, h)
 end
 
+function ViewConfig:osuDirectFilters(view)
+	local w, h = Layout:move("filters")
+
+	Theme:panel(w, h)
+
+	local heightStart = just.height
+	local uiW = w / 2.5
+	local uiH = cfg.size
+
+	self.container:startDraw(w, h)
+	imgui.setSize(w, h, uiW, uiH)
+
+	love.graphics.setFont(Font.headerText)
+	love.graphics.setColor(Color.text)
+	imgui.separator()
+	just.text(Text.osuDirect)
+	just.next(0, 15)
+
+	local osudirectModel = view.game.osudirectModel
+	local statusIndex = imgui.spoilerList(
+		"RankedStatusDropdown",
+		osudirectModel.rankedStatuses,
+		osudirectModel.rankedStatus,
+		nil,
+		Text.rankedStatus
+	)
+
+	if statusIndex then
+		osudirectModel:setRankedStatus(osudirectModel.rankedStatuses[statusIndex])
+	end
+
+	self.container.scrollLimit = just.height - heightStart - h
+	self.container:stopDraw()
+	w, h = Layout:move("filters")
+	Theme:border(w, h)
+end
+
 function ViewConfig:chartsLine(view)
 	local w, h = Layout:move("filterLine")
 
@@ -138,7 +177,11 @@ function ViewConfig:draw(view)
 	love.graphics.setFont(Font.title)
 	gfx_util.printFrame(Text.filters, 0, 0, w, h, "center", "center")
 
-	self:filters(view)
+	if self.osuDirect then
+		self:osuDirectFilters(view)
+	else
+		self:filters(view)
+	end
 	self:chartsLine(view)
 end
 

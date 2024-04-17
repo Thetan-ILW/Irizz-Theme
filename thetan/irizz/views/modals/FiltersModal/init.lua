@@ -12,6 +12,10 @@ function FiltersModal:onQuit()
 	self.game.selectView:updateFilterLines()
 end
 
+function FiltersModal:onShow()
+	self.viewConfig.osuDirect = self.game.selectView:isInOsuDirect()
+end
+
 function FiltersModal:new(game)
 	self.game = game
 end

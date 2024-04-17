@@ -155,6 +155,11 @@ function SelectView:updateFilterLines()
 	self.scoreFilterLine = ("%s   %s"):format(source, mode)
 end
 
+function SelectView:isInOsuDirect()
+	local inOsuDirect = self.collectionsViewConfig:getModeName() == "osu!direct"
+	return inOsuDirect and self.screenX == -1
+end
+
 function SelectView:openModal(name)
 	self.game.gameView:openModal(name)
 end

@@ -302,6 +302,8 @@ localization.textFilters = {
 	scratch = "Scratch",
 	played = "Played",
 	sort = "Sort",
+	osuDirect = "osu!direct",
+	rankedStatus = "Ranked status",
 }
 
 localization.textResult = {

@@ -13,9 +13,6 @@ function SelectInputMap:createBindings(sv, a)
 		[a.showInputs] = function()
 			sv:openModal("thetan.irizz.views.modals.InputModal")
 		end,
-		[a.showFilters] = function()
-			sv:openModal("thetan.irizz.views.modals.FiltersModal")
-		end,
 		[a.showMultiplayer] = function()
 			sv:openModal("thetan.irizz.views.modals.MultiplayerModal")
 		end,
@@ -59,6 +56,9 @@ function SelectInputMap:createBindings(sv, a)
 		end,
 		[a.pauseMusic] = function()
 			sv.game.previewModel:stop()
+		end,
+		[a.showFilters] = function()
+			sv:openModal("thetan.irizz.views.modals.FiltersModal")
 		end,
 	}
 end
