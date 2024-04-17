@@ -122,9 +122,9 @@ localization.textSettings = {
 	scrollAcceleration = "Scroll acceleration",
 	scrollClickExtraTime = "Scroll click extra time",
 	--
-	themeVersion = "Theme version: ",
 	commit = "Commit: ",
 	commitDate = "Date: ",
+	contributors = "Big thanks to contributors:",
 	--
 	scoring = "Scoring",
 	scoreSystem = "Score system",

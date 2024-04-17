@@ -691,6 +691,11 @@ function SettingsTab:Version(view)
 	just.text("Irizz theme: " .. IRIZZ_VERSION)
 	just.text(Text.commit .. version.commit)
 	just.text(Text.commitDate .. version.date)
+
+	imgui.separator()
+	just.text(Text.contributors)
+	just.text("iyase - Translating to Japanese and fixing mistakes")
+	just.text("floob1nk - Translating to Russian")
 end
 
 return SettingsTab

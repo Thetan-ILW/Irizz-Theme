@@ -51,6 +51,11 @@ Note: you should specify the file format. For sound - mp3, wav, ogg. For images 
 - It is recommended to turn off automatic updates for the base game if the Irizz Theme is working correctly to avoid potential compatibility issues.
 - Update the base game only when a new version of the Irizz Theme is available, as frequent updates can break compatibility.
 
+## Contributors
+
+- iyase - Translating to Japanese and fixing mistakes
+- floob1nk - Translating to Russian
+
 ## Screenshots
 
 ![Settings screenshot](screenshots/settings.png?raw=true)

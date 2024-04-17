@@ -73,7 +73,7 @@ localization.textModifiers = {
 }
 
 localization.textInputsList = {
-	noItems = "チャートが選択されていません。\n入力モードを決定できません。",
+	noItems = "譜面が選択されていません。\n入力モードを決定できません。",
 }
 
 localization.textNoteSkinsList = {
@@ -81,10 +81,10 @@ localization.textNoteSkinsList = {
 }
 
 localization.textRoomsList = {
-	noItems = "部屋がありません。\n自分で作成して友達を招待しましょう！",
+	noItems = "ルームがありません。\n自分で作成して友達を招待しましょう！",
 	playing = "プレイ中",
 	join = "参加",
-	room = "部屋: %s",
+	room = "ルーム: %s",
 	host = "ホスト: %s",
 }
 
@@ -103,18 +103,18 @@ localization.textInputs = {
 
 localization.textMounts = {
 	mounts = "マウント",
-	update = "更新",
+	update = "アップデート",
 	deleteCache = "キャッシュを削除",
-	processingCharts = "チャートを処理中...",
+	processingCharts = "譜面を処理中...",
 	path = "パス",
-	chartsFound = "処理済み / 見つかった",
-	chartsCached = "キャッシュされたチャート",
-	create = "作成",
+	chartsFound = "処理済み / 見つかりました",
+	chartsCached = "譜面をキャッシュされました",
+	create = "作る",
 	delete = "削除",
 	locations = "場所",
 	database = "データベース",
-	chartdiffs = "チャートの難易度 / レーティング",
-	chartmetas = "チャートのメタデータ",
+	chartdiffs = "譜面の難易度 / レーティング",
+	chartmetas = "譜面のメタデータ",
 	compute = "計算",
 	computed = "計算済み: %i",
 }
@@ -132,11 +132,11 @@ localization.textOnline = {
 localization.textFilters = {
 	filters = "フィルター",
 	moddedCharts = "修正されたチャートを表示",
-	chartCount = "%i チャート in '%s'",
-	charts = "チャート",
+	chartCount = "%i 譜面 in '%s'",
+	charts = "譜面",
 	scores = "スコア",
 	scoresSource = "スコアのソース",
-	inputMode = "モード",
+	inputMode = "キーモード",
 	actualInputMode = "実際のモード",
 	format = "フォーマット",
 	scratch = "スクラッチ",
@@ -146,9 +146,9 @@ localization.textFilters = {
 localization.textResult = {
 	score = "スコア",
 	accuracy = "精度",
-	inputMode = "入力モード",
+	inputMode = "キーモード",
 	timeRate = "レート",
-	pauses = "一時停止",
+	pauses = "休む",
 	scrollSpeed = "スクロール速度",
 	noPatterns = "パターンがありません",
 	noAccuracy = "精度がありません",
@@ -158,26 +158,26 @@ localization.textMultiplayer = {
 	title = "マルチプレイヤーとプレイヤー",
 	noPlayers = "オンラインの人はいません。",
 	players = "プレイヤー:",
-	createTip = "自分の部屋を作成:",
-	createRoom = "部屋を作成",
-	name = "名前",
+	createTip = "自分のルームを作る:",
+	createRoom = "ルームを作る",
+	name = "名",
 	password = "パスワード",
-	create = "作成",
-	enterPassword = "%sに参加するためのパスワードを入力",
+	create = "作る",
+	enterPassword = "%sのパスワードを入れてください",
 	back = "戻る",
 	notConnected = "接続を試みています。\nステータス: %s",
 }
 
 localization.textMultiplayerScreen = {
-	roomName = "ルーム名前: %s",
+	roomName = "ルーム名: %s",
 	playerCount = "プレイヤー: %i",
 }
 
 localization.textChartInfo = {
-	chartInfo = "チャート情報",
+	chartInfo = "譜面情報",
 	artist = "アーティスト",
 	title = "タイトル",
-	chartName = "名前",
+	chartName = "名",
 	bpm = "BPM",
 	tags = "タグ",
 	source = "ソース",
@@ -185,14 +185,14 @@ localization.textChartInfo = {
 	setName = "セット名",
 	path = "パス",
 	audioPath = "オーディオパス",
-	backgroundPath = "背景パス",
+	backgroundPath = "バックパス",
 	mode = "モード",
-	chartFileName = "チャートファイル名",
+	chartFileName = "譜面ファイル名",
 	hash = "MD5ハッシュ",
 }
 
 localization.textKeybinds = {
-	keybinds = "キーバインド",
+	keybinds = "キーコンフィグ",
 }
 
 localization.fontFamilyList = {
