@@ -103,13 +103,13 @@ function GameView:draw()
 		self.tooltip = nil
 	end
 
+	NotificationView:draw()
+
 	self.fadeTransition:drawAfter()
 	self.frameTimeView:draw()
 
 	local settings = self.game.configModel.configs.settings
 	local showTasks = settings.miscellaneous.showTasks
-
-	NotificationView:draw()
 
 	if showTasks then
 		AsyncTasksView()

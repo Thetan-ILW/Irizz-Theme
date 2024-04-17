@@ -360,6 +360,7 @@ localization.textKeybinds = {
 
 localization.textNotification = {
 	volume = "Volume: %i%%",
+	chartStarted = "%s - %s [%s]\nLength: %s",
 }
 
 localization.keybindsGlobal = {
@@ -594,6 +595,7 @@ localization.fonts = {
 
 	notifications = {
 		message = { "ZenMaruGothic-Medium", 36 },
+		smallText = { "ZenMaruGothic-Medium", 24 },
 	},
 }
 

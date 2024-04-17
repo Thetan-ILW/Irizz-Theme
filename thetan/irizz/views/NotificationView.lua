@@ -11,9 +11,11 @@ local hide_time = 0.4
 
 local message = ""
 local show_time = 0
+local message_font
 
 local messages = {
 	volumeChanged = Text.volume,
+	chartStarted = Text.chartStarted,
 }
 
 function NotificationView:init()
@@ -21,16 +23,33 @@ function NotificationView:init()
 end
 
 ---@param message_key string
----@param value any
-function NotificationView:show(message_key, value)
-	local text = messages[message_key]
+---@param value any?
+---@param params table?
+function NotificationView:show(message_key, value, params)
+	local text = messages[message_key] or message_key
 
 	if value then
-		text = text:format(value)
+		if type(value) == "table" then
+			text = text:format(unpack(value))
+		else
+			text = text:format(value)
+		end
 	end
 
 	message = text
-	show_time = love.timer.getTime() + hide_time
+
+	local time = hide_time
+	message_font = font.message
+
+	if params then
+		time = params.show_time or time
+
+		if params.small_text then
+			message_font = font.smallText
+		end
+	end
+
+	show_time = love.timer.getTime() + time
 end
 
 local gfx = love.graphics
@@ -43,15 +62,15 @@ function NotificationView:draw()
 	gfx.origin()
 	local ww, wh = love.graphics.getDimensions()
 
-	local w = font.message:getWidth(message) + 30
-	local h = font.message:getHeight() + 30
+	local w = message_font:getWidth(message) + 30
+	local h = message_font:getHeight() + 40
 
 	gfx.translate((ww / 2) - (w / 2), ((wh / 2) - (h / 2)))
 	Theme:panel(w, h)
 
 	gfx.origin()
 	gfx.setColor(Color.text)
-	gfx.setFont(font.message)
+	gfx.setFont(message_font)
 	gyatt.frame(message, 0, 0, ww, wh, "center", "center")
 end
 
