@@ -358,6 +358,10 @@ localization.textKeybinds = {
 	keybinds = "Key binds",
 }
 
+localization.textNotification = {
+	volume = "Volume: %i%%",
+}
+
 localization.keybindsGlobal = {
 	insertMode = "Insert mode",
 	normalMode = "Normal mode",
@@ -586,6 +590,10 @@ localization.fonts = {
 	chartInfoModal = {
 		title = { "ZenMaruGothic-Black", 72 },
 		info = { "ZenMaruGothic-Medium", 24 },
+	},
+
+	notifications = {
+		message = { "ZenMaruGothic-Medium", 36 },
 	},
 }
 

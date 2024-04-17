@@ -5,6 +5,15 @@ local Theme = require("thetan.irizz.views.Theme")
 
 local GameViewInputMap = InputMap + {}
 
+local function volumeChanged(gv)
+	local configs = gv.game.configModel.configs
+	local settings = configs.settings
+	local a = settings.audio
+	local v = a.volume
+
+	gv.showMessage("volumeChanged", v.master * 100)
+end
+
 function GameViewInputMap:createBindings(gv, a)
 	self.global = {
 		[a.showKeybinds] = function()
@@ -18,9 +27,11 @@ function GameViewInputMap:createBindings(gv, a)
 		end,
 		[a.increaseVolume] = function()
 			Theme:changeVolume(gv.game, 1)
+			volumeChanged(gv)
 		end,
 		[a.decreaseVolume] = function()
 			Theme:changeVolume(gv.game, -1)
+			volumeChanged(gv)
 		end,
 		[a.insertMode] = function()
 			gyatt.vim.setMode(gyatt.vim.mode.insert)

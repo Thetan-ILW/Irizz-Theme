@@ -5,6 +5,7 @@ local FrameTimeView = require("sphere.views.FrameTimeView")
 local AsyncTasksView = require("sphere.views.AsyncTasksView")
 local TextTooltipImView = require("sphere.imviews.TextTooltipImView")
 local ContextMenuImView = require("sphere.imviews.ContextMenuImView")
+local NotificationView = require("thetan.irizz.views.NotificationView")
 local InputMap = require("thetan.irizz.views.GameViewInputMap")
 local Theme = require("thetan.irizz.views.Theme")
 
@@ -30,6 +31,7 @@ function GameView:load()
 
 	local actionModel = self.game.actionModel
 	self.inputMap = InputMap(self, actionModel:getGroup("global"))
+	NotificationView:init()
 end
 
 ---@param view sphere.ScreenView
@@ -107,6 +109,8 @@ function GameView:draw()
 	local settings = self.game.configModel.configs.settings
 	local showTasks = settings.miscellaneous.showTasks
 
+	NotificationView:draw()
+
 	if showTasks then
 		AsyncTasksView()
 	end
@@ -143,6 +147,10 @@ end
 function GameView:setContextMenu(f, width)
 	self.contextMenu = f
 	self.contextMenuWidth = width
+end
+
+function GameView.showMessage(...)
+	NotificationView:show(...)
 end
 
 ---@param modal table
