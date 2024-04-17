@@ -46,8 +46,10 @@ function ScoreListView:getModifiers(modifiers)
 	for _, mod in ipairs(modOrder) do
 		for _, enabledMod in ipairs(modifiers) do
 			if mod.id == enabledMod.id then
-				if mod.format then
+				if mod.format and type(enabledMod.value) == "number" then
 					modLine = modLine .. mod.label:format(enabledMod.value)
+				elseif mod.format and type(enabledMod.value) == "string" then
+					modLine = modLine .. mod.label:format(0)
 				else
 					modLine = modLine .. mod.label
 				end

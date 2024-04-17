@@ -1,6 +1,6 @@
 local localization = {}
 
-localization.language = "ジャパニーズ"
+localization.language = "日本語"
 
 localization.textHeader = {
 	settings = "設定",
@@ -18,7 +18,7 @@ localization.textSongSelect = {
 	searchPlaceholder = "検索するには入力してください...",
 	filterPlaceholder = "フィルターなし。",
 	score = "スコア: %i",
-	noPatterns = "パターンがありません",
+	noPatterns = "パターン無し",
 }
 
 localization.textCollections = {
@@ -30,7 +30,7 @@ localization.textCollections = {
 	creatingCache = "ステータス: キャッシュを作成中: %0.2f%%",
 	download = "ダウンロード",
 	redownload = "再ダウンロード",
-	wait = "お待ちください...",
+	wait = "少しお待ちください...",
 	osuDirectSearchPlaceholder = "検索するには入力してください...",
 }
 
@@ -147,7 +147,7 @@ localization.textResult = {
 	score = "スコア",
 	accuracy = "精度",
 	inputMode = "入力モード",
-	timeRate = "時間レート",
+	timeRate = "レート",
 	pauses = "一時停止",
 	scrollSpeed = "スクロール速度",
 	noPatterns = "パターンがありません",
@@ -169,7 +169,7 @@ localization.textMultiplayer = {
 }
 
 localization.textMultiplayerScreen = {
-	roomName = "部屋の名前: %s",
+	roomName = "ルーム名前: %s",
 	playerCount = "プレイヤー: %i",
 }
 
