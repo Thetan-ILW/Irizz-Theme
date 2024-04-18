@@ -8,6 +8,7 @@ local font
 local NotificationView = {}
 
 local hide_time = 0.4
+local animation_start_time = 0
 
 local message = ""
 local show_time = 0
@@ -50,12 +51,15 @@ function NotificationView:show(message_key, value, params)
 	end
 
 	show_time = love.timer.getTime() + time
+	animation_start_time = show_time - 0.1
 end
 
 local gfx = love.graphics
 
 function NotificationView:draw()
-	if love.timer.getTime() > show_time then
+	local current_time = love.timer.getTime()
+
+	if current_time > show_time then
 		return
 	end
 
@@ -65,6 +69,11 @@ function NotificationView:draw()
 	local w = message_font:getWidth(message) + 30
 	local h = message_font:getHeight() + 40
 
+	local previousCanvas = gfx.getCanvas()
+	local layer = gyatt.getCanvas("notification")
+	gfx.setCanvas({ layer, stencil = true })
+	gfx.clear()
+
 	gfx.translate((ww / 2) - (w / 2), ((wh / 2) - (h / 2)))
 	Theme:panel(w, h)
 
@@ -72,6 +81,16 @@ function NotificationView:draw()
 	gfx.setColor(Color.text)
 	gfx.setFont(message_font)
 	gyatt.frame(message, 0, 0, ww, wh, "center", "center")
+
+	gfx.setCanvas({ previousCanvas, stencil = true })
+
+	local alpha = 1 - ((current_time - animation_start_time) * 10)
+
+	if alpha <= 1 then
+		gfx.setColor({ alpha, alpha, alpha, alpha })
+	end
+
+	gfx.draw(layer)
 end
 
 return NotificationView

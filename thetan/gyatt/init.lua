@@ -10,6 +10,7 @@ gyatt.inputMode = "keyboard"
 gyatt.vim = vim
 gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
+gyatt.getCanvas = gfx_util.getCanvas
 gyatt.separator = imgui.separator
 gyatt.setSize = imgui.setSize
 
