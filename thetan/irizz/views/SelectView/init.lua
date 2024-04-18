@@ -24,6 +24,9 @@ SelectView.screenXTarget = 0
 SelectView.chartFilterLine = ""
 SelectView.scoreFilterLine = ""
 
+SelectView.openAnimationTween = nil
+SelectView.openAnimationPercent = 0
+
 local playSound = nil
 function SelectView:load()
 	self.game.selectController:load(self)
@@ -40,6 +43,7 @@ function SelectView:load()
 
 	self:updateFilterLines()
 	self.layersView = LayersView(self.game, "select", "preview")
+	self.openAnimationTween = flux.to(self, 0.8, { openAnimationPercent = 1 }):ease("quadout")
 end
 
 function SelectView:beginUnload()
@@ -249,6 +253,27 @@ function SelectView:draw()
 	end
 
 	self.layersView:draw(panelsStencil, UI)
+
+	if not self.openAnimationTween then
+		return
+	end
+
+	if self.openAnimationPercent == 1 then
+		self.openAnimationTween = nil
+	end
+
+	local w, h = love.graphics.getDimensions()
+
+	local animationStencil = function()
+		love.graphics.circle("fill", 0, 0, (w * 1.5) * self.openAnimationPercent)
+	end
+
+	love.graphics.stencil(animationStencil, "replace", 1)
+	love.graphics.setStencilTest("equal", 0)
+	love.graphics.setColor(0, 0, 0, 1)
+
+	love.graphics.rectangle("fill", 0, 0, w, h)
+	love.graphics.setStencilTest()
 end
 
 return SelectView

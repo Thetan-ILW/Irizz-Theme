@@ -185,7 +185,7 @@ function LayersView:drawUI(ui)
 
 	ui()
 
-	gfx.setCanvas(previousCanvas)
+	gfx.setCanvas({ previousCanvas, stencil = true })
 
 	gfx.origin()
 	gfx.setColor(uiAlpha, uiAlpha, uiAlpha, uiAlpha)
