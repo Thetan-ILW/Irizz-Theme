@@ -11,14 +11,14 @@ localization.textHeader = {
 }
 
 localization.textSettings = {
-	gameplayTab = "Gameplay",
+	gameplayTab = "Геймплей",
 	audioTab = "Аудио",
 	videoTab = "Видео",
-	timingsTab = "Timings",
-	keybindsTab = "Keybinds",
-	inputsTab = "Inputs",
-	uiTab = "UI",
-	versionTab = "Version",
+	timingsTab = "Тайминги",
+	keybindsTab = "Привязка клавиш",
+	inputsTab = "Ввод",
+	uiTab = "Интерфейс",
+	versionTab = "Версия",
 	--
 	scrollSpeed = "Скорость прокрутки",
 	speedType = "Тип скорости",
@@ -123,7 +123,7 @@ localization.textSettings = {
 	commit = "Commit: ",
 	commitDate = "Date: ",
 	--
-	scoring = "Scoring",
+	scoring = "Оценивание",
 	scoreSystem = "Score system",
 	judgement = "Judgement",
 	nearest = "Closest note scoring",
@@ -150,12 +150,12 @@ localization.textSettings = {
 	circle = "Circle",
 	arrow = "Arrow",
 	system = "System",
-	other = "Other",
+	other = "Другое",
 	volume = "Volume",
 	audioDevice = "Audio device",
 	bpm = "%i BPM",
 	noMods = "No modifiers",
-	const = "Constant scroll speed",
+	const = "Постоянная скорость прокрутки",
 	singleNoteHandler = "Taiko note handler",
 	muteOnUnfocus = "Mute game out of focus",
 	autoUpdate = "Auto update",
@@ -175,7 +175,7 @@ localization.textSongSelect = {
 	notes = "%s НОТЫ",
 	bpm = "%i УВМ", -- может лучше BPM оставить? ни один русский не знает что такое УВМ на самом деле
 	ln = "%i%% ДЛ. НОТЫ",
-	searchPlaceholder = "Нажмите чтобы найти...", -- Тут скорее лучше 'Пишите' или 'Напишите'. Но всё равно как то не так
+	searchPlaceholder = "Введите чтобы найти...", -- Тут скорее лучше 'Пишите' или 'Напишите'. Но всё равно как то не так
 	filterPlaceholder = "Нет фильтров.",
 	score = "Рекорд: %i",
 	noPatterns = "Нет паттернов",
@@ -335,73 +335,73 @@ localization.textMultiplayerScreen = {
 }
 
 localization.textChartInfo = {
-	chartInfo = "Chart info",
-	artist = "Artist",
-	title = "Title",
-	chartName = "Name",
-	bpm = "BPM",
-	tags = "Tags",
-	source = "Source",
-	chartFormat = "Format",
-	setName = "Set name",
-	path = "Path",
-	audioPath = "Audio path",
-	backgroundPath = "Background path",
-	mode = "Mode",
-	chartFileName = "Chart file name",
-	hash = "MD5 hash",
+	chartInfo = "Информация о карте",
+	artist = "Исполнитель",
+	title = "Название",
+	chartName = "Название",
+	bpm = "УВМ",
+	tags = "Тэги",
+	source = "Первоисточник",
+	chartFormat = "Формат",
+	setName = "Полное название",
+	path = "Путь",
+	audioPath = "Путь аудио",
+	backgroundPath = "Путь фона",
+	mode = "Кол-во клавиш",
+	chartFileName = "Название файла карты",
+	hash = "MD5 хэш",
 }
 
 localization.textKeybinds = {
-	keybinds = "Key binds",
+	keybinds = "Привязка клавиш",
 }
 
 localization.keybindsGlobal = {
-	insertMode = "Insert mode",
-	normalMode = "Normal mode",
-	quit = "Close a window or quit from a screen",
-	showChartInfo = "Show all information about the selected chart",
-	showKeybinds = "Show keybind table (You are here)",
+	insertMode = "Режим вставки",
+	normalMode = "Обычный режим",
+	quit = "Закрыть окно или уйти с экрана",
+	showChartInfo = "Показать всю информацию об выбранной карте",
+	showKeybinds = "Показать таблицу привязки клавиш (Вы находитесь здесь)",
 }
 
 localization.keybindsLargeList = {
-	up = "Move up in the list",
-	down = "Move down in the list",
-	up10 = "Move up 10 items in the list",
-	down10 = "Move down 10 items in the list",
-	toStart = "Move to the start of the list",
-	toEnd = "Move to the end of the list",
+	up = "Переместиться вверх по списку",
+	down = "Переместиться вниз по списку",
+	up10 = "Переместиться вверх 10 раз по списку",
+	down10 = "Переместиться вниз 10 раз по списку",
+	toStart = "Переместиться к началу списка",
+	toEnd = "Переместиться к концу списка",
 }
 
 localization.keybindsSmallList = {
-	up = "Move up in the small list",
-	down = "Move down in the small list",
+	up = "Переместиться вверх по малому списку",
+	down = "Переместиться вниз по малому списку",
 }
 
 localization.keybindsSongSelect = {
-	play = "Play the selected chart",
-	showMods = "Show song modifications",
-	random = "Randomize the chart selection",
-	decreaseTimeRate = "Decrease the music time rate",
-	increaseTimeRate = "Increase the music time rate",
-	undoRandom = "Undo the random chart selection",
-	clearSearch = "Clear the search field",
-	moveScreenLeft = "Move the screen to the left",
-	moveScreenRight = "Move the screen to the right",
-	pauseMusic = "Pause the music",
-	showSkins = "Show available skins",
-	showFilters = "Show chart and score filters",
-	showInputs = "Show input settings",
-	showMultiplayer = "Show multiplayer window or return to lobby",
-	showKeybinds = "Show keybinds window",
-	autoPlay = "Start chart in auto-play mode",
-	openEditor = "Open the chart editor",
+	play = "Сыграть выбранную карту",
+	showMods = "Показать модификаторы",
+	random = "Выбрать случайную карту",
+	decreaseTimeRate = "Уменьшить скорость музыки",
+	increaseTimeRate = "Увеличить скорость музыки",
+	undoRandom = "Вернуть прошлую случайную карту",
+	clearSearch = "Очистить поле поиска",
+	moveScreenLeft = "Переместить экран влево",
+	moveScreenRight = "Переместить экран вправо",
+	pauseMusic = "Поставить музыку на паузу",
+	showSkins = "Показать доступные скины",
+	showFilters = "Показать карту и фильтры рекордов",
+	showInputs = "Показать настройки ввода",
+	showMultiplayer = "Показать окно мультиплеера или вернуться в лобби",
+	showKeybinds = "Показать окно привязки клавиш",
+	autoPlay = "Запустить карту в режиме авто",
+	openEditor = "Открыть редактор карты",
 }
 
 localization.keybindsResult = {
-	watchReplay = "Watch the replay",
-	retry = "Retry the chart",
-	submitScore = "(Re)submit your score",
+	watchReplay = "Посмотреть реплей",
+	retry = "Перепройти карту",
+	submitScore = "(Пере)отправить ваш рекорд",
 }
 
 localization.fontFamilyList = {
