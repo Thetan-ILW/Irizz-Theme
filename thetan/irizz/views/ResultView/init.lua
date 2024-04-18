@@ -83,6 +83,7 @@ end
 
 function ResultView:update()
 	self.layersView:update()
+	self.game.previewModel:update()
 end
 
 function ResultView:draw()

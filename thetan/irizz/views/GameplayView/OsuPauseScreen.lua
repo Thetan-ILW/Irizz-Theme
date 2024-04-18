@@ -13,21 +13,33 @@ local PauseSubscreen = class()
 PauseSubscreen.tween = nil
 PauseSubscreen.alpha = 0
 
-function PauseSubscreen:new(overlay_file_name, overlay_fail_file_name)
-	if overlay_file_name then
-		self.overlayImage = love.graphics.newImage(overlay_file_name)
+local failed = false
+
+local function newImage(path)
+	if not path then
+		return nil
 	end
 
-	if overlay_fail_file_name then
-		self.overlayFailImage = love.graphics.newImage(overlay_fail_file_name)
+	return love.graphics.newImage(path)
+end
+
+function PauseSubscreen:new(note_skin)
+	if not note_skin then
+		return
 	end
+
+	self.overlayImage = newImage(note_skin.overlay)
+	self.overlayFailImage = newImage(note_skin.overlayFail)
+	self.continueImage = newImage(note_skin.continue)
+	self.retryImage = newImage(note_skin.retry)
+	self.backImage = newImage(note_skin.back)
 end
 
 function PauseSubscreen:show()
 	if self.tween then
 		self.tween:stop()
 	end
-	self.tween = flux.to(self, 0.3, { alpha = 1 }):ease("quadout")
+	self.tween = flux.to(self, 0.22, { alpha = 1 }):ease("quadout")
 end
 
 function PauseSubscreen:hide()
@@ -96,7 +108,7 @@ end
 function PauseSubscreen:overlay(view)
 	local image = self.overlayImage
 
-	if view.game.rhythmModel.scoreEngine.scoreSystem.hp:isFailed() then
+	if failed then
 		image = self.overlayFailImage
 	end
 
@@ -114,15 +126,65 @@ function PauseSubscreen:overlay(view)
 	love.graphics.draw(image, (ww / 2) - (w / 2), (wh / 2) - (h / 2), 0, scale, scale)
 end
 
+local y1 = 0.2222
+local y2 = 0.4444
+local y3 = 0.6666
+local button_size = 0.22
+
+local function button(image, _y)
+	if not image then
+		return
+	end
+
+	local w, h = image:getDimensions()
+	local ww, wh = love.graphics.getDimensions()
+
+	local x = (ww / 2) - (w / 2)
+	local y = wh * _y
+
+	love.graphics.origin()
+	love.graphics.translate(x, y)
+	local changed, active, hovered = just.button("button" .. _y, just.is_over(w, h))
+
+	love.graphics.setColor({ 1, 1, 1, 1 })
+
+	if hovered then
+		love.graphics.setColor({ 0.7, 0.7, 1, 1 })
+	end
+
+	love.graphics.draw(image)
+
+	return changed
+end
+
+function PauseSubscreen:buttons(view)
+	local gameplayController = view.game.gameplayController
+
+	if button(self.continueImage, y1) then
+		gameplayController:changePlayState("play")
+		self:hide()
+	end
+	if button(self.retryImage, y2) then
+		gameplayController:changePlayState("retry")
+		self:hide()
+	end
+	if button(self.backImage, y3) then
+		view:quit()
+	end
+end
+
 function PauseSubscreen:draw(view)
 	love.graphics.origin()
+
+	failed = view.game.rhythmModel.scoreEngine.scoreSystem.hp:isFailed()
 
 	local previousCanvas = love.graphics.getCanvas()
 	local layer = gyatt.getCanvas("pauseOverlay")
 	love.graphics.setCanvas({ layer, stencil = true })
 	love.graphics.clear()
 	self:overlay(view)
-	bottomScreenMenu(view)
+	self:buttons(view)
+	--bottomScreenMenu(view)
 	love.graphics.setCanvas({ previousCanvas, stencil = true })
 
 	love.graphics.origin()

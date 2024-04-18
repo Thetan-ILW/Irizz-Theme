@@ -1,7 +1,8 @@
 local Layout = require("sphere.views.GameplayView.Layout")
 local Background = require("sphere.views.GameplayView.Background")
 local Foreground = require("sphere.views.GameplayView.Foreground")
-local PauseSubscreen = require("thetan.irizz.views.GameplayView.PauseSubscreen")
+local OsuPauseScreen = require("thetan.irizz.views.GameplayView.OsuPauseScreen")
+local PauseScreen = require("thetan.irizz.views.GameplayView.PauseScreen")
 local ScreenView = require("sphere.views.ScreenView")
 local SequenceView = require("sphere.views.SequenceView")
 local just = require("just")
@@ -39,7 +40,15 @@ function GameplayView:load()
 	local values = { chartview.artist, chartview.title, chartview.name, length }
 	self.game.gameView.showMessage("chartStarted", values, { show_time = 2, small_text = true })
 
-	self.pauseScreen = PauseSubscreen(note_skin.pauseOverlay, note_skin.pauseOverlayFail)
+	local note_skin_pause = note_skin.pauseScreen
+
+	if note_skin_pause and note_skin_pause.type == "osu" then
+		self.pauseScreen = OsuPauseScreen(note_skin_pause)
+	elseif note_skin_pause and note_skin_pause.instance then
+		self.pauseScreen = note_skin_pause.instance
+	else
+		self.pauseScreen = PauseScreen()
+	end
 end
 
 function GameplayView:unload()
