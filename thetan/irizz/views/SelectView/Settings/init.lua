@@ -12,17 +12,17 @@ local Font
 local ViewConfig = class()
 
 local tabs = {
-	Text.gameplayTab,
-	Text.audioTab,
-	Text.videoTab,
-	Text.scoring,
-	Text.timingsTab,
-	Text.inputsTab,
-	Text.uiTab,
-	Text.versionTab,
+	{ "gameplayTab", "Gameplay" },
+	{ "audioTab", "Audio" },
+	{ "videoTab", "Video" },
+	{ "scoring", "Scoring" },
+	{ "timingsTab", "Timings" },
+	{ "inputsTab", "Inputs" },
+	{ "uiTab", "UI" },
+	{ "versionTab", "Version" },
 }
 
-local currentTab = Text.gameplayTab
+local currentTab = tabs[1][2]
 
 function ViewConfig:new(game)
 	self.game = game
@@ -57,9 +57,11 @@ function ViewConfig:tabs(view)
 
 	love.graphics.setFont(Font.tabs)
 
-	for _, tab in ipairs(tabs) do
-		if imgui.TextOnlyButton(tab, tab, w, h, "center", tab == currentTab) then
-			currentTab = tab
+	for i, tab in ipairs(tabs) do
+		local label = Text[tab[1]]
+		local methodName = tab[2]
+		if imgui.TextOnlyButton(label, label, w, h, "center", methodName == currentTab) then
+			currentTab = methodName
 			SettingsTab:reset()
 			Theme:playSound("tabButtonClick")
 		end

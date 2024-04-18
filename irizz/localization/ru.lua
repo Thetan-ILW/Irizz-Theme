@@ -12,8 +12,8 @@ localization.textHeader = {
 
 localization.textSettings = {
 	gameplayTab = "Gameplay",
-	audioTab = "Audio",
-	videoTab = "Video",
+	audioTab = "Аудио",
+	videoTab = "Видео",
 	timingsTab = "Timings",
 	keybindsTab = "Keybinds",
 	inputsTab = "Inputs",
@@ -43,8 +43,8 @@ localization.textSettings = {
 	pauseRetry = "Пауза->Перезапуск",
 	--
 	ratingHitWindow = "Rating hit window",
-	inputOffest = "Оффсет ввода",
-	visualOffset = "Визуальный оффсет",
+	inputOffest = "Сдвиг ввода",
+	visualOffset = "Визуальный сдвиг",
 	multiplyInputOffset = "Multiply input offset by time rate",
 	multiplyVisualOffset = "Multiply visual offset by time rate",
 	--
@@ -83,7 +83,7 @@ localization.textSettings = {
 	allowRotateX = "Allow rotation of X coordinate",
 	allowRotateY = "Allow rotation of Y coordinate",
 	--
-	offset = "Оффсет",
+	offset = "Сдвиг",
 	timeRate = "Time rate",
 	pause = "Пауза",
 	none = "Ничего",
@@ -120,7 +120,6 @@ localization.textSettings = {
 	scrollAcceleration = "Scroll acceleration",
 	scrollClickExtraTime = "Scroll click extra time",
 	--
-	themeVersion = "Theme version: ",
 	commit = "Commit: ",
 	commitDate = "Date: ",
 	--
@@ -172,25 +171,17 @@ localization.textSettings = {
 }
 
 localization.textSongSelect = {
-	noCharts = "Нет карт!",
-	noChartSets = "Нет набора карт!",
-	noScores = "Нет рекордов!",
 	length = "%s ДЛИНА",
 	notes = "%s НОТЫ",
-	bpm = "%i УВМ",
+	bpm = "%i УВМ", -- может лучше BPM оставить? ни один русский не знает что такое УВМ на самом деле
 	ln = "%i%% ДЛ. НОТЫ",
-	searchPlaceholder = "Нажмите чтобы найти...",
+	searchPlaceholder = "Нажмите чтобы найти...", -- Тут скорее лучше 'Пишите' или 'Напишите'. Но всё равно как то не так
 	filterPlaceholder = "Нет фильтров.",
-	noMods = "Нет модов",
-	hasMods = "Есть моды",
 	score = "Рекорд: %i",
 	noPatterns = "Нет паттернов",
 }
 
 localization.textCollections = {
-	queueEmpty = "Очередь пуста!",
-	notInOsuDirect = "Не в osu!direct режиме!",
-	noCollections = "Нет коллекций!",
 	cache = "Кэш",
 	collections = "Коллекции",
 	osuDirect = "osu!direct",
@@ -201,6 +192,60 @@ localization.textCollections = {
 	redownload = "Перезагрузить",
 	wait = "Подождите...",
 	osuDirectSearchPlaceholder = "Нажмите чтобы найти...",
+}
+
+localization.textChartList = {
+	noItems = "Нет карт!",
+}
+
+localization.textChartSetsList = {
+	noItems = "Нет набора карт!",
+}
+
+localization.textScoreList = {
+	noItems = "Нет рекордов!",
+	noMods = "Нет модов",
+	hasMods = "Есть моды",
+}
+
+localization.textQueueList = {
+	noItems = "Очередь пуста!",
+}
+
+localization.textOsuDirectList = {
+	noItems = "Не в osu!direct режиме!",
+}
+
+localization.textCollectionsList = {
+	noItems = "Нет коллекций!",
+}
+
+localization.textModifiersList = {
+	noItems = "No selected mods!",
+}
+
+localization.textAvailableModifiersList = {
+	noItems = "Your game is broken if you see this.",
+}
+
+localization.textInputsList = {
+	noItems = "Карта не выбрана.\nНе удается определить режим ввода.",
+}
+
+localization.textNoteSkinsList = {
+	noItems = "Нет скинов!",
+}
+
+localization.textRoomsList = {
+	noItems = "Нет комнат.\nСоздайте свою и пригласите своих друзей!",
+	playing = "Playing",
+	join = "Присоедениться",
+	room = "Комната: %s",
+	host = "Хост: %s",
+}
+
+localization.textMountsList = {
+	noItems = "Нет привязок!", -- я не знаю как это назвать. Хрен эти маунты на русский язык ты переведешь.
 }
 
 localization.textModifiers = {
@@ -214,12 +259,10 @@ localization.textNoteSkins = {
 
 localization.textInputs = {
 	inputs = "Привязка клавиш",
-	noInputs = "Карта не выбрана.\nНе удается определить режим ввода.",
 }
 
 localization.textMounts = {
 	mounts = "Ручная установка",
-	noMounts = "Нет пути!",
 	update = "Обновить",
 	deleteCache = "Удалить кэш",
 	processingCharts = "Обработка карт...",
@@ -233,13 +276,12 @@ localization.textMounts = {
 	chartdiffs = "Сложность карты",
 	chartmetas = "Метаданные карты",
 	compute = "Подсчитать",
-	delete = "Удалить",
 	computed = "Подсчитанно: %i",
 }
 
 localization.textOnline = {
 	notLoggedIn = "Подключится к серверу:",
-	loggedIn = "Вы подключены на сервере.",
+	loggedIn = "Вы подключены к серверу.",
 	connect = "Войти",
 	quickConnect = "Войти с помощью бразуера",
 	logout = "Выйти",
@@ -263,37 +305,33 @@ localization.textFilters = {
 
 localization.textResult = {
 	score = "КОЛ-ВО ОЧКОВ",
-	accuracy = "ПРОЦЕНТ АККУРАТНОСТИ",
+	accuracy = "ТОЧНОСТЬ",
 	inputMode = "РЕЖИМ",
 	timeRate = "УСКОРЕНИЕ",
 	pauses = "КОЛ-ВО ПАУЗ",
-	scrollSpeed = "СКОРОСТЬ ПРОКРУТКИ",
+	scrollSpeed = "ТИП ПРОКРУТКИ",
 	noPatterns = "Нет паттернов",
-	noAccuracy = "No accuracy",
+	noAccuracy = "Нет точности",
 }
 
 localization.textMultiplayer = {
-	title = "Multiplayer and players",
-	noPlayers = "Nobody is online.",
-	players = "Players:",
-	noRooms = "No rooms.\nCreate one and invite your friends!",
-	createTip = "Create your own room:",
-	createRoom = "Create a room",
-	playing = "Playing",
-	join = "Join",
-	name = "Name",
-	password = "Password",
-	create = "Create",
-	enterPassword = "Enter password to join the %s",
-	back = "Back",
-	notConnected = "Trying to connect.\nStatus: %s",
-	room = "Room: %s",
-	host = "Host: %s",
+	title = "Мультиплеер ",
+	noPlayers = "Нет игроков в сети.",
+	players = "Игроки:",
+	createTip = "Создайте вашу собственную комнату:",
+	createRoom = "Создать комнату",
+	playing = "В игре",
+	name = "Название",
+	password = "Пароль",
+	create = "Создать",
+	enterPassword = "Введите пароль чтобы присоединиться к %s",
+	back = "Назад",
+	notConnected = "Пытаемся подключиться.\nСтатус: %s",
 }
 
 localization.textMultiplayerScreen = {
-	roomName = "Room name: %s",
-	playerCount = "Players: %i",
+	roomName = "Название комнаты: %s",
+	playerCount = "Игроки: %i",
 }
 
 localization.textChartInfo = {
@@ -525,7 +563,7 @@ localization.fonts = {
 		hitError = { "ZenMaruGothic-Medium", 16 },
 		judgements = { "ZenMaruGothic-Medium", 24 },
 		accuracy = { "ZenMaruGothic-Medium", 28 },
-		scoreInfo = { "ZenMaruGothic-Medium", 30 },
+		scoreInfo = { "ZenMaruGothic-Medium", 24 },
 		pauses = { "ZenMaruGothic-Medium", 24 },
 		difficulty = { "ZenMaruGothic-Medium", 28 },
 		calculator = { "ZenMaruGothic-Medium", 24 },
