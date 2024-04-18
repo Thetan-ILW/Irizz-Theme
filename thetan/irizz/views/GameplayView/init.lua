@@ -1,7 +1,7 @@
 local Layout = require("sphere.views.GameplayView.Layout")
 local Background = require("sphere.views.GameplayView.Background")
 local Foreground = require("sphere.views.GameplayView.Foreground")
-local PauseSubscreen = require("sphere.views.GameplayView.PauseSubscreen")
+local PauseSubscreen = require("thetan.irizz.views.GameplayView.PauseSubscreen")
 local ScreenView = require("sphere.views.ScreenView")
 local SequenceView = require("sphere.views.SequenceView")
 local just = require("just")
@@ -24,18 +24,22 @@ function GameplayView:load()
 	self.subscreen = ""
 	self.failed = false
 
-	local sequenceView = self.sequenceView
+	local sequence_view = self.sequenceView
 
-	sequenceView.game = self.game
-	sequenceView.subscreen = "gameplay"
-	sequenceView:setSequenceConfig(self.game.noteSkinModel.noteSkin.playField)
-	sequenceView:load()
+	local note_skin = self.game.noteSkinModel.noteSkin
+
+	sequence_view.game = self.game
+	sequence_view.subscreen = "gameplay"
+	sequence_view:setSequenceConfig(note_skin.playField)
+	sequence_view:load()
 
 	local chartview = self.game.selectModel.chartview
 
 	local length = time_util.format((chartview.duration or 0) / self.game.playContext.rate)
 	local values = { chartview.artist, chartview.title, chartview.name, length }
 	self.game.gameView.showMessage("chartStarted", values, { show_time = 2, small_text = true })
+
+	self.pauseScreen = PauseSubscreen(note_skin.pauseOverlay, note_skin.pauseOverlayFail)
 end
 
 function GameplayView:unload()
@@ -59,7 +63,7 @@ function GameplayView:draw()
 	Background(self)
 	self.sequenceView:draw()
 	if self.subscreen == "pause" then
-		PauseSubscreen(self)
+		self.pauseScreen:draw(self)
 	end
 	Foreground(self)
 	just.container()
@@ -158,6 +162,7 @@ function GameplayView:keypressed()
 	if state == "play" then
 		if kp(input.pause) and not shift then
 			gameplayController:changePlayState("pause")
+			self.pauseScreen:show()
 		elseif kp(input.pause) and shift then
 			self:quit()
 		elseif kp(input.quickRestart) then
@@ -166,6 +171,7 @@ function GameplayView:keypressed()
 	elseif state == "pause" then
 		if kp(input.pause) and not shift then
 			gameplayController:changePlayState("play")
+			self.pauseScreen:hide()
 		elseif kp(input.pause) and shift then
 			self:quit()
 		elseif kp(input.quickRestart) then
@@ -173,6 +179,7 @@ function GameplayView:keypressed()
 		end
 	elseif state == "pause-play" and kp(input.pause) then
 		gameplayController:changePlayState("pause")
+		self.pauseScreen:show()
 	end
 end
 

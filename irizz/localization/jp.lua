@@ -376,6 +376,11 @@ localization.fonts = {
 		title = { "ZenMaruGothic-Black", 72 },
 		info = { "ZenMaruGothic-Medium", 24 },
 	},
+
+	notifications = {
+		message = { "ZenMaruGothic-Medium", 36 },
+		smallText = { "ZenMaruGothic-Medium", 24 },
+	},
 }
 
 return localization
