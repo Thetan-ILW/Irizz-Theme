@@ -545,6 +545,16 @@ local _colorTypes = {
 	solid = Text.solidColor,
 }
 
+local transitionTypes = {
+	"circle",
+	"fade",
+}
+
+local _transitionTypes = {
+	circle = Text.circle,
+	fade = Text.fade,
+}
+
 ---@param v number?
 ---@return string
 local function formatRateType(v)
@@ -557,6 +567,10 @@ end
 
 local function formatLocalization(v)
 	return v.name
+end
+
+local function formatTranisiton(v)
+	return _transitionTypes[v] or ""
 end
 
 function SettingsTab:UI(view)
@@ -617,9 +631,19 @@ function SettingsTab:UI(view)
 		1,
 		Text.ch_ab
 	) * 0.001
+
 	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion)
 		* 0.001
+
 	irizz.spectrum = imgui.combo("irizz.spectrum", irizz.spectrum, colorTypes, formatColorType, Text.spectrum)
+
+	irizz.transitionAnimation = imgui.combo(
+		"irizz.transitionAnimation",
+		irizz.transitionAnimation,
+		transitionTypes,
+		formatTranisiton,
+		Text.transitionAnimation
+	)
 
 	imgui.separator()
 	just.text(Text.collections)

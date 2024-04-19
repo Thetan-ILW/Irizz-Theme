@@ -121,6 +121,8 @@ localization.textSettings = {
 	vimMotions = "Vim motions (RESTART REQUIRED)",
 	scrollAcceleration = "Scroll acceleration",
 	scrollClickExtraTime = "Scroll click extra time",
+	transitionAnimation = "Transition animation",
+	fade = "Fade",
 	--
 	commit = "Commit: ",
 	commitDate = "Date: ",

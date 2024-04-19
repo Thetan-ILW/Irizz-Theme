@@ -20,4 +20,5 @@ return {
 	scrollClickExtraTime = 0.05,
 	language = "English",
 	alwaysShowOriginalMode = false,
+	transitionAnimation = "circle",
 }

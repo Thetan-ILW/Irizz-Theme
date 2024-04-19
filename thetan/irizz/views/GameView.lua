@@ -1,6 +1,6 @@
 local class = require("class")
 local gyatt = require("thetan.gyatt")
-local FadeTransition = require("sphere.views.FadeTransition")
+local ScreenTransition = require("thetan.irizz.views.ScreenTransition")
 local FrameTimeView = require("sphere.views.FrameTimeView")
 local AsyncTasksView = require("sphere.views.AsyncTasksView")
 local TextTooltipImView = require("sphere.imviews.TextTooltipImView")
@@ -16,7 +16,7 @@ local GameView = class()
 ---@param game sphere.GameController
 function GameView:new(game)
 	self.game = game
-	self.fadeTransition = FadeTransition()
+	self.screenTransition = ScreenTransition()
 	self.frameTimeView = FrameTimeView()
 end
 
@@ -53,11 +53,13 @@ end
 
 ---@param view sphere.ScreenView
 function GameView:setView(view)
+	local config = self.game.configModel.configs.irizz
+	local transition = config.transitionAnimation
 	view.gameView = self
-	self.fadeTransition:transit(function()
-		self.fadeTransition:transitAsync(1, 0)
+	self.screenTransition:transit(function()
+		self.screenTransition:transitAsync(1, 0, transition)
 		self:_setView(view)
-		self.fadeTransition:transitAsync(0, 1)
+		self.screenTransition:transitAsync(0, 1, transition)
 	end)
 end
 
@@ -70,7 +72,7 @@ end
 
 ---@param dt number
 function GameView:update(dt)
-	self.fadeTransition:update()
+	self.screenTransition:update()
 	if not self.view then
 		return
 	end
@@ -81,7 +83,7 @@ function GameView:draw()
 	if not self.view then
 		return
 	end
-	self.fadeTransition:drawBefore()
+	self.screenTransition:drawBefore()
 	self.view:draw()
 
 	if self.modal then
@@ -105,7 +107,7 @@ function GameView:draw()
 
 	NotificationView:draw()
 
-	self.fadeTransition:drawAfter()
+	self.screenTransition:drawAfter()
 	self.frameTimeView:draw()
 
 	local settings = self.game.configModel.configs.settings
