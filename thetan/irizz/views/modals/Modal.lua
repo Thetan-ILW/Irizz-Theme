@@ -55,7 +55,7 @@ function Modal:draw(view)
 	love.graphics.setCanvas({ self.canvas, stencil = true })
 	love.graphics.clear()
 	self.viewConfig:draw(self)
-	love.graphics.setCanvas(previousCanvas)
+	love.graphics.setCanvas({ previousCanvas, stencil = true })
 
 	love.graphics.origin()
 	love.graphics.setColor(1, 1, 1, self.alpha)
