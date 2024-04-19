@@ -123,6 +123,7 @@ localization.textSettings = {
 	scrollClickExtraTime = "Scroll click extra time",
 	transitionAnimation = "Transition animation",
 	fade = "Fade",
+	shutter = "Shutter",
 	--
 	commit = "Commit: ",
 	commitDate = "Date: ",

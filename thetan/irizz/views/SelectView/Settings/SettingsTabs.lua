@@ -548,11 +548,13 @@ local _colorTypes = {
 local transitionTypes = {
 	"circle",
 	"fade",
+	"shutter",
 }
 
 local _transitionTypes = {
 	circle = Text.circle,
 	fade = Text.fade,
+	shutter = Text.shutter,
 }
 
 ---@param v number?

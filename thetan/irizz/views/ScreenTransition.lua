@@ -10,7 +10,8 @@ ScreenTransition.percent = 1
 ScreenTransition.duration = 0.2
 
 local w, h = 0, 0
-local x, y = 0, 0
+local circle_x, circle_y = 0, 0
+local shutter_y = 0
 
 ---@param cf function
 function ScreenTransition:transit(cf)
@@ -31,22 +32,26 @@ function ScreenTransition:animation() end
 ---@param transition string
 function ScreenTransition:transitAsync(start_percent, target_percent, transition)
 	w, h = love.graphics.getDimensions()
+
 	local ease = "quadinout"
+	self.duration = 0.2
 
 	if transition == "circle" then
 		self.animation = self.circle
-		x, y = 0, 0
+		circle_x, circle_y = 0, 0
 
 		ease = "quartin"
 		if target_percent == 0 then
-			x, y = w, h
+			circle_x, circle_y = w, h
 			ease = "quartout"
 		end
 
 		self.duration = 0.4
 	elseif transition == "fade" then
 		self.animation = self.fade
-		self.duration = 0.2
+	elseif transition == "shutter" then
+		shutter_y = target_percent == 0 and -h or 0
+		self.animation = self.shutter
 	end
 
 	self.percent = start_percent
@@ -74,9 +79,21 @@ function ScreenTransition:drawBefore()
 	self.isCanvasSet = true
 end
 
+function ScreenTransition:shutter()
+	gfx.setColor(0, 0, 0, 1)
+
+	local percent = self.target_percent == 0 and 1 - self.percent or self.percent
+
+	gfx.rectangle("fill", 0, shutter_y + (h * percent), w, h)
+
+	gfx.setCanvas()
+	gfx.setColor(1, 1, 1, 1)
+	gfx.draw(gfx_util.getCanvas("screenTransition"))
+end
+
 function ScreenTransition:circle()
 	local animationStencil = function()
-		gfx.circle("fill", x, y, (w * 1.5) * self.percent)
+		gfx.circle("fill", circle_x, circle_y, (w * 1.5) * self.percent)
 	end
 
 	gfx.stencil(animationStencil, "replace", 1)
