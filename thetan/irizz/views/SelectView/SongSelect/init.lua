@@ -322,7 +322,7 @@ function ViewConfig:draw(view, position)
 	end
 
 	canUpdate = position == 0
-	canUpdate = canUpdate and not view.modalActive
+	canUpdate = canUpdate and view:canUpdate()
 	canUpdate = canUpdate and gyatt.vim.isNormalMode
 
 	self.panels()

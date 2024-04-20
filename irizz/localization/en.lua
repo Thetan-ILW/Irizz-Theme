@@ -603,6 +603,10 @@ localization.fonts = {
 		message = { "ZenMaruGothic-Medium", 36 },
 		smallText = { "ZenMaruGothic-Medium", 24 },
 	},
+
+	mainMenuView = {
+		title = { "ZenMaruGothic-Medium", 72 },
+	},
 }
 
 return localization

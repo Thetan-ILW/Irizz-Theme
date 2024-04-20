@@ -27,6 +27,7 @@ local panelBlur = 0
 local showSpectrum = false
 local applyShaders = false
 local modalActive = false
+local mainMenuActive = false
 
 local gfx = love.graphics
 
@@ -226,6 +227,11 @@ function LayersView:update()
 	end
 
 	modalActive = self.game.gameView.modal ~= nil
+	uiAlpha = 1 - self.game.gameView.mainMenuView:getAlpha()
+
+	if modalActive then
+		uiAlpha = uiAlpha - self.game.gameView.modal.alpha
+	end
 end
 
 function LayersView:draw(panelsStencil, ui)
@@ -234,12 +240,8 @@ function LayersView:draw(panelsStencil, ui)
 
 	local background = self:drawBackground()
 
-	if modalActive then
-		uiAlpha = 1 - self.game.gameView.modal.alpha
-
-		if uiAlpha == 0 then
-			return
-		end
+	if uiAlpha == 0 then
+		return
 	end
 
 	self:drawPanelBlur(background, panelsStencil)

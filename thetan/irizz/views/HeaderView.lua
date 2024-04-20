@@ -15,7 +15,7 @@ local ViewConfig = class()
 
 local gfx = love.graphics
 
-local function drawImageInCirlce(image, r, x)
+local function circleImage(image, r, x)
 	local imageW = (r * 2) / image:getPixelWidth()
 	local imageH = (r * 2) / image:getPixelHeight()
 
@@ -28,6 +28,9 @@ local function drawImageInCirlce(image, r, x)
 	gfx.draw(image, x - (r * 2), 0, 0, imageW, imageH)
 	gfx.setStencilTest()
 	gfx.circle("line", x - r, r, r)
+
+	local clicked = just.button("circleImage" .. x, just.is_over(r * 2, r * 2))
+	return clicked
 end
 
 local buttonOffset = 0
@@ -72,7 +75,10 @@ function ViewConfig:songSelectButtons(view)
 
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
-	drawImageInCirlce(self.gameIcon, r, r * 2)
+
+	if circleImage(self.gameIcon, r, r * 2) then
+		view.gameView.mainMenuView:toggle()
+	end
 
 	buttonOffset = r * 2
 	local panelHeight = font.anyText:getHeight() + 8
@@ -100,7 +106,10 @@ function ViewConfig:resultButtons(view)
 
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
-	drawImageInCirlce(self.gameIcon, r, r * 2)
+
+	if circleImage(self.gameIcon, r, r * 2) then
+		view.gameView.mainMenuView:toggle()
+	end
 
 	local songsText = font.anyText:getWidth(Text.songs)
 
@@ -172,7 +181,7 @@ function ViewConfig:rightSide(view)
 	local r = h / 1.4
 	local panelHeight = font.anyText:getHeight() + 8
 
-	drawImageInCirlce(self.avatarImage, r, w)
+	circleImage(self.avatarImage, r, w)
 
 	buttonOffset = -r * 2
 	button(username, w, h, panelHeight, true)

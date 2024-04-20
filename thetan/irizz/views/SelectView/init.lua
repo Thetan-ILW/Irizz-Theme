@@ -203,6 +203,13 @@ function SelectView:songSelectInputs()
 	self.inputMap:call("select")
 end
 
+function SelectView:canUpdate()
+	local canUpdate = not self.modalActive
+	canUpdate = canUpdate and (not self.gameView.mainMenuView:isActive())
+
+	return canUpdate
+end
+
 function SelectView:receive(event)
 	self.game.selectController:receive(event)
 

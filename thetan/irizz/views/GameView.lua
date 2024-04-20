@@ -5,6 +5,7 @@ local FrameTimeView = require("sphere.views.FrameTimeView")
 local AsyncTasksView = require("sphere.views.AsyncTasksView")
 local TextTooltipImView = require("sphere.imviews.TextTooltipImView")
 local ContextMenuImView = require("sphere.imviews.ContextMenuImView")
+local MainMenuView = require("thetan.irizz.views.MainMenuView")
 local NotificationView = require("thetan.irizz.views.NotificationView")
 local InputMap = require("thetan.irizz.views.GameViewInputMap")
 local Theme = require("thetan.irizz.views.Theme")
@@ -31,7 +32,13 @@ function GameView:load()
 
 	local actionModel = self.game.actionModel
 	self.inputMap = InputMap(self, actionModel:getGroup("global"))
+
+	self.mainMenuView = MainMenuView(self)
 	NotificationView:init()
+end
+
+function GameView:getViewName()
+	return self.viewName
 end
 
 ---@param view sphere.ScreenView
@@ -39,11 +46,22 @@ function GameView:_setView(view)
 	if self.view then
 		self.view:unload()
 	end
+
 	view.prevView = self.view
 	self.view = view
 	self.view:load()
 
-	if self:getViewName() ~= "gameplay" then
+	local viewNames = {
+		[self.game.selectView] = "select",
+		[self.game.resultView] = "result",
+		[self.game.gameplayView] = "gameplay",
+		[self.game.multiplayerView] = "multiplayer",
+		[self.game.editorView] = "editor",
+	}
+
+	self.viewName = viewNames[view]
+
+	if self.viewName ~= "gameplay" then
 		gyatt.vim.enable()
 		return
 	end
@@ -83,6 +101,7 @@ function GameView:draw()
 	if not self.view then
 		return
 	end
+
 	self.screenTransition:drawBefore()
 	self.view:draw()
 
@@ -100,11 +119,13 @@ function GameView:draw()
 			self.contextMenu = nil
 		end
 	end
+
 	if self.tooltip then
 		TextTooltipImView(self.tooltip)
 		self.tooltip = nil
 	end
 
+	self.mainMenuView:draw(self:getViewName())
 	NotificationView:draw()
 
 	self.screenTransition:drawAfter()
@@ -189,25 +210,14 @@ function GameView:sendQuitSignal()
 		return
 	end
 
+	if self.mainMenuView:isActive() then
+		self.mainMenuView:toggle()
+		return
+	end
+
 	if self.view.quit then
 		self.view:quit()
 	end
-end
-
-function GameView:getViewName(view)
-	local t = {
-		[self.game.selectView] = "select",
-		[self.game.resultView] = "result",
-		[self.game.gameplayView] = "gameplay",
-		[self.game.multiplayerView] = "multiplayer",
-		[self.game.editorView] = "editor",
-	}
-
-	if view then
-		return t[view]
-	end
-
-	return t[self.view]
 end
 
 return GameView
