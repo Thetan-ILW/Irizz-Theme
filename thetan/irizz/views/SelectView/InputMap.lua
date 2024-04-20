@@ -45,6 +45,9 @@ function SelectInputMap:createBindings(sv, a)
 
 			sv:changeScreen("editorView")
 		end,
+		[a.openResult] = function()
+			sv:result()
+		end,
 	}
 
 	self.view = {

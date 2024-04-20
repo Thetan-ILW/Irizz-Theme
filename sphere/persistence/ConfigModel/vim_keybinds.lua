@@ -24,6 +24,7 @@ return {
 		showInputs = { op = "oi" },
 		showMultiplayer = { op = "op" },
 		openEditor = { op = "oe" },
+		openResult = { op = "or" },
 		autoPlay = { mod = { "lctrl", "rctrl" }, "return" },
 	},
 	resultScreen = {

@@ -25,6 +25,7 @@ return {
 		showMultiplayer = { mod = { "lctrl", "rctrl" }, "m" },
 		autoPlay = { mod = { "lctrl", "rctrl" }, "return" },
 		openEditor = { mod = { "lctrl", "rctrl" }, "e" },
+		openResult = { mod = { "lctrl", "rctrl" }, "r" },
 	},
 	resultScreen = {
 		watchReplay = "w",

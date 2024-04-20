@@ -372,6 +372,8 @@ localization.keybindsGlobal = {
 	quit = "Close a window or quit from a screen",
 	showChartInfo = "Show all information about the selected chart",
 	showKeybinds = "Show keybind table (You are here)",
+	increaseVolume = "Increase volume",
+	decreaseVolume = "Decrease volume",
 }
 
 localization.keybindsLargeList = {
@@ -406,6 +408,7 @@ localization.keybindsSongSelect = {
 	showKeybinds = "Show keybinds window",
 	autoPlay = "Start chart in auto-play mode",
 	openEditor = "Open the chart editor",
+	openResult = "Open the resul screen",
 }
 
 localization.keybindsResult = {

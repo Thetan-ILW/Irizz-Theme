@@ -14,14 +14,16 @@ KeybindModal.keybinds = {
 
 local function getSelectKeybinds(self)
 	local groups = {
-		songSelect = Theme.keybindsSongSelect,
-		largeList = Theme.keybindsLargeList,
-		smallList = Theme.keybindsSmallList,
-		global = Theme.keybindsGlobal,
+		{ "global", Theme.keybindsGlobal },
+		{ "songSelect", Theme.keybindsSongSelect },
+		{ "largeList", Theme.keybindsLargeList },
+		{ "smallList", Theme.keybindsSmallList },
 	}
 
-	for name, format in pairs(groups) do
-		self.keybinds.formattedGroups[name] = self.actionModel:formatGroup(name, format)
+	for _, keyValue in ipairs(groups) do
+		local name = keyValue[1]
+		local localization = keyValue[2]
+		table.insert(self.keybinds.formattedGroups, { name, self.actionModel:formatGroup(name, localization) })
 	end
 
 	self.keybinds.view = "select"
@@ -29,12 +31,14 @@ end
 
 local function getResultKeybinds(self)
 	local groups = {
-		global = Theme.keybindsGlobal,
-		resultScreen = Theme.keybindsResult,
+		{ "global", Theme.keybindsGlobal },
+		{ "resultScreen", Theme.keybindsResult },
 	}
 
-	for name, format in pairs(groups) do
-		self.keybinds.formattedGroups[name] = self.actionModel:formatGroup(name, format)
+	for _, keyValue in ipairs(groups) do
+		local name = keyValue[1]
+		local localization = keyValue[2]
+		table.insert(self.keybinds.formattedGroups, { name, self.actionModel:formatGroup(name, localization) })
 	end
 
 	self.keybinds.view = "result"

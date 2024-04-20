@@ -27,10 +27,14 @@ function ViewConfig:keybinds(view)
 	self.container:startDraw(w, h)
 
 	love.graphics.setColor(Color.text)
-	for _, group in pairs(groups) do
+	for _, groupsKeyValue in ipairs(groups) do
+		local _ = groupsKeyValue[1] -- name
+		local group = groupsKeyValue[2]
 		gyatt.separator()
 		love.graphics.setFont(Font.keybinds)
-		for description, bind in pairs(group) do
+		for _, keyValue in ipairs(group) do
+			local description = keyValue[1]
+			local bind = keyValue[2]
 			gyatt.frame(description, -30, 0, w, h, "right", "top")
 			just.text(bind)
 			just.next(0, 10)

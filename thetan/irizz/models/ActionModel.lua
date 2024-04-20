@@ -34,19 +34,76 @@ local modFormat = {
 	ralt = "ALT",
 }
 
-function ActionModel:formatGroup(groupName, formatTable)
+local order = {
+	global = {
+		"quit",
+		"increaseVolume",
+		"decreaseVolume",
+		"showChartInfo",
+		"showKeybinds",
+		"insertMode",
+		"normalMode",
+	},
+
+	largeList = {
+		"up",
+		"down",
+		"up10",
+		"down10",
+		"toStart",
+		"toEnd",
+	},
+
+	smallList = {
+		"up",
+		"down",
+	},
+
+	songSelect = {
+		"play",
+		"autoPlay",
+		"showMods",
+		"showSkins",
+		"showFilters",
+		"showInputs",
+		"showMultiplayer",
+		"showKeybinds",
+		"openEditor",
+		"openResult",
+		"decreaseTimeRate",
+		"increaseTimeRate",
+		"random",
+		"undoRandom",
+		"clearSearch",
+		"moveScreenLeft",
+		"moveScreenRight",
+		"pauseMusic",
+	},
+
+	resultScreen = {
+		"watchReplay",
+		"retry",
+		"submitScore",
+	},
+}
+
+---@param groupName string
+---@param localization string[]
+function ActionModel:formatGroup(groupName, localization)
 	local t = {}
 	local group = actions[groupName]
 
-	for action, binding in pairs(group) do
-		action = formatTable[action] or "IDIOT"
+	for _, actionName in ipairs(order[groupName]) do
+		local action = localization[actionName] or "IDIOT"
+		local binding = group[actionName]
+
 		if type(binding) == "string" then
-			t[action] = binding
+			table.insert(t, { action, binding })
 		elseif type(binding) == "table" then
 			if binding.mod then
-				t[action] = modFormat[binding.mod[1]] .. " + " .. table.concat(binding, " + ", 1)
+				table.insert(t, { action, modFormat[binding.mod[1]] .. " + " .. table.concat(binding, " + ", 1) })
 			elseif binding.op then
-				t[action] = binding.op
+				table.insert(t, { action, binding.op })
 			end
 		end
 	end
