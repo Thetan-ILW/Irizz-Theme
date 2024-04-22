@@ -23,7 +23,7 @@ function imgui.separator()
 	local r, g, b, a = love.graphics.getColor()
 	love.graphics.setColor(Color.separator)
 	love.graphics.line(0, 0, w - 30, 0)
-	love.graphics.setColor({r, g, b, a})
+	love.graphics.setColor({ r, g, b, a })
 	just.emptyline(8)
 end
 
@@ -210,7 +210,7 @@ function imgui.textcheckbox(id, v, text)
 	end
 
 	local width = love.graphics.getFont():getWidth(text)
-	if imgui.TextCheckbox(id, width, v,  text) then
+	if imgui.TextCheckbox(id, width, v, text) then
 		v = not v
 	end
 	if isNumber then
@@ -283,7 +283,7 @@ function imgui.intButtons(id, v, s, label)
 			v = v + (button == 1 and 1 or -1) * d
 		end
 	end
-	just.next(Theme.imgui.size/10)
+	just.next(Theme.imgui.size / 10)
 	imgui.label(id .. "label", label)
 	just.row()
 	return math.floor(v)

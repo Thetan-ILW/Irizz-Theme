@@ -77,6 +77,8 @@ function InputListView:drawItem(i, w, h)
 			if i + 1 <= item.inputCount and newBind then
 				just.focus(inputIdPattern:format(i + 1, index))
 			end
+
+			self:reloadItems()
 		end
 	end
 
