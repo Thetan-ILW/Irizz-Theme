@@ -6,6 +6,7 @@ local Layout = require("thetan.irizz.views.MainMenuView.Layout")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
+local Text = Theme.textMainMenu
 local font
 
 local MainMenu = class()
@@ -48,11 +49,26 @@ end
 
 local gfx = love.graphics
 
+local function getTimeOfDay()
+	local time = os.date("*t")
+	if time.hour < 12 then
+		return Text.morning
+	elseif time.hour < 17 then
+		return Text.day
+	elseif time.hour < 20 then
+		return Text.evening
+	else
+		return Text.night
+	end
+end
+
 local function title()
 	local w, h = Layout:move("screen")
 	gfx.setColor(Color.text)
 	gfx.setFont(font.title)
-	gyatt.frame("IRIZZ | SOUNDSPHERE", 0, -20, w, h, "right", "top")
+	gyatt.frame("IRIZZ | SOUNDSPHERE", 0, -20, w, h, "center", "top")
+	gfx.setFont(font.timeOfDay)
+	gyatt.frame(Text.timeOfDay:format(getTimeOfDay()), 0, font.title:getHeight() - 20, w, h, "center", "top")
 end
 
 ---@param screen_name string
@@ -74,6 +90,9 @@ function MainMenu:draw(screen_name)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
 	title()
+
+	if screen_name == "select" then
+	end
 
 	gfx.setCanvas({ previousCanvas, stencil = true })
 

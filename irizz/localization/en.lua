@@ -357,6 +357,14 @@ localization.textChartInfo = {
 	hash = "MD5 hash",
 }
 
+localization.textMainMenu = {
+	timeOfDay = "Good %s!",
+	morning = "morning",
+	day = "day",
+	evening = "evening",
+	night = "night",
+}
+
 localization.textKeybinds = {
 	keybinds = "Key binds",
 }
@@ -392,8 +400,8 @@ localization.keybindsSmallList = {
 
 localization.keybindsSongSelect = {
 	play = "Play the selected chart",
-	showMods = "Show song modifications",
-	random = "Randomize the chart selection",
+	showMods = "Show chart modifiers",
+	random = "Pick a random chart",
 	decreaseTimeRate = "Decrease the music time rate",
 	increaseTimeRate = "Increase the music time rate",
 	undoRandom = "Undo the random chart selection",
@@ -408,7 +416,7 @@ localization.keybindsSongSelect = {
 	showKeybinds = "Show keybinds window",
 	autoPlay = "Start chart in auto-play mode",
 	openEditor = "Open the chart editor",
-	openResult = "Open the resul screen",
+	openResult = "Open the result screen",
 }
 
 localization.keybindsResult = {
@@ -606,6 +614,8 @@ localization.fonts = {
 
 	mainMenuView = {
 		title = { "ZenMaruGothic-Medium", 72 },
+		timeOfDay = { "ZenMaruGothic-Medium", 48 },
+		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 }
 

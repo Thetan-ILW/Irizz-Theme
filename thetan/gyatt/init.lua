@@ -13,6 +13,8 @@ gyatt.frame = gfx_util.printFrame
 gyatt.getCanvas = gfx_util.getCanvas
 gyatt.separator = imgui.separator
 gyatt.setSize = imgui.setSize
+gyatt.button = just.button
+gyatt.isOver = just.is_over
 
 local modKeysList = {
 	lctrl = true,
@@ -211,7 +213,7 @@ function gyatt.resetInputs()
 end
 
 function gyatt.text(text, w, ax)
-	gyatt.frame(text, 0, 0, w, math.huge, ax, "top")
+	gyatt.frame(text, 0, 0, w or math.huge, math.huge, ax or "left", "top")
 	just.next(0, love.graphics.getFont():getHeight())
 end
 

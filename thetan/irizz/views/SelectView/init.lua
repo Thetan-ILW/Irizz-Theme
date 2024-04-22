@@ -99,6 +99,10 @@ function SelectView:notechartChanged()
 end
 
 function SelectView:play()
+	if not self:canUpdate() then
+		return
+	end
+
 	if not self.game.selectModel:notechartExists() then
 		return
 	end
