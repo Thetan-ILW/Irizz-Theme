@@ -154,6 +154,8 @@ ResultView.play = thread.coro(function(self, mode)
 		return
 	end
 
+	self.game.rhythmModel.audioEngine:unload()
+
 	playing = true
 	local scoreEntry = self.game.selectModel.scoreItem
 	local isResult = self.game.resultController:replayNoteChartAsync(mode, scoreEntry)
