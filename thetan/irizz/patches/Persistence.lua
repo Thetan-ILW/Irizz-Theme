@@ -18,6 +18,7 @@ modulePatcher:insert("sphere.persistence.Persistence", "load", function(_self)
 	configModel:open("irizz", true)
 	configModel:open("keybinds", true)
 	configModel:open("vim_keybinds", true)
+	configModel:open("osu_api", true)
 	configModel:read()
 
 	_self.cacheModel:load()

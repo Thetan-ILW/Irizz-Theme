@@ -3,6 +3,7 @@ local SelectView = require("thetan.irizz.views.SelectView")
 local GameplayView = require("thetan.irizz.views.GameplayView")
 local ResultView = require("thetan.irizz.views.ResultView")
 local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
+local OsuApi = require("thetan.irizz.models.OsuApi")
 local GameView = require("thetan.irizz.views.GameView")
 
 local modulePatcher = require("ModulePatcher")
@@ -26,6 +27,8 @@ modulePatcher:insert(module, "load", function(self)
 	--self.ui.multiplayerView = MultiplayerView(self)
 	--self.multiplayerView = self.ui.multiplayerView
 
+	self.osuApi = OsuApi(self)
+
 	self.persistence:load()
 	self.app:load()
 
@@ -43,6 +46,7 @@ modulePatcher:insert(module, "load", function(self)
 	self.noteSkinModel:load()
 	self.osudirectModel:load()
 	self.selectModel:load()
+	table.insert(self.selectModel.scoreLibrary.scoreSources, "osu")
 
 	self.multiplayerController:load()
 
@@ -50,6 +54,7 @@ modulePatcher:insert(module, "load", function(self)
 	self.multiplayerModel:connect()
 
 	self.actionModel:load()
+	self.osuApi:load()
 
 	self.ui:load()
 end)

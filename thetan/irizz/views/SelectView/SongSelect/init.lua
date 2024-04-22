@@ -17,6 +17,7 @@ local font
 local NoteChartSetListView = require("thetan.irizz.views.SelectView.SongSelect.NoteChartSetListView")
 local NoteChartListView = require("thetan.irizz.views.SelectView.SongSelect.NoteChartListView")
 local ScoreListView = require("thetan.irizz.views.ScoreListView")
+local OsuScoreListView = require("thetan.irizz.views.OsuScoreList")
 
 local boxes = {
 	"scores",
@@ -36,6 +37,7 @@ function ViewConfig:new(game)
 	self.noteChartSetListView = NoteChartSetListView(game)
 	self.noteChartListView = NoteChartListView(game)
 	self.scoreListView = ScoreListView(game)
+	self.osuScoreListView = OsuScoreListView(game)
 	font = Theme:getFonts("songSelectViewConfig")
 end
 
@@ -148,7 +150,13 @@ function ViewConfig:scores(view)
 
 	w, h = Layout:move("scores")
 
-	local list = self.scoreListView
+	local source = view.game.configModel.configs.select.scoreSourceName
+
+	if source == "osu" then
+		self.osuScoreListView:reloadItems()
+	end
+
+	local list = source == "osu" and self.osuScoreListView or self.scoreListView
 	list:draw(w, h, canUpdate)
 
 	if list.openResult then

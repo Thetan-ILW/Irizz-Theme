@@ -35,7 +35,10 @@ function OsudirectProcessingListView:drawItem(i, w, h)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.status)
 	just.indent(-15)
-	gyatt.frame(item.status, 0, 0, w, h, "right", "top")
+
+	if item.status then
+		gyatt.frame(item.status, 0, 0, w, h, "right", "top")
+	end
 
 	just.indent(30)
 	TextCellImView(math.huge, h, "left", item.artist, item.title, self.font.artist, self.font.title)

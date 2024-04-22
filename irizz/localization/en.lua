@@ -292,6 +292,14 @@ localization.textOnline = {
 	passwordPlaceholder = "Password",
 }
 
+localization.textOsuApi = {
+	loading = "Loading...",
+	noScores = "No scores!",
+	wait = "Wait...",
+	noToken = "No access token.",
+	noId = "No beatmap ID",
+}
+
 localization.textFilters = {
 	filters = "Filters",
 	moddedCharts = "Show modified charts",
