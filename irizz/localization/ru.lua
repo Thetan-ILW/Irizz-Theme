@@ -352,6 +352,20 @@ localization.textChartInfo = {
 	hash = "MD5 хэш",
 }
 
+localization.textMainMenu = {
+	morning = "Good morning!",
+	day = "Good day!",
+	evening = "Good evening!",
+	night = "Good night!",
+	modifiers = "Modifiers",
+	filters = "Filters",
+	noteSkins = "Note skins",
+	inputs = "Inputs",
+	keyBinds = "Key binds",
+	multiplayer = "Multiplayer",
+	chartEditor = "Chart editor",
+}
+
 localization.textKeybinds = {
 	keybinds = "Привязка клавиш",
 }
@@ -594,7 +608,7 @@ localization.fonts = {
 	mainMenuView = {
 		title = { "ZenMaruGothic-Medium", 72 },
 		timeOfDay = { "ZenMaruGothic-Medium", 48 },
-		buttons = { "ZenMaruGothic-Medium", 48 },
+		buttons = { "ZenMaruGothic-Medium", 24 },
 	},
 }
 

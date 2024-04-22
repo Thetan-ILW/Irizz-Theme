@@ -177,6 +177,19 @@ function Assets:get(config, theme)
 			end
 		end
 	end
+
+	local icons_path = "irizz/icons/"
+	local icons = {
+		modifiers = love.graphics.newImage(icons_path .. "modifiers.png"),
+		filters = love.graphics.newImage(icons_path .. "filters.png"),
+		noteSkins = love.graphics.newImage(icons_path .. "note_skins.png"),
+		inputs = love.graphics.newImage(icons_path .. "inputs.png"),
+		keyBinds = love.graphics.newImage(icons_path .. "key_binds.png"),
+		multiplayer = love.graphics.newImage(icons_path .. "multiplayer.png"),
+		chartEditor = love.graphics.newImage(icons_path .. "chart_editor.png"),
+	}
+
+	theme.icons = icons
 end
 
 return Assets

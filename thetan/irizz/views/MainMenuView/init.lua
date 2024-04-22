@@ -16,11 +16,13 @@ MainMenu.alpha = 0
 MainMenu.tween = nil
 
 local gameView
+local icons
 
 ---@param game_view sphere.GameView
 function MainMenu:new(game_view)
 	gameView = game_view
 	font = Theme:getFonts("mainMenuView")
+	icons = Theme.icons
 end
 
 ---@return boolean
@@ -68,7 +70,82 @@ local function title()
 	gfx.setFont(font.title)
 	gyatt.frame("IRIZZ | SOUNDSPHERE", 0, -20, w, h, "center", "top")
 	gfx.setFont(font.timeOfDay)
-	gyatt.frame(Text.timeOfDay:format(getTimeOfDay()), 0, font.title:getHeight() - 20, w, h, "center", "top")
+	gyatt.frame(getTimeOfDay(), 0, font.title:getHeight() - 20, w, h, "center", "top")
+end
+
+local function button(text, icon, spacing, size)
+	local w, _ = icon:getDimensions()
+
+	local icon_scale = (size / w) * 0.65
+	local icon_pos = (size / 2) - ((w * icon_scale) / 2)
+
+	local changed, active, hovered
+	if not gameView.modal then
+		changed, active, hovered = gyatt.button(text .. "mainMenu", gyatt.isOver(size, size))
+	end
+
+	gfx.setColor(Color.panel)
+	gfx.rectangle("fill", 0, 0, size, size, 12, 12)
+
+	gfx.setColor(hovered and Color.accent or { 1, 1, 1, 1 })
+	gfx.draw(icon, icon_pos, icon_pos - 10, 0, icon_scale, icon_scale)
+
+	gfx.setColor(Color.text)
+	gyatt.frame(text, 0, -5, size, size, "center", "bottom")
+
+	gfx.rectangle("line", 0, 0, size, size, 12, 12)
+	gfx.translate(spacing + size, 0)
+
+	return changed
+end
+
+function MainMenu:songSelectButtons()
+	local w, h = Layout:move("screen")
+
+	local button_count = 7
+
+	local button_size = w / 10
+	local spacing = 30
+
+	local position = (w / 2) - (((button_size * button_count) + (spacing * (button_count - 1))) / 2)
+
+	gfx.setLineWidth(8)
+	gfx.setFont(font.buttons)
+
+	gfx.translate(position, (h / 2) - (button_size / 2))
+
+	if button(Text.modifiers, icons.modifiers, spacing, button_size) then
+		gameView:openModal("thetan.irizz.views.modals.ModifierModal")
+	end
+
+	if button(Text.filters, icons.filters, spacing, button_size) then
+		gameView:openModal("thetan.irizz.views.modals.FiltersModal")
+	end
+
+	if button(Text.noteSkins, icons.noteSkins, spacing, button_size) then
+		gameView:openModal("thetan.irizz.views.modals.NoteSkinModal")
+	end
+
+	if button(Text.inputs, icons.inputs, spacing, button_size) then
+		gameView:openModal("thetan.irizz.views.modals.InputModal")
+	end
+
+	if button(Text.keyBinds, icons.keyBinds, spacing, button_size) then
+		gameView:openModal("thetan.irizz.views.modals.KeybindModal")
+	end
+
+	if button(Text.multiplayer, icons.multiplayer, spacing, button_size) then
+		gameView:openModal("thetan.irizz.views.modals.MultiplayerModal")
+	end
+
+	if button(Text.chartEditor, icons.chartEditor, spacing, button_size) then
+		if not gameView.game.selectModel:notechartExists() then
+			return
+		end
+
+		self:toggle()
+		gameView.view:changeScreen("editorView")
+	end
 end
 
 ---@param screen_name string
@@ -92,6 +169,7 @@ function MainMenu:draw(screen_name)
 	title()
 
 	if screen_name == "select" then
+		self:songSelectButtons()
 	end
 
 	gfx.setCanvas({ previousCanvas, stencil = true })

@@ -20,9 +20,6 @@ function _Layout:draw()
 	local gy, gh = gfx_util.layout(_y, _yh, { 20, "*", 20 })
 
 	self:pack("screen", gx[2], gy[2], gw[2], gh[2])
-
-	local y1, h1 = gfx_util.layout(gy[2], gh[2], { -0.5, -0.5 })
-	self:pack("buttons", gx[2], y1[2], gw[2], h1[2])
 end
 
 return _Layout
