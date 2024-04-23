@@ -1,7 +1,5 @@
 local class = require("class")
 
-local Layout = require("sphere.views.GameplayView.Layout")
-
 local flux = require("flux")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
@@ -15,12 +13,24 @@ PauseSubscreen.alpha = 0
 
 local failed = false
 
-local function newImage(path)
+local function exist(path)
 	if not path then
-		return nil
+		return false
 	end
 
-	return love.graphics.newImage(path)
+	if not love.filesystem.getInfo(path) then
+		return false
+	end
+
+	return true
+end
+
+local function newImage(path)
+	return exist(path) and love.graphics.newImage(path) or nil
+end
+
+local function newAudio(path, type)
+	return exist(path) and love.audio.newSource(path, type) or nil
 end
 
 function PauseSubscreen:new(note_skin)
@@ -33,6 +43,8 @@ function PauseSubscreen:new(note_skin)
 	self.continueImage = newImage(note_skin.continue)
 	self.retryImage = newImage(note_skin.retry)
 	self.backImage = newImage(note_skin.back)
+
+	self.loopAudio = newAudio(note_skin.loop, "stream")
 end
 
 function PauseSubscreen:show()
@@ -40,13 +52,26 @@ function PauseSubscreen:show()
 		self.tween:stop()
 	end
 	self.tween = flux.to(self, 0.22, { alpha = 1 }):ease("quadout")
+
+	if self.loopAudio then
+		self.loopAudio:stop()
+		self.loopAudio:play()
+	end
 end
 
 function PauseSubscreen:hide()
 	if self.tween then
 		self.tween:stop()
 	end
+
 	self.tween = flux.to(self, 0.22, { alpha = 0 }):ease("quadout")
+end
+
+function PauseSubscreen:unload()
+	if self.loopAudio then
+		self.loopAudio:stop()
+		self.loopAudio:release()
+	end
 end
 
 ---@param self table
@@ -119,32 +144,28 @@ function PauseSubscreen:overlay(view)
 	local w, h = image:getDimensions()
 	local ww, wh = love.graphics.getDimensions()
 
-	local scale = ww / w
+	local scale = math.max(ww / w, wh / h)
+
 	w = w * scale
 	h = h * scale
 
 	love.graphics.draw(image, (ww / 2) - (w / 2), (wh / 2) - (h / 2), 0, scale, scale)
 end
 
-local y1 = 0.2222
-local y2 = 0.4444
-local y3 = 0.6666
-local button_size = 0.22
-
 local function button(image, _y)
 	if not image then
 		return
 	end
 
-	local w, h = image:getDimensions()
-	local ww, wh = love.graphics.getDimensions()
+	local iw, ih = image:getDimensions()
+	local w, h = love.graphics.getDimensions()
 
-	local x = (ww / 2) - (w / 2)
-	local y = wh * _y
+	local x = (w / 2) - (iw / 2)
+	local y = h * _y
 
 	love.graphics.origin()
 	love.graphics.translate(x, y)
-	local changed, active, hovered = just.button("button" .. _y, just.is_over(w, h))
+	local changed, active, hovered = just.button("button" .. _y, just.is_over(iw, ih))
 
 	love.graphics.setColor({ 1, 1, 1, 1 })
 
@@ -160,16 +181,30 @@ end
 function PauseSubscreen:buttons(view)
 	local gameplayController = view.game.gameplayController
 
-	if button(self.continueImage, y1) then
-		gameplayController:changePlayState("play")
-		self:hide()
+	if not failed then
+		if button(self.continueImage, 0.2222) then
+			gameplayController:changePlayState("play")
+			self:hide()
+		end
 	end
-	if button(self.retryImage, y2) then
+
+	if button(self.retryImage, 0.4444) then
 		gameplayController:changePlayState("retry")
 		self:hide()
 	end
-	if button(self.backImage, y3) then
+	if button(self.backImage, 0.6666) then
 		view:quit()
+	end
+end
+
+function PauseSubscreen:updateAudio(view)
+	local configs = view.game.configModel.configs
+	local settings = configs.settings
+	local a = settings.audio
+	local volume = a.volume.master * a.volume.music
+
+	if self.loopAudio then
+		self.loopAudio:setVolume(volume * self.alpha)
 	end
 end
 
@@ -177,6 +212,8 @@ function PauseSubscreen:draw(view)
 	love.graphics.origin()
 
 	failed = view.game.rhythmModel.scoreEngine.scoreSystem.hp:isFailed()
+
+	self:updateAudio(view)
 
 	local previousCanvas = love.graphics.getCanvas()
 	local layer = gyatt.getCanvas("pauseOverlay")

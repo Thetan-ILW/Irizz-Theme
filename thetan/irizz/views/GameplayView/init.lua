@@ -52,6 +52,7 @@ function GameplayView:load()
 end
 
 function GameplayView:unload()
+	self.pauseScreen:unload()
 	self.game.gameplayController:unload()
 	self.game.rhythmModel.observable:remove(self.sequenceView)
 	self.sequenceView:unload()
