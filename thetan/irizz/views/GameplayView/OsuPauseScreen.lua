@@ -14,7 +14,7 @@ PauseSubscreen.alpha = 0
 local failed = false
 
 local function newImage(path)
-	local success, image = pcall(love.audio.newSource, path, type)
+	local success, image = pcall(love.graphics.newImage, path)
 	return success and image or nil
 end
 
