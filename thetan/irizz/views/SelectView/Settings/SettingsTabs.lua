@@ -39,40 +39,22 @@ local function intButtonsMs(id, v, label)
 	return imgui.intButtons(id, v * 1000, 1, label) / 1000
 end
 
-local speedType = {
-	["default"] = Text.default,
-	["osu"] = Text.osu,
-}
-
-local actionOnFail = {
-	["none"] = Text.none,
-	["pause"] = Text.pause,
-	["quit"] = Text.quit,
-}
-
-local tempoFactor = {
-	["average"] = Text.average,
-	["primary"] = Text.primary,
-	["minimum"] = Text.minimum,
-	["maximum"] = Text.maximum,
-}
-
 ---@param v number?
 ---@return string
 local function formatActionOnFail(v)
-	return actionOnFail[v] or ""
+	return Text[v] or ""
 end
 
 ---@param v number?
 ---@return string
 local function formatSpeedType(v)
-	return speedType[v] or ""
+	return Text[v] or ""
 end
 
 ---@param v number?
 ---@return string
 local function formatTempoFactor(v)
-	return tempoFactor[v] or ""
+	return Text[v] or ""
 end
 
 function SettingsTab:Gameplay(view)
@@ -334,15 +316,10 @@ function SettingsTab:Timings(view)
 	end
 end
 
-local volumeType = {
-	["linear"] = Text.linearType,
-	["logarithmic"] = Text.logarithmicType,
-}
-
 ---@param mode string
 ---@return string
 local function formatVolumeType(mode)
-	return volumeType[mode] or ""
+	return Text[mode] or ""
 end
 
 function SettingsTab:Audio(view)
@@ -431,38 +408,27 @@ local function formatMode(mode)
 end
 
 local vsyncNames = {
-	[1] = Text.enabled,
-	[0] = Text.disabled,
-	[-1] = Text.adaptive,
-}
-
-local fullscreenType = {
-	["desktop"] = Text.desktop,
-	["exclusive"] = Text.exclusive,
-}
-
-local cursor = {
-	["circle"] = Text.circle,
-	["arrow"] = Text.arrow,
-	["system"] = Text.system,
+	[1] = "enabled",
+	[0] = "disabled",
+	[-1] = "adaptive",
 }
 
 ---@param v number?
 ---@return string
 local function formatVsync(v)
-	return vsyncNames[v] or ""
+	return Text[vsyncNames[v]] or ""
 end
 
 ---@param v number?
 ---@return string
 local function formatFullscreenType(v)
-	return fullscreenType[v] or ""
+	return Text[v] or ""
 end
 
 ---@param v number?
 ---@return string
 local function formatCursor(v)
-	return cursor[v] or ""
+	return Text[v] or ""
 end
 
 function SettingsTab:Video(view)
@@ -530,41 +496,14 @@ local diff_columns = {
 	"user_diff",
 }
 
-local rateTypes = {
-	linear = Text.linear,
-	exp = Text.exp,
-}
-
-local colorTypes = {
-	"inverted",
-	"solid",
-}
-
-local _colorTypes = {
-	inverted = Text.invertedColor,
-	solid = Text.solidColor,
-}
-
-local transitionTypes = {
-	"circle",
-	"fade",
-	"shutter",
-}
-
-local _transitionTypes = {
-	circle = Text.circle,
-	fade = Text.fade,
-	shutter = Text.shutter,
-}
-
 ---@param v number?
 ---@return string
 local function formatRateType(v)
-	return rateTypes[v] or ""
+	return Text[v] or ""
 end
 
 local function formatColorType(v)
-	return _colorTypes[v] or ""
+	return Text[v] or ""
 end
 
 local function formatLocalization(v)
@@ -572,7 +511,7 @@ local function formatLocalization(v)
 end
 
 local function formatTranisiton(v)
-	return _transitionTypes[v] or ""
+	return Text[v] or ""
 end
 
 function SettingsTab:UI(view)
@@ -637,12 +576,13 @@ function SettingsTab:UI(view)
 	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion)
 		* 0.001
 
-	irizz.spectrum = imgui.combo("irizz.spectrum", irizz.spectrum, colorTypes, formatColorType, Text.spectrum)
+	irizz.spectrum =
+		imgui.combo("irizz.spectrum", irizz.spectrum, { "solid", "inverted" }, formatColorType, Text.spectrum)
 
 	irizz.transitionAnimation = imgui.combo(
 		"irizz.transitionAnimation",
 		irizz.transitionAnimation,
-		transitionTypes,
+		{ "circle", "fade" },
 		formatTranisiton,
 		Text.transitionAnimation
 	)
