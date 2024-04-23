@@ -27,6 +27,8 @@ function PauseSubscreen:hide()
 	self.tween = flux.to(self, 0.22, { alpha = 0 }):ease("quadout")
 end
 
+function PauseSubscreen:unload() end
+
 ---@param self table
 local function bottomScreenMenu(self)
 	love.graphics.setFont(spherefonts.get("Noto Sans", 24))

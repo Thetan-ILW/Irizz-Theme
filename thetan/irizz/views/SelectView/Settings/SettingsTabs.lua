@@ -582,7 +582,7 @@ function SettingsTab:UI(view)
 	irizz.transitionAnimation = imgui.combo(
 		"irizz.transitionAnimation",
 		irizz.transitionAnimation,
-		{ "circle", "fade" },
+		{ "circle", "fade", "shutter" },
 		formatTranisiton,
 		Text.transitionAnimation
 	)
