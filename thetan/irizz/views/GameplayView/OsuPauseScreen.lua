@@ -13,24 +13,27 @@ PauseSubscreen.alpha = 0
 
 local failed = false
 
-local function exist(path)
-	if not path then
-		return false
-	end
-
-	if not love.filesystem.getInfo(path) then
-		return false
-	end
-
-	return true
-end
-
 local function newImage(path)
-	return exist(path) and love.graphics.newImage(path) or nil
+	local success, image = pcall(love.audio.newSource, path, type)
+	return success and image or nil
 end
 
 local function newAudio(path, type)
-	return exist(path) and love.audio.newSource(path, type) or nil
+	local success, audio = pcall(love.audio.newSource, path, type)
+	return success and audio or nil
+end
+
+local function play(source)
+	if source then
+		source:stop()
+		source:play()
+	end
+end
+
+local function setVolume(source, volume)
+	if source then
+		source:setVolume(volume)
+	end
 end
 
 function PauseSubscreen:new(note_skin)
@@ -45,6 +48,9 @@ function PauseSubscreen:new(note_skin)
 	self.backImage = newImage(note_skin.back)
 
 	self.loopAudio = newAudio(note_skin.loop, "stream")
+	self.continueClick = newAudio(note_skin.continueClick, "static")
+	self.retryClick = newAudio(note_skin.retryClick, "static")
+	self.backClick = newAudio(note_skin.backClick, "static")
 end
 
 function PauseSubscreen:show()
@@ -53,10 +59,7 @@ function PauseSubscreen:show()
 	end
 	self.tween = flux.to(self, 0.22, { alpha = 1 }):ease("quadout")
 
-	if self.loopAudio then
-		self.loopAudio:stop()
-		self.loopAudio:play()
-	end
+	play(self.loopAudio)
 end
 
 function PauseSubscreen:hide()
@@ -183,16 +186,20 @@ function PauseSubscreen:buttons(view)
 
 	if not failed then
 		if button(self.continueImage, 0.2222) then
+			play(self.continueClick)
 			gameplayController:changePlayState("play")
 			self:hide()
 		end
 	end
 
 	if button(self.retryImage, 0.4444) then
+		play(self.retryClick)
 		gameplayController:changePlayState("retry")
 		self:hide()
 	end
+
 	if button(self.backImage, 0.6666) then
+		play(self.backClick)
 		view:quit()
 	end
 end
@@ -203,9 +210,10 @@ function PauseSubscreen:updateAudio(view)
 	local a = settings.audio
 	local volume = a.volume.master * a.volume.music
 
-	if self.loopAudio then
-		self.loopAudio:setVolume(volume * self.alpha)
-	end
+	setVolume(self.loopAudio, volume * self.alpha)
+	setVolume(self.continueClick, volume)
+	setVolume(self.retryClick, volume)
+	setVolume(self.backClick, volume)
 end
 
 function PauseSubscreen:draw(view)
