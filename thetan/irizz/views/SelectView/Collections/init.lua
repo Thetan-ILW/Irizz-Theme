@@ -27,6 +27,8 @@ function ViewConfig:new(game)
 	self.osuDirectListView = OsuDirectListView(game)
 	self.osuDirectChartsListView = OsuDirectChartsListView(game)
 	self.osuDirectQueueListView = OsuDirectQueueListView(game)
+	self:updateLists()
+
 	Font = Theme:getFonts("collectionsViewConfig")
 	action = game.actionModel:getGroup("songSelect")
 end
@@ -49,6 +51,16 @@ local function borders()
 	for _, name in ipairs(boxes) do
 		local w, h = Layout:move(name)
 		Theme:border(w, h)
+	end
+end
+
+function ViewConfig:updateLists()
+	if collectionsMode == "Collections" then
+		self.collectionListView:reloadItems()
+	else
+		self.osuDirectListView:reloadItems()
+		self.osuDirectChartsListView:reloadItems()
+		self.osuDirectQueueListView:reloadItems()
 	end
 end
 
@@ -102,9 +114,7 @@ function ViewConfig:collectionsButtons(view)
 	end
 
 	if imgui.TextOnlyButton("osuDirect", Text.osuDirect, w, h) then
-		collectionsMode = "osu!direct"
-		view.game.osudirectModel:searchNoDebounce()
-		self.osuDirectChartsListView.noItemsText = Text.notInOsuDirect
+		self:setMode(view, "osu!direct")
 	end
 
 	w, h = Layout:move("button3")
@@ -135,10 +145,7 @@ function ViewConfig:osuDirectButtons(view)
 	end
 
 	if imgui.TextOnlyButton("collections", Text.collections, w, h) then
-		collectionsMode = "Collections"
-		view.game.selectModel:debouncePullNoteChartSet()
-		self.osuDirectChartsListView.items = {}
-		self.osuDirectChartsListView.noItemsText = Text.noCharts
+		self:setMode(view, "Collections")
 	end
 
 	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
@@ -190,6 +197,19 @@ function ViewConfig:getModeName()
 	return collectionsMode
 end
 
+function ViewConfig:setMode(view, name)
+	if name == "Collections" then
+		collectionsMode = "Collections"
+		view.game.selectModel:debouncePullNoteChartSet()
+		self.osuDirectChartsListView.items = {}
+	elseif name == "osu!direct" then
+		collectionsMode = "osu!direct"
+		view.game.osudirectModel:searchNoDebounce()
+	else
+		error(name .. " collection mode does not exists")
+	end
+end
+
 function ViewConfig.layoutDraw(position)
 	Layout:draw(position)
 end
@@ -207,10 +227,7 @@ function ViewConfig:draw(view, position)
 	canUpdate = canUpdate and not view.modalActive
 
 	if canUpdate then
-		self.collectionListView:reloadItems()
-		self.osuDirectListView:reloadItems()
-		self.osuDirectChartsListView:reloadItems()
-		self.osuDirectQueueListView:reloadItems()
+		self:updateLists()
 	end
 
 	just.origin()

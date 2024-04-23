@@ -9,7 +9,7 @@ local CollectionListView = ListView + {}
 
 CollectionListView.rows = 13
 CollectionListView.centerItems = true
-CollectionListView.text = Theme.textOsuDirectList
+CollectionListView.text = Theme.textCollectionsList
 
 function CollectionListView:new(game)
 	ListView:new(game)

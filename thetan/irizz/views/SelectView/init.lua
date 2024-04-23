@@ -69,6 +69,7 @@ function SelectView:moveScreen(where, exact)
 
 	if self.screenXTarget == 0 then
 		self:switchToSongSelect()
+		self.collectionsViewConfig:setMode(self, "Collections")
 	end
 
 	Theme:playSound("songSelectScreenChanged")
