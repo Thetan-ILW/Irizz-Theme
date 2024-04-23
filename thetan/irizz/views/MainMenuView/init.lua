@@ -148,8 +148,39 @@ function MainMenu:songSelectButtons()
 	end
 end
 
+function MainMenu:resultButtons(view)
+	local w, h = Layout:move("screen")
+
+	local button_count = 3
+
+	local button_size = w / 10
+	local spacing = 30
+
+	local position = (w / 2) - (((button_size * button_count) + (spacing * (button_count - 1))) / 2)
+
+	gfx.setLineWidth(8)
+	gfx.setFont(font.buttons)
+
+	gfx.translate(position, (h / 2) - (button_size / 2))
+
+	if button(Text.retry, icons.retry, spacing, button_size) then
+		view:play("retry")
+		self:toggle()
+	end
+
+	if button(Text.watch, icons.watch, spacing, button_size) then
+		view:play("replay")
+		self:toggle()
+	end
+
+	if button(Text.submit, icons.submit, spacing, button_size) then
+		view:submitScore()
+	end
+end
+
 ---@param screen_name string
-function MainMenu:draw(screen_name)
+---@param view sphere.ScreenView
+function MainMenu:draw(screen_name, view)
 	if self.alpha == 0 then
 		return
 	end
@@ -170,6 +201,8 @@ function MainMenu:draw(screen_name)
 
 	if screen_name == "select" then
 		self:songSelectButtons()
+	elseif screen_name == "result" then
+		self:resultButtons(view)
 	end
 
 	gfx.setCanvas({ previousCanvas, stencil = true })

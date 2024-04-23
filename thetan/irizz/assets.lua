@@ -187,6 +187,9 @@ function Assets:get(config, theme)
 		keyBinds = love.graphics.newImage(icons_path .. "key_binds.png"),
 		multiplayer = love.graphics.newImage(icons_path .. "multiplayer.png"),
 		chartEditor = love.graphics.newImage(icons_path .. "chart_editor.png"),
+		retry = love.graphics.newImage(icons_path .. "retry.png"),
+		watch = love.graphics.newImage(icons_path .. "watch.png"),
+		submit = love.graphics.newImage(icons_path .. "submit.png"),
 	}
 
 	theme.icons = icons

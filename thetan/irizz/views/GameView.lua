@@ -125,7 +125,7 @@ function GameView:draw()
 		self.tooltip = nil
 	end
 
-	self.mainMenuView:draw(self:getViewName())
+	self.mainMenuView:draw(self:getViewName(), self.view)
 	NotificationView:draw()
 
 	self.screenTransition:drawAfter()

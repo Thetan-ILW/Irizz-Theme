@@ -377,6 +377,9 @@ localization.textMainMenu = {
 	keyBinds = "Key binds",
 	multiplayer = "Multiplayer",
 	chartEditor = "Chart editor",
+	retry = "Retry",
+	watch = "Watch",
+	submit = "Submit",
 }
 
 localization.textKeybinds = {
