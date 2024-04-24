@@ -30,8 +30,8 @@ function GameView:load()
 
 	self:setView(self.game.selectView)
 
-	local actionModel = self.game.actionModel
-	self.inputMap = InputMap(self, actionModel:getGroup("global"))
+	self.actionModel = self.game.actionModel
+	self.inputMap = InputMap(self, self.actionModel)
 
 	self.mainMenuView = MainMenuView(self)
 	NotificationView:init()
@@ -62,7 +62,7 @@ function GameView:_setView(view)
 	self.viewName = viewNames[view]
 
 	if self.viewName ~= "gameplay" then
-		gyatt.vim.enable()
+		--gyatt.vim.enable()
 		return
 	end
 
@@ -147,11 +147,11 @@ function GameView:receive(event)
 	end
 
 	if event.name == "inputchanged" then
-		gyatt.inputchanged(event)
+		--gyatt.inputchanged(event)
 	end
 
 	if event.name == "keypressed" then
-		gyatt.keypressed(event)
+		self.actionModel.keyPressed(event)
 
 		if self:getViewName() ~= "gameplay" then
 			self.inputMap:call("global")
@@ -159,7 +159,7 @@ function GameView:receive(event)
 	end
 
 	if event.name == "focus" then
-		gyatt.resetInputs()
+		self.actionModel.resetInputs()
 	end
 
 	self.view:receive(event)

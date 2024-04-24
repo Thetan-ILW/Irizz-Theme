@@ -4,63 +4,63 @@ local SelectInputMap = InputMap + {}
 
 function SelectInputMap:createBindings(sv, a)
 	self.selectModals = {
-		[a.showMods] = function()
+		["showMods"] = function()
 			sv:openModal("thetan.irizz.views.modals.ModifierModal")
 		end,
-		[a.showSkins] = function()
+		["showSkins"] = function()
 			sv:openModal("thetan.irizz.views.modals.NoteSkinModal")
 		end,
-		[a.showInputs] = function()
+		["showInputs"] = function()
 			sv:openModal("thetan.irizz.views.modals.InputModal")
 		end,
-		[a.showMultiplayer] = function()
+		["showMultiplayer"] = function()
 			sv:openModal("thetan.irizz.views.modals.MultiplayerModal")
 		end,
 	}
 
 	self.select = {
-		[a.undoRandom] = function()
+		["undoRandom"] = function()
 			sv.selectModel:undoRandom()
 		end,
-		[a.random] = function()
+		["random"] = function()
 			sv.selectModel:scrollRandom()
 		end,
-		[a.autoPlay] = function()
+		["autoPlay"] = function()
 			sv.game.rhythmModel:setAutoplay(true)
 			sv:play()
 		end,
-		[a.decreaseTimeRate] = function()
+		["decreaseTimeRate"] = function()
 			sv:changeTimeRate(-1)
 		end,
-		[a.increaseTimeRate] = function()
+		["increaseTimeRate"] = function()
 			sv:changeTimeRate(1)
 		end,
-		[a.play] = function()
+		["play"] = function()
 			sv:play()
 		end,
-		[a.openEditor] = function()
+		["openEditor"] = function()
 			if not sv.game.selectModel:notechartExists() then
 				return
 			end
 
 			sv:changeScreen("editorView")
 		end,
-		[a.openResult] = function()
+		["openResult"] = function()
 			sv:result()
 		end,
 	}
 
 	self.view = {
-		[a.moveScreenLeft] = function()
+		["moveScreenLeft"] = function()
 			sv:moveScreen(-1)
 		end,
-		[a.moveScreenRight] = function()
+		["moveScreenRight"] = function()
 			sv:moveScreen(1)
 		end,
-		[a.pauseMusic] = function()
+		["pauseMusic"] = function()
 			sv.game.previewModel:stop()
 		end,
-		[a.showFilters] = function()
+		["showFilters"] = function()
 			sv:openModal("thetan.irizz.views.modals.FiltersModal")
 		end,
 	}

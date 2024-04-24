@@ -1,29 +1,33 @@
 local class = require("class")
-local gyatt = require("thetan.gyatt")
 
----@class thetan.gyatt.InputMap
----@operator call: thetan.gyatt.InputMap
+---@class gyatt.InputMap
+---@operator call: gyatt.InputMap
 local InputMap = class()
 
----@param view sphere.ScreenView
----@param actions table
-function InputMap:createBindings(view, actions) end
+---@type irizz.ActionModel
+InputMap.actionModel = nil
 
 ---@param view sphere.ScreenView
----@param actions table
-function InputMap:new(view, actions)
-	self:createBindings(view, actions)
+function InputMap:createBindings(view) end
+
+---@param view sphere.ScreenView
+---@param actionModel irizz.ActionModel
+function InputMap:new(view, actionModel)
+	self:createBindings(view)
+	self.actionModel = actionModel
 end
 
 ---@param group string
+---@return boolean
 function InputMap:call(group)
 	local bindings = self[group]
 
-	for k, v in pairs(bindings) do
-		if gyatt.actionPressed(k) then
-			v()
-			return true
-		end
+	local f = bindings[self.actionModel.getAction()]
+
+	if f then
+		f()
+		self.actionModel.resetInputs()
+		return true
 	end
 
 	return false

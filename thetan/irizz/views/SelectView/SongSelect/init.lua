@@ -29,10 +29,14 @@ local boxes = {
 
 local ViewConfig = class()
 
+---@type irizz.ActionModel
+local actionModel
+
 local action = {}
 local canUpdate = false
 
 function ViewConfig:new(game)
+	actionModel = game.actionModel
 	action = game.actionModel:getGroup("songSelect")
 	self.noteChartSetListView = NoteChartSetListView(game)
 	self.noteChartListView = NoteChartListView(game)
@@ -97,9 +101,9 @@ end
 
 ---@param view table
 local function searchField(view)
-	local vimMotions = view.game.configModel.configs.irizz.vimMotions
+	local vimMotions = actionModel.isVimMode()
 
-	if not vimMotions or gyatt.vim.isInsertMode() then
+	if not vimMotions or actionModel.isInsertMode() then
 		just.focus("SearchField")
 	end
 
@@ -114,7 +118,7 @@ local function searchField(view)
 		view:updateSearch(text)
 	end
 
-	local delAll = gyatt.actionPressed(action.clearSearch)
+	local delAll = actionModel.consumeAction("deleteLine")
 
 	if delAll then
 		view:updateSearch("")
@@ -331,7 +335,7 @@ function ViewConfig:draw(view, position)
 
 	canUpdate = position == 0
 	canUpdate = canUpdate and view:canUpdate()
-	canUpdate = canUpdate and gyatt.vim.isNormalMode
+	canUpdate = canUpdate and not actionModel.isInsertMode()
 
 	self.panels()
 	searchField(view)

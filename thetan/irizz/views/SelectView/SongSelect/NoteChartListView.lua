@@ -90,6 +90,10 @@ function NoteChartListView:input(w, h)
 		self:scroll(-delta)
 	end
 
+	if true then
+		return
+	end
+
 	local kd = gyatt.actionDown
 	local kp = gyatt.actionPressed
 

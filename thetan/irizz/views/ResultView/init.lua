@@ -25,7 +25,7 @@ ResultView.load = thread.coro(function(self)
 	self.game.resultController:load()
 
 	local actionModel = self.game.actionModel
-	self.inputMap = InputMap(self, actionModel:getGroup("resultScreen"))
+	--self.inputMap = InputMap(self, actionModel:getGroup("resultScreen"))
 
 	local audioSource = "preview"
 

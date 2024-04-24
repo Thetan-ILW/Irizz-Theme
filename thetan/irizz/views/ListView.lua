@@ -115,6 +115,9 @@ function ListView:input(w, h)
 		acceleration = 0
 	end
 
+	if true then
+		return
+	end
 	local ap = gyatt.actionPressed
 	local ad = gyatt.actionDown
 	local oc = gyatt.vim.getCount

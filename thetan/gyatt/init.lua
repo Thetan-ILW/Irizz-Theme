@@ -1,13 +1,11 @@
 local gfx_util = require("gfx_util")
 local imgui = require("thetan.irizz.imgui")
 local just = require("just")
-local vim = require("thetan.gyatt.vim")
 local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local gyatt = {}
 
 gyatt.inputMode = "keyboard"
-gyatt.vim = vim
 gyatt.baseline = gfx_util.printBaseline
 gyatt.frame = gfx_util.printFrame
 gyatt.getCanvas = gfx_util.getCanvas
@@ -15,73 +13,6 @@ gyatt.separator = imgui.separator
 gyatt.setSize = imgui.setSize
 gyatt.button = just.button
 gyatt.isOver = just.is_over
-
-local modKeysList = {
-	lctrl = true,
-	rctrl = true,
-	lshift = true,
-	rshift = true,
-	lgui = true,
-	lalt = true,
-	ralt = true,
-	space = true,
-}
-
-local ignoreKey = {
-	escape = true,
-	["return"] = true,
-}
-
-local modKeysDown = {}
-local keysDown = {}
-local keyPressTimestamps = {}
-local bufferTime = 0.2
-
-function gyatt.inputchanged(event)
-	local key = event[3]
-	local state = event[4]
-
-	if modKeysList[key] then
-		modKeysDown[key] = state
-		return
-	end
-
-	keysDown[key] = state
-end
-
-function gyatt.keypressed(event)
-	local key = event[2]
-	keyPressTimestamps[key] = event.time
-
-	if gyatt.isModKeyDown() then
-		return false
-	end
-
-	if gyatt.inputMode == "keyboard" then
-		return
-	end
-
-	if ignoreKey[key] then
-		vim.clear()
-		return
-	end
-
-	if vim.isInsertMode() then
-		return
-	end
-
-	vim.updateOperation(key)
-end
-
-function gyatt.isModKeyDown()
-	local isDown = false
-
-	for _, down in pairs(modKeysDown) do
-		isDown = isDown or down
-	end
-
-	return isDown
-end
 
 ---@param action string | table
 ---@return boolean
@@ -204,12 +135,6 @@ function gyatt.actionDown(action)
 	end
 
 	return isDown
-end
-
-function gyatt.resetInputs()
-	modKeysDown = {}
-	keysDown = {}
-	keyPressTimestamps = {}
 end
 
 function gyatt.text(text, w, ax)

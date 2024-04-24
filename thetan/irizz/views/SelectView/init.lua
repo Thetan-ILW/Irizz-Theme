@@ -27,7 +27,7 @@ SelectView.scoreFilterLine = ""
 local playSound = nil
 function SelectView:load()
 	self.game.selectController:load(self)
-	self.headerView = HeaderView("select")
+	self.headerView = HeaderView(self.game, "select")
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
@@ -36,7 +36,7 @@ function SelectView:load()
 	playSound = Theme:getStartSound(self.game)
 
 	local actionModel = self.game.actionModel
-	self.inputMap = InputMap(self, actionModel:getGroup("songSelect"))
+	self.inputMap = InputMap(self, actionModel)
 
 	self:updateFilterLines()
 	self.layersView = LayersView(self.game, "select", "preview")
