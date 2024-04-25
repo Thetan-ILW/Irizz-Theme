@@ -22,8 +22,6 @@ ListView.font = nil
 ListView.staticCursor = false
 ListView.status = nil
 
-local action = {}
-
 local nextTime = 0
 local maxInterval = 0.07
 local pressInterval = 0.12
@@ -39,8 +37,7 @@ function ListView:new(game)
 	self.config = configs.irizz
 	self.staticCursor = self.config.staticCursor
 
-	local actionModel = self.game.actionModel
-	action = actionModel:getGroup("largeList")
+	self.actionModel = self.game.actionModel
 end
 
 function ListView:playSound()
@@ -115,24 +112,21 @@ function ListView:input(w, h)
 		acceleration = 0
 	end
 
-	if true then
-		return
-	end
-	local ap = gyatt.actionPressed
-	local ad = gyatt.actionDown
-	local oc = gyatt.vim.getCount
+	local ap = self.actionModel.consumeAction
+	local ad = self.actionModel.isActionDown
+	--local oc = gyatt.vim.getCount
 
-	if ad(action.up) then
-		self:autoScroll(-1 * oc(), ap(action.up))
-	elseif ad(action.down) then
-		self:autoScroll(1 * oc(), ap(action.down))
-	elseif ad(action.up10) then
-		self:autoScroll(-10 * oc(), ap(action.up10))
-	elseif ad(action.down10) then
-		self:autoScroll(10 * oc(), ap(action.down10))
-	elseif ap(action.toStart) then
+	if ad("up") then
+		self:autoScroll(-1, ap("up"))
+	elseif ad("down") then
+		self:autoScroll(1, ap("down"))
+	elseif ad("up10") then
+		self:autoScroll(-10, ap("up10"))
+	elseif ad("down10") then
+		self:autoScroll(10, ap("down10"))
+	elseif ap("toStart") then
 		self:scroll(-math.huge)
-	elseif ap(action.toEnd) then
+	elseif ap("toEnd") then
 		self:scroll(math.huge)
 	else
 		acceleration = 0

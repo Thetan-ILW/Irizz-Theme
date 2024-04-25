@@ -25,7 +25,7 @@ ResultView.load = thread.coro(function(self)
 	self.game.resultController:load()
 
 	local actionModel = self.game.actionModel
-	--self.inputMap = InputMap(self, actionModel:getGroup("resultScreen"))
+	self.inputMap = InputMap(self, actionModel)
 
 	local audioSource = "preview"
 
@@ -105,13 +105,9 @@ function ResultView:draw()
 	self.layersView:draw(panels, UI)
 end
 
-function ResultView:inputs()
-	self.inputMap:call("view")
-end
-
 function ResultView:receive(event)
 	if event.name == "keypressed" then
-		self:inputs()
+		self.inputMap:call("view")
 	end
 end
 

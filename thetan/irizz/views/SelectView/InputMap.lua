@@ -2,7 +2,8 @@ local InputMap = require("thetan.gyatt.InputMap")
 
 local SelectInputMap = InputMap + {}
 
-function SelectInputMap:createBindings(sv, a)
+---@param sv irizz.SelectView
+function SelectInputMap:createBindings(sv)
 	self.selectModals = {
 		["showMods"] = function()
 			sv:openModal("thetan.irizz.views.modals.ModifierModal")

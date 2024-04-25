@@ -79,64 +79,6 @@ local function actionPressed(action)
 	return false
 end
 
----@param action string | table
----@return boolean
-local function actionDown(action)
-	if type(action) == "string" then
-		if gyatt.isModKeyDown() then
-			return false
-		end
-
-		return keysDown[action]
-	end
-
-	local modKeyDown = false
-	for _, k in ipairs(action.mod) do
-		modKeyDown = modKeyDown or modKeysDown[k]
-	end
-
-	if not modKeyDown then
-		return false
-	end
-
-	local isDown = true
-	for _, key in ipairs(action) do
-		if type(key) == "string" then
-			isDown = isDown and keysDown[key]
-		end
-	end
-
-	if modKeyDown and isDown then
-		return true
-	end
-
-	return false
-end
-
-function gyatt.actionPressed(action)
-	if vim.getOperation():len() > 1 and not action.op then
-		return
-	end
-
-	local isPressed = actionPressed(action)
-
-	if isPressed then
-		vim.clear()
-	end
-
-	return isPressed
-end
-
-function gyatt.actionDown(action)
-	local isDown = actionDown(action)
-
-	if isDown then
-		vim.clear()
-	end
-
-	return isDown
-end
-
 function gyatt.text(text, w, ax)
 	gyatt.frame(text, 0, 0, w or math.huge, math.huge, ax or "left", "top")
 	just.next(0, love.graphics.getFont():getHeight())

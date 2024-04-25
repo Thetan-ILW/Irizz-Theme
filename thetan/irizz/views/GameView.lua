@@ -62,11 +62,11 @@ function GameView:_setView(view)
 	self.viewName = viewNames[view]
 
 	if self.viewName ~= "gameplay" then
-		--gyatt.vim.enable()
+		self.actionModel.enable()
 		return
 	end
 
-	gyatt.vim.disable()
+	self.actionModel.disable()
 end
 
 ---@param view sphere.ScreenView
@@ -147,7 +147,7 @@ function GameView:receive(event)
 	end
 
 	if event.name == "inputchanged" then
-		--gyatt.inputchanged(event)
+		self.actionModel.inputChanged(event)
 	end
 
 	if event.name == "keypressed" then

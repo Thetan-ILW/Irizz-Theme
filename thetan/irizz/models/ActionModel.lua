@@ -9,6 +9,8 @@ local vimModes = {
 	insert = "Insert",
 }
 
+local disabled = false
+
 ---@type "vim" | "keyboard"
 local inputMode = "keyboard"
 ---@type VimMode
@@ -16,11 +18,12 @@ local vimMode = vimModes.normal
 
 ---@type string?
 local currentAction = nil
+local currentDownAction = nil
 local currentVimNode = {}
 
-local comboActions = {} -- Mod + key + ..
-local operationsTree = {} -- Tree of keys
-local singleKeyActions = {} -- key
+local comboActions = {} -- [keyCombo] = ActionName
+local operationsTree = {} -- {Key] = [Key, ActionName] Tree of keys
+local singleKeyActions = {} -- [Key] = ActionName
 
 local bufferTime = 0.2
 local keyPressTimestamps = {}
@@ -36,24 +39,27 @@ local modKeysList = {
 	ralt = true,
 }
 
+local modFormat = {
+	lctrl = "ctrl",
+	rctrl = "ctrl",
+	lshift = "shift",
+	rshift = "shift",
+	lalt = "alt",
+	ralt = "alt",
+}
+
 function ActionModel:new(configModel)
 	self.configModel = configModel
 end
 
-local function buildOperationsTree(actions)
-	local tree = {}
-	for action, t in pairs(actions) do
-		if t.op then
-			local keys = t.op
-			local node = tree
-			for _, key in ipairs(keys) do
-				node[key] = node[key] or {}
-				node = node[key]
-			end
-			node.action = action
-		end
+local function getComboString(t)
+	for i, v in ipairs(t) do
+		local formatted = modFormat[v] or v
+		t[i] = formatted
 	end
-	return tree
+
+	table.sort(t)
+	return table.concat(t, "+")
 end
 
 function ActionModel:load()
@@ -63,22 +69,35 @@ function ActionModel:load()
 
 	if configs.irizz.vimMotions then
 		inputMode = "vim"
-		actions = configs.vim_keybinds
+		actions = configs.vim_keybinds_v2
 	else
 		inputMode = "keyboard"
-		actions = configs.keybinds
+		actions = configs.keybinds_v2
 	end
-
-	operationsTree = buildOperationsTree(actions)
-	currentVimNode = operationsTree
 
 	for actionName, action in pairs(actions) do
 		if type(action) == "string" then
 			singleKeyActions[action] = actionName
 		end
+
+		if type(action) == "table" then
+			if action.op then
+				local keys = action.op
+				local node = operationsTree
+				for _, key in ipairs(keys) do
+					node[key] = node[key] or {}
+					node = node[key]
+				end
+				node.action = actionName
+			end
+
+			if action.mod then
+				comboActions[getComboString(action.mod)] = actionName
+			end
+		end
 	end
 
-	-- Do the same ^^^ for combinations
+	currentVimNode = operationsTree
 end
 
 ---@return string?
@@ -96,15 +115,6 @@ function ActionModel.consumeAction(action)
 
 	return false
 end
-
-local modFormat = {
-	lctrl = "CTRL",
-	rctrl = "CTRL",
-	lshift = "SHIFT",
-	rshift = "SHIFT",
-	lalt = "ALT",
-	ralt = "ALT",
-}
 
 ---@return boolean
 function ActionModel.isModKeyDown()
@@ -144,24 +154,63 @@ function ActionModel.resetInputs()
 	currentAction = nil
 end
 
-function ActionModel.inputchanged(event)
+local function getDownModAction()
+	local keys = {}
+
+	for k, v in pairs(modKeysDown) do
+		table.insert(keys, k)
+	end
+
+	for k, _ in pairs(keysDown) do
+		table.insert(keys, k)
+	end
+
+	return comboActions[getComboString(keys)]
+end
+
+local function getDownAction()
+	for k, v in pairs(keysDown) do
+		local action = singleKeyActions[k]
+
+		if action then
+			return action
+		end
+	end
+
+	return nil
+end
+
+---@param event table
+-- Accepts keyboard events and finds which actions is down
+function ActionModel.inputChanged(event)
+	if disabled then
+		return
+	end
+
 	local key = event[3]
 	local state = event[4]
 
 	if modKeysList[key] then
-		modKeysDown[key] = state
+		modKeysDown[key] = state or nil
+	else
+		keysDown[key] = state or nil
+	end
+
+	if ActionModel.isModKeyDown() then
+		currentDownAction = getDownModAction()
 		return
 	end
 
-	keysDown[key] = state
+	currentDownAction = getDownAction()
 end
 
 ---@param key string
+---@param final boolean?
 ---@return boolean
 ---@return string?
 -- Returns true if current node is deep in the tree.
 -- Second argument is an action name
-local function handleOperations(key)
+local function handleOperations(key, final)
 	local new_node = currentVimNode[key]
 
 	local found_new = false
@@ -171,8 +220,11 @@ local function handleOperations(key)
 		currentVimNode = new_node
 		found_new = true
 	else
-		ActionModel.resetInputs()
 		currentVimNode = operationsTree
+
+		if not final then -- makes inputs like "ooi" work
+			return handleOperations(key, true)
+		end
 	end
 
 	if currentVimNode.action then
@@ -184,6 +236,10 @@ local function handleOperations(key)
 end
 
 function ActionModel.keyPressed(event)
+	if disabled then
+		return
+	end
+
 	local key = event[2]
 	keyPressTimestamps[key] = event.time
 
@@ -216,6 +272,20 @@ function ActionModel.keyPressed(event)
 		currentAction = action
 		return
 	end
+end
+
+---@param name string
+---@return boolean
+function ActionModel.isActionDown(name)
+	return currentDownAction == name
+end
+
+function ActionModel.enable()
+	disabled = false
+end
+
+function ActionModel.disable()
+	disabled = true
 end
 
 -------------------------------

@@ -24,8 +24,7 @@ function NoteChartListView:new(game)
 	self.scrollSound = Theme.sounds.scrollSmallList
 	config = game.configModel.configs.irizz
 
-	local actionModel = self.game.actionModel
-	action = actionModel:getGroup("smallList")
+	self.actionModel = self.game.actionModel
 end
 
 function NoteChartListView:reloadItems()
@@ -90,17 +89,13 @@ function NoteChartListView:input(w, h)
 		self:scroll(-delta)
 	end
 
-	if true then
-		return
-	end
+	local ap = self.actionModel.consumeAction
+	local ad = self.actionModel.isActionDown
 
-	local kd = gyatt.actionDown
-	local kp = gyatt.actionPressed
-
-	if kd(action.up) then
-		self:autoScroll(-1, kp(action.up))
-	elseif kd(action.down) then
-		self:autoScroll(1, kp(action.down))
+	if ad("left") then
+		self:autoScroll(-1, ap("left"))
+	elseif ad("right") then
+		self:autoScroll(1, ap("right"))
 	end
 end
 
