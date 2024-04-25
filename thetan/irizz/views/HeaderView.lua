@@ -160,6 +160,9 @@ function ViewConfig:vimMode(view)
 	local w, h = Layout:move("vimMode")
 
 	local text = actionModel.getVimMode()
+	local count = actionModel.getCount()
+
+	text = ("%s [%i]"):format(text, count)
 
 	gfx.setColor(Color.panel)
 	local textW = font.anyText:getWidth(text)

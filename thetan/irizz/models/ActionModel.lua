@@ -19,6 +19,7 @@ local vimMode = vimModes.normal
 ---@type string?
 local currentAction = nil
 local currentDownAction = nil
+local count = ""
 local currentVimNode = {}
 
 local comboActions = {} -- [keyCombo] = ActionName
@@ -105,7 +106,12 @@ function ActionModel.getAction()
 	return currentAction
 end
 
+function ActionModel.getCount()
+	return tonumber(count) or 1
+end
+
 function ActionModel.resetAction()
+	count = ""
 	currentAction = nil
 end
 
@@ -113,7 +119,7 @@ end
 ---@return boolean
 function ActionModel.consumeAction(action)
 	if currentAction == action then
-		currentAction = nil
+		ActionModel.resetAction()
 		return true
 	end
 
@@ -259,6 +265,10 @@ function ActionModel.keyPressed(event)
 	end
 
 	local key = event[2]
+
+	if tonumber(key) then
+		count = count .. key
+	end
 
 	if not modKeysList[key] then
 		keyPressTimestamps[key] = event.time

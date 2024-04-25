@@ -114,16 +114,16 @@ function ListView:input(w, h)
 
 	local ap = self.actionModel.consumeAction
 	local ad = self.actionModel.isActionDown
-	--local oc = gyatt.vim.getCount
+	local gc = self.actionModel.getCount
 
 	if ad("up") then
-		self:autoScroll(-1, ap("up"))
+		self:autoScroll(-1 * gc(), ap("up"))
 	elseif ad("down") then
-		self:autoScroll(1, ap("down"))
+		self:autoScroll(1 * gc(), ap("down"))
 	elseif ad("up10") then
-		self:autoScroll(-10, ap("up10"))
+		self:autoScroll(-10 * gc(), ap("up10"))
 	elseif ad("down10") then
-		self:autoScroll(10, ap("down10"))
+		self:autoScroll(10 * gc(), ap("down10"))
 	elseif ap("toStart") then
 		self:scroll(-math.huge)
 	elseif ap("toEnd") then
