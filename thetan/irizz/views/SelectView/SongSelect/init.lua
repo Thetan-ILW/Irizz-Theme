@@ -3,6 +3,7 @@ local just = require("just")
 local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 local time_util = require("time_util")
+local math_util = require("math_util")
 
 local TextInput = require("thetan.irizz.imgui.TextInput")
 
@@ -298,13 +299,13 @@ local function footer(view)
 
 	love.graphics.setFont(font.titleAndDifficulty)
 
-	local leftText = string.format("%s - %s", chartview.artist, chartview.title)
-	local rightText
+	local left_text = string.format("%s - %s", chartview.artist, chartview.title)
+	local right_text
 
 	if not chartview.creator or chartview.creator == "" then
-		rightText = string.format("[%s] %s", Format.inputMode(chartview.chartdiff_inputmode), chartview.name)
+		right_text = string.format("[%s] %s", Format.inputMode(chartview.chartdiff_inputmode), chartview.name)
 	else
-		rightText = string.format(
+		right_text = string.format(
 			"[%s] [%s] %s",
 			Format.inputMode(chartview.chartdiff_inputmode),
 			chartview.creator or "",
@@ -313,9 +314,21 @@ local function footer(view)
 	end
 
 	local w, h = Layout:move("footerTitle")
-	Theme:textWithShadow(leftText, w, h, "left", "top")
+	local left_scale = math_util.clamp(w / font.titleAndDifficulty:getWidth(left_text), 0, 1)
 	w, h = Layout:move("footerChartName")
-	Theme:textWithShadow(rightText, w, h, "right", "top")
+	local right_scale = math_util.clamp(w / font.titleAndDifficulty:getWidth(right_text), 0, 1)
+	local scale = math.min(left_scale, right_scale)
+
+	w, h = Layout:move("footerTitle")
+	love.graphics.scale(scale, scale)
+	love.graphics.translate(0, 5)
+	Theme:textWithShadow(left_text, w / scale, h / scale, "left", "bottom")
+	w, h = Layout:move("footerChartName")
+
+	love.graphics.scale(scale, scale)
+	love.graphics.translate(0, 5)
+	Theme:textWithShadow(right_text, w / scale, h / scale, "right", "bottom")
+	love.graphics.scale(1, 1)
 end
 
 function ViewConfig.layoutDraw(position)
