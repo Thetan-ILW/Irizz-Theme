@@ -157,7 +157,7 @@ end
 local function getDownModAction()
 	local keys = {}
 
-	for k, v in pairs(modKeysDown) do
+	for k, _ in pairs(modKeysDown) do
 		table.insert(keys, k)
 	end
 
@@ -169,7 +169,7 @@ local function getDownModAction()
 end
 
 local function getDownAction()
-	for k, v in pairs(keysDown) do
+	for k, _ in pairs(keysDown) do
 		local action = singleKeyActions[k]
 
 		if action then
@@ -206,19 +206,16 @@ end
 
 ---@param key string
 ---@param final boolean?
----@return boolean
 ---@return string?
 -- Returns true if current node is deep in the tree.
 -- Second argument is an action name
 local function handleOperations(key, final)
 	local new_node = currentVimNode[key]
 
-	local found_new = false
 	local action = nil
 
 	if new_node then
 		currentVimNode = new_node
-		found_new = true
 	else
 		currentVimNode = operationsTree
 
@@ -232,7 +229,7 @@ local function handleOperations(key, final)
 		currentVimNode = operationsTree
 	end
 
-	return found_new, action
+	return action
 end
 
 function ActionModel.keyPressed(event)
@@ -248,6 +245,7 @@ function ActionModel.keyPressed(event)
 	end
 
 	if inputMode == "keyboard" then
+		currentAction = singleKeyActions[key]
 		return
 	end
 
@@ -255,23 +253,14 @@ function ActionModel.keyPressed(event)
 		return
 	end
 
-	local in_tree, action = handleOperations(key)
+	local action = handleOperations(key)
 
 	if action then
 		currentAction = action
 		return
 	end
 
-	if in_tree then
-		return
-	end
-
-	action = singleKeyActions[key]
-
-	if action then
-		currentAction = action
-		return
-	end
+	currentAction = singleKeyActions[key]
 end
 
 ---@param name string
