@@ -105,6 +105,10 @@ function ActionModel.getAction()
 	return currentAction
 end
 
+function ActionModel.resetAction()
+	currentAction = nil
+end
+
 ---@param action string
 ---@return boolean
 function ActionModel.consumeAction(action)
@@ -207,9 +211,7 @@ end
 ---@param key string
 ---@param final boolean?
 ---@return string?
--- Returns true if current node is deep in the tree.
--- Second argument is an action name
-local function handleOperations(key, final)
+local function nextInTree(key, final)
 	local new_node = currentVimNode[key]
 
 	local action = nil
@@ -220,7 +222,7 @@ local function handleOperations(key, final)
 		currentVimNode = operationsTree
 
 		if not final then -- makes inputs like "ooi" work
-			return handleOperations(key, true)
+			return nextInTree(key, true)
 		end
 	end
 
@@ -232,16 +234,39 @@ local function handleOperations(key, final)
 	return action
 end
 
+local function getComboAction()
+	local keys = {}
+	local current_time = love.timer.getTime()
+
+	for key, _ in pairs(modKeysDown) do
+		table.insert(keys, key)
+	end
+
+	for key, time in pairs(keyPressTimestamps) do
+		if time + bufferTime > current_time then
+			table.insert(keys, key)
+		else
+			keyPressTimestamps[key] = nil
+		end
+	end
+
+	return comboActions[getComboString(keys)]
+end
+
 function ActionModel.keyPressed(event)
 	if disabled then
 		return
 	end
 
 	local key = event[2]
-	keyPressTimestamps[key] = event.time
+
+	if not modKeysList[key] then
+		keyPressTimestamps[key] = event.time
+	end
 
 	if ActionModel.isModKeyDown() then
-		return false
+		currentAction = getComboAction()
+		return
 	end
 
 	if inputMode == "keyboard" then
@@ -253,7 +278,7 @@ function ActionModel.keyPressed(event)
 		return
 	end
 
-	local action = handleOperations(key)
+	local action = nextInTree(key)
 
 	if action then
 		currentAction = action

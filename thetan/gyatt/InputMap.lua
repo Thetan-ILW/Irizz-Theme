@@ -26,7 +26,7 @@ function InputMap:call(group)
 
 	if f then
 		f()
-		self.actionModel.resetInputs()
+		self.actionModel.resetAction()
 		return true
 	end
 
