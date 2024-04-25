@@ -66,7 +66,7 @@ local function getComboString(t)
 	return table.concat(t, "+")
 end
 
-function ActionModel:load()
+function ActionModel:updateActions()
 	local configs = self.configModel.configs
 
 	if configs.irizz.vimMotions then
@@ -100,6 +100,10 @@ function ActionModel:load()
 	end
 
 	currentVimNode = operationsTree
+end
+
+function ActionModel:load()
+	self:updateActions()
 end
 
 ---@return string?
