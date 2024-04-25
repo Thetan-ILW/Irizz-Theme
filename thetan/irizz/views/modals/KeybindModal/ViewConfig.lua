@@ -15,6 +15,10 @@ function ViewConfig:new()
 	self.container = Container("keybindsContainer")
 end
 
+function ViewConfig:reset()
+	self.container:reset()
+end
+
 function ViewConfig:keybinds(view)
 	local w, h = Layout:move("keybinds")
 

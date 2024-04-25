@@ -1,4 +1,5 @@
 local class = require("class")
+local table_util = require("table_util")
 
 ---@class irizz.ActionModel
 local ActionModel = class()
@@ -22,9 +23,11 @@ local currentDownAction = nil
 local count = ""
 local currentVimNode = {}
 
-local comboActions = {} -- [keyCombo] = ActionName
-local operationsTree = {} -- {Key] = [Key, ActionName] Tree of keys
-local singleKeyActions = {} -- [Key] = ActionName
+local comboActions = {} -- [keyCombo] = action_name
+local operationsTree = {} -- [key] = [key, action_name] Tree of keys
+local singleKeyActions = {} -- [key] = action_name
+
+local currentConfig = {}
 
 local bufferTime = 0.2
 local keyPressTimestamps = {}
@@ -66,17 +69,15 @@ end
 function ActionModel:load()
 	local configs = self.configModel.configs
 
-	local actions
-
 	if configs.irizz.vimMotions then
 		inputMode = "vim"
-		actions = configs.vim_keybinds_v2
+		currentConfig = configs.vim_keybinds_v2
 	else
 		inputMode = "keyboard"
-		actions = configs.keybinds_v2
+		currentConfig = configs.keybinds_v2
 	end
 
-	for actionName, action in pairs(actions) do
+	for actionName, action in pairs(currentConfig) do
 		if type(action) == "string" then
 			singleKeyActions[action] = actionName
 		end
@@ -314,10 +315,6 @@ end
 
 -------------------------------
 
-function ActionModel:getGroup(groupName)
-	return --actions[groupName]
-end
-
 local order = {
 	global = {
 		"quit",
@@ -373,21 +370,21 @@ local order = {
 
 ---@param groupName string
 ---@param localization string[]
+---@return table
 function ActionModel:formatGroup(groupName, localization)
 	local t = {}
-	local group = actions[groupName]
 
 	for _, actionName in ipairs(order[groupName]) do
 		local action = localization[actionName] or "IDIOT"
-		local binding = group[actionName]
+		local binding = currentConfig[actionName]
 
 		if type(binding) == "string" then
 			table.insert(t, { action, binding })
 		elseif type(binding) == "table" then
 			if binding.mod then
-				table.insert(t, { action, modFormat[binding.mod[1]] .. " + " .. table.concat(binding, " + ", 1) })
+				table.insert(t, { action, table.concat(binding.mod, " + ", 1) })
 			elseif binding.op then
-				table.insert(t, { action, binding.op })
+				table.insert(t, { action, table.concat(binding.op) })
 			end
 		end
 	end

@@ -16,7 +16,7 @@ end
 function GameViewInputMap:createBindings(gv)
 	self.global = {
 		["showKeybinds"] = function()
-			--gv:openModal("thetan.irizz.views.modals.KeybindModal")
+			gv:openModal("thetan.irizz.views.modals.KeybindModal")
 		end,
 		["showChartInfo"] = function()
 			gv:openModal("thetan.irizz.views.modals.ChartInfoModal")

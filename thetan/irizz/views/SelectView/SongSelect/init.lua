@@ -32,12 +32,10 @@ local ViewConfig = class()
 ---@type irizz.ActionModel
 local actionModel
 
-local action = {}
 local canUpdate = false
 
 function ViewConfig:new(game)
 	actionModel = game.actionModel
-	action = game.actionModel:getGroup("songSelect")
 	self.noteChartSetListView = NoteChartSetListView(game)
 	self.noteChartListView = NoteChartListView(game)
 	self.scoreListView = ScoreListView(game)
