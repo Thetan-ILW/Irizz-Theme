@@ -2,15 +2,15 @@ local InputMap = require("thetan.gyatt.InputMap")
 
 local ResultInputMap = InputMap + {}
 
-function ResultInputMap:createBindings(view, a)
+function ResultInputMap:createBindings(view)
 	self.view = {
-		[a.retry] = function()
+		["retry"] = function()
 			view:play("retry")
 		end,
-		[a.watchReplay] = function()
+		["watchReplay"] = function()
 			view:play("replay")
 		end,
-		[a.submitScore] = function()
+		["submitScore"] = function()
 			view:submitScore()
 		end,
 	}

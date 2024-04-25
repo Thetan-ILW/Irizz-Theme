@@ -47,6 +47,8 @@ end
 function KeybindModal:onShow()
 	local viewName = self.game.gameView:getViewName()
 
+	self.viewConfig:reset()
+
 	if viewName ~= self.keybinds.view then
 		self.keybinds.formattedGroups = {}
 		if viewName == "select" then

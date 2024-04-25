@@ -20,7 +20,6 @@ local ViewConfig = class()
 
 local canUpdate = false
 local collectionsMode = "Collections"
-local action
 
 function ViewConfig:new(game)
 	self.collectionListView = CollectionListView(game)
@@ -30,7 +29,6 @@ function ViewConfig:new(game)
 	self:updateLists()
 
 	Font = Theme:getFonts("collectionsViewConfig")
-	action = game.actionModel:getGroup("songSelect")
 end
 
 local boxes = {

@@ -1,4 +1,3 @@
-local gyatt = require("thetan.gyatt")
 local InputMap = require("thetan.gyatt.InputMap")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -14,30 +13,30 @@ local function volumeChanged(gv)
 	gv.showMessage("volumeChanged", v.master * 100)
 end
 
-function GameViewInputMap:createBindings(gv, a)
+function GameViewInputMap:createBindings(gv)
 	self.global = {
-		[a.showKeybinds] = function()
+		["showKeybinds"] = function()
 			gv:openModal("thetan.irizz.views.modals.KeybindModal")
 		end,
-		[a.showChartInfo] = function()
+		["showChartInfo"] = function()
 			gv:openModal("thetan.irizz.views.modals.ChartInfoModal")
 		end,
-		[a.quit] = function()
+		["quit"] = function()
 			gv:sendQuitSignal()
 		end,
-		[a.increaseVolume] = function()
+		["increaseVolume"] = function()
 			Theme:changeVolume(gv.game, 1)
 			volumeChanged(gv)
 		end,
-		[a.decreaseVolume] = function()
+		["decreaseVolume"] = function()
 			Theme:changeVolume(gv.game, -1)
 			volumeChanged(gv)
 		end,
-		[a.insertMode] = function()
-			gyatt.vim.setMode(gyatt.vim.mode.insert)
+		["insertMode"] = function()
+			self.actionModel.setVimMode("Insert")
 		end,
-		[a.normalMode] = function()
-			gyatt.vim.setMode(gyatt.vim.mode.normal)
+		["normalMode"] = function()
+			self.actionModel.setVimMode("Normal")
 			local selectModel = gv.game.selectModel
 			selectModel:debouncePullNoteChartSet()
 		end,

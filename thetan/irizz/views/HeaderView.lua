@@ -13,7 +13,27 @@ local font
 
 local ViewConfig = class()
 
+---@type irizz.ActionModel
+local actionModel
+
 local gfx = love.graphics
+
+---@param game sphere.GameController
+---@param screen "select" | "result" | "multiplayer"
+function ViewConfig:new(game, screen)
+	font = Theme:getFonts("header")
+
+	self.gameIcon = Theme.gameIcon
+	self.avatarImage = Theme.avatarImage
+	self.screen = screen
+	actionModel = game.actionModel
+
+	if screen == "select" then
+		self.buttons = self.songSelectButtons
+	else
+		self.buttons = self.resultButtons
+	end
+end
 
 local function circleImage(image, r, x)
 	local imageW = (r * 2) / image:getPixelWidth()
@@ -133,21 +153,16 @@ function ViewConfig:resultButtons(view)
 end
 
 function ViewConfig:vimMode(view)
-	local configs = view.game.configModel.configs
-	local vimMotions = configs.irizz.vimMotions
-
-	if not vimMotions then
+	if not actionModel.isVimMode() then
 		return
 	end
 
 	local w, h = Layout:move("vimMode")
 
-	local text = gyatt.vim.getMode()
-	local operations = gyatt.vim.getOperation()
+	local text = actionModel.getVimMode()
+	local count = actionModel.getCount()
 
-	if operations:len() > 1 then
-		text = text .. (" [%s]"):format(operations)
-	end
+	text = ("%s [%i]"):format(text, count)
 
 	gfx.setColor(Color.panel)
 	local textW = font.anyText:getWidth(text)
@@ -191,20 +206,6 @@ function ViewConfig:rightSide(view)
 	end
 
 	button(time, w, h, panelHeight, true)
-end
-
-function ViewConfig:new(screen)
-	font = Theme:getFonts("header")
-
-	self.gameIcon = Theme.gameIcon
-	self.avatarImage = Theme.avatarImage
-	self.screen = screen
-
-	if screen == "select" then
-		self.buttons = self.songSelectButtons
-	else
-		self.buttons = self.resultButtons
-	end
 end
 
 function ViewConfig:draw(view)

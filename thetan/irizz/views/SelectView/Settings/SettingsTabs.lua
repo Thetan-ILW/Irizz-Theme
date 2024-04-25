@@ -602,7 +602,12 @@ function SettingsTab:UI(view)
 	just.text(Text.uiTab)
 	just.next(0, textSeparation)
 
-	irizz.vimMotions = imgui.checkbox("irizz.vimMotions", irizz.vimMotions, Text.vimMotions)
+	changed = false
+	irizz.vimMotions, changed = imgui.checkbox("irizz.vimMotions", irizz.vimMotions, Text.vimMotions)
+
+	if changed then
+		view.game.actionModel:updateActions()
+	end
 
 	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
 	irizz.scrollAcceleration =

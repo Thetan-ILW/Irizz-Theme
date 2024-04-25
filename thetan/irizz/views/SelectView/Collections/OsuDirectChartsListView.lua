@@ -20,8 +20,7 @@ function OsuDirectChartsListView:new(game)
 	self.font = Theme:getFonts("osuDirectChartsListView")
 	self.scrollSound = Theme.sounds.scrollSmallList
 
-	local actionModel = self.game.actionModel
-	action = actionModel:getGroup("smallList")
+	self.actionModel = self.game.actionModel
 end
 
 function OsuDirectChartsListView:scroll(count)
@@ -43,13 +42,13 @@ function OsuDirectChartsListView:input(w, h)
 		self:scroll(-delta)
 	end
 
-	local kd = gyatt.actionDown
-	local kp = gyatt.actionPressed
+	local ap = self.actionModel.consumeAction
+	local ad = self.actionModel.isActionDown
 
-	if kd(action.up) then
-		self:autoScroll(-1, kp(action.up))
-	elseif kd(action.down) then
-		self:autoScroll(1, kp(action.down))
+	if ad("left") then
+		self:autoScroll(-1, ap("left"))
+	elseif ad("right") then
+		self:autoScroll(1, ap("right"))
 	end
 end
 
