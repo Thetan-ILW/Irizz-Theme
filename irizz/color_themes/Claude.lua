@@ -26,7 +26,7 @@ ColorTheme.colors = {
 	panel = Hex("#00000088"),
 	border = Hex("#CCCCCC"),
 	-- LINES AND RECTANGLES IN PANELS
-	separator = Hex("#4D4D4D"),
+	separator = Hex("#828282"),
 	innerPanel = Hex("#00000066"),
 	-- LISTS
 	itemDownloaded = { 0.8, 0.8, 0.8, 0.6 },

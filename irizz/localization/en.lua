@@ -442,21 +442,20 @@ localization.keybindsResult = {
 }
 
 localization.fontFamilyList = {
-	["Noto Sans"] = {
-		"resources/fonts/NotoSansCJK-Regular.ttc",
-		"resources/fonts/NotoSans-Minimal.ttf",
-		height = 813 / 758,
-	},
-	["Noto Sans Mono"] = {
-		"resources/fonts/NotoSansMono-Regular.ttf",
-		"resources/fonts/NotoSansMono-Minimal.ttf",
-		height = 730 / 699,
-	},
 	["ZenMaruGothic-Black"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Black.ttf",
 	},
 	["ZenMaruGothic-Medium"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Medium.ttf",
+	},
+	["Titillium-Web-Regular"] = {
+		"irizz/fonts/Titillium_Web/TitilliumWeb-Regular.ttf",
+	},
+	["Titillium-Web-SemiBold"] = {
+		"irizz/fonts/Titillium_Web/TitilliumWeb-SemiBold.ttf",
+	},
+	["Titillium-Web-Bold"] = {
+		"irizz/fonts/Titillium_Web/TitilliumWeb-Bold.ttf",
 	},
 }
 
@@ -597,15 +596,11 @@ localization.fonts = {
 
 	resultView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
-		hitError = { "ZenMaruGothic-Medium", 16 },
-		judgements = { "ZenMaruGothic-Medium", 24 },
-		accuracy = { "ZenMaruGothic-Medium", 28 },
-		scoreInfo = { "ZenMaruGothic-Medium", 30 },
-		pauses = { "ZenMaruGothic-Medium", 24 },
-		difficulty = { "ZenMaruGothic-Medium", 28 },
-		calculator = { "ZenMaruGothic-Medium", 24 },
-		patterns = { "ZenMaruGothic-Medium", 22 },
-		modifiers = { "ZenMaruGothic-Black", 48 },
+		modifiers = { "Titillium-Web-Bold", 28 },
+		accuracy = { "Titillium-Web-Bold", 28 },
+		counterName = { "Titillium-Web-SemiBold", 24 },
+		grade = { "Titillium-Web-Regular", 24 },
+		timings = { "Titillium-Web-Regular", 24 },
 	},
 
 	multiplayerView = {
