@@ -39,12 +39,19 @@ local judgeName = ""
 local scoreSystemName = ""
 local counterNames
 
+local customConfig = nil
+
 local gfx = love.graphics
 
-function ViewConfig:new(game)
+function ViewConfig:new(game, custom_config)
 	self.scoreListView = ScoreListView(game, true)
 	self.scoreListView.rows = 5
 	font = Theme:getFonts("resultView")
+
+	if custom_config then
+		customConfig = custom_config()
+		customConfig:load(game, self)
+	end
 end
 
 ---@param view table
@@ -163,10 +170,12 @@ local hitGraphScale = 0.72
 local function getPointY(y)
 	local delta_time = y.misc.deltaTime
 
+	delta_time = delta_time * 1000
+
 	if delta_time > 0 then
-		delta_time = ((delta_time * 1000) / maxLateTiming) / 1000
+		delta_time = (delta_time / maxLateTiming) / 1000
 	else
-		delta_time = ((delta_time * 1000) / maxEarlyTiming) / 1000
+		delta_time = (delta_time / maxEarlyTiming) / 1000
 	end
 
 	return math_util.clamp((delta_time * hitGraphScale) + 0.5, -1, 0.98)
@@ -206,7 +215,12 @@ local function getHitColor(delta_time, is_miss)
 	end
 
 	local colors = counterColors[scoreSystemName]
+
 	delta_time = math.abs(delta_time)
+
+	if scoreSystemName == "etterna" then -- this is bad, don't forget to refactor score systems PLEASE
+		delta_time = delta_time * 1000
+	end
 
 	for _, key in ipairs(counterNames) do
 		local window = judge.windows[key]
@@ -630,6 +644,10 @@ end
 function ViewConfig:draw(view)
 	just.origin()
 
+	if customConfig then
+		customConfig:drawUnderPanels()
+	end
+
 	title(view)
 	self:modifiers(view)
 	self:scoringStats(view)
@@ -637,6 +655,11 @@ function ViewConfig:draw(view)
 	self:scoreInfo()
 	self:difficulty()
 	self:scores(view)
+
+	if customConfig then
+		love.graphics.origin()
+		customConfig:draw()
+	end
 end
 
 return ViewConfig

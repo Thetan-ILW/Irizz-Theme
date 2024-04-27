@@ -2,6 +2,7 @@ local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
 local table_util = require("table_util")
 
+local Theme = require("thetan.irizz.views.Theme")
 local Header = require("thetan.irizz.views.HeaderView")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
@@ -40,7 +41,7 @@ ResultView.load = thread.coro(function(self)
 	end
 
 	self.header = Header(self.game, "result")
-	self.viewConfig = ViewConfig(self.game)
+	self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
 
 	self:updateJudgements()
 

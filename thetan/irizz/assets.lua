@@ -193,6 +193,8 @@ function Assets:get(config, theme)
 	}
 
 	theme.icons = icons
+
+	theme.resultCustomConfig = love.filesystem.load("userdata/ui/result/config.lua")
 end
 
 return Assets
