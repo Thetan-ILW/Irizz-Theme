@@ -601,6 +601,11 @@ localization.fonts = {
 		counterName = { "Titillium-Web-SemiBold", 24 },
 		grade = { "Titillium-Web-Regular", 24 },
 		timings = { "Titillium-Web-Regular", 24 },
+		difficultyValue = { "Titillium-Web-SemiBold", 32 },
+		calculator = { "Titillium-Web-Regular", 24 },
+		patterns = { "Titillium-Web-Regular", 24 },
+		timeRate = { "Titillium-Web-SemiBold", 32 },
+		scoreInfo = { "Titillium-Web-Regular", 24 },
 	},
 
 	multiplayerView = {
