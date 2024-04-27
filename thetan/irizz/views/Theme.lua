@@ -97,27 +97,6 @@ function Theme:getFonts(objectName)
 	return loadedFonts
 end
 
-function Theme:getHitColor(delta, isMiss)
-	if isMiss then
-		return self.missColor
-	end
-
-	local hitColors = self.hitColors
-	delta = math.abs(delta)
-
-	if delta < 0.016 then
-		return hitColors[1]
-	elseif delta < 0.037 then
-		return hitColors[2]
-	elseif delta < 0.07 then
-		return hitColors[3]
-	elseif delta < 0.1 then
-		return hitColors[4]
-	else
-		return hitColors[5]
-	end
-end
-
 ---@param mods table
 ---@return string
 function Theme:getModifierString(mods)

@@ -21,7 +21,10 @@ local ViewConfig = class()
 local canUpdate = false
 local collectionsMode = "Collections"
 
+local actionModel
+
 function ViewConfig:new(game)
+	actionModel = game.actionModel
 	self.collectionListView = CollectionListView(game)
 	self.osuDirectListView = OsuDirectListView(game)
 	self.osuDirectChartsListView = OsuDirectChartsListView(game)
@@ -66,9 +69,9 @@ function ViewConfig:osuDirectSearch(view)
 	local w, h = Layout:move("searchField")
 	love.graphics.setFont(Font.searchField)
 
-	local vimMotions = view.game.configModel.configs.irizz.vimMotions
+	local vimMotions = actionModel.isVimMode()
 
-	if not vimMotions or gyatt.vim.isInsertMode() then
+	if not vimMotions or actionModel.isInsertMode() then
 		just.focus("osuDirectSearchField")
 	end
 
@@ -76,14 +79,14 @@ function ViewConfig:osuDirectSearch(view)
 	local changed, text =
 		TextInput("osuDirectSearchField", { filterString, Text.osuDirectSearchPlaceholder }, nil, w, h)
 
-	local delAll = gyatt.actionPressed(action.clearSearch)
-
-	if delAll then
-		view.game.osudirectModel:setSearchString("")
-	end
+	local delAll = actionModel.consumeAction("deleteLine")
 
 	if changed == "text" then
 		view.game.osudirectModel:setSearchString(text)
+	end
+
+	if delAll then
+		view.game.osudirectModel:setSearchString("")
 	end
 end
 
