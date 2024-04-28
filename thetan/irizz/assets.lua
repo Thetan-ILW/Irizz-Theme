@@ -195,6 +195,7 @@ function Assets:get(config, theme)
 	theme.icons = icons
 
 	theme.resultCustomConfig = love.filesystem.load("userdata/ui/result/config.lua")
+	theme.osuResultConfig = love.filesystem.load("userdata/ui/result/osu_config.lua")()
 end
 
 return Assets

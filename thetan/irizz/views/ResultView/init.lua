@@ -6,6 +6,7 @@ local Theme = require("thetan.irizz.views.Theme")
 local Header = require("thetan.irizz.views.HeaderView")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
+local OsuViewConfig = require("thetan.irizz.views.ResultView.OsuViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
 
 local InputMap = require("thetan.irizz.views.ResultView.InputMap")
@@ -41,7 +42,8 @@ ResultView.load = thread.coro(function(self)
 	end
 
 	self.header = Header(self.game, "result")
-	self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
+	self.viewConfig = OsuViewConfig(self.game, Theme.osuResultConfig)
+	--self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
 
 	self:updateJudgements()
 
@@ -54,7 +56,7 @@ ResultView.load = thread.coro(function(self)
 	end
 
 	self.viewConfig:loadScore(self)
-	self.viewConfig.scoreListView:reloadItems()
+	--self.viewConfig.scoreListView:reloadItems()
 
 	canDraw = true
 	loading = false
