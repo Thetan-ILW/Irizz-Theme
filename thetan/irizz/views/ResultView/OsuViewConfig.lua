@@ -222,6 +222,10 @@ function OsuViewConfig:loadScore(view)
 
 	grade = Scoring.getGrade(scoreSystemName, judge.accuracy)
 
+	if scoreSystemName ~= "osuMania" then
+		grade = Scoring.convertGradeToOsu(grade)
+	end
+
 	local playContext = view.game.playContext
 	local timings = playContext.timings
 

@@ -24,6 +24,8 @@ function Scoring.getGrade(scoreSystemName, accuracy)
 			return "AAA"
 		elseif accuracy > 0.93 then
 			return "AA"
+		elseif accuracy > 0.85 then
+			return "A"
 		elseif accuracy > 0.8 then
 			return "B"
 		elseif accuracy > 0.7 then
@@ -52,6 +54,18 @@ function Scoring.getGrade(scoreSystemName, accuracy)
 	end
 
 	return "-"
+end
+
+function Scoring.convertGradeToOsu(grade)
+	if grade == "AAAAA" or grade == "AAAA" or grade == "AAA" or grade == "X" then
+		return "SS"
+	elseif grade == "AA" then
+		return "S"
+	elseif grade == "F" then
+		return "D"
+	end
+
+	return grade
 end
 
 Scoring.counterColors = {
