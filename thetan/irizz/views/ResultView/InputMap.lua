@@ -13,6 +13,12 @@ function ResultInputMap:createBindings(view)
 		["submitScore"] = function()
 			view:submitScore()
 		end,
+		["left"] = function()
+			view:switchJudge(-1)
+		end,
+		["right"] = function()
+			view:switchJudge(1)
+		end,
 	}
 end
 

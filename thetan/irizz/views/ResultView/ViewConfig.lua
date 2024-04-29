@@ -115,7 +115,7 @@ function ViewConfig:loadScore(view)
 	ratingFormatted = ("%0.02f PR"):format(scoreItem.rating)
 
 	local configs = view.game.configModel.configs
-	judgeName = configs.select.judgements
+	judgeName = view.currentJudgeName
 	judge = view.judgements[judgeName]
 	counterNames = judge:getOrderedCounterNames()
 	playContext = view.game.playContext

@@ -1,6 +1,7 @@
 local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
 local table_util = require("table_util")
+local math_util = require("math_util")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Header = require("thetan.irizz.views.HeaderView")
@@ -14,6 +15,10 @@ local InputMap = require("thetan.irizz.views.ResultView.InputMap")
 ---@class thetan.irizz.ResultView: sphere.ScreenView
 ---@operator call: thetan.irizz.ResultView
 local ResultView = ScreenView + {}
+
+ResultView.currentJudgeName = ""
+
+local currentJudge = 0
 
 local loading = false
 local canDraw = false
@@ -47,6 +52,7 @@ ResultView.load = thread.coro(function(self)
 
 	if irizz.osuResultScreen then
 		self.viewConfig = OsuViewConfig(self.game, Theme.osuResultAssets)
+		self.header = nil
 	else
 		self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
 		self.header = Header(self.game, "result")
@@ -55,11 +61,13 @@ ResultView.load = thread.coro(function(self)
 
 	self:updateJudgements()
 
-	local selectedJudgement = select.judgements
+	self.currentJudgeName = select.judgements
+	currentJudge = irizz.judge
 
-	if not self.judgements[selectedJudgement] then
+	if not self.judgements[self.currentJudgeName] then
 		local k, _ = next(self.judgements)
 		select.judgements = k
+		self.currentJudgeName = k
 	end
 
 	self.viewConfig:loadScore(self)
@@ -174,5 +182,31 @@ ResultView.play = thread.coro(function(self, mode)
 	self:changeScreen("gameplayView")
 	playing = false
 end)
+
+function ResultView:switchJudge(direction)
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
+
+	local scoreSystems = self.game.rhythmModel.scoreEngine.scoreSystem
+	local ss = irizz.scoreSystem
+
+	local scoreSystem
+
+	if ss == "Soundsphere" then
+		return
+	elseif ss == "osu!mania" then
+		scoreSystem = scoreSystems.osuMania
+	elseif ss == "Etterna" then
+		scoreSystem = scoreSystems.etterna
+	elseif ss == "Quaver" then
+		return
+	end
+
+	currentJudge =
+		math_util.clamp(currentJudge + direction, scoreSystem.metadata.range[1], scoreSystem.metadata.range[2])
+
+	self.currentJudgeName = scoreSystem.metadata.name:format(currentJudge)
+	self.viewConfig:loadScore(self)
+end
 
 return ResultView

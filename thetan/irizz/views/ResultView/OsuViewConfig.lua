@@ -172,7 +172,7 @@ function OsuViewConfig:loadScore(view)
 	local configs = view.game.configModel.configs
 	local irizz = configs.irizz
 
-	judgeName = configs.select.judgements
+	judgeName = view.currentJudgeName
 	judge = view.judgements[judgeName]
 	counterNames = judge:getOrderedCounterNames()
 
@@ -265,7 +265,7 @@ function OsuViewConfig:title(view)
 
 	local second_row = string.format("Chart from %s", setDirectory)
 
-	if chartview.format == "osu" then
+	if chartview.format ~= "sm" then
 		second_row = string.format("Chart by %s", creator)
 	end
 
@@ -319,7 +319,7 @@ function OsuViewConfig:panel()
 	w, h = Layout:move("accuracy")
 	gfx.scale(768 / 1080)
 	gfx.setFont(font.accuracy)
-	gyatt.frame(judgeName, 20, -20, w, h, "center", "top")
+	gyatt.frame(judgeName, 0, -20, w + 40, h, "center", "top")
 	gfx.scale(1)
 end
 
