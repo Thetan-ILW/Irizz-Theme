@@ -11,9 +11,10 @@ local Text = Theme.textResult
 local font
 
 local Layout = require("thetan.irizz.views.ResultView.Layout")
+local HitGraph = require("thetan.irizz.views.ResultView.HitGraph")
+local Scoring = require("thetan.irizz.views.ResultView.Scoring")
 
 local ScoreListView = require("thetan.irizz.views.ScoreListView")
-local PointGraphView = require("sphere.views.GameplayView.PointGraphView")
 
 local ViewConfig = class()
 
@@ -31,8 +32,6 @@ local ratingFormatted = ""
 
 local playContext
 local timings
-local maxEarlyTiming = 0
-local maxLateTiming = 0
 
 local judge
 local judgeName = ""
@@ -43,17 +42,6 @@ local customConfig = nil
 
 local gfx = love.graphics
 
-function ViewConfig:new(game, custom_config)
-	self.scoreListView = ScoreListView(game, true)
-	self.scoreListView.rows = 5
-	font = Theme:getFonts("resultView")
-
-	if custom_config then
-		customConfig = custom_config()
-		customConfig:load(game, self)
-	end
-end
-
 ---@param view table
 ---@return boolean
 local function showLoadedScore(view)
@@ -63,6 +51,19 @@ local function showLoadedScore(view)
 		return false
 	end
 	return scoreItem.id == scoreEntry.id
+end
+
+function ViewConfig:new(game, custom_config)
+	self.scoreListView = ScoreListView(game, true)
+	self.scoreListView.rows = 5
+	font = Theme:getFonts("resultView")
+
+	if custom_config then
+		customConfig = custom_config()
+		customConfig:load(game, self)
+	end
+
+	HitGraph.showLoadedScore = showLoadedScore
 end
 
 function ViewConfig:loadScore(view)
@@ -114,7 +115,7 @@ function ViewConfig:loadScore(view)
 	ratingFormatted = ("%0.02f PR"):format(scoreItem.rating)
 
 	local configs = view.game.configModel.configs
-	judgeName = configs.select.judgements
+	judgeName = view.currentJudgeName
 	judge = view.judgements[judgeName]
 	counterNames = judge:getOrderedCounterNames()
 	playContext = view.game.playContext
@@ -125,9 +126,6 @@ function ViewConfig:loadScore(view)
 	local earlyReleaseMiss = math.abs(timings.LongNoteEnd.miss[1])
 	local lateReleaseMiss = timings.LongNoteEnd.miss[2]
 
-	maxEarlyTiming = math.max(earlyNoteMiss, earlyReleaseMiss)
-	maxLateTiming = math.max(lateNoteMiss, lateReleaseMiss)
-
 	if string.find(judgeName, "osu!mania") then
 		scoreSystemName = "osuMania"
 	elseif string.find(judgeName, "Etterna") then
@@ -137,6 +135,12 @@ function ViewConfig:loadScore(view)
 	elseif string.find(judgeName, "Soundsphere") then
 		scoreSystemName = "soundsphere"
 	end
+
+	HitGraph.maxEarlyTiming = math.max(earlyNoteMiss, earlyReleaseMiss)
+	HitGraph.maxLateTiming = math.max(lateNoteMiss, lateReleaseMiss)
+	HitGraph.judge = judge
+	HitGraph.counterNames = counterNames
+	HitGraph.scoreSystemName = scoreSystemName
 end
 
 local boxes = {
@@ -153,148 +157,6 @@ function ViewConfig.panels()
 		local w, h = Layout:move(name)
 		Theme:panel(w, h)
 	end
-end
-
-local pointR = 3
-local padding = 5
----@param self table
-local function drawGraph(self)
-	local w, h = Layout:move("hitGraph")
-	love.graphics.translate(pointR + padding, pointR)
-	self.__index.draw(self, w - pointR - (padding * 2), h - pointR)
-	love.graphics.translate(-pointR - padding, -pointR)
-end
-
-local hitGraphScale = 0.72
-
-local function getPointY(y)
-	local delta_time = y.misc.deltaTime
-
-	delta_time = delta_time * 1000
-
-	if delta_time > 0 then
-		delta_time = (delta_time / maxLateTiming) / 1000
-	else
-		delta_time = (delta_time / maxEarlyTiming) / 1000
-	end
-
-	return math_util.clamp((delta_time * hitGraphScale) + 0.5, -1, 0.98)
-end
-
-local counterColors = {
-	soundsphere = {
-		perfect = { 1, 1, 1, 1 },
-		["not perfect"] = { 1, 0.6, 0.4, 1 },
-	},
-	osuMania = {
-		perfect = { 0.6, 0.8, 1, 1 },
-		great = { 0.95, 0.796, 0.188, 1 },
-		good = { 0.07, 0.8, 0.56, 1 },
-		ok = { 0.1, 0.39, 1, 1 },
-		meh = { 0.42, 0.48, 0.51, 1 },
-	},
-	etterna = {
-		marvelous = { 0.6, 0.8, 1, 1 },
-		perfect = { 0.95, 0.796, 0.188, 1 },
-		great = { 0.07, 0.8, 0.56, 1 },
-		bad = { 0.1, 0.7, 1, 1 },
-		boo = { 1, 0.1, 0.7, 1 },
-	},
-	quaver = {
-		marvelous = { 1, 1, 0.71, 1 },
-		perfect = { 1, 0.91, 0.44, 1 },
-		great = { 0.38, 0.96, 0.47, 1 },
-		good = { 0.25, 0.7, 0.75, 1 },
-		okay = { 0.72, 0.46, 0.65, 1 },
-	},
-}
-
-local function getHitColor(delta_time, is_miss)
-	if is_miss then
-		return { 1, 0, 0, 1 }
-	end
-
-	local colors = counterColors[scoreSystemName]
-
-	delta_time = math.abs(delta_time)
-
-	if scoreSystemName == "etterna" then -- this is bad, don't forget to refactor score systems PLEASE
-		delta_time = delta_time * 1000
-	end
-
-	for _, key in ipairs(counterNames) do
-		local window = judge.windows[key]
-
-		if delta_time < window then
-			return colors[key]
-		end
-	end
-
-	return { 1, 0, 0, 1 }
-end
-
-local _HitGraph = PointGraphView({
-	draw = drawGraph,
-	radius = pointR,
-	backgroundColor = { 0, 0, 0, 0.2 },
-	backgroundRadius = 6,
-	point = function(self, point)
-		if point.base.isMiss then
-			return
-		end
-		local y = getPointY(point)
-		local color = getHitColor(point.misc.deltaTime, false)
-		return y, unpack(color)
-	end,
-	show = showLoadedScore,
-})
-
-local _EarlyHitGraph = PointGraphView({
-	draw = drawGraph,
-	radius = pointR,
-	backgroundColor = { 0, 0, 0, 1 },
-	backgroundRadius = 0,
-	point = function(self, point)
-		if not point.base.isEarlyHit then
-			return
-		end
-		local y = getPointY(point)
-		return y, unpack(getHitColor(0, true))
-	end,
-	show = showLoadedScore,
-})
-
-local _MissGraph = PointGraphView({
-	draw = drawGraph,
-	radius = pointR,
-	backgroundColor = { 0, 0, 0, 1 },
-	backgroundRadius = 0,
-	point = function(self, point)
-		if not point.base.isMiss then
-			return
-		end
-		local y = getPointY(point)
-		return y, unpack(getHitColor(0, true))
-	end,
-	show = showLoadedScore,
-})
-
----@param view table
-local function hitGraph(view)
-	local w, h = Layout:move("hitGraph")
-	Theme:panel(w, h)
-
-	_HitGraph.game = view.game
-	_HitGraph:draw(w, h)
-	_EarlyHitGraph.game = view.game
-	_EarlyHitGraph:draw(w, h)
-	_MissGraph.game = view.game
-	_MissGraph:draw(w, h)
-
-	gfx.setColor(Color.panel)
-	gfx.rectangle("fill", -2, h / 2, w + 2, 4)
-
-	Theme:border(w, h)
 end
 
 local function title(view)
@@ -352,37 +214,23 @@ local function judgementCount(label, color, w, count, max)
 	gfx.translate(0, label_height + 8)
 end
 
-local gradeColors = {
-	soundsphere = {
-		["-"] = { 1, 1, 1, 1 },
-	},
-	osuMania = {
-		SS = { 0.6, 0.8, 1, 1 },
-		S = { 0.95, 0.796, 0.188, 1 },
-		A = { 0.07, 0.8, 0.56, 1 },
-		B = { 0.1, 0.39, 1, 1 },
-		C = { 0.42, 0.48, 0.51, 1 },
-		D = { 0.51, 0.37, 0, 1 },
-	},
-	etterna = {
-		AAAAA = { 1, 1, 1, 1 },
-		AAAA = { 0.6, 0.8, 1, 1 },
-		AAA = { 0.95, 0.796, 0.188, 1 },
-		AA = { 0.07, 0.8, 0.56, 1 },
-		B = { 0.1, 0.7, 1, 1 },
-		C = { 1, 0.1, 0.7, 1 },
-		F = { 0.51, 0.37, 0, 1 },
-	},
-	quaver = {
-		X = { 0.6, 0.8, 1, 1 },
-		S = { 0.95, 0.796, 0.188, 1 },
-		A = { 0.95, 0.796, 0.188, 1 },
-		B = { 0.07, 0.8, 0.56, 1 },
-		C = { 0.1, 0.39, 1, 1 },
-		D = { 0.42, 0.48, 0.51, 1 },
-		F = { 0.51, 0.37, 0, 1 },
-	},
-}
+---@param view table
+local function hitGraph(view)
+	local w, h = Layout:move("hitGraph")
+	Theme:panel(w, h)
+
+	HitGraph.hitGraph.game = view.game
+	HitGraph.hitGraph:draw(w, h)
+	HitGraph.earlyHitGraph.game = view.game
+	HitGraph.earlyHitGraph:draw(w, h)
+	HitGraph.missGraph.game = view.game
+	HitGraph.missGraph:draw(w, h)
+
+	gfx.setColor(Color.panel)
+	gfx.rectangle("fill", -2, h / 2, w + 2, 4)
+
+	Theme:border(w, h)
+end
 
 local function GradeKV(label, v, w)
 	just.indent(50)
@@ -390,60 +238,6 @@ local function GradeKV(label, v, w)
 	just.sameline()
 	just.indent(-100)
 	gyatt.text(v, w, "right")
-end
-
-local function getGrade(accuracy)
-	if scoreSystemName == "osuMania" then
-		if accuracy == 1 then
-			return "SS"
-		elseif accuracy > 0.95 then
-			return "S"
-		elseif accuracy > 0.9 then
-			return "A"
-		elseif accuracy > 0.8 then
-			return "B"
-		elseif accuracy > 0.7 then
-			return "C"
-		else
-			return "D"
-		end
-	elseif scoreSystemName == "etterna" then
-		if accuracy > 0.999935 then
-			return "AAAAA"
-		elseif accuracy > 0.99955 then
-			return "AAAA"
-		elseif accuracy > 0.997 then
-			return "AAA"
-		elseif accuracy > 0.93 then
-			return "AA"
-		elseif accuracy > 0.8 then
-			return "B"
-		elseif accuracy > 0.7 then
-			return "C"
-		else
-			return "F"
-		end
-	elseif scoreSystemName == "quaver" then
-		if accuracy == 1 then
-			return "X"
-		elseif accuracy > 0.99 then
-			return "SS"
-		elseif accuracy > 0.95 then
-			return "S"
-		elseif accuracy > 0.9 then
-			return "A"
-		elseif accuracy > 0.8 then
-			return "B"
-		elseif accuracy > 0.7 then
-			return "C"
-		elseif accuracy > 0.6 then
-			return "D"
-		else
-			return "F"
-		end
-	end
-
-	return "-"
 end
 
 local function timingsKV(label, v, w)
@@ -473,8 +267,8 @@ function ViewConfig:scoringStats(view)
 	end
 
 	local pauses = playContext.pauses or 0
-	local grade = getGrade(judge.accuracy)
-	local gradeColor = gradeColors[scoreSystemName][grade]
+	local grade = Scoring.getGrade(scoreSystemName, judge.accuracy)
+	local gradeColor = Scoring.gradeColors[scoreSystemName][grade]
 
 	local judge_timings = timings
 
@@ -502,7 +296,7 @@ function ViewConfig:scoringStats(view)
 	-- JUDGEMENTS
 	w, h = Layout:move("judgements")
 
-	local colors = counterColors[scoreSystemName]
+	local colors = Scoring.counterColors[scoreSystemName]
 
 	gfx.setFont(font.counterName)
 	for _, counter in ipairs(counterNames) do

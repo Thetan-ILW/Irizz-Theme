@@ -1,6 +1,8 @@
 local defaultColorTheme = require("irizz.color_themes.Default")
 local defaultLocalization = require("irizz.localization.en")
 local table_util = require("table_util")
+local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
+local utf8validate = require("utf8validate")
 
 local Assets = {}
 
@@ -116,6 +118,121 @@ function Assets:init(theme)
 	table_util.copy(defaultColorTheme, theme)
 end
 
+local characters = {
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+	"comma",
+	"dot",
+	"percent",
+	"x",
+}
+
+local char_alias = {
+	comma = ",",
+	dot = ".",
+	percent = "%",
+}
+
+local image_format = {
+	"png",
+	"jpg",
+	"jpeg",
+	"bmp",
+	"tga",
+}
+
+local function findImage(path)
+	for _, format in ipairs(image_format) do
+		local normal = path .. "." .. format
+		local double = path .. "@2x." .. format
+
+		if love.filesystem.getInfo(double) then
+			return double
+		end
+
+		if love.filesystem.getInfo(normal) then
+			return normal
+		end
+
+		if love.filesystem.getInfo(double:lower()) then
+			return double:lower()
+		end
+
+		if love.filesystem.getInfo(normal:lower()) then
+			return normal:lower()
+		end
+	end
+
+	return nil
+end
+
+local function getImageFont(group)
+	local font = {}
+
+	for _, v in ipairs(characters) do
+		local file = findImage(("%s-%s"):format(group, v))
+
+		if file then
+			local key = char_alias[v] and char_alias[v] or v
+			font[key] = file
+		end
+	end
+
+	return font
+end
+
+local function loadImage(path)
+	path = findImage(path)
+
+	if path then
+		return love.graphics.newImage(path)
+	end
+
+	return nil
+end
+
+local osuResultPath = "userdata/ui/result/"
+
+local function getOsuResultAssets()
+	local content = love.filesystem.read(osuResultPath .. "skin.ini")
+
+	if not content then
+		return nil
+	end
+
+	content = utf8validate(content)
+	local skinini = OsuNoteSkin:parseSkinIni(content)
+
+	local scoreFontPath = osuResultPath .. skinini.Fonts.ScorePrefix or osuResultPath .. "score"
+
+	local t = {
+		title = loadImage(osuResultPath .. "ranking-title"),
+		panel = loadImage(osuResultPath .. "ranking-panel"),
+		graph = loadImage(osuResultPath .. "ranking-graph"),
+		scoreFont = getImageFont(scoreFontPath),
+		scoreOverlap = skinini.Fonts.ScoreOverlap or 0,
+
+		grade = {
+			SS = loadImage(osuResultPath .. "ranking-X"),
+			S = loadImage(osuResultPath .. "ranking-S"),
+			A = loadImage(osuResultPath .. "ranking-A"),
+			B = loadImage(osuResultPath .. "ranking-B"),
+			C = loadImage(osuResultPath .. "ranking-C"),
+			D = loadImage(osuResultPath .. "ranking-D"),
+		},
+	}
+
+	return t
+end
+
 function Assets:get(config, theme)
 	local startSounds = getItems("ui_sounds/start")
 
@@ -195,6 +312,7 @@ function Assets:get(config, theme)
 	theme.icons = icons
 
 	theme.resultCustomConfig = love.filesystem.load("userdata/ui/result/config.lua")
+	theme.osuResultAssets = getOsuResultAssets()
 end
 
 return Assets
