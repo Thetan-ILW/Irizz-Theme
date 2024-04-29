@@ -2,6 +2,7 @@ local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
 local table_util = require("table_util")
 local math_util = require("math_util")
+local assets = require("thetan.irizz.assets")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Header = require("thetan.irizz.views.HeaderView")
@@ -19,6 +20,7 @@ local ResultView = ScreenView + {}
 ResultView.currentJudgeName = ""
 
 local currentJudge = 0
+local osuSkin = nil
 
 local loading = false
 local canDraw = false
@@ -49,9 +51,15 @@ ResultView.load = thread.coro(function(self)
 	local configs = self.game.configModel.configs
 	local select = configs.select
 	local irizz = configs.irizz
+	local selected_osu_skin = irizz.osuResultSkin
 
 	if irizz.osuResultScreen then
-		self.viewConfig = OsuViewConfig(self.game, Theme.osuResultAssets)
+		if not osuSkin or osuSkin.name ~= selected_osu_skin then
+			osuSkin = assets:getOsuResultAssets(Theme.osuSkins[selected_osu_skin])
+			osuSkin.name = selected_osu_skin
+		end
+
+		self.viewConfig = OsuViewConfig(self.game, osuSkin)
 		self.header = nil
 	else
 		self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)

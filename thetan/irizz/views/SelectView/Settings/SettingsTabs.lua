@@ -641,6 +641,8 @@ function SettingsTab:UI(view)
 	irizz.osuResultScreen = imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, Text.enable)
 	irizz.hpGraph = imgui.checkbox("irizz.hpGraph", irizz.hpGraph, Text.showHpGraph)
 
+	irizz.osuResultSkin = imgui.combo("irizz.osuResultSkin", irizz.osuResultSkin, Theme.osuSkinNames, nil, Text.skin)
+
 	imgui.separator()
 
 	just.text(Text.dim)

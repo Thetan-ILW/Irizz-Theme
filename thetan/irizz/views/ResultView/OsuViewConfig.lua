@@ -302,6 +302,7 @@ function OsuViewConfig:panel()
 	local w, h = Layout:move("panel")
 
 	gfx.setColor({ 1, 1, 1, 1 })
+
 	gfx.draw(assets.panel, 0, 0, 0)
 
 	centerFrame(scoreValue, "score")

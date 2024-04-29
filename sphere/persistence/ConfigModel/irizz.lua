@@ -22,5 +22,6 @@ return {
 	alwaysShowOriginalMode = false,
 	transitionAnimation = "circle",
 	osuResultScreen = false,
+	osuResultSkin = "",
 	hpGraph = true,
 }

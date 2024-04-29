@@ -199,10 +199,10 @@ local function loadImage(path)
 	return nil
 end
 
-local osuResultPath = "userdata/ui/result/"
+function Assets:getOsuResultAssets(skin_path)
+	skin_path = skin_path .. "/"
 
-local function getOsuResultAssets()
-	local content = love.filesystem.read(osuResultPath .. "skin.ini")
+	local content = love.filesystem.read(skin_path .. "skin.ini")
 
 	if not content then
 		return nil
@@ -211,26 +211,43 @@ local function getOsuResultAssets()
 	content = utf8validate(content)
 	local skinini = OsuNoteSkin:parseSkinIni(content)
 
-	local scoreFontPath = osuResultPath .. skinini.Fonts.ScorePrefix or osuResultPath .. "score"
+	local scoreFontPath = skin_path .. skinini.Fonts.ScorePrefix or skin_path .. "score"
 
 	local t = {
-		title = loadImage(osuResultPath .. "ranking-title"),
-		panel = loadImage(osuResultPath .. "ranking-panel"),
-		graph = loadImage(osuResultPath .. "ranking-graph"),
+		title = loadImage(skin_path .. "ranking-title"),
+		panel = loadImage(skin_path .. "ranking-panel"),
+		graph = loadImage(skin_path .. "ranking-graph"),
 		scoreFont = getImageFont(scoreFontPath),
 		scoreOverlap = skinini.Fonts.ScoreOverlap or 0,
 
 		grade = {
-			SS = loadImage(osuResultPath .. "ranking-X"),
-			S = loadImage(osuResultPath .. "ranking-S"),
-			A = loadImage(osuResultPath .. "ranking-A"),
-			B = loadImage(osuResultPath .. "ranking-B"),
-			C = loadImage(osuResultPath .. "ranking-C"),
-			D = loadImage(osuResultPath .. "ranking-D"),
+			SS = loadImage(skin_path .. "ranking-X"),
+			S = loadImage(skin_path .. "ranking-S"),
+			A = loadImage(skin_path .. "ranking-A"),
+			B = loadImage(skin_path .. "ranking-B"),
+			C = loadImage(skin_path .. "ranking-C"),
+			D = loadImage(skin_path .. "ranking-D"),
 		},
 	}
 
 	return t
+end
+
+local function getOsuSkins()
+	local skins = love.filesystem.getDirectoryItems("userdata/skins/")
+
+	local osu_skins = {}
+	local osu_skin_names = {}
+
+	for _, name in ipairs(skins) do
+		local path = "userdata/skins/" .. name
+		if love.filesystem.getInfo(path .. "/skin.ini") then
+			osu_skins[name] = path
+			table.insert(osu_skin_names, name)
+		end
+	end
+
+	return osu_skins, osu_skin_names
 end
 
 function Assets:get(config, theme)
@@ -312,7 +329,7 @@ function Assets:get(config, theme)
 	theme.icons = icons
 
 	theme.resultCustomConfig = love.filesystem.load("userdata/ui/result/config.lua")
-	theme.osuResultAssets = getOsuResultAssets()
+	theme.osuSkins, theme.osuSkinNames = getOsuSkins()
 end
 
 return Assets

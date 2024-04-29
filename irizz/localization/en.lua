@@ -127,6 +127,7 @@ localization.textSettings = {
 	osuResultScreen = "osu! result screen",
 	enable = "Enable",
 	showHpGraph = "Show HP graph",
+	skin = "Skin",
 	--
 	commit = "Commit: ",
 	commitDate = "Date: ",
