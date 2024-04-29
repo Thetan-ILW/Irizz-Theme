@@ -32,6 +32,7 @@ local scoreValue
 local timeRate = 1
 local timeFormatted = ""
 local setDirectory = ""
+local creator = ""
 
 local grade = ""
 
@@ -195,6 +196,7 @@ function OsuViewConfig:loadScore(view)
 	timeFormatted = os.date("%c", view.game.selectModel.scoreItem.time)
 	local chartview = view.game.selectModel.chartview
 	setDirectory = chartview.set_dir
+	creator = chartview.creator
 
 	local scoreSystemName
 	if string.find(judgeName, "osu!mania") then
@@ -256,7 +258,12 @@ function OsuViewConfig:title(view)
 		title = ("%s [%s %0.02fx]"):format(title, timeRate)
 	end
 
-	local creator = string.format("Chart from %s", setDirectory)
+	local second_row = string.format("Chart from %s", setDirectory)
+
+	if chartview.format == "osu" then
+		second_row = string.format("Chart by %s", creator)
+	end
+
 	local playInfo = string.format("Played by Guest on %s", timeFormatted)
 
 	gfx.scale(768 / 1080)
@@ -265,7 +272,7 @@ function OsuViewConfig:title(view)
 	gyatt.frame(title, 9, 0, math.huge, h, "left", "top")
 
 	gfx.setFont(font.creator)
-	gyatt.frame(creator, 9, 65, math.huge, h, "left", "top")
+	gyatt.frame(second_row, 9, 65, math.huge, h, "left", "top")
 
 	gfx.setFont(font.playInfo)
 	gyatt.frame(playInfo, 9, 95, math.huge, h, "left", "top")
