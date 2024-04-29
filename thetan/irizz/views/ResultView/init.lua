@@ -41,22 +41,28 @@ ResultView.load = thread.coro(function(self)
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
 	end
 
-	self.header = Header(self.game, "result")
-	self.viewConfig = OsuViewConfig(self.game, Theme.osuResultConfig)
-	--self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
+	local configs = self.game.configModel.configs
+	local select = configs.select
+	local irizz = configs.irizz
+
+	if irizz.osuResultScreen then
+		self.viewConfig = OsuViewConfig(self.game, Theme.osuResultAssets)
+	else
+		self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
+		self.header = Header(self.game, "result")
+		self.viewConfig.scoreListView:reloadItems()
+	end
 
 	self:updateJudgements()
 
-	local config = self.game.configModel.configs.select
-	local selectedJudgement = config.judgements
+	local selectedJudgement = select.judgements
 
 	if not self.judgements[selectedJudgement] then
 		local k, _ = next(self.judgements)
-		config.judgements = k
+		select.judgements = k
 	end
 
 	self.viewConfig:loadScore(self)
-	--self.viewConfig.scoreListView:reloadItems()
 
 	canDraw = true
 	loading = false
@@ -101,7 +107,9 @@ function ResultView:draw()
 	end
 
 	local function UI()
-		self.header:draw(self)
+		if self.header then
+			self.header:draw(self)
+		end
 		self.viewConfig:draw(self)
 	end
 

@@ -21,4 +21,5 @@ return {
 	language = "English",
 	alwaysShowOriginalMode = false,
 	transitionAnimation = "circle",
+	osuResultScreen = false,
 }

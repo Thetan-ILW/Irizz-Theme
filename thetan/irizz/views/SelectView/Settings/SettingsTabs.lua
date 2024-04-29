@@ -609,9 +609,11 @@ function SettingsTab:UI(view)
 		view.game.actionModel:updateActions()
 	end
 
+	irizz.osuResultScreen = imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, Text.osuResultScreen)
 	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
 	irizz.scrollAcceleration =
 		imgui.checkbox("irizz.scrollAcceleration", irizz.scrollAcceleration, Text.scrollAcceleration)
+
 	irizz.scrollClickExtraTime = imgui.slider1(
 		"irizz.scrollClickExtraTime",
 		irizz.scrollClickExtraTime,

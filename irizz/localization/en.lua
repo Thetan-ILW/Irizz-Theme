@@ -116,6 +116,7 @@ localization.textSettings = {
 	linear = "Linear",
 	exp = "Exp",
 	language = "Language (RESTART REQUIRED)",
+	osuResultScreen = "Use custom result screen",
 	colorTheme = "Color theme",
 	vimMotions = "Vim motions",
 	scrollAcceleration = "Scroll acceleration",
@@ -606,6 +607,13 @@ localization.fonts = {
 		patterns = { "Titillium-Web-Regular", 24 },
 		timeRate = { "Titillium-Web-SemiBold", 32 },
 		scoreInfo = { "Titillium-Web-Regular", 24 },
+	},
+
+	osuResultView = {
+		title = { "ZenMaruGothic-Black", 36 },
+		creator = { "Titillium-Web-Regular", 24 },
+		playInfo = { "Titillium-Web-Regular", 24 },
+		accuracy = { "Titillium-Web-Regular", 20 },
 	},
 
 	multiplayerView = {

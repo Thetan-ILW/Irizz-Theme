@@ -1,5 +1,4 @@
 local class = require("class")
-local spherefonts = require("sphere.assets.fonts")
 local gyatt = require("thetan.gyatt")
 
 local Layout = love.filesystem.load("thetan/irizz/views/ResultView/OsuLayout.lua")()
@@ -9,16 +8,11 @@ local HitGraph = require("thetan.irizz.views.ResultView.HitGraph")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
+local font
 
 local OsuViewConfig = class()
 
-local titleImage
-local panelImage
-
-local titleFont
-local creatorFont
-local playInfoFont
-local accuracyFont
+local assets
 
 local judge
 local judgeName
@@ -33,6 +27,7 @@ local missValue
 
 local comboValue
 local accuracyValue
+local scoreValue
 
 local timeRate = 1
 local timeFormatted = ""
@@ -40,130 +35,119 @@ local setDirectory = ""
 
 local grade = ""
 
-local gradeImages = {}
-
 local gfx = love.graphics
 
-local function getFont(config)
-	if config.filename then
-		config[1], config[2] = config.filename, config.size
+function OsuViewConfig:new(game, _assets)
+	assets = _assets
+
+	if not assets then
+		error(
+			"\n\nNo skin.ini in the `userdata/ui/result/`. COPY your osu! skin there or switch back to the default result screen.\n\n"
+		)
 	end
 
-	return spherefonts.get(unpack(config))
-end
-
-function OsuViewConfig:new(game, config)
-	titleImage = gfx.newImage(config.title)
-	panelImage = gfx.newImage(config.panel)
-
-	local x1 = 170
-	local x2 = 620
-
-	local y1 = 215
-	local y2 = 350
-	local y3 = 485
-
-	titleFont = getFont(config.titleFont)
-	creatorFont = getFont(config.creatorFont)
-	playInfoFont = getFont(config.playInfoFont)
-	accuracyFont = getFont(config.accuracyFont)
-
-	gradeImages = {
-		SS = gfx.newImage(config.gradeSS),
-		S = gfx.newImage(config.gradeS),
-		A = gfx.newImage(config.gradeA),
-		B = gfx.newImage(config.gradeB),
-		C = gfx.newImage(config.gradeC),
-		D = gfx.newImage(config.gradeD),
-	}
+	font = Theme:getFonts("osuResultView")
+	local overlap = -assets.scoreOverlap
 
 	marvelousValue = ImageValueView({
-		x = x2,
-		y = y1,
+		x = 0,
+		y = 0,
 		oy = 0.5,
 		align = "left",
 		format = "%ix",
-		scale = 1.3,
-		overlap = 1,
-		files = config.scoreFont,
+		scale = 1.1,
+		overlap = overlap,
+		files = assets.scoreFont,
 	})
 
 	perfectValue = ImageValueView({
-		x = x1,
-		y = y1,
+		x = 0,
+		y = 0,
 		oy = 0.5,
 		align = "left",
 		format = "%ix",
-		scale = 1.3,
-		overlap = 1,
-		files = config.scoreFont,
+		scale = 1.1,
+		overlap = overlap,
+		files = assets.scoreFont,
 	})
 
 	greatValue = ImageValueView({
-		x = x1,
-		y = y2,
+		x = 0,
+		y = 0,
 		oy = 0.5,
 		align = "left",
 		format = "%ix",
-		scale = 1.3,
-		overlap = 1,
-		files = config.scoreFont,
+		scale = 1.1,
+		overlap = overlap,
+		files = assets.scoreFont,
 	})
 
 	goodValue = ImageValueView({
-		x = x2,
-		y = y2,
+		x = 0,
+		y = 0,
 		oy = 0.5,
 		align = "left",
 		format = "%ix",
-		scale = 1.3,
-		overlap = 1,
-		files = config.scoreFont,
+		scale = 1.1,
+		overlap = overlap,
+		files = assets.scoreFont,
 	})
 
 	badValue = ImageValueView({
-		x = x1,
-		y = y3,
+		x = 0,
+		y = 0,
 		oy = 0.5,
 		align = "left",
 		format = "%ix",
-		scale = 1.3,
-		overlap = 1,
-		files = config.scoreFont,
+		scale = 1.1,
+		overlap = overlap,
+		files = assets.scoreFont,
 	})
 
 	missValue = ImageValueView({
-		x = x2,
-		y = y3,
+		x = 0,
+		y = 0,
 		oy = 0.5,
 		align = "left",
 		format = "%ix",
-		scale = 1.3,
-		overlap = 1,
-		files = config.scoreFont,
+		scale = 1.1,
+		overlap = overlap,
+		files = assets.scoreFont,
 	})
 
 	comboValue = ImageValueView({
-		x = 80,
-		y = 630,
+		x = 0,
+		y = 0,
 		oy = 0.5,
 		align = "left",
 		format = "%ix",
-		scale = 1.3,
-		overlap = 1,
-		files = config.scoreFont,
+		scale = 1.1,
+		overlap = overlap,
+		files = assets.scoreFont,
 	})
 
 	accuracyValue = ImageValueView({
-		x = 490,
-		y = 640,
+		x = 0,
+		y = 0,
 		oy = 0.5,
 		align = "left",
 		format = "%0.02f%%",
 		multiplier = 100,
 		scale = 1.1,
-		overlap = 1,
-		files = config.scoreFont,
+		overlap = overlap,
+		files = assets.scoreFont,
+	})
+
+	scoreValue = ImageValueView({
+		x = 0,
+		y = 0,
+		oy = 0.5,
+		align = "center",
+		format = "%i",
+		multiplier = 1,
+		scale = 1.2,
+		overlap = overlap,
+		files = assets.scoreFont,
 	})
 
 	marvelousValue:load()
@@ -175,6 +159,7 @@ function OsuViewConfig:new(game, config)
 
 	comboValue:load()
 	accuracyValue:load()
+	scoreValue:load()
 end
 
 function OsuViewConfig.panels() end
@@ -198,6 +183,8 @@ function OsuViewConfig:loadScore(view)
 	end
 
 	accuracyValue.value = judge.accuracy
+
+	scoreValue.value = judge.score or 0
 
 	local base = view.game.rhythmModel.scoreEngine.scoreSystem["base"]
 
@@ -243,15 +230,15 @@ end
 
 function OsuViewConfig:title(view)
 	local w, h = Layout:move("title")
-	local iw, ih = titleImage:getDimensions()
-
-	local scale = 1920 / iw
 
 	gfx.setColor({ 0, 0, 0, 0.65 })
 	gfx.rectangle("fill", 0, 0, w, h)
 
 	gfx.setColor({ 1, 1, 1, 1 })
-	gfx.draw(titleImage, 0, 0, 0, scale, scale)
+
+	if assets.title then
+		gfx.draw(assets.title, 0, 0, 0, 1, 1)
+	end
 
 	local chartview = view.game.selectModel.chartview
 
@@ -272,64 +259,76 @@ function OsuViewConfig:title(view)
 	local creator = string.format("Chart from %s", setDirectory)
 	local playInfo = string.format("Played by Guest on %s", timeFormatted)
 
+	gfx.scale(768 / 1080)
 	gfx.setColor(Color.text)
-	gfx.setFont(titleFont)
-	gyatt.frame(title, 9, 9, w, h, "left", "top")
+	gfx.setFont(font.title)
+	gyatt.frame(title, 9, 0, math.huge, h, "left", "top")
 
-	gfx.setFont(creatorFont)
-	gyatt.frame(creator, 9, 65, w, h, "left", "top")
+	gfx.setFont(font.creator)
+	gyatt.frame(creator, 9, 65, math.huge, h, "left", "top")
 
-	gfx.setFont(playInfoFont)
-	gyatt.frame(playInfo, 9, 95, w, h, "left", "top")
+	gfx.setFont(font.playInfo)
+	gyatt.frame(playInfo, 9, 95, math.huge, h, "left", "top")
+	gfx.scale(1)
+end
+
+local function centerFrame(value, box)
+	local w, h = Layout:move(box)
+	gfx.translate(w / 2, h / 2)
+	value:draw()
+	gfx.translate(-w / 2, -h / 2)
+end
+
+local function frame(value, box, box2)
+	local w, h = Layout:move(box, box2)
+	gfx.translate(0, h / 2)
+	value:draw()
+	gfx.translate(0, -h / 2)
 end
 
 function OsuViewConfig:panel()
 	local w, h = Layout:move("panel")
-	local iw, ih = panelImage:getDimensions()
-
-	local scale = 1
-
-	if iw > 1920 then
-		scale = 1920 / iw
-	elseif ih > 727 then
-		scale = 727 / ih
-	end
 
 	gfx.setColor({ 1, 1, 1, 1 })
-	gfx.draw(panelImage, 0, 0, 0, scale, scale)
+	gfx.draw(assets.panel, 0, 0, 0)
 
-	marvelousValue:draw()
-	perfectValue:draw()
-	greatValue:draw()
-	goodValue:draw()
-	badValue:draw()
-	missValue:draw()
+	centerFrame(scoreValue, "score")
 
-	comboValue:draw()
-	accuracyValue:draw()
+	frame(perfectValue, "column2", "row1")
+	frame(marvelousValue, "column4", "row1")
+	frame(greatValue, "column2", "row2")
+	frame(goodValue, "column4", "row2")
+	frame(badValue, "column2", "row3")
+	frame(missValue, "column4", "row3")
 
-	gfx.setFont(accuracyFont)
+	frame(comboValue, "combo")
+	frame(accuracyValue, "accuracy")
+
+	gfx.scale(768 / 1080)
+	gfx.setFont(font.accuracy)
 	gyatt.frame(judgeName, 500, 600, math.huge, math.huge, "left", "top")
+	gfx.scale(1)
 end
 
 function OsuViewConfig:grade()
-	gfx.origin()
+	local image = assets.grade[grade]
 
-	local image = gradeImages[grade]
+	if image then
+		Layout:move("grade")
+		local iw, ih = image:getDimensions()
 
-	local w, h = gfx.getDimensions()
-	local iw, ih = image:getDimensions()
-
-	local scale = h / ih
-
-	gfx.draw(image, w - (iw * scale), -100, 0, scale, scale)
+		local x = iw / 2
+		local y = ih / 2
+		gfx.draw(image, -x, -y)
+	end
 end
 
 ---@param view table
 local function hitGraph(view)
 	local w, h = Layout:move("hitGraph")
 
-	gfx.translate(0, 2)
+	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.draw(assets.graph)
 
 	HitGraph.hitGraph.game = view.game
 	HitGraph.hitGraph:draw(w, h)
