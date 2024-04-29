@@ -35,6 +35,7 @@ local setDirectory = ""
 local creator = ""
 
 local grade = ""
+local hpGraph = false
 
 local gfx = love.graphics
 
@@ -169,6 +170,8 @@ function OsuViewConfig:loadScore(view)
 	Layout = love.filesystem.load("thetan/irizz/views/ResultView/OsuLayout.lua")()
 
 	local configs = view.game.configModel.configs
+	local irizz = configs.irizz
+
 	judgeName = configs.select.judgements
 	judge = view.judgements[judgeName]
 	counterNames = judge:getOrderedCounterNames()
@@ -228,6 +231,8 @@ function OsuViewConfig:loadScore(view)
 	HitGraph.judge = judge
 	HitGraph.counterNames = counterNames
 	HitGraph.scoreSystemName = scoreSystemName
+
+	hpGraph = irizz.hpGraph
 end
 
 function OsuViewConfig:title(view)
@@ -311,9 +316,10 @@ function OsuViewConfig:panel()
 	frame(comboValue, "combo")
 	frame(accuracyValue, "accuracy")
 
+	w, h = Layout:move("accuracy")
 	gfx.scale(768 / 1080)
 	gfx.setFont(font.accuracy)
-	gyatt.frame(judgeName, 500, 600, math.huge, math.huge, "left", "top")
+	gyatt.frame(judgeName, 20, -20, w, h, "center", "top")
 	gfx.scale(1)
 end
 
@@ -334,8 +340,15 @@ end
 local function hitGraph(view)
 	local w, h = Layout:move("hitGraph")
 
+	gfx.translate(0, 4)
 	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.draw(assets.graph)
+
+	if hpGraph then
+		HitGraph.hpGraph.game = view.game
+		HitGraph.hpGraph:draw(w, h)
+		return
+	end
 
 	HitGraph.hitGraph.game = view.game
 	HitGraph.hitGraph:draw(w, h)

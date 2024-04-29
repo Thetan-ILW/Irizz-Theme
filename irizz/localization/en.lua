@@ -116,7 +116,6 @@ localization.textSettings = {
 	linear = "Linear",
 	exp = "Exp",
 	language = "Language (RESTART REQUIRED)",
-	osuResultScreen = "Use custom result screen",
 	colorTheme = "Color theme",
 	vimMotions = "Vim motions",
 	scrollAcceleration = "Scroll acceleration",
@@ -124,6 +123,10 @@ localization.textSettings = {
 	transitionAnimation = "Transition animation",
 	fade = "Fade",
 	shutter = "Shutter",
+	--
+	osuResultScreen = "osu! result screen",
+	enable = "Enable",
+	showHpGraph = "Show HP graph",
 	--
 	commit = "Commit: ",
 	commitDate = "Date: ",

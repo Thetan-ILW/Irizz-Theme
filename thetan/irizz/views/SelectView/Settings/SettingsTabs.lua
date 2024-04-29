@@ -609,7 +609,6 @@ function SettingsTab:UI(view)
 		view.game.actionModel:updateActions()
 	end
 
-	irizz.osuResultScreen = imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, Text.osuResultScreen)
 	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
 	irizz.scrollAcceleration =
 		imgui.checkbox("irizz.scrollAcceleration", irizz.scrollAcceleration, Text.scrollAcceleration)
@@ -634,6 +633,13 @@ function SettingsTab:UI(view)
 
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
 	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil, Text.startSound)
+
+	imgui.separator()
+	just.text(Text.osuResultScreen)
+	just.next(0, textSeparation)
+
+	irizz.osuResultScreen = imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, Text.enable)
+	irizz.hpGraph = imgui.checkbox("irizz.hpGraph", irizz.hpGraph, Text.showHpGraph)
 
 	imgui.separator()
 

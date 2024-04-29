@@ -107,4 +107,28 @@ HitGraph.missGraph = PointGraphView({
 	show = HitGraph.showLoadedScore,
 })
 
+HitGraph.hpGraph = PointGraphView({
+	draw = drawGraph,
+	radius = 6,
+	backgroundColor = { 0, 0, 0, 0.2 },
+	backgroundRadius = 0,
+	point = function(self, point)
+		local value = 0
+		local _hp = self.game.rhythmModel.scoreEngine.scoreSystem.hp
+		local hp = point.hp
+		for _, h in ipairs(hp) do
+			if h.value > 0 then
+				value = h.value / _hp.max
+				break
+			end
+		end
+
+		if value < 0.45 then
+			return 1 - value, 0.76, 0, 0, 1
+		end
+		return 1 - value, 0.25, 0.8, 0.5, 1
+	end,
+	show = HitGraph.showLoadedScore,
+})
+
 return HitGraph
