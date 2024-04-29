@@ -188,7 +188,7 @@ function OsuViewConfig:loadScore(view)
 
 	accuracyValue.value = judge.accuracy
 
-	scoreValue.value = judge.score or 0
+	scoreValue.value = judge.score or view.judgements["osu!mania OD9"].score
 
 	local base = view.game.rhythmModel.scoreEngine.scoreSystem["base"]
 
