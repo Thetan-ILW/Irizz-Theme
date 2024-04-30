@@ -9,6 +9,7 @@ local HitGraph = require("thetan.irizz.views.ResultView.HitGraph")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
+local Text = Theme.textOsuResult
 local font
 
 local OsuViewConfig = class()
@@ -44,6 +45,7 @@ local scrollSpeed = ""
 local modsFormatted = ""
 
 local ppFormatted = ""
+local username = ""
 
 local gfx = love.graphics
 
@@ -291,6 +293,7 @@ function OsuViewConfig:loadScore(view)
 	end
 
 	modsFormatted = Theme:getModifierString(modifiers)
+	username = view.game.configModel.configs.online.user.name or Text.guest
 end
 
 function OsuViewConfig:title(view)
@@ -325,13 +328,13 @@ function OsuViewConfig:title(view)
 		title = ("%s [%s %0.02fx]"):format(title, timeRate)
 	end
 
-	local second_row = string.format("Chart from %s", setDirectory)
+	local second_row = Text.chartFrom:format(setDirectory)
 
 	if chartview.format ~= "sm" then
-		second_row = string.format("Chart by %s", creator)
+		second_row = Text.chartBy:format(creator)
 	end
 
-	local playInfo = string.format("Played by Guest on %s", timeFormatted)
+	local playInfo = Text.playedBy:format(username, timeFormatted)
 
 	gfx.scale(768 / 1080)
 	gfx.setColor(Color.text)
@@ -452,17 +455,16 @@ local function graphInfo()
 	local mx, my = gfx.inverseTransformPoint(love.mouse.getPosition())
 	gfx.translate(mx, my)
 	gfx.setColor(0, 0, 0, 0.8)
-	gfx.rectangle("fill", 0, 0, 300, 120, 4, 4)
+	gfx.rectangle("fill", 0, 0, 250, 120, 4, 4)
 
 	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.setFont(font.graphInfo)
 
 	gfx.translate(5, 5)
-	just.text("Mean: " .. meanFormatted)
-	just.text("Max error: " .. maxErrorFormatted)
-	just.text("Scroll speed: " .. scrollSpeed)
-
-	just.text("Mods: " .. modsFormatted)
+	just.text(Text.mean:format(meanFormatted))
+	just.text(Text.maxError:format(maxErrorFormatted))
+	just.text(Text.scrollSpeed:format(scrollSpeed))
+	just.text(Text.mods:format(modsFormatted))
 end
 
 ---@param view table

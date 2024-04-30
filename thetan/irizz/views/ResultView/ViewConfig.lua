@@ -73,7 +73,7 @@ function ViewConfig:loadScore(view)
 
 	local diff_column = view.game.configModel.configs.settings.select.diff_column
 	local time_rate = view.game.playContext.rate
-	timeRateFormatted = ("Time rate: %0.02fx"):format(time_rate)
+	timeRateFormatted = Text.timeRate:format(time_rate)
 
 	difficulty = (chartview.difficulty or 0) * time_rate
 	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
@@ -315,17 +315,17 @@ function ViewConfig:scoringStats(view)
 	gfx.setFont(font.grade)
 	gfx.setColor(Color.text)
 
-	GradeKV("Pauses:", pauses, w)
+	GradeKV(Text.pauses, pauses, w)
 
 	just.indent(50)
-	gyatt.text("Grade:", w, "left")
+	gyatt.text(Text.grade, w, "left")
 	just.sameline()
 	just.indent(-100)
 	gfx.setColor(gradeColor)
 	gyatt.text(grade, w, "right")
 
 	gfx.setColor(Color.text)
-	GradeKV("Scroll speed:", scrollSpeed, w)
+	GradeKV(Text.scrollSpeed, scrollSpeed, w)
 
 	w, h = Layout:move("grade")
 	gfx.setColor(Color.border)
@@ -336,10 +336,10 @@ function ViewConfig:scoringStats(view)
 	gfx.setFont(font.timings)
 	gfx.setColor(Color.text)
 
-	timingsKV("Hit window", ("%i | %i"):format(math.abs(hit[1]) * 1000, hit[2] * 1000), w)
-	timingsKV("Miss window", ("%i | %i"):format(math.abs(miss[1]) * 1000, miss[2] * 1000), w)
-	timingsKV("Release multiplier", ("%0.1fx"):format(release_multiplier), w)
-	timingsKV("Hit logic", nearest and "Nearest" or "Latest note", w)
+	timingsKV(Text.hitWindow, ("%i | %i"):format(math.abs(hit[1]) * 1000, hit[2] * 1000), w)
+	timingsKV(Text.missWindow, ("%i | %i"):format(math.abs(miss[1]) * 1000, miss[2] * 1000), w)
+	timingsKV(Text.releaseMultiplier, ("%0.1fx"):format(release_multiplier), w)
+	timingsKV(Text.hitLogic, nearest and Text.nearest or Text.earliestNote, w)
 
 	w, h = Layout:move("scoringStats")
 	Theme:border(w, h)
@@ -362,10 +362,10 @@ function ViewConfig:scoreInfo()
 	w, h = Layout:move("scoreInfoInner")
 	gfx.setFont(font.scoreInfo)
 	gfx.setColor(Color.text)
-	GradeKV("Mode: ", inputMode, w)
-	GradeKV("Score: ", scoreFormatted, w)
-	GradeKV("Accuracy: ", accuracyFormatted, w)
-	GradeKV("Rating: ", ratingFormatted, w)
+	GradeKV(Text.mode, inputMode, w)
+	GradeKV(Text.score, scoreFormatted, w)
+	GradeKV(Text.accuracy, accuracyFormatted, w)
+	GradeKV(Text.rating, ratingFormatted, w)
 
 	gfx.translate(0, 10)
 	gfx.setColor(Color.separator)
@@ -373,8 +373,8 @@ function ViewConfig:scoreInfo()
 	gfx.translate(0, 10)
 
 	gfx.setColor(Color.text)
-	GradeKV("Mean: ", meanFormatted, w)
-	GradeKV("Max error: ", maxErrorFormatted, w)
+	GradeKV(Text.mean, meanFormatted, w)
+	GradeKV(Text.maxError, maxErrorFormatted, w)
 
 	w, h = Layout:move("scoreInfo")
 	Theme:border(w, h)

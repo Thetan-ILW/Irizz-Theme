@@ -323,14 +323,34 @@ localization.textFilters = {
 }
 
 localization.textResult = {
-	score = "SCORE",
-	accuracy = "ACCURACY",
-	inputMode = "INPUT MODE",
-	timeRate = "TIME RATE",
-	pauses = "PAUSES",
-	scrollSpeed = "SCROLL SPEED",
+	timeRate = "Time rate: %0.02fx",
+	pauses = "Pauses:",
+	grade = "Grade:",
+	scrollSpeed = "Scroll speed:",
+	hitWindow = "Hit window",
+	missWindow = "Miss window",
+	releaseMultiplier = "Release multiplier",
+	hitLogic = "Hit logic",
+	nearest = "Nearest",
+	earliestNote = "Earliest note",
 	noPatterns = "No patterns",
-	noAccuracy = "No accuracy",
+	mode = "Mode: ",
+	score = "Score: ",
+	accuracy = "Accuracy: ",
+	rating = "Rating: ",
+	mean = "Mean: ",
+	maxError = "Max error: ",
+}
+
+localization.textOsuResult = {
+	chartBy = "Chart by %s",
+	chartFrom = "Chart from %s",
+	playedBy = "Played by %s on %s",
+	mean = "Mean: %s",
+	maxError = "Max error: %s",
+	scrollSpeed = "Scroll speed: %s",
+	mods = "Mods: %s",
+	guest = "Guest",
 }
 
 localization.textMultiplayer = {
