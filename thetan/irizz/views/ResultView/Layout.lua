@@ -4,20 +4,9 @@ local Layout = require("sphere.views.Layout")
 
 local _Layout = Layout()
 
-local Theme = require("thetan.irizz.views.Theme")
-local outerPanelsSize = Theme.layout.outerPanelsSize
-local innerPanelSize = 300
-local gap = Theme.layout.gap
-local verticalPanelGap = 4
-local horizontalPanelGap = 4
-
-function _Layout:_difficulty(x, y, w, h)
-	local x1, w1 = gfx_util.layout(x, w, { -0.25, -0.75 })
-
-	self:pack("difficulty", x1[1], y, w1[1], h)
-	self:pack("patterns", x1[2], y, w1[2], h)
-	self:pack("difficultyLine", x, y, w, h)
-end
+local outerPanelsSize = 350
+local innerPanelSize = 350
+local gap = 20
 
 function _Layout:draw()
 	local width, height = love.graphics.getDimensions()
@@ -28,44 +17,44 @@ function _Layout:draw()
 	local _xw, _yh = love.graphics.inverseTransformPoint(width, height)
 
 	local gx, gw = gfx_util.layout(_x, _xw, { gap, "*", gap })
-	local gy, gh = gfx_util.layout(_y, _yh, { 64, -1, gap })
+	local gy, gh = gfx_util.layout(_y, _yh, { 100, -1, gap })
 
-	local _w, _h = _xw - _x, _yh - _y
-	self:pack("background", _x, _y, _w, _h)
-	local gx2, gw2 = gfx_util.layout(
-		gx[2],
-		gw[2],
-		{ -0.5, outerPanelsSize + horizontalPanelGap + innerPanelSize + horizontalPanelGap + outerPanelsSize, -0.5 }
-	)
+	local y1, h1 = gfx_util.layout(gy[2], gh[2], { -0.05, -0.05, -0.05, -0.05, -0.65, -0.05 })
+
+	self:pack("title", gx[2], y1[1], gw[2], h1[1])
+	self:pack("chartName", gx[2], y1[2], gw[2], h1[2])
+	self:pack("mods", gx[2], y1[3], gw[2], h1[3])
+
 	local x1, w1 =
-		gfx_util.layout(gx2[2], gw2[2], { 50, -1 / 3, horizontalPanelGap, -1 / 3, horizontalPanelGap, -1 / 3, 50 })
-	local y1, h1 = gfx_util.layout(gy[2], gh[2], { gap, -0.2, gap, -0.6, -0.2 })
+		gfx_util.layout(gx[2], gw[2], { -0.5, outerPanelsSize, gap, innerPanelSize, gap, outerPanelsSize, -0.5 })
 
-	local y2, h2 = gfx_util.layout(y1[2], h1[2], { -0.2, -0.3, -0.3, -0.2 })
-	self:pack("title", gx[2], y2[2], gw[2], h2[2])
-	self:pack("chartName", gx[2], y2[3], gw[2], h2[3])
+	local y2, h2 = gfx_util.layout(y1[5], h1[5], { -0.1, -0.45, -0.2, -0.25 })
+	local y3, h3 = gfx_util.layout(y1[5], h1[5], { -0.2, -0.45, -0.1, -0.25 })
 
-	local y3, h3 = gfx_util.layout(y1[4], h1[4], { -0.3, 1, -0.55, verticalPanelGap, -0.15 })
+	self:pack("scoringStats", x1[2], y1[5], w1[2], h1[5])
+	self:pack("accuracy", x1[2], y2[1], w1[2], h2[1])
+	self:pack("judgements", x1[2], y2[2], w1[2], h2[2])
+	self:pack("grade", x1[2], y2[3], w1[2], h2[3])
+	self:pack("timings", x1[2], y2[4], w1[2], h2[4])
 
-	self:pack("hitGraph", gx2[2], y3[1], gw2[2], h3[1])
+	local hit_graph_width = w1[4] + w1[5] + w1[6]
 
-	local panelWidth = w1[2] + w1[3] + w1[4] + w1[5] + w1[6]
-	local panelHeight = h3[2] + h3[3] + h3[4] + h3[5]
-	self:pack("panel", x1[2], y3[2], panelWidth, panelHeight)
+	self:pack("hitGraph", x1[4], y2[4], hit_graph_width, h2[4])
 
-	self:pack("line1", x1[3], y3[2], w1[3], panelHeight)
-	self:pack("line2", x1[5], y3[2], w1[5], panelHeight)
-	self:pack("line3", x1[2], y3[4], w1[2], h3[4])
-	self:pack("line4", x1[4], y3[4], w1[4], h3[4])
-	self:pack("line5", x1[6], y3[4], w1[6], h3[4])
+	local dx, dw = gfx_util.layout(x1[4], w1[4], { 100, -1 })
+	self:pack("difficulty", x1[4], y2[3], w1[4], h2[3] - gap)
+	self:pack("difficultyValue", dx[1], y2[3], dw[1], h2[3] - gap)
+	self:pack("difficultyPatterns", dx[2], y2[3], dw[2], h2[3] - gap)
 
-	self:pack("judgements", x1[2], y3[3], w1[2], h3[3])
-	self:pack("judgementsAccuracy", x1[2], y3[5], w1[2], h3[5])
-	self:pack("normalscore", x1[4], y3[3], w1[4], h3[3])
-	self:pack("scores", x1[6], y3[3], w1[6], h3[3])
-	self:_difficulty(x1[4], y3[5], w1[4], h3[5])
-	self:pack("pauses", x1[6], y3[5], w1[6], h3[5])
-	self:pack("mods", gx[2], y1[5], gw[2], h1[5])
+	local score_info_height = h2[1] + h2[2] - gap
+	self:pack("scoreInfo", x1[4], y2[1], w1[4], score_info_height)
+	self:pack("timeRate", x1[4], y2[1], w1[4], h2[1])
+	self:pack("scoreInfoInner", x1[4], y2[2], w1[4], h2[2] - gap)
+
+	local scores_height = h3[2] + h3[3] - gap
+
+	self:pack("mods", x1[6], y3[1], w1[6], h3[1] - gap)
+	self:pack("scores", x1[6], y3[2], w1[6], scores_height)
 end
 
 return _Layout

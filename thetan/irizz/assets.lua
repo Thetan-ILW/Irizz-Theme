@@ -1,6 +1,8 @@
 local defaultColorTheme = require("irizz.color_themes.Default")
 local defaultLocalization = require("irizz.localization.en")
 local table_util = require("table_util")
+local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
+local utf8validate = require("utf8validate")
 
 local Assets = {}
 
@@ -116,6 +118,153 @@ function Assets:init(theme)
 	table_util.copy(defaultColorTheme, theme)
 end
 
+local characters = {
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+	"comma",
+	"dot",
+	"percent",
+	"x",
+}
+
+local char_alias = {
+	comma = ",",
+	dot = ".",
+	percent = "%",
+}
+
+local image_format = {
+	"png",
+	"jpg",
+	"jpeg",
+	"bmp",
+	"tga",
+}
+
+local function findImage(path)
+	for _, format in ipairs(image_format) do
+		local normal = path .. "." .. format
+		local double = path .. "@2x." .. format
+
+		if love.filesystem.getInfo(double) then
+			return double
+		end
+
+		if love.filesystem.getInfo(normal) then
+			return normal
+		end
+
+		if love.filesystem.getInfo(double:lower()) then
+			return double:lower()
+		end
+
+		if love.filesystem.getInfo(normal:lower()) then
+			return normal:lower()
+		end
+	end
+
+	return nil
+end
+
+local function getImageFont(group)
+	local font = {}
+
+	for _, v in ipairs(characters) do
+		local file = findImage(("%s-%s"):format(group, v))
+
+		if file then
+			local key = char_alias[v] and char_alias[v] or v
+			font[key] = file
+		end
+	end
+
+	return font
+end
+
+local function loadImage(path)
+	path = findImage(path)
+
+	if path then
+		return love.graphics.newImage(path)
+	end
+
+	return nil
+end
+
+function Assets:getOsuResultAssets(skin_path)
+	skin_path = skin_path .. "/"
+
+	local content = love.filesystem.read(skin_path .. "skin.ini")
+
+	if not content then
+		return nil
+	end
+
+	content = utf8validate(content)
+	local skinini = OsuNoteSkin:parseSkinIni(content)
+
+	local score_font_path = skin_path .. skinini.Fonts.ScorePrefix or skin_path .. "score"
+
+	local t = {
+		title = loadImage(skin_path .. "ranking-title"),
+		panel = loadImage(skin_path .. "ranking-panel"),
+		graph = loadImage(skin_path .. "ranking-graph"),
+		menuBack = loadImage(skin_path .. "menu-back"),
+		maxCombo = loadImage(skin_path .. "ranking-maxcombo"),
+		accuracy = loadImage(skin_path .. "ranking-accuracy"),
+		replay = loadImage(skin_path .. "pause-replay"),
+		scoreFont = getImageFont(score_font_path),
+		scoreOverlap = skinini.Fonts.ScoreOverlap or 0,
+		accuracyNameX = skinini.Fonts.accuracyNameX or 0,
+		accuracyNameY = skinini.Fonts.accuracyNameY or 0,
+
+		judge = {
+			marvelous = loadImage(skin_path .. "mania-hit300g-0"),
+			perfect = loadImage(skin_path .. "mania-hit300"),
+			great = loadImage(skin_path .. "mania-hit200"),
+			good = loadImage(skin_path .. "mania-hit100"),
+			bad = loadImage(skin_path .. "mania-hit50"),
+			miss = loadImage(skin_path .. "mania-hit0"),
+		},
+
+		grade = {
+			SS = loadImage(skin_path .. "ranking-X"),
+			S = loadImage(skin_path .. "ranking-S"),
+			A = loadImage(skin_path .. "ranking-A"),
+			B = loadImage(skin_path .. "ranking-B"),
+			C = loadImage(skin_path .. "ranking-C"),
+			D = loadImage(skin_path .. "ranking-D"),
+		},
+	}
+
+	return t
+end
+
+local function getOsuSkins()
+	local skins = love.filesystem.getDirectoryItems("userdata/skins/")
+
+	local osu_skins = {}
+	local osu_skin_names = {}
+
+	for _, name in ipairs(skins) do
+		local path = "userdata/skins/" .. name
+		if love.filesystem.getInfo(path .. "/skin.ini") then
+			osu_skins[name] = path
+			table.insert(osu_skin_names, name)
+		end
+	end
+
+	return osu_skins, osu_skin_names
+end
+
 function Assets:get(config, theme)
 	local startSounds = getItems("ui_sounds/start")
 
@@ -193,6 +342,9 @@ function Assets:get(config, theme)
 	}
 
 	theme.icons = icons
+
+	theme.resultCustomConfig = love.filesystem.load("userdata/ui/result/config.lua")
+	theme.osuSkins, theme.osuSkinNames = getOsuSkins()
 end
 
 return Assets

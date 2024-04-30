@@ -20,7 +20,7 @@ return {
 	openResult = { mod = { "ctrl", "r" } },
 
 	undoRandom = { mod = { "ctrl", "f2" } },
-	clearSearch = { mod = { "ctrl", "backspace" } },
+	deleteLine = { mod = { "ctrl", "backspace" } },
 	moveScreenLeft = { mod = { "ctrl", "left" } },
 	moveScreenRight = { mod = { "ctrl", "right" } },
 	pauseMusic = { mod = { "ctrl", "p" } },

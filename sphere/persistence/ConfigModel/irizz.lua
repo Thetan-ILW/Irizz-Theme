@@ -21,4 +21,8 @@ return {
 	language = "English",
 	alwaysShowOriginalMode = false,
 	transitionAnimation = "circle",
+	osuResultScreen = false,
+	osuResultSkin = "",
+	hpGraph = true,
+	showPP = true,
 }

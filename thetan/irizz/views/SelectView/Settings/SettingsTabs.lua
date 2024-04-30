@@ -612,6 +612,7 @@ function SettingsTab:UI(view)
 	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
 	irizz.scrollAcceleration =
 		imgui.checkbox("irizz.scrollAcceleration", irizz.scrollAcceleration, Text.scrollAcceleration)
+
 	irizz.scrollClickExtraTime = imgui.slider1(
 		"irizz.scrollClickExtraTime",
 		irizz.scrollClickExtraTime,
@@ -632,6 +633,16 @@ function SettingsTab:UI(view)
 
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
 	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil, Text.startSound)
+
+	imgui.separator()
+	just.text(Text.osuResultScreen)
+	just.next(0, textSeparation)
+
+	irizz.osuResultScreen = imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, Text.enable)
+	irizz.hpGraph = imgui.checkbox("irizz.hpGraph", irizz.hpGraph, Text.showHpGraph)
+	irizz.showPP = imgui.checkbox("irizz.showPP", irizz.showPP, Text.showPP)
+
+	irizz.osuResultSkin = imgui.combo("irizz.osuResultSkin", irizz.osuResultSkin, Theme.osuSkinNames, nil, Text.skin)
 
 	imgui.separator()
 

@@ -1,6 +1,7 @@
 local class = require("class")
 local just = require("just")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
+local math_util = require("math_util")
 local Format = require("sphere.views.Format")
 local erfunc = require("libchart.erfunc")
 
@@ -10,9 +11,10 @@ local Text = Theme.textResult
 local font
 
 local Layout = require("thetan.irizz.views.ResultView.Layout")
+local HitGraph = require("thetan.irizz.views.ResultView.HitGraph")
+local Scoring = require("thetan.irizz.views.ResultView.Scoring")
 
 local ScoreListView = require("thetan.irizz.views.ScoreListView")
-local PointGraphView = require("sphere.views.GameplayView.PointGraphView")
 
 local ViewConfig = class()
 
@@ -20,31 +22,25 @@ local difficulty = 0
 local patterns = ""
 local calculator = ""
 local difficultyColor = Color.text
+local timeRateFormatted = ""
+local inputMode = ""
+local accuracyFormatted = ""
+local scoreFormatted = ""
+local meanFormatted = ""
+local maxErrorFormatted = ""
+local ratingFormatted = ""
 
-function ViewConfig:new(game)
-	self.scoreListView = ScoreListView(game, true)
-	self.scoreListView.rows = 5
-	font = Theme:getFonts("resultView")
-end
+local playContext
+local timings
 
-function ViewConfig:loadScore(view)
-	local chartview = view.game.selectModel.chartview
-	local chartdiff = view.game.playContext.chartdiff
+local judge
+local judgeName = ""
+local scoreSystemName = ""
+local counterNames
 
-	local diffColumn = view.game.configModel.configs.settings.select.diff_column
-	local timeRate = view.game.playContext.rate
+local customConfig = nil
 
-	difficulty = (chartview.difficulty or 0) * timeRate
-	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
-
-	if diffColumn == "msd_diff" and chartdiff.msd_diff_data then
-		difficulty = chartdiff.msd_diff
-		patterns = Theme.getMaxAndSecondFromSsr(chartdiff.msd_diff_data) or Text.noPatterns
-	end
-
-	difficultyColor = Theme:getDifficultyColor(difficulty, diffColumn)
-	calculator = Theme.formatDiffColumns(diffColumn)
-end
+local gfx = love.graphics
 
 ---@param view table
 ---@return boolean
@@ -57,210 +53,110 @@ local function showLoadedScore(view)
 	return scoreItem.id == scoreEntry.id
 end
 
-local lineList = {
-	"line1",
-	"line2",
-	"line3",
-	"line4",
-	"line5",
+function ViewConfig:new(game, custom_config)
+	self.scoreListView = ScoreListView(game, true)
+	self.scoreListView.rows = 5
+	font = Theme:getFonts("resultView")
+
+	if custom_config then
+		customConfig = custom_config()
+		customConfig:load(game, self)
+	end
+
+	HitGraph.showLoadedScore = showLoadedScore
+end
+
+function ViewConfig:loadScore(view)
+	local chartview = view.game.selectModel.chartview
+	local chartdiff = view.game.playContext.chartdiff
+	local scoreItem = view.game.selectModel.scoreItem
+
+	local diff_column = view.game.configModel.configs.settings.select.diff_column
+	local time_rate = view.game.playContext.rate
+	timeRateFormatted = Text.timeRate:format(time_rate)
+
+	difficulty = (chartview.difficulty or 0) * time_rate
+	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
+
+	if diff_column == "msd_diff" and chartdiff.msd_diff_data then
+		difficulty = chartdiff.msd_diff
+		patterns = Theme.getMaxAndSecondFromSsr(chartdiff.msd_diff_data):upper() or Text.noPatterns
+	end
+
+	difficultyColor = Theme:getDifficultyColor(difficulty, diff_column)
+	calculator = Theme.formatDiffColumns(diff_column)
+
+	local show = showLoadedScore(view)
+
+	local ratingHitTimingWindow = view.game.configModel.configs.settings.gameplay.ratingHitTimingWindow
+
+	local rhythmModel = view.game.rhythmModel
+	local normalscore = rhythmModel.scoreEngine.scoreSystem.normalscore
+	local scoreEngine = rhythmModel.scoreEngine
+
+	local _inputMode = show and tostring(rhythmModel.noteChart.inputMode) or scoreItem.inputmode
+	inputMode = Format.inputMode(_inputMode)
+
+	local score = not show and scoreItem.score
+		or erfunc.erf(ratingHitTimingWindow / (normalscore.accuracyAdjusted * math.sqrt(2))) * 10000
+	if score ~= score then
+		score = 0
+	end
+
+	scoreFormatted = ("%i"):format(score)
+
+	local accuracyValue = show and normalscore.accuracyAdjusted or scoreItem.accuracy
+	accuracyFormatted = Format.accuracy(accuracyValue)
+
+	local mean = show and normalscore.normalscore.mean or scoreItem.mean
+
+	meanFormatted = ("%i ms"):format(mean * 1000)
+	maxErrorFormatted = ("%i ms"):format(scoreEngine.scoreSystem.misc.maxDeltaTime * 1000)
+	ratingFormatted = ("%0.02f PR"):format(scoreItem.rating)
+
+	local configs = view.game.configModel.configs
+	judgeName = view.currentJudgeName
+	judge = view.judgements[judgeName]
+	counterNames = judge:getOrderedCounterNames()
+	playContext = view.game.playContext
+	timings = playContext.timings
+
+	local earlyNoteMiss = math.abs(timings.ShortNote.miss[1])
+	local lateNoteMiss = timings.ShortNote.miss[2]
+	local earlyReleaseMiss = math.abs(timings.LongNoteEnd.miss[1])
+	local lateReleaseMiss = timings.LongNoteEnd.miss[2]
+
+	if string.find(judgeName, "osu!mania") then
+		scoreSystemName = "osuMania"
+	elseif string.find(judgeName, "Etterna") then
+		scoreSystemName = "etterna"
+	elseif string.find(judgeName, "Quaver") then
+		scoreSystemName = "quaver"
+	elseif string.find(judgeName, "Soundsphere") then
+		scoreSystemName = "soundsphere"
+	end
+
+	HitGraph.maxEarlyTiming = math.max(earlyNoteMiss, earlyReleaseMiss)
+	HitGraph.maxLateTiming = math.max(lateNoteMiss, lateReleaseMiss)
+	HitGraph.judge = judge
+	HitGraph.counterNames = counterNames
+	HitGraph.scoreSystemName = scoreSystemName
+end
+
+local boxes = {
+	"scoringStats",
+	"hitGraph",
+	"difficulty",
+	"scores",
+	"mods",
+	"scoreInfo",
 }
 
 function ViewConfig.panels()
-	local w, h = Layout:move("panel")
-	Theme:panel(w, h)
-	w, h = Layout:move("hitGraph")
-	Theme:panel(w, h)
-end
-
-local function borders()
-	local w, h = Layout:move("hitGraph")
-	Theme:border(w, h)
-
-	w, h = Layout:move("panel")
-
-	local function stencil()
-		love.graphics.rectangle("fill", -100, 0, w + 200, h + 100)
-	end
-
-	love.graphics.stencil(stencil, "replace", 1)
-	love.graphics.setStencilTest("greater", 0)
-	Theme:border(w, h)
-	love.graphics.setStencilTest()
-end
-
-local function lines()
-	love.graphics.setColor(Color.border)
-	for _, name in ipairs(lineList) do
+	for _, name in ipairs(boxes) do
 		local w, h = Layout:move(name)
-		love.graphics.rectangle("fill", 0, 0, w, h)
+		Theme:panel(w, h)
 	end
-end
-
-local function printKeyValue(key, value, w, h, ay)
-	ay = ay or "top"
-	gfx_util.printFrame(("%s:"):format(key), 15, 15, w, h, "left", ay)
-	gfx_util.printFrame(value, -15, 15, w, h, "right", ay)
-end
-
-function ViewConfig:scores(view)
-	local w, h = Layout:move("scores")
-	local list = self.scoreListView
-	list:draw(w, h, true)
-	if list.openResult then
-		list.openResult = false
-		view:loadScore(list.selectedScoreIndex)
-	end
-end
-
-local pointR = 3
-local padding = 5
----@param self table
-local function drawGraph(self)
-	local w, h = Layout:move("hitGraph")
-	love.graphics.translate(pointR + padding, pointR)
-	self.__index.draw(self, w - pointR - (padding * 2), h - pointR)
-	love.graphics.translate(-pointR - padding, -pointR)
-end
-
-local function getPointY(y)
-	return (y.misc.deltaTime / 0.27) + 0.5
-end
-
-local _HitGraph = PointGraphView({
-	draw = drawGraph,
-	radius = pointR,
-	backgroundColor = { 0, 0, 0, 0.2 },
-	backgroundRadius = 6,
-	point = function(self, point)
-		if point.base.isMiss then
-			return
-		end
-		local y = getPointY(point)
-		local color = Theme:getHitColor(point.misc.deltaTime, false)
-		return y, unpack(color)
-	end,
-	show = showLoadedScore,
-})
-
-local _EarlyHitGraph = PointGraphView({
-	draw = drawGraph,
-	radius = pointR,
-	backgroundColor = { 0, 0, 0, 1 },
-	backgroundRadius = 0,
-	point = function(self, point)
-		if not point.base.isEarlyHit then
-			return
-		end
-		local y = getPointY(point)
-		return y, unpack(Theme:getHitColor(0, true))
-	end,
-	show = showLoadedScore,
-})
-
-local _MissGraph = PointGraphView({
-	draw = drawGraph,
-	radius = pointR,
-	backgroundColor = { 0, 0, 0, 1 },
-	backgroundRadius = 0,
-	point = function(self, point)
-		if not point.base.isMiss then
-			return
-		end
-		local y = getPointY(point)
-		return y, unpack(Theme:getHitColor(0, true))
-	end,
-	show = showLoadedScore,
-})
-
----@param view table
-local function HitGraph(view)
-	local w, h = Layout:move("hitGraph")
-	_HitGraph.game = view.game
-	_HitGraph:draw()
-	_EarlyHitGraph.game = view.game
-	_EarlyHitGraph:draw()
-	_MissGraph.game = view.game
-	_MissGraph:draw()
-
-	local show = showLoadedScore(view)
-
-	local rhythmModel = view.game.rhythmModel
-	local scoreEngine = rhythmModel.scoreEngine
-	local scoreItem = view.game.selectModel.scoreItem
-
-	if not scoreItem then
-		return
-	end
-
-	local normalscore = rhythmModel.scoreEngine.scoreSystem.normalscore
-	local mean = show and normalscore.normalscore.mean or scoreItem.mean
-
-	local meanText = string.format("Mean: %i ms", mean * 1000)
-	local maxErrorText = string.format("Max error: %i ms", scoreEngine.scoreSystem.misc.maxDeltaTime * 1000)
-
-	local fontHeight = font.hitError:getBaseline()
-	Theme:panel(font.hitError:getWidth(meanText) + 10, fontHeight + 10)
-
-	love.graphics.translate(0, h - fontHeight - 10)
-	Theme:panel(font.hitError:getWidth(maxErrorText) + 10, fontHeight + 10)
-
-	just.indent(5)
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(font.hitError)
-	Layout:move("hitGraph")
-	just.text(meanText, w)
-	Layout:move("hitGraph")
-	gfx_util.printFrame(maxErrorText, 5, -5, w, h, "left", "bottom")
-end
-
----@param view table
-function ViewConfig:judgements(view)
-	local show = showLoadedScore(view)
-	local scoreEngine = view.game.rhythmModel.scoreEngine
-	local scoreItem = view.game.selectModel.scoreItem
-
-	if not scoreItem then
-		return
-	end
-
-	local configs = view.game.configModel.configs
-	local judgeName = configs.select.judgements
-	local judge = view.judgements[judgeName]
-	local counters = judge.counters
-	local judgementLists = judge:getOrderedCounterNames()
-	local base = scoreEngine.scoreSystem.base
-
-	local miss = show and base.missCount or scoreItem.miss or 0
-
-	local w, h = Layout:move("judgements")
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(font.judgements)
-
-	local textHeight = font.judgements:getHeight()
-	local textIndent = textHeight
-
-	if show then
-		for _, name in ipairs(judgementLists) do
-			local value = counters[name]
-			printKeyValue(name:upper(), value, w, h)
-			just.next(0, textIndent)
-		end
-
-		w, h = Layout:move("judgements")
-
-		just.next(0, -textHeight + 5)
-		printKeyValue("MISS", miss, w, h, "bottom")
-	end
-
-	w, h = Layout:move("judgementsAccuracy")
-	love.graphics.setFont(font.accuracy)
-
-	if not judge.accuracy then
-		gfx_util.printFrame(Text.noAccuracy, 0, 0, w, h, "center", "center")
-		return
-	end
-
-	gfx_util.printFrame(("%s %3.2f%%"):format(judgeName, judge.accuracy * 100), 0, 0, w, h, "center", "center")
 end
 
 local function title(view)
@@ -287,133 +183,277 @@ local function title(view)
 	Theme:textWithShadow(rightText, w, h, "center", "bottom")
 end
 
-function ViewConfig:scoreInfo(view)
-	local ratingHitTimingWindow = view.game.configModel.configs.settings.gameplay.ratingHitTimingWindow
+local function judgementCount(label, color, w, count, max)
+	local label_height = font.counterName:getHeight()
 
-	local rhythmModel = view.game.rhythmModel
-	local normalscore = rhythmModel.scoreEngine.scoreSystem.normalscore
+	local bar_x = 4
+	local bar_width = math_util.clamp(((count / max) * w) - (bar_x * 2), 0, w)
 
-	local chartview = view.game.selectModel.chartview
+	local bar_height = label_height + 4
+
+	color[4] = 0.4
+	gfx.setColor(color)
+	gfx.rectangle("fill", bar_x, 4, w - (bar_x * 2), bar_height, 4, 4)
+
+	if bar_width > 4 then
+		color[4] = 1
+		gfx.setColor(color)
+		gfx.rectangle("fill", bar_x, 4, bar_width, bar_height, 4, 4)
+	end
+
+	color[4] = 1
+
+	gfx.push()
+	gfx.setColor(Color.text)
+	gfx.translate(10, 4)
+	Theme:textWithShadow(label, w, label_height, "left", "center")
+	gfx.translate(-20, 0)
+	Theme:textWithShadow(count, w, label_height, "right", "center")
+	gfx.pop()
+
+	gfx.translate(0, label_height + 8)
+end
+
+---@param view table
+local function hitGraph(view)
+	local w, h = Layout:move("hitGraph")
+	Theme:panel(w, h)
+
+	HitGraph.hitGraph.game = view.game
+	HitGraph.hitGraph:draw(w, h)
+	HitGraph.earlyHitGraph.game = view.game
+	HitGraph.earlyHitGraph:draw(w, h)
+	HitGraph.missGraph.game = view.game
+	HitGraph.missGraph:draw(w, h)
+
+	gfx.setColor(Color.panel)
+	gfx.rectangle("fill", -2, h / 2, w + 2, 4)
+
+	Theme:border(w, h)
+end
+
+local function GradeKV(label, v, w)
+	just.indent(50)
+	gyatt.text(label, w, "left")
+	just.sameline()
+	just.indent(-100)
+	gyatt.text(v, w, "right")
+end
+
+local function timingsKV(label, v, w)
+	just.indent(15)
+	gyatt.text(v, w, "left")
+	just.sameline()
+	just.indent(-30)
+	gyatt.text(label, w, "right")
+end
+
+function ViewConfig:scoringStats(view)
+	local w, h = Layout:move("scoringStats")
+
+	Theme:panel(w, h)
+
 	local scoreItem = view.game.selectModel.scoreItem
-	local scoreEngine = rhythmModel.scoreEngine
-	local playContext = view.game.playContext
+	local show = showLoadedScore(view)
 
 	if not scoreItem then
 		return
 	end
 
-	local scoreEntry = playContext.scoreEntry
-	if not scoreEntry then
-		return
-	end
-
-	local show = showLoadedScore(view)
-
-	local baseTimeRate = show and playContext.rate or scoreItem.rate
-
-	local inputMode = show and tostring(rhythmModel.noteChart.inputMode) or scoreItem.inputmode
-	inputMode = Format.inputMode(inputMode)
-	local score = not show and scoreItem.score
-		or erfunc.erf(ratingHitTimingWindow / (normalscore.accuracyAdjusted * math.sqrt(2))) * 10000
-	if score ~= score then
-		score = 0
-	end
-
-	local accuracyValue = show and normalscore.accuracyAdjusted or scoreItem.accuracy
-	local accuracy = Format.accuracy(accuracyValue)
-
-	local w, h = Layout:move("normalscore")
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(font.scoreInfo)
-
-	local textHeight = font.judgements:getHeight()
-	local textIndent = textHeight + 8
-
-	just.next(0, (h / 2) - ((textIndent * 2) + 15))
-	printKeyValue(Text.score, ("%i"):format(score), w, h)
-	just.next(0, textIndent)
-	printKeyValue(Text.accuracy, accuracy, w, h)
-	just.next(0, textIndent)
-	printKeyValue(Text.inputMode, inputMode, w, h)
-	just.next(0, textIndent)
-	printKeyValue(Text.timeRate, ("%0.02fx"):format(baseTimeRate), w, h)
-end
-
-function ViewConfig:difficulty(view)
-	local w, h = Layout:move("difficulty")
-
-	love.graphics.setColor(Color.innerPanel)
-	love.graphics.rectangle("fill", 0, 0, w, h)
-
-	w, h = Layout:move("difficulty")
-
-	love.graphics.setColor(difficultyColor)
-	love.graphics.setFont(font.difficulty)
-	gfx_util.printBaseline(string.format("%0.02f", difficulty), 0, h / 2, w, 1, "center")
-
-	love.graphics.setFont(font.calculator)
-	gfx_util.printBaseline(calculator, 0, h / 1.2, w, 1, "center")
-
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(font.patterns)
-	w, h = Layout:move("patterns")
-	gfx_util.printFrame(patterns, 0, 0, w, h, "center", "center")
-end
-
-function ViewConfig:pauses(view)
-	local scoreItem = view.game.selectModel.scoreItem
-	local playContext = view.game.playContext
-
-	if not scoreItem then
-		return
-	end
-
-	local show = showLoadedScore(view)
 	local const = show and playContext.const or scoreItem.const
 	local scrollSpeed = "X"
 	if const then
 		scrollSpeed = "Const"
 	end
 
-	local w, h = Layout:move("pauses")
-	love.graphics.setFont(font.pauses)
-	local textHeight = font.judgements:getHeight()
+	local pauses = playContext.pauses or 0
+	local grade = Scoring.getGrade(scoreSystemName, judge.accuracy)
+	local gradeColor = Scoring.gradeColors[scoreSystemName][grade]
 
-	just.next(0, -15)
-	printKeyValue(Text.pauses, scoreItem.pauses, w, h)
-	just.next(0, -textHeight + 30)
-	printKeyValue(Text.scrollSpeed, scrollSpeed, w, h, "bottom")
+	local judge_timings = timings
+
+	if judge.getTimings then
+		judge_timings = judge:getTimings()
+	end
+
+	local hit = timings.ShortNote.hit
+	local miss = timings.ShortNote.miss
+	local release_multiplier = judge_timings.LongNoteEnd.hit[1] / judge_timings.ShortNote.hit[1]
+	local nearest = timings.nearest
+
+	-- ACCURACY
+	w, h = Layout:move("accuracy")
+	gfx.setFont(font.accuracy)
+	gfx.setColor(Color.text)
+	gyatt.frame(judgeName, 10, -4, w, h, "left", "center")
+
+	gfx.setColor(gradeColor)
+	gyatt.frame(("%0.02f%%"):format(judge.accuracy * 100), -10, -4, w, h, "right", "center")
+
+	gfx.setColor(Color.border)
+	gfx.rectangle("fill", 0, h - 4, w, 4)
+
+	-- JUDGEMENTS
+	w, h = Layout:move("judgements")
+
+	local colors = Scoring.counterColors[scoreSystemName]
+
+	gfx.setFont(font.counterName)
+	for _, counter in ipairs(counterNames) do
+		judgementCount(counter:upper(), colors[counter], w, judge.counters[counter], judge.notes)
+	end
+
+	judgementCount("MISS", { 1, 0, 0, 1 }, w, judge.counters["miss"], judge.notes)
+
+	w, h = Layout:move("judgements")
+	gfx.setColor(Color.separator)
+	gfx.rectangle("fill", 25, h - 4, w - 50, 4)
+
+	-- GRADE AND PAUSES
+	w, h = Layout:move("grade")
+
+	gfx.setFont(font.grade)
+	gfx.setColor(Color.text)
+
+	GradeKV(Text.pauses, pauses, w)
+
+	just.indent(50)
+	gyatt.text(Text.grade, w, "left")
+	just.sameline()
+	just.indent(-100)
+	gfx.setColor(gradeColor)
+	gyatt.text(grade, w, "right")
+
+	gfx.setColor(Color.text)
+	GradeKV(Text.scrollSpeed, scrollSpeed, w)
+
+	w, h = Layout:move("grade")
+	gfx.setColor(Color.border)
+	gfx.rectangle("fill", 0, h - 4, w, 4)
+
+	-- TIMINGS
+	w, h = Layout:move("timings")
+	gfx.setFont(font.timings)
+	gfx.setColor(Color.text)
+
+	timingsKV(Text.hitWindow, ("%i | %i"):format(math.abs(hit[1]) * 1000, hit[2] * 1000), w)
+	timingsKV(Text.missWindow, ("%i | %i"):format(math.abs(miss[1]) * 1000, miss[2] * 1000), w)
+	timingsKV(Text.releaseMultiplier, ("%0.1fx"):format(release_multiplier), w)
+	timingsKV(Text.hitLogic, nearest and Text.nearest or Text.earliestNote, w)
+
+	w, h = Layout:move("scoringStats")
+	Theme:border(w, h)
+end
+
+function ViewConfig:scoreInfo()
+	local w, h = Layout:move("scoreInfo")
+	Theme:panel(w, h)
+
+	w, h = Layout:move("timeRate")
+	gfx.setFont(font.timeRate)
+	gfx.setColor(Color.text)
+
+	gyatt.frame(timeRateFormatted, 0, 0, w, h, "center", "center")
+
+	gfx.setColor(Color.separator)
+	gfx.rectangle("fill", 25, h - 4, w - 50, 4)
+	gfx.translate(0, 10)
+
+	w, h = Layout:move("scoreInfoInner")
+	gfx.setFont(font.scoreInfo)
+	gfx.setColor(Color.text)
+	GradeKV(Text.mode, inputMode, w)
+	GradeKV(Text.score, scoreFormatted, w)
+	GradeKV(Text.accuracy, accuracyFormatted, w)
+	GradeKV(Text.rating, ratingFormatted, w)
+
+	gfx.translate(0, 10)
+	gfx.setColor(Color.separator)
+	gfx.rectangle("fill", 25, 0, w - 50, 4)
+	gfx.translate(0, 10)
+
+	gfx.setColor(Color.text)
+	GradeKV(Text.mean, meanFormatted, w)
+	GradeKV(Text.maxError, maxErrorFormatted, w)
+
+	w, h = Layout:move("scoreInfo")
+	Theme:border(w, h)
+end
+
+function ViewConfig:difficulty()
+	local w, h = Layout:move("difficulty")
+
+	Theme:panel(w, h)
+
+	w, h = Layout:move("difficultyValue")
+	gfx.setColor(Color.innerPanel)
+	gfx.rectangle("fill", 0, 0, w, h)
+
+	gfx.setColor(difficultyColor)
+	gfx.setFont(font.difficultyValue)
+	gyatt.frame(("%0.02f"):format(difficulty), 0, -20, w, h, "center", "center")
+
+	gfx.setFont(font.calculator)
+	gyatt.frame(calculator, 0, 20, w, h, "center", "center")
+
+	w, h = Layout:move("difficultyPatterns")
+	gfx.setColor(Color.text)
+	gfx.setFont(font.patterns)
+	gyatt.frame(patterns, 0, 0, w, h, "center", "center")
+
+	w, h = Layout:move("difficulty")
+	Theme:border(w, h)
+end
+
+function ViewConfig:scores(view)
+	local w, h = Layout:move("scores")
+	Theme:panel(w, h)
+	local list = self.scoreListView
+	list:draw(w, h, true)
+	if list.openResult then
+		list.openResult = false
+		view:loadScore(list.selectedScoreIndex)
+	end
+
+	Theme:border(w, h)
 end
 
 function ViewConfig:modifiers(view)
+	local w, h = Layout:move("mods")
+
+	Theme:panel(w, h)
 	local selectModel = view.game.selectModel
 	local modifiers = view.game.playContext.modifiers
 	if not showLoadedScore(view) and selectModel.scoreItem then
 		modifiers = selectModel.scoreItem.modifiers
 	end
 
-	local w, h = Layout:move("mods")
 	local text = Theme:getModifierString(modifiers)
-	love.graphics.setFont(font.modifiers)
-	Theme:textWithShadow(text, w, h, "center", "center")
+	gfx.setFont(font.modifiers)
+	gfx.setColor(Color.text)
+	gyatt.frame(text, 0, 0, w, h, "center", "center")
+	Theme:border(w, h)
 end
 
 function ViewConfig:draw(view)
 	just.origin()
+
+	if customConfig then
+		customConfig:drawUnderPanels()
+	end
+
 	title(view)
-
-	self.panels()
-	HitGraph(view)
-	lines()
-
-	self:judgements(view)
-	self:scores(view)
-	self:difficulty(view)
-	self:scoreInfo(view)
-	self:pauses(view)
 	self:modifiers(view)
+	self:scoringStats(view)
+	hitGraph(view)
+	self:scoreInfo()
+	self:difficulty()
+	self:scores(view)
 
-	borders()
+	if customConfig then
+		love.graphics.origin()
+		customConfig:draw()
+	end
 end
 
 return ViewConfig

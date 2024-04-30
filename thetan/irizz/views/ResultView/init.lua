@@ -1,10 +1,14 @@
 local ScreenView = require("sphere.views.ScreenView")
 local thread = require("thread")
 local table_util = require("table_util")
+local math_util = require("math_util")
+local assets = require("thetan.irizz.assets")
 
+local Theme = require("thetan.irizz.views.Theme")
 local Header = require("thetan.irizz.views.HeaderView")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
+local OsuViewConfig = require("thetan.irizz.views.ResultView.OsuViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
 
 local InputMap = require("thetan.irizz.views.ResultView.InputMap")
@@ -12,6 +16,11 @@ local InputMap = require("thetan.irizz.views.ResultView.InputMap")
 ---@class thetan.irizz.ResultView: sphere.ScreenView
 ---@operator call: thetan.irizz.ResultView
 local ResultView = ScreenView + {}
+
+ResultView.currentJudgeName = ""
+ResultView.currentJudge = 0
+
+local osuSkin = nil
 
 local loading = false
 local canDraw = false
@@ -39,21 +48,37 @@ ResultView.load = thread.coro(function(self)
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
 	end
 
-	self.header = Header(self.game, "result")
-	self.viewConfig = ViewConfig(self.game)
+	local configs = self.game.configModel.configs
+	local select = configs.select
+	local irizz = configs.irizz
+	local selected_osu_skin = irizz.osuResultSkin
+
+	if irizz.osuResultScreen then
+		if not osuSkin or osuSkin.name ~= selected_osu_skin then
+			osuSkin = assets:getOsuResultAssets(Theme.osuSkins[selected_osu_skin])
+			osuSkin.name = selected_osu_skin
+		end
+
+		self.viewConfig = OsuViewConfig(self.game, osuSkin)
+		self.header = nil
+	else
+		self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
+		self.header = Header(self.game, "result")
+		self.viewConfig.scoreListView:reloadItems()
+	end
 
 	self:updateJudgements()
 
-	local config = self.game.configModel.configs.select
-	local selectedJudgement = config.judgements
+	self.currentJudgeName = select.judgements
+	self.currentJudge = irizz.judge
 
-	if not self.judgements[selectedJudgement] then
+	if not self.judgements[self.currentJudgeName] then
 		local k, _ = next(self.judgements)
-		config.judgements = k
+		select.judgements = k
+		self.currentJudgeName = k
 	end
 
 	self.viewConfig:loadScore(self)
-	self.viewConfig.scoreListView:reloadItems()
 
 	canDraw = true
 	loading = false
@@ -98,7 +123,9 @@ function ResultView:draw()
 	end
 
 	local function UI()
-		self.header:draw(self)
+		if self.header then
+			self.header:draw(self)
+		end
 		self.viewConfig:draw(self)
 	end
 
@@ -163,5 +190,31 @@ ResultView.play = thread.coro(function(self, mode)
 	self:changeScreen("gameplayView")
 	playing = false
 end)
+
+function ResultView:switchJudge(direction)
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
+
+	local scoreSystems = self.game.rhythmModel.scoreEngine.scoreSystem
+	local ss = irizz.scoreSystem
+
+	local scoreSystem
+
+	if ss == "Soundsphere" then
+		return
+	elseif ss == "osu!mania" then
+		scoreSystem = scoreSystems.osuMania
+	elseif ss == "Etterna" then
+		scoreSystem = scoreSystems.etterna
+	elseif ss == "Quaver" then
+		return
+	end
+
+	self.currentJudge =
+		math_util.clamp(self.currentJudge + direction, scoreSystem.metadata.range[1], scoreSystem.metadata.range[2])
+
+	self.currentJudgeName = scoreSystem.metadata.name:format(self.currentJudge)
+	self.viewConfig:loadScore(self)
+end
 
 return ResultView

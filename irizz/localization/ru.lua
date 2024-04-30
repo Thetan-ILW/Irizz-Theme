@@ -303,14 +303,34 @@ localization.textFilters = {
 }
 
 localization.textResult = {
-	score = "КОЛ-ВО ОЧКОВ",
-	accuracy = "ТОЧНОСТЬ",
-	inputMode = "РЕЖИМ",
-	timeRate = "УСКОРЕНИЕ",
-	pauses = "КОЛ-ВО ПАУЗ",
-	scrollSpeed = "ТИП ПРОКРУТКИ",
-	noPatterns = "Нет паттернов",
-	noAccuracy = "Нет точности",
+	timeRate = "Time rate: %0.02fx",
+	pauses = "Pauses:",
+	grade = "Grade:",
+	scrollSpeed = "Scroll speed:",
+	hitWindow = "Hit window",
+	missWindow = "Miss window",
+	releaseMultiplier = "Release multiplier",
+	hitLogic = "Hit logic",
+	nearest = "Nearest",
+	earliestNote = "Earliest note",
+	noPatterns = "No patterns",
+	mode = "Mode: ",
+	score = "Score: ",
+	accuracy = "Accuracy: ",
+	rating = "Rating: ",
+	mean = "Mean: ",
+	maxError = "Max error: ",
+}
+
+localization.textOsuResult = {
+	chartBy = "Chart by %s",
+	chartFrom = "Chart from %s",
+	playedBy = "Played by %s on %s",
+	mean = "Mean: %s",
+	maxError = "Max error: %s",
+	scrollSpeed = "Scroll speed: %s",
+	mods = "Mods: %s",
+	guest = "Guest",
 }
 
 localization.textMultiplayer = {
@@ -418,21 +438,20 @@ localization.keybindsResult = {
 }
 
 localization.fontFamilyList = {
-	["Noto Sans"] = {
-		"resources/fonts/NotoSansCJK-Regular.ttc",
-		"resources/fonts/NotoSans-Minimal.ttf",
-		height = 813 / 758,
-	},
-	["Noto Sans Mono"] = {
-		"resources/fonts/NotoSansMono-Regular.ttf",
-		"resources/fonts/NotoSansMono-Minimal.ttf",
-		height = 730 / 699,
-	},
 	["ZenMaruGothic-Black"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Black.ttf",
 	},
 	["ZenMaruGothic-Medium"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Medium.ttf",
+	},
+	["Titillium-Web-Regular"] = {
+		"irizz/fonts/Titillium_Web/TitilliumWeb-Regular.ttf",
+	},
+	["Titillium-Web-SemiBold"] = {
+		"irizz/fonts/Titillium_Web/TitilliumWeb-SemiBold.ttf",
+	},
+	["Titillium-Web-Bold"] = {
+		"irizz/fonts/Titillium_Web/TitilliumWeb-Bold.ttf",
 	},
 }
 
@@ -573,15 +592,25 @@ localization.fonts = {
 
 	resultView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
-		hitError = { "ZenMaruGothic-Medium", 16 },
-		judgements = { "ZenMaruGothic-Medium", 24 },
-		accuracy = { "ZenMaruGothic-Medium", 28 },
-		scoreInfo = { "ZenMaruGothic-Medium", 24 },
-		pauses = { "ZenMaruGothic-Medium", 24 },
-		difficulty = { "ZenMaruGothic-Medium", 28 },
-		calculator = { "ZenMaruGothic-Medium", 24 },
-		patterns = { "ZenMaruGothic-Medium", 22 },
-		modifiers = { "ZenMaruGothic-Black", 48 },
+		modifiers = { "Titillium-Web-Bold", 28 },
+		accuracy = { "Titillium-Web-Bold", 28 },
+		counterName = { "Titillium-Web-SemiBold", 24 },
+		grade = { "Titillium-Web-Regular", 24 },
+		timings = { "Titillium-Web-Regular", 24 },
+		difficultyValue = { "Titillium-Web-SemiBold", 32 },
+		calculator = { "Titillium-Web-Regular", 24 },
+		patterns = { "Titillium-Web-Regular", 24 },
+		timeRate = { "Titillium-Web-SemiBold", 32 },
+		scoreInfo = { "Titillium-Web-Regular", 24 },
+	},
+
+	osuResultView = {
+		title = { "ZenMaruGothic-Black", 36 },
+		creator = { "Titillium-Web-Regular", 24 },
+		playInfo = { "Titillium-Web-Regular", 24 },
+		accuracy = { "Titillium-Web-Regular", 20 },
+		graphInfo = { "Titillium-Web-Regular", 18 },
+		pp = { "Titillium-Web-SemiBold", 36 },
 	},
 
 	multiplayerView = {
