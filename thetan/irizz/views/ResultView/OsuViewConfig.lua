@@ -43,6 +43,8 @@ local maxErrorFormatted = ""
 local scrollSpeed = ""
 local modsFormatted = ""
 
+local ppFormatted = ""
+
 local gfx = love.graphics
 
 local buttonHoverShader
@@ -195,6 +197,7 @@ end
 function OsuViewConfig:loadScore(view)
 	Layout = love.filesystem.load("thetan/irizz/views/ResultView/OsuLayout.lua")()
 
+	local chartview = view.game.selectModel.chartview
 	local configs = view.game.configModel.configs
 	local irizz = configs.irizz
 
@@ -214,7 +217,8 @@ function OsuViewConfig:loadScore(view)
 
 	accuracyValue.value = judge.accuracy
 
-	scoreValue.value = judge.score or view.judgements["osu!mania OD9"].score or 0
+	local score = judge.score or view.judgements["osu!mania OD9"].score or 0
+	scoreValue.value = score
 
 	local base = view.game.rhythmModel.scoreEngine.scoreSystem["base"]
 
@@ -223,7 +227,6 @@ function OsuViewConfig:loadScore(view)
 	timeRate = view.game.playContext.rate
 
 	timeFormatted = os.date("%c", view.game.selectModel.scoreItem.time)
-	local chartview = view.game.selectModel.chartview
 	setDirectory = chartview.set_dir
 	creator = chartview.creator
 
@@ -239,10 +242,14 @@ function OsuViewConfig:loadScore(view)
 	end
 
 	grade = Scoring.getGrade(scoreSystemName, judge.accuracy)
+	local od = view.currentJudge
 
 	if scoreSystemName ~= "osuMania" then
 		grade = Scoring.convertGradeToOsu(grade)
+		od = 9
 	end
+
+	ppFormatted = ("%i PP"):format(Theme.getPP(judge.notes, chartview.osu_diff, od, score))
 
 	local playContext = view.game.playContext
 	local timings = playContext.timings
@@ -526,6 +533,11 @@ function OsuViewConfig:draw(view)
 	backButton(view)
 
 	hitGraph(view)
+
+	local w, h = Layout:move("base")
+	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setFont(font.pp)
+	gyatt.frame(ppFormatted, -20, 0, w, h, "right", "bottom")
 end
 
 return OsuViewConfig

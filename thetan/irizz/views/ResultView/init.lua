@@ -18,8 +18,8 @@ local InputMap = require("thetan.irizz.views.ResultView.InputMap")
 local ResultView = ScreenView + {}
 
 ResultView.currentJudgeName = ""
+ResultView.currentJudge = 0
 
-local currentJudge = 0
 local osuSkin = nil
 
 local loading = false
@@ -70,7 +70,7 @@ ResultView.load = thread.coro(function(self)
 	self:updateJudgements()
 
 	self.currentJudgeName = select.judgements
-	currentJudge = irizz.judge
+	self.currentJudge = irizz.judge
 
 	if not self.judgements[self.currentJudgeName] then
 		local k, _ = next(self.judgements)
@@ -210,10 +210,10 @@ function ResultView:switchJudge(direction)
 		return
 	end
 
-	currentJudge =
-		math_util.clamp(currentJudge + direction, scoreSystem.metadata.range[1], scoreSystem.metadata.range[2])
+	self.currentJudge =
+		math_util.clamp(self.currentJudge + direction, scoreSystem.metadata.range[1], scoreSystem.metadata.range[2])
 
-	self.currentJudgeName = scoreSystem.metadata.name:format(currentJudge)
+	self.currentJudgeName = scoreSystem.metadata.name:format(self.currentJudge)
 	self.viewConfig:loadScore(self)
 end
 
