@@ -1,5 +1,6 @@
 local class = require("class")
 local gyatt = require("thetan.gyatt")
+local just = require("just")
 
 local Layout = love.filesystem.load("thetan/irizz/views/ResultView/OsuLayout.lua")()
 local ImageValueView = require("thetan.irizz.views.ResultView.ImageValueView")
@@ -39,13 +40,13 @@ local hpGraph = false
 
 local gfx = love.graphics
 
+local buttonHoverShader
+
 function OsuViewConfig:new(game, _assets)
 	assets = _assets
 
 	if not assets then
-		error(
-			"\n\nNo skin.ini in the `userdata/ui/result/`. COPY your osu! skin there or switch back to the default result screen.\n\n"
-		)
+		error("\n\nSelect valid osu! skin in the `Settings > UI > osu! result screen` \n\n")
 	end
 
 	font = Theme:getFonts("osuResultView")
@@ -145,7 +146,7 @@ function OsuViewConfig:new(game, _assets)
 		y = 0,
 		oy = 0.5,
 		align = "center",
-		format = "%i",
+		format = "%07d",
 		multiplier = 1,
 		scale = 1.2,
 		overlap = overlap,
@@ -162,6 +163,15 @@ function OsuViewConfig:new(game, _assets)
 	comboValue:load()
 	accuracyValue:load()
 	scoreValue:load()
+
+	buttonHoverShader = gfx.newShader([[
+	vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
+        {
+		vec4 texturecolor = Texel(tex, texture_coords);
+		texturecolor.rgb += 0.2;
+		return texturecolor * color;
+        }
+	]])
 end
 
 function OsuViewConfig.panels() end
@@ -188,7 +198,7 @@ function OsuViewConfig:loadScore(view)
 
 	accuracyValue.value = judge.accuracy
 
-	scoreValue.value = judge.score or view.judgements["osu!mania OD9"].score
+	scoreValue.value = judge.score or view.judgements["osu!mania OD9"].score or 0
 
 	local base = view.game.rhythmModel.scoreEngine.scoreSystem["base"]
 
@@ -244,8 +254,12 @@ function OsuViewConfig:title(view)
 	gfx.setColor({ 1, 1, 1, 1 })
 
 	if assets.title then
-		gfx.draw(assets.title, 0, 0, 0, 1, 1)
+		w, h = Layout:move("titleImage")
+		local iw, ih = assets.title:getDimensions()
+		gfx.draw(assets.title, w - iw, 0)
 	end
+
+	w, h = Layout:move("title")
 
 	local chartview = view.game.selectModel.chartview
 
@@ -285,17 +299,30 @@ function OsuViewConfig:title(view)
 end
 
 local function centerFrame(value, box)
-	local w, h = Layout:move(box)
-	gfx.translate(w / 2, h / 2)
-	value:draw()
-	gfx.translate(-w / 2, -h / 2)
+	if value then
+		local w, h = Layout:move(box)
+		gfx.translate(w / 2, h / 2)
+		value:draw()
+		gfx.translate(-w / 2, -h / 2)
+	end
 end
 
 local function frame(value, box, box2)
-	local w, h = Layout:move(box, box2)
-	gfx.translate(0, h / 2)
-	value:draw()
-	gfx.translate(0, -h / 2)
+	if value then
+		local w, h = Layout:move(box, box2)
+		gfx.translate(0, h / 2)
+		value:draw()
+		gfx.translate(0, -h / 2)
+	end
+end
+
+local function judgeFrame(image, box, box2)
+	if image then
+		local s = 0.51
+		local w, h = Layout:move(box, box2)
+		local iw, ih = image:getDimensions()
+		gfx.draw(image, (w / 2) - ((iw * s) / 2), (h / 2) - ((ih * s) / 2) + 2, 0, s, s)
+	end
 end
 
 function OsuViewConfig:panel()
@@ -303,7 +330,9 @@ function OsuViewConfig:panel()
 
 	gfx.setColor({ 1, 1, 1, 1 })
 
-	gfx.draw(assets.panel, 0, 0, 0)
+	if assets.panel then
+		gfx.draw(assets.panel, 0, 0, 0)
+	end
 
 	centerFrame(scoreValue, "score")
 
@@ -314,13 +343,25 @@ function OsuViewConfig:panel()
 	frame(badValue, "column2", "row3")
 	frame(missValue, "column4", "row3")
 
+	judgeFrame(assets.judge.marvelous, "column3", "row1")
+	judgeFrame(assets.judge.perfect, "column1", "row1")
+	judgeFrame(assets.judge.great, "column1", "row2")
+	judgeFrame(assets.judge.good, "column3", "row2")
+	judgeFrame(assets.judge.bad, "column1", "row3")
+	judgeFrame(assets.judge.miss, "column3", "row3")
+
 	frame(comboValue, "combo")
 	frame(accuracyValue, "accuracy")
+
+	Layout:move("comboText")
+	gfx.draw(assets.maxCombo)
+	Layout:move("accuracyText")
+	gfx.draw(assets.accuracy)
 
 	w, h = Layout:move("accuracy")
 	gfx.scale(768 / 1080)
 	gfx.setFont(font.accuracy)
-	gyatt.frame(judgeName, 0, -20, w + 40, h, "center", "top")
+	gyatt.frame(judgeName, 0 + assets.accuracyNameX, -20 + assets.accuracyNameY, w + 40, h, "center", "top")
 	gfx.scale(1)
 end
 
@@ -343,14 +384,20 @@ local function hitGraph(view)
 
 	gfx.translate(0, 4)
 	gfx.setColor({ 1, 1, 1, 1 })
-	gfx.draw(assets.graph)
+
+	if assets.graph then
+		gfx.draw(assets.graph)
+	end
 
 	if hpGraph then
+		h = h * 0.86
+		gfx.translate(2, 6)
 		HitGraph.hpGraph.game = view.game
 		HitGraph.hpGraph:draw(w, h)
 		return
 	end
 
+	h = h * 0.9
 	HitGraph.hitGraph.game = view.game
 	HitGraph.hitGraph:draw(w, h)
 	HitGraph.earlyHitGraph.game = view.game
@@ -362,12 +409,36 @@ local function hitGraph(view)
 	gfx.rectangle("fill", -2, h / 2, w + 2, 4)
 end
 
+local function backButton(view)
+	local w, h = Layout:move("base")
+	local iw, ih = assets.menuBack:getDimensions()
+
+	if assets.menuBack then
+		gfx.translate(0, h - ih)
+		local changed, _, hovered = just.button("backButton", just.is_over(iw, ih))
+
+		local prev_shader = gfx.getShader()
+
+		if hovered then
+			gfx.setShader(buttonHoverShader)
+		end
+
+		gfx.draw(assets.menuBack, 0, 0)
+		gfx.setShader(prev_shader)
+
+		if changed then
+			view:quit()
+		end
+	end
+end
+
 function OsuViewConfig:draw(view)
 	Layout:draw()
 
 	self:panel()
 	self:title(view)
 	self:grade()
+	backButton(view)
 
 	hitGraph(view)
 end

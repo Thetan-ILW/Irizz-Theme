@@ -211,14 +211,29 @@ function Assets:getOsuResultAssets(skin_path)
 	content = utf8validate(content)
 	local skinini = OsuNoteSkin:parseSkinIni(content)
 
-	local scoreFontPath = skin_path .. skinini.Fonts.ScorePrefix or skin_path .. "score"
+	local score_font_path = skin_path .. skinini.Fonts.ScorePrefix or skin_path .. "score"
 
 	local t = {
 		title = loadImage(skin_path .. "ranking-title"),
 		panel = loadImage(skin_path .. "ranking-panel"),
 		graph = loadImage(skin_path .. "ranking-graph"),
-		scoreFont = getImageFont(scoreFontPath),
+		menuBack = loadImage(skin_path .. "menu-back"),
+		maxCombo = loadImage(skin_path .. "ranking-maxcombo"),
+		accuracy = loadImage(skin_path .. "ranking-accuracy"),
+		replay = loadImage(skin_path .. "pause-replay"),
+		scoreFont = getImageFont(score_font_path),
 		scoreOverlap = skinini.Fonts.ScoreOverlap or 0,
+		accuracyNameX = skinini.Fonts.accuracyNameX or 0,
+		accuracyNameY = skinini.Fonts.accuracyNameY or 0,
+
+		judge = {
+			marvelous = loadImage(skin_path .. "mania-hit300g-0"),
+			perfect = loadImage(skin_path .. "mania-hit300"),
+			great = loadImage(skin_path .. "mania-hit200"),
+			good = loadImage(skin_path .. "mania-hit100"),
+			bad = loadImage(skin_path .. "mania-hit50"),
+			miss = loadImage(skin_path .. "mania-hit0"),
+		},
 
 		grade = {
 			SS = loadImage(skin_path .. "ranking-X"),
