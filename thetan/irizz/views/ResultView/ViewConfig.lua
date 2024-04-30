@@ -288,7 +288,7 @@ function ViewConfig:scoringStats(view)
 	gyatt.frame(judgeName, 10, -4, w, h, "left", "center")
 
 	gfx.setColor(gradeColor)
-	gyatt.frame(("%0.02f%%"):format(judge.accuracy * 100), -10, -4, w, h, "right", "center")
+	gyatt.frame(("%0.02f%%"):format((judge.accuracy or 0) * 100), -10, -4, w, h, "right", "center")
 
 	gfx.setColor(Color.border)
 	gfx.rectangle("fill", 0, h - 4, w, 4)

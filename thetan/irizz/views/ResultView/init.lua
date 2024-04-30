@@ -53,7 +53,7 @@ ResultView.load = thread.coro(function(self)
 	local irizz = configs.irizz
 	local selected_osu_skin = irizz.osuResultSkin
 
-	if irizz.osuResultScreen then
+	if irizz.osuResultScreen and selected_osu_skin ~= "None" then
 		if not osuSkin or osuSkin.name ~= selected_osu_skin then
 			osuSkin = assets:getOsuResultAssets(Theme.osuSkins[selected_osu_skin])
 			osuSkin.name = selected_osu_skin

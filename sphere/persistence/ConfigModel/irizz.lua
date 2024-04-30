@@ -22,7 +22,7 @@ return {
 	alwaysShowOriginalMode = false,
 	transitionAnimation = "circle",
 	osuResultScreen = false,
-	osuResultSkin = "",
+	osuResultSkin = "None",
 	hpGraph = true,
 	showPP = true,
 }

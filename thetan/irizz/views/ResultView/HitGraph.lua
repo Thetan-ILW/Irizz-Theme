@@ -33,6 +33,10 @@ local function getHitColor(delta_time, is_miss)
 		return { 1, 0, 0, 1 }
 	end
 
+	if not HitGraph.judge.windows then
+		return { 1, 1, 1, 1 }
+	end
+
 	local colors = Scoring.counterColors[HitGraph.scoreSystemName]
 
 	delta_time = math.abs(delta_time)

@@ -642,6 +642,10 @@ function SettingsTab:UI(view)
 	irizz.hpGraph = imgui.checkbox("irizz.hpGraph", irizz.hpGraph, Text.showHpGraph)
 	irizz.showPP = imgui.checkbox("irizz.showPP", irizz.showPP, Text.showPP)
 
+	if #Theme.osuSkinNames == 0 then
+		Theme.osuSkinNames = { "None" }
+	end
+
 	irizz.osuResultSkin = imgui.combo("irizz.osuResultSkin", irizz.osuResultSkin, Theme.osuSkinNames, nil, Text.skin)
 
 	imgui.separator()
