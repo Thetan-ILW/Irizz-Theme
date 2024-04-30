@@ -38,6 +38,11 @@ local creator = ""
 local grade = ""
 local hpGraph = false
 
+local meanFormatted = ""
+local maxErrorFormatted = ""
+local scrollSpeed = ""
+local modsFormatted = ""
+
 local gfx = love.graphics
 
 local buttonHoverShader
@@ -176,6 +181,17 @@ end
 
 function OsuViewConfig.panels() end
 
+---@param view table
+---@return boolean
+local function showLoadedScore(view)
+	local scoreEntry = view.game.playContext.scoreEntry
+	local scoreItem = view.game.selectModel.scoreItem
+	if not scoreEntry or not scoreItem then
+		return false
+	end
+	return scoreItem.id == scoreEntry.id
+end
+
 function OsuViewConfig:loadScore(view)
 	Layout = love.filesystem.load("thetan/irizz/views/ResultView/OsuLayout.lua")()
 
@@ -243,6 +259,31 @@ function OsuViewConfig:loadScore(view)
 	HitGraph.scoreSystemName = scoreSystemName
 
 	hpGraph = irizz.hpGraph
+
+	local show = showLoadedScore(view)
+
+	local scoreItem = view.game.selectModel.scoreItem
+	local rhythmModel = view.game.rhythmModel
+	local scoreEngine = rhythmModel.scoreEngine
+	local normalscore = rhythmModel.scoreEngine.scoreSystem.normalscore
+	local mean = show and normalscore.normalscore.mean or scoreItem.mean
+
+	meanFormatted = ("%i ms"):format(mean * 1000)
+	maxErrorFormatted = ("%i ms"):format(scoreEngine.scoreSystem.misc.maxDeltaTime * 1000)
+
+	local const = show and playContext.const or scoreItem.const
+	scrollSpeed = "X"
+	if const then
+		scrollSpeed = "Const"
+	end
+
+	local selectModel = view.game.selectModel
+	local modifiers = view.game.playContext.modifiers
+	if not showLoadedScore(view) and selectModel.scoreItem then
+		modifiers = selectModel.scoreItem.modifiers
+	end
+
+	modsFormatted = Theme:getModifierString(modifiers)
 end
 
 function OsuViewConfig:title(view)
@@ -400,6 +441,23 @@ local function rightSideButtons(view)
 	end
 end
 
+local function graphInfo()
+	local mx, my = gfx.inverseTransformPoint(love.mouse.getPosition())
+	gfx.translate(mx, my)
+	gfx.setColor(0, 0, 0, 0.8)
+	gfx.rectangle("fill", 0, 0, 300, 120, 4, 4)
+
+	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setFont(font.graphInfo)
+
+	gfx.translate(5, 5)
+	just.text("Mean: " .. meanFormatted)
+	just.text("Max error: " .. maxErrorFormatted)
+	just.text("Scroll speed: " .. scrollSpeed)
+
+	just.text("Mods: " .. modsFormatted)
+end
+
 ---@param view table
 local function hitGraph(view)
 	local w, h = Layout:move("hitGraph")
@@ -416,19 +474,22 @@ local function hitGraph(view)
 		gfx.translate(2, 6)
 		HitGraph.hpGraph.game = view.game
 		HitGraph.hpGraph:draw(w, h)
-		return
+	else
+		h = h * 0.9
+		HitGraph.hitGraph.game = view.game
+		HitGraph.hitGraph:draw(w, h)
+		HitGraph.earlyHitGraph.game = view.game
+		HitGraph.earlyHitGraph:draw(w, h)
+		HitGraph.missGraph.game = view.game
+		HitGraph.missGraph:draw(w, h)
+
+		gfx.setColor(Color.panel)
+		gfx.rectangle("fill", -2, h / 2, w + 2, 4)
 	end
 
-	h = h * 0.9
-	HitGraph.hitGraph.game = view.game
-	HitGraph.hitGraph:draw(w, h)
-	HitGraph.earlyHitGraph.game = view.game
-	HitGraph.earlyHitGraph:draw(w, h)
-	HitGraph.missGraph.game = view.game
-	HitGraph.missGraph:draw(w, h)
-
-	gfx.setColor(Color.panel)
-	gfx.rectangle("fill", -2, h / 2, w + 2, 4)
+	if just.is_over(w, h) then
+		graphInfo()
+	end
 end
 
 local function backButton(view)

@@ -618,6 +618,7 @@ localization.fonts = {
 		creator = { "Titillium-Web-Regular", 24 },
 		playInfo = { "Titillium-Web-Regular", 24 },
 		accuracy = { "Titillium-Web-Regular", 20 },
+		graphInfo = { "Titillium-Web-Regular", 18 },
 	},
 
 	multiplayerView = {

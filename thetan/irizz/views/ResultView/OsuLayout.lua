@@ -40,7 +40,7 @@ function _Layout:draw()
 	self:pack("score", x3[2], y3[2], w3[2], h3[2])
 
 	local x4, w4 = gfx_util.layout(_x, _w, { 130, 130, 57, 130, 130, -1 })
-	local y4, h4 = gfx_util.layout(_y, _h, { 230, 45, 53, 45, 53, 45, 60, 51, -1 })
+	local y4, h4 = gfx_util.layout(_y, _h, { 230, 45, 53, 45, 50, 45, 58, 51, -1 })
 
 	self:pack("column1", x4[1], 0, w4[1], 0)
 	self:pack("column2", x4[2], 0, w4[2], 0)
