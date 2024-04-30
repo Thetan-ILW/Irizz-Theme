@@ -534,6 +534,13 @@ function OsuViewConfig:draw(view)
 
 	hitGraph(view)
 
+	local configs = view.game.configModel.configs
+	local irizz = configs.irizz
+
+	if not irizz.showPP then
+		return
+	end
+
 	local w, h = Layout:move("base")
 	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.setFont(font.pp)

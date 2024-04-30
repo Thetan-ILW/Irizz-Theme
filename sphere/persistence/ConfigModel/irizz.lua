@@ -24,4 +24,5 @@ return {
 	osuResultScreen = false,
 	osuResultSkin = "",
 	hpGraph = true,
+	showPP = true,
 }
