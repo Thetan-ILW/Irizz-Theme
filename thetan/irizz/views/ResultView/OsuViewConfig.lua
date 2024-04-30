@@ -378,6 +378,28 @@ function OsuViewConfig:grade()
 	end
 end
 
+local function rightSideButtons(view)
+	local w, h = Layout:move("base", "watch")
+
+	if assets.replay then
+		local iw, ih = assets.replay:getDimensions()
+		gfx.translate(w - iw, 0)
+
+		local changed, _, hovered = just.button("replayButton", just.is_over(iw, ih))
+
+		if not hovered then
+			gfx.setColor(1, 1, 1, 0.7)
+		end
+
+		if changed then
+			view:play("replay")
+		end
+
+		gfx.draw(assets.replay, 0, 0)
+		gfx.setColor(1, 1, 1, 1)
+	end
+end
+
 ---@param view table
 local function hitGraph(view)
 	local w, h = Layout:move("hitGraph")
@@ -411,9 +433,10 @@ end
 
 local function backButton(view)
 	local w, h = Layout:move("base")
-	local iw, ih = assets.menuBack:getDimensions()
 
 	if assets.menuBack then
+		local iw, ih = assets.menuBack:getDimensions()
+
 		gfx.translate(0, h - ih)
 		local changed, _, hovered = just.button("backButton", just.is_over(iw, ih))
 
@@ -438,6 +461,7 @@ function OsuViewConfig:draw(view)
 	self:panel()
 	self:title(view)
 	self:grade()
+	rightSideButtons(view)
 	backButton(view)
 
 	hitGraph(view)
