@@ -268,8 +268,14 @@ local function mods(view)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.timeRate)
 
+	local rateType = view.game.configModel.configs.settings.gameplay.rate_type
 	local timeRateModel = view.game.timeRateModel
-	gfx_util.printBaseline(("%0.02f"):format(timeRateModel:get()), 0, h / 1.5, w, 1, "center")
+
+	if rateType == "linear" then
+		gfx_util.printBaseline(("%0.02f"):format(timeRateModel:get()), 0, h / 1.5, w, 1, "center")
+	else
+		gfx_util.printBaseline(("%iQ"):format(timeRateModel:get()), 0, h / 1.5, w, 1, "center")
+	end
 
 	w, h = Layout:move("modsAndInfoLine")
 	love.graphics.setColor(Color.separator)
