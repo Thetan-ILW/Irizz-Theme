@@ -203,9 +203,10 @@ function OsuViewConfig:loadScore(view)
 	local configs = view.game.configModel.configs
 	local irizz = configs.irizz
 
+	local scoreSystems = view.game.rhythmModel.scoreEngine.scoreSystem
 	judgeName = view.currentJudgeName
-	judge = view.judgements[judgeName]
-	counterNames = judge:getOrderedCounterNames()
+	judge = scoreSystems.judgements[judgeName]
+	counterNames = judge.orderedCounters
 
 	marvelousValue.value = judge.counters[counterNames[1]]
 	perfectValue.value = judge.counters[counterNames[2]]

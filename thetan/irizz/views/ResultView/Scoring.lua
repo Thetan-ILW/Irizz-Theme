@@ -1,7 +1,7 @@
 local Scoring = {}
 
 function Scoring.getGrade(scoreSystemName, accuracy)
-	if scoreSystemName == "osuMania" then
+	if scoreSystemName == "osuMania" or scoreSystemName == "osuLegacy" then
 		if accuracy == 1 then
 			return "SS"
 		elseif accuracy > 0.95 then
@@ -51,6 +51,24 @@ function Scoring.getGrade(scoreSystemName, accuracy)
 		else
 			return "F"
 		end
+	elseif scoreSystemName == "lr2" then
+		if accuracy > 0.8888 then
+			return "AAA"
+		elseif accuracy > 0.7777 then
+			return "AA"
+		elseif accuracy > 0.6666 then
+			return "A"
+		elseif accuracy > 0.5555 then
+			return "B"
+		elseif accuracy > 0.4444 then
+			return "C"
+		elseif accuracy > 0.3333 then
+			return "D"
+		elseif accuracy > 0.2222 then
+			return "E"
+		else
+			return "F"
+		end
 	end
 
 	return "-"
@@ -80,6 +98,13 @@ Scoring.counterColors = {
 		ok = { 0.1, 0.39, 1, 1 },
 		meh = { 0.42, 0.48, 0.51, 1 },
 	},
+	osuLegacy = {
+		perfect = { 0.6, 0.8, 1, 1 },
+		great = { 0.95, 0.796, 0.188, 1 },
+		good = { 0.07, 0.8, 0.56, 1 },
+		ok = { 0.1, 0.39, 1, 1 },
+		meh = { 0.42, 0.48, 0.51, 1 },
+	},
 	etterna = {
 		marvelous = { 0.6, 0.8, 1, 1 },
 		perfect = { 0.95, 0.796, 0.188, 1 },
@@ -94,6 +119,12 @@ Scoring.counterColors = {
 		good = { 0.25, 0.7, 0.75, 1 },
 		okay = { 0.72, 0.46, 0.65, 1 },
 	},
+	lr2 = {
+		pgreat = { 0.6, 0.8, 1, 1 },
+		great = { 0.95, 0.796, 0.188, 1 },
+		good = { 1, 0.69, 0.24, 1 },
+		bad = { 1, 0.5, 0.24, 1 },
+	},
 }
 
 Scoring.gradeColors = {
@@ -101,6 +132,14 @@ Scoring.gradeColors = {
 		["-"] = { 1, 1, 1, 1 },
 	},
 	osuMania = {
+		SS = { 0.6, 0.8, 1, 1 },
+		S = { 0.95, 0.796, 0.188, 1 },
+		A = { 0.07, 0.8, 0.56, 1 },
+		B = { 0.1, 0.39, 1, 1 },
+		C = { 0.42, 0.48, 0.51, 1 },
+		D = { 0.51, 0.37, 0, 1 },
+	},
+	osuLegacy = {
 		SS = { 0.6, 0.8, 1, 1 },
 		S = { 0.95, 0.796, 0.188, 1 },
 		A = { 0.07, 0.8, 0.56, 1 },
@@ -125,6 +164,15 @@ Scoring.gradeColors = {
 		B = { 0.07, 0.8, 0.56, 1 },
 		C = { 0.1, 0.39, 1, 1 },
 		D = { 0.42, 0.48, 0.51, 1 },
+		F = { 0.51, 0.37, 0, 1 },
+	},
+	lr2 = {
+		AAA = { 0.95, 0.796, 0.188, 1 },
+		AA = { 0.07, 0.8, 0.56, 1 },
+		A = { 0, 0.7, 0.32, 1 },
+		B = { 0.1, 0.7, 1, 1 },
+		C = { 1, 0.1, 0.7, 1 },
+		E = { 1, 0.1, 0.7, 1 },
 		F = { 0.51, 0.37, 0, 1 },
 	},
 }

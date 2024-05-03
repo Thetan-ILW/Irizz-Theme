@@ -114,10 +114,12 @@ function ViewConfig:loadScore(view)
 	maxErrorFormatted = ("%i ms"):format(scoreEngine.scoreSystem.misc.maxDeltaTime * 1000)
 	ratingFormatted = ("%0.02f PR"):format(scoreItem.rating)
 
+	local scoreSystems = view.game.rhythmModel.scoreEngine.scoreSystem
 	local configs = view.game.configModel.configs
 	judgeName = view.currentJudgeName
-	judge = view.judgements[judgeName]
-	counterNames = judge:getOrderedCounterNames()
+	judge = scoreSystems.judgements[judgeName]
+	scoreSystemName = judge.scoreSystemName
+	counterNames = judge.orderedCounters
 	playContext = view.game.playContext
 	timings = playContext.timings
 
@@ -125,16 +127,6 @@ function ViewConfig:loadScore(view)
 	local lateNoteMiss = timings.ShortNote.miss[2]
 	local earlyReleaseMiss = math.abs(timings.LongNoteEnd.miss[1])
 	local lateReleaseMiss = timings.LongNoteEnd.miss[2]
-
-	if string.find(judgeName, "osu!mania") then
-		scoreSystemName = "osuMania"
-	elseif string.find(judgeName, "Etterna") then
-		scoreSystemName = "etterna"
-	elseif string.find(judgeName, "Quaver") then
-		scoreSystemName = "quaver"
-	elseif string.find(judgeName, "Soundsphere") then
-		scoreSystemName = "soundsphere"
-	end
 
 	HitGraph.maxEarlyTiming = math.max(earlyNoteMiss, earlyReleaseMiss)
 	HitGraph.maxLateTiming = math.max(lateNoteMiss, lateReleaseMiss)

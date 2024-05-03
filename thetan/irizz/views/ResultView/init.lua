@@ -67,8 +67,7 @@ ResultView.load = thread.coro(function(self)
 		self.viewConfig.scoreListView:reloadItems()
 	end
 
-	self:updateJudgements()
-
+	self.judgements = self.game.rhythmModel.scoreEngine.scoreSystem.judgements
 	self.currentJudgeName = select.judgements
 	self.currentJudge = irizz.judge
 
@@ -83,28 +82,6 @@ ResultView.load = thread.coro(function(self)
 	canDraw = true
 	loading = false
 end)
-
-function ResultView:updateJudgements()
-	local scoreSystems = self.game.rhythmModel.scoreEngine.scoreSystem
-	self.selectors = {
-		scoreSystems["soundsphere"].metadata,
-		scoreSystems["quaver"].metadata,
-		scoreSystems["osuMania"].metadata,
-		scoreSystems["etterna"].metadata,
-	}
-
-	self.judgements = {}
-
-	for _, scoreSystem in pairs(scoreSystems) do
-		table_util.copy(scoreSystem.judges, self.judgements)
-	end
-
-	local judgementScoreSystem = scoreSystems["judgement"]
-	for _, judge in ipairs(judgementScoreSystem.judgementList) do
-		table.insert(self.selectors, judge)
-		table_util.copy(judgementScoreSystem.judges[judge.name], self.judgements)
-	end
-end
 
 function ResultView:update()
 	self.layersView:update()
@@ -200,20 +177,31 @@ function ResultView:switchJudge(direction)
 
 	local scoreSystem
 
-	if ss == "Soundsphere" then
-		return
-	elseif ss == "osu!mania" then
+	if ss == "osu!mania" then
 		scoreSystem = scoreSystems.osuMania
+	elseif ss == "osu!legacy" then
+		scoreSystem = scoreSystems.osuLegacy
 	elseif ss == "Etterna" then
 		scoreSystem = scoreSystems.etterna
-	elseif ss == "Quaver" then
+	elseif ss == "Lunatic rave 2" then
+		scoreSystem = scoreSystems.lr2
+	end
+
+	if not scoreSystem then
 		return
 	end
 
 	self.currentJudge =
 		math_util.clamp(self.currentJudge + direction, scoreSystem.metadata.range[1], scoreSystem.metadata.range[2])
 
-	self.currentJudgeName = scoreSystem.metadata.name:format(self.currentJudge)
+	local alias = scoreSystem.metadata.rangeValueAlias
+
+	if alias then
+		self.currentJudgeName = scoreSystem.metadata.name:format(alias[self.currentJudge])
+	else
+		self.currentJudgeName = scoreSystem.metadata.name:format(self.currentJudge)
+	end
+
 	self.viewConfig:loadScore(self)
 end
 

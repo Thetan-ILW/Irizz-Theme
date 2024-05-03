@@ -131,23 +131,29 @@ end
 
 local soundsphere = require("sphere.models.RhythmModel.ScoreEngine.SoundsphereScoring")
 local osuMania = require("sphere.models.RhythmModel.ScoreEngine.OsuManiaScoring")
+local osuLegacy = require("sphere.models.RhythmModel.ScoreEngine.OsuLegacyScoring")
 local quaver = require("sphere.models.RhythmModel.ScoreEngine.QuaverScoring")
 local etterna = require("sphere.models.RhythmModel.ScoreEngine.EtternaScoring")
+local lr2 = require("sphere.models.RhythmModel.ScoreEngine.LunaticRaveScoring")
 
 local timings = require("sphere.models.RhythmModel.ScoreEngine.timings")
 
 local scoreSystems = {
-	"Soundsphere",
+	"soundsphere",
 	"osu!mania",
+	"osu!legacy",
 	"Quaver",
 	"Etterna",
+	"Lunatic rave 2",
 }
 
 local metadata = {
-	["Soundsphere"] = soundsphere.metadata,
+	["soundsphere"] = soundsphere.metadata,
 	["osu!mania"] = osuMania.metadata,
+	["osu!legacy"] = osuLegacy.metadata,
 	["Quaver"] = quaver.metadata,
 	["Etterna"] = etterna.metadata,
+	["Lunatic rave 2"] = lr2.metadata,
 }
 
 local function getJudges(range)
@@ -162,7 +168,9 @@ end
 
 local allJudges = {
 	["osu!mania"] = getJudges(osuMania.metadata.range),
+	["osu!legacy"] = getJudges(osuLegacy.metadata.range),
 	["Etterna"] = getJudges(etterna.metadata.range),
+	["Lunatic rave 2"] = getJudges(lr2.metadata.range),
 }
 
 local function scoreSystem(updated, selectedScoreSystem, irizz, select, playContext)
@@ -175,7 +183,15 @@ local function scoreSystem(updated, selectedScoreSystem, irizz, select, playCont
 
 		local prevJudge = irizz.judge
 		irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, nil, Text.judgement)
-		select.judgements = metadata[irizz.scoreSystem].name:format(irizz.judge)
+
+		local alias = metadata[selectedScoreSystem].rangeValueAlias
+		local judge = irizz.judge
+
+		if alias then
+			judge = alias[judge]
+		end
+
+		select.judgements = metadata[irizz.scoreSystem].name:format(judge)
 
 		if prevJudge ~= irizz.judge then
 			updated = true
@@ -184,7 +200,7 @@ local function scoreSystem(updated, selectedScoreSystem, irizz, select, playCont
 		local md = metadata[irizz.scoreSystem]
 
 		if not md then
-			md = metadata["Soundsphere"]
+			md = metadata["soundsphere"]
 		end
 
 		select.judgements = md.name
@@ -196,12 +212,14 @@ local function scoreSystem(updated, selectedScoreSystem, irizz, select, playCont
 
 	local ss = irizz.scoreSystem
 
-	if ss == "Soundsphere" then
+	if ss == "soundsphere" then
 		playContext.timings = table_util.deepcopy(timings.soundsphere)
 	elseif ss == "osu!mania" then
-		playContext.timings = table_util.deepcopy(timings.osu(irizz.judge))
+		playContext.timings = table_util.deepcopy(timings.osuMania(irizz.judge))
+	elseif ss == "osu!legacy" then
+		playContext.timings = table_util.deepcopy(timings.osuLegacy(irizz.judge))
 	elseif ss == "Etterna" then
-		playContext.timings = table_util.deepcopy(timings.etterna(irizz.judge))
+		playContext.timings = table_util.deepcopy(timings.etterna)
 	elseif ss == "Quaver" then
 		playContext.timings = table_util.deepcopy(timings.quaver)
 	end
