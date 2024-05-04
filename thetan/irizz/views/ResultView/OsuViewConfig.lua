@@ -35,6 +35,7 @@ local timeRate = 1
 local timeFormatted = ""
 local setDirectory = ""
 local creator = ""
+local difficultyFormatted = ""
 
 local grade = ""
 local hpGraph = false
@@ -233,16 +234,23 @@ function OsuViewConfig:loadScore(view)
 	setDirectory = chartview.set_dir
 	creator = chartview.creator
 
-	local scoreSystemName
-	if string.find(judgeName, "osu!mania") then
-		scoreSystemName = "osuMania"
-	elseif string.find(judgeName, "Etterna") then
-		scoreSystemName = "etterna"
-	elseif string.find(judgeName, "Quaver") then
-		scoreSystemName = "quaver"
-	elseif string.find(judgeName, "Soundsphere") then
-		scoreSystemName = "soundsphere"
+	local chartdiff = view.game.playContext.chartdiff
+	local diff_column = view.game.configModel.configs.settings.select.diff_column
+	local time_rate = view.game.playContext.rate
+
+	local difficulty = (chartview.difficulty or 0) * time_rate
+	local patterns = chartview.level and "Lv." .. chartview.level or ""
+
+	difficultyFormatted = ("[%0.02f*]"):format(difficulty)
+
+	if diff_column == "msd_diff" and chartdiff.msd_diff_data then
+		difficulty = chartdiff.msd_diff
+		patterns = Theme.getFirstFromSsr(chartdiff.msd_diff_data) or ""
+		patterns = Theme.simplifySsr(patterns)
+		difficultyFormatted = ("[%0.02f %s]"):format(difficulty, patterns)
 	end
+
+	local scoreSystemName = judge.scoreSystemName
 
 	grade = Scoring.getGrade(scoreSystemName, judge.accuracy)
 	local od = view.currentJudge
@@ -328,6 +336,8 @@ function OsuViewConfig:title(view)
 	else
 		title = ("%s [%s %0.02fx]"):format(title, timeRate)
 	end
+
+	title = title .. " " .. difficultyFormatted
 
 	local second_row = Text.chartFrom:format(setDirectory)
 

@@ -250,6 +250,42 @@ function Theme.getMaxAndSecondFromSsr(ssrStr)
 	return output
 end
 
+function Theme.getFirstFromSsr(ssrStr)
+	local ssr = etterna_ssr:decodePatterns(ssrStr)
+
+	local maxKey = nil
+	local maxValue = 0
+	for key, value in pairs(ssr) do
+		value = tonumber(value)
+		if value > maxValue then
+			maxValue = value
+			maxKey = key
+		end
+	end
+
+	return maxKey
+end
+
+function Theme.simplifySsr(pattern)
+	if pattern == "stream" then
+		return "STR"
+	elseif pattern == "jumpstream" then
+		return "JS"
+	elseif pattern == "handstream" then
+		return "HS"
+	elseif pattern == "stamina" then
+		return "STAM"
+	elseif pattern == "jackspeed" then
+		return "JACK"
+	elseif pattern == "chordjack" then
+		return "CJ"
+	elseif pattern == "technical" then
+		return "TECH"
+	end
+
+	return "NONE"
+end
+
 function Theme.getSsrPatterns(ssrStr)
 	if type(etterna_ssr) ~= "table" then
 		return nil
