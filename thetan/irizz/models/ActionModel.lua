@@ -171,9 +171,20 @@ end
 
 local function getDownModAction()
 	local keys = {}
+	local ctrl_down = false
 
 	for k, _ in pairs(modKeysDown) do
+		if ctrl_down then
+			goto continue
+		end
+
 		table.insert(keys, k)
+
+		if k == "lctrl" or k == "rctrl" then
+			ctrl_down = true
+		end
+
+		::continue::
 	end
 
 	for k, _ in pairs(keysDown) do
@@ -247,10 +258,21 @@ end
 
 local function getComboAction()
 	local keys = {}
+	local ctrl_down = false
 	local current_time = love.timer.getTime()
 
-	for key, _ in pairs(modKeysDown) do
-		table.insert(keys, key)
+	for k, _ in pairs(modKeysDown) do
+		if ctrl_down then
+			goto continue
+		end
+
+		table.insert(keys, k)
+
+		if k == "lctrl" or k == "rctrl" then
+			ctrl_down = true
+		end
+
+		::continue::
 	end
 
 	for key, time in pairs(keyPressTimestamps) do
