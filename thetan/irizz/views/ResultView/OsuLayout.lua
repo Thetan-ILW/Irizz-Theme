@@ -59,6 +59,11 @@ function _Layout:draw()
 
 	self:pack("comboText", x6[2], y5[2], w6[2], h5[2])
 	self:pack("accuracyText", x6[3], y5[2], w6[3], y5[2])
+
+	local x7, w7 = gfx_util.layout(_x, _w, { -1, 30 })
+	local y7, h7 = gfx_util.layout(_y, _h, { 414, -1 })
+
+	self:pack("mods", x7[1], y7[2], w7[1], h7[1])
 end
 
 return _Layout

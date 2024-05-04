@@ -52,6 +52,8 @@ local gfx = love.graphics
 
 local buttonHoverShader
 
+local modifierIconImages = {}
+
 function OsuViewConfig:new(game, _assets)
 	assets = _assets
 
@@ -303,6 +305,40 @@ function OsuViewConfig:loadScore(view)
 
 	modsFormatted = Theme:getModifierString(modifiers)
 	username = view.game.configModel.configs.online.user.name or Text.guest
+
+	-- 9 NLN
+	-- 11 automap
+	-- 16 mirror
+	-- 17 random
+
+	modifierIconImages = {}
+
+	for _, mod in ipairs(modifiers) do
+		local id = mod.id
+
+		if id == 9 then
+			table.insert(modifierIconImages, assets.modifiers.noLongNote)
+		elseif id == 11 then
+			table.insert(modifierIconImages, assets.modifiers[("automap%i"):format(mod.value)])
+		elseif id == 16 then
+			table.insert(modifierIconImages, assets.modifiers.mirror)
+		elseif id == 17 then
+			table.insert(modifierIconImages, assets.modifiers.random)
+		end
+	end
+
+	if timeRate == 1.5 then
+		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+	elseif timeRate == (1.5 * 1.5) then
+		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+	elseif timeRate == (1.5 * 1.5 * 1.5) then
+		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+	elseif timeRate == 0.75 then
+		table.insert(modifierIconImages, assets.modifiers.halfTime)
+	end
 end
 
 function OsuViewConfig:title(view)
@@ -536,6 +572,25 @@ local function backButton(view)
 	end
 end
 
+local function mods()
+	local w, _ = Layout:move("mods")
+
+	if #modifierIconImages == 0 then
+		return
+	end
+
+	local iw, ih = modifierIconImages[1]:getDimensions()
+
+	gfx.translate(w - iw, -ih / 2)
+	gfx.setColor({ 1, 1, 1, 1 })
+
+	for _, image in ipairs(modifierIconImages) do
+		iw, _ = image:getDimensions()
+		gfx.draw(image)
+		gfx.translate(-iw / 2, 0)
+	end
+end
+
 function OsuViewConfig:draw(view)
 	Layout:draw()
 
@@ -544,6 +599,7 @@ function OsuViewConfig:draw(view)
 	self:grade()
 	rightSideButtons(view)
 	backButton(view)
+	mods()
 
 	hitGraph(view)
 

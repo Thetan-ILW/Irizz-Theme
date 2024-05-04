@@ -243,6 +243,21 @@ function Assets:getOsuResultAssets(skin_path)
 			C = loadImage(skin_path .. "ranking-C"),
 			D = loadImage(skin_path .. "ranking-D"),
 		},
+		modifiers = {
+			noLongNote = loadImage(skin_path .. "selection-mod-nolongnote"),
+			mirror = loadImage(skin_path .. "selection-mod-mirror"),
+			random = loadImage(skin_path .. "selection-mod-random"),
+			doubleTime = loadImage(skin_path .. "selection-mod-doubletime"),
+			halfTime = loadImage(skin_path .. "selection-mod-halftime"),
+			autoPlay = loadImage(skin_path .. "selection-mod-autoplay"),
+			automap4 = loadImage(skin_path .. "selection-mod-key4"),
+			automap5 = loadImage(skin_path .. "selection-mod-key5"),
+			automap6 = loadImage(skin_path .. "selection-mod-key6"),
+			automap7 = loadImage(skin_path .. "selection-mod-key7"),
+			automap8 = loadImage(skin_path .. "selection-mod-key8"),
+			automap9 = loadImage(skin_path .. "selection-mod-key9"),
+			automap10 = loadImage(skin_path .. "selection-mod-key10"),
+		},
 	}
 
 	return t
