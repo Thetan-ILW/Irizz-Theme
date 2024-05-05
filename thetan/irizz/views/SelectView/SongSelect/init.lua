@@ -181,7 +181,7 @@ local function difficulty(view, chartview)
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(font.patterns)
 	w, h = Layout:move("patterns")
-	gfx_util.printFrame(patterns, 0, 0, w, h, "center", "center")
+	gfx_util.printFrame(patterns:upper(), 0, 0, w, h, "center", "center")
 end
 
 local function info(view)

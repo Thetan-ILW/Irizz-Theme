@@ -303,6 +303,7 @@ function ViewConfig:scoringStats(view)
 
 	-- GRADE AND PAUSES
 	w, h = Layout:move("grade")
+	gfx.translate(0, 4)
 
 	gfx.setFont(font.grade)
 	gfx.setColor(Color.text)
@@ -325,6 +326,7 @@ function ViewConfig:scoringStats(view)
 
 	-- TIMINGS
 	w, h = Layout:move("timings")
+	gfx.translate(0, 4)
 	gfx.setFont(font.timings)
 	gfx.setColor(Color.text)
 
@@ -352,6 +354,7 @@ function ViewConfig:scoreInfo()
 	gfx.translate(0, 10)
 
 	w, h = Layout:move("scoreInfoInner")
+	gfx.translate(0, 4)
 	gfx.setFont(font.scoreInfo)
 	gfx.setColor(Color.text)
 	GradeKV(Text.mode, inputMode, w)
@@ -365,6 +368,7 @@ function ViewConfig:scoreInfo()
 	gfx.translate(0, 10)
 
 	gfx.setColor(Color.text)
+	gfx.translate(0, 4)
 	GradeKV(Text.mean, meanFormatted, w)
 	GradeKV(Text.maxError, maxErrorFormatted, w)
 

@@ -474,6 +474,9 @@ localization.fontFamilyList = {
 	["ZenMaruGothic-Medium"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Medium.ttf",
 	},
+	["ZenMaruGothic-Regular"] = {
+		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Regular.ttf",
+	},
 	["Titillium-Web-Regular"] = {
 		"irizz/fonts/Titillium_Web/TitilliumWeb-Regular.ttf",
 	},
@@ -622,16 +625,16 @@ localization.fonts = {
 
 	resultView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
-		modifiers = { "Titillium-Web-Bold", 28 },
-		accuracy = { "Titillium-Web-Bold", 28 },
-		counterName = { "Titillium-Web-SemiBold", 24 },
-		grade = { "Titillium-Web-Regular", 24 },
-		timings = { "Titillium-Web-Regular", 24 },
-		difficultyValue = { "Titillium-Web-SemiBold", 32 },
-		calculator = { "Titillium-Web-Regular", 24 },
-		patterns = { "Titillium-Web-Regular", 24 },
-		timeRate = { "Titillium-Web-SemiBold", 32 },
-		scoreInfo = { "Titillium-Web-Regular", 24 },
+		modifiers = { "ZenMaruGothic-Medium", 28 },
+		accuracy = { "ZenMaruGothic-Medium", 28 },
+		counterName = { "ZenMaruGothic-Medium", 24 },
+		grade = { "ZenMaruGothic-Regular", 24 },
+		timings = { "ZenMaruGothic-Regular", 24 },
+		difficultyValue = { "ZenMaruGothic-Medium", 32 },
+		calculator = { "ZenMaruGothic-Medium", 24 },
+		patterns = { "ZenMaruGothic-Regular", 24 },
+		timeRate = { "ZenMaruGothic-Medium", 32 },
+		scoreInfo = { "ZenMaruGothic-Regular", 24 },
 	},
 
 	osuResultView = {
