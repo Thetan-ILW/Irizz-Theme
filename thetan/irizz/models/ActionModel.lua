@@ -337,6 +337,7 @@ end
 
 function ActionModel.disable()
 	disabled = true
+	ActionModel.resetInputs()
 end
 
 -------------------------------
