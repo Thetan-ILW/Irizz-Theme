@@ -148,19 +148,6 @@ function SettingsTab:Gameplay(view)
 	local playContext = view.game.playContext
 	playContext.const = imgui.checkbox("const", playContext.const, Text.const)
 
-	local input_mode = tostring(view.game.selectController.state.inputMode)
-
-	if input_mode ~= "" then
-		local selected_note_skin = view.game.noteSkinModel:getNoteSkin(input_mode)
-		local skins = view.game.noteSkinModel:getSkinInfos(input_mode)
-		local select, changed =
-			imgui.combo("sphere.skinSelect", selected_note_skin, skins, formatNoteSkin, Text.noteSkin)
-
-		if changed then
-			view.game.noteSkinModel:setDefaultNoteSkin(input_mode, select:getPath())
-		end
-	end
-
 	imgui.separator()
 	just.text(Text.waitTime)
 	just.next(0, textSeparation)
@@ -170,10 +157,28 @@ function SettingsTab:Gameplay(view)
 	g.time.pausePlay = imgui.slider1("time.pausePlay", g.time.pausePlay, "%0.1f", 0, 2, 0.1, Text.pausePlay)
 	g.time.pauseRetry = imgui.slider1("time.pauseRetry", g.time.pauseRetry, "%0.1f", 0, 2, 0.1, Text.pauseRetry)
 
-	imgui.separator()
-	just.text(Text.other)
-	just.next(0, textSeparation)
-	g.lastMeanValues = imgui.intButtons("lastMeanValues", g.lastMeanValues, 1, Text.lastMeanValues)
+	local input_mode = tostring(view.game.selectController.state.inputMode)
+
+	if input_mode ~= "" then
+		imgui.separator()
+		just.text(Text.noteSkin)
+		just.next(0, textSeparation)
+
+		local selected_note_skin = view.game.noteSkinModel:getNoteSkin(input_mode)
+		local skins = view.game.noteSkinModel:getSkinInfos(input_mode)
+		local select, changed = imgui.combo("sphere.skinSelect", selected_note_skin, skins, formatNoteSkin, "")
+
+		if changed then
+			view.game.noteSkinModel:setDefaultNoteSkin(input_mode, select:getPath())
+		end
+
+		just.sameline()
+		local pressed = imgui.button("skinSettings", "Settings")
+
+		if pressed then
+			view.game.gameView:openModal("thetan.irizz.views.modals.NoteSkinModal")
+		end
+	end
 end
 
 local soundsphere = require("sphere.models.RhythmModel.ScoreEngine.SoundsphereScoring")
@@ -351,6 +356,7 @@ function SettingsTab:Scoring(view)
 	just.text(Text.other)
 	just.next(0, textSeparation)
 	g.ratingHitTimingWindow = intButtonsMs("ratingHitTimingWindow", g.ratingHitTimingWindow, Text.ratingHitWindow)
+	g.lastMeanValues = imgui.intButtons("lastMeanValues", g.lastMeanValues, 1, Text.lastMeanValues)
 end
 
 local formats = { "osu", "qua", "sm", "ksh" }
