@@ -113,10 +113,6 @@ function Theme:getModifierString(mods)
 		end
 	end
 
-	if modString == "" then
-		modString = "No mods"
-	end
-
 	return modString
 end
 

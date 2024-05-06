@@ -227,12 +227,18 @@ end
 ---@param to_string function?
 ---@param label string?
 ---@return any
+---@return boolean
 function imgui.combo(id, v, values, to_string, label)
 	local fv = to_string and to_string(v) or v
 	local i = imgui.SpoilerList(id, _w, _h, values, fv, to_string)
 	just.sameline()
 	imgui.label(id .. "label", label)
-	return i and values[i] or v
+
+	if i then
+		return values[i], true
+	end
+
+	return v, false
 end
 
 function imgui.spoilerList(id, list, preview, to_string, label)

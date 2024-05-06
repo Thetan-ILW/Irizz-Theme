@@ -57,6 +57,20 @@ local function formatTempoFactor(v)
 	return Text[v] or ""
 end
 
+local function formatNoteSkin(v)
+	if not v.name then
+		return "??"
+	end
+
+	local len = v.name:len()
+
+	if len > 20 then
+		return v.name:sub(1, 20) .. "..."
+	end
+
+	return v.name
+end
+
 function SettingsTab:Gameplay(view)
 	imgui.separator()
 	local configs = view.game.configModel.configs
@@ -113,6 +127,18 @@ function SettingsTab:Gameplay(view)
 	g.scaleSpeed = g.swapVelocityType and true or g.scaleSpeed
 	local playContext = view.game.playContext
 	playContext.const = imgui.checkbox("const", playContext.const, Text.const)
+
+	local input_mode = tostring(view.game.selectController.state.inputMode)
+
+	if input_mode ~= "" then
+		local selected_note_skin = view.game.noteSkinModel:getNoteSkin(input_mode)
+		local skins = view.game.noteSkinModel:getSkinInfos(input_mode)
+		local select, changed = imgui.combo("sphere.skinSelect", selected_note_skin, skins, formatNoteSkin, "skin")
+
+		if changed then
+			view.game.noteSkinModel:setDefaultNoteSkin(input_mode, select:getPath())
+		end
+	end
 
 	imgui.separator()
 	just.text(Text.waitTime)

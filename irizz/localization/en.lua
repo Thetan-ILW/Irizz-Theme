@@ -189,6 +189,7 @@ localization.textSongSelect = {
 	filterPlaceholder = "No filters.",
 	score = "Score: %i",
 	noPatterns = "No patterns",
+	noMods = "No modifiers.\nClick here to select.",
 }
 
 localization.textCollections = {
@@ -208,7 +209,7 @@ localization.textChartList = {
 
 localization.textScoreList = {
 	noItems = "No scores!",
-	noMods = "No mods",
+	noMods = "No mods.",
 	hasMods = "Has mods",
 }
 
@@ -507,6 +508,7 @@ localization.fonts = {
 		moreInfo = { "ZenMaruGothic-Medium", 28 },
 		timeRate = { "ZenMaruGothic-Medium", 32 },
 		mods = { "ZenMaruGothic-Medium", 24 },
+		noMods = { "ZenMaruGothic-Medium", 18 },
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
 	},
 

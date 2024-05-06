@@ -289,11 +289,17 @@ local function mods(view)
 		end
 	end
 
-	local mods = view.game.playContext.modifiers
-
 	love.graphics.setFont(font.mods)
 	love.graphics.setColor(Color.text)
-	gfx_util.printFrame(Theme:getModifierString(mods), 0, -5, w, h, "center", "center")
+	local modifiers = view.game.playContext.modifiers
+	local modString = Theme:getModifierString(modifiers)
+
+	if modString == "" then
+		love.graphics.setFont(font.noMods)
+		modString = Text.noMods
+	end
+
+	gfx_util.printFrame(modString, 0, -5, w, h, "center", "center")
 end
 
 local function footer(view)
