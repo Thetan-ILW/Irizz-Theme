@@ -26,8 +26,13 @@ local currentTab = tabs[1][2]
 
 function ViewConfig:new(game)
 	self.game = game
+	self.settingsPanel = SettingsTab(game)
 
 	Font = Theme:getFonts("settingsViewConfig")
+end
+
+function ViewConfig:focused()
+	self.settingsPanel:updateItems(self)
 end
 
 local boxes = {
@@ -70,7 +75,7 @@ end
 
 function ViewConfig:settings(view)
 	local w, h = Layout:move("settings")
-	SettingsTab:draw(view, w, h, currentTab)
+	self.settingsPanel:draw(view, w, h, currentTab)
 end
 
 function ViewConfig.layoutDraw(position)

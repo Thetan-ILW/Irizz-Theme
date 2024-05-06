@@ -1,3 +1,5 @@
+local class = require("class")
+
 local just = require("just")
 local imgui = require("thetan.irizz.imgui")
 local table_util = require("table_util")
@@ -10,10 +12,25 @@ local Theme = require("thetan.irizz.views.Theme")
 local Text = Theme.textSettings
 local cfg = Theme.imgui
 
-local SettingsTab = {}
+local InputListView = require("thetan.irizz.views.modals.InputModal.InputListView")
+
+local SettingsTab = class()
 
 local textSeparation = 15
+local panelW = 0
+local panelH = 0
+local inputListView
+
 SettingsTab.container = Container("settingsContainer")
+
+function SettingsTab:new(game)
+	inputListView = InputListView(game)
+end
+
+function SettingsTab:updateItems(view)
+	inputListView.inputMode = tostring(view.game.selectController.state.inputMode)
+	inputListView:reloadItems()
+end
 
 function SettingsTab:reset()
 	self.container:reset()
@@ -21,6 +38,9 @@ end
 
 function SettingsTab:draw(view, w, h, tab)
 	imgui.setSize(w, h, w / 2.5, cfg.size)
+	panelW = w
+	panelH = h
+
 	local startHeight = just.height
 	self.container:startDraw(w, h)
 
@@ -133,7 +153,8 @@ function SettingsTab:Gameplay(view)
 	if input_mode ~= "" then
 		local selected_note_skin = view.game.noteSkinModel:getNoteSkin(input_mode)
 		local skins = view.game.noteSkinModel:getSkinInfos(input_mode)
-		local select, changed = imgui.combo("sphere.skinSelect", selected_note_skin, skins, formatNoteSkin, "skin")
+		local select, changed =
+			imgui.combo("sphere.skinSelect", selected_note_skin, skins, formatNoteSkin, Text.noteSkin)
 
 		if changed then
 			view.game.noteSkinModel:setDefaultNoteSkin(input_mode, select:getPath())
@@ -550,6 +571,12 @@ function SettingsTab:Inputs(view)
 
 	local playContext = view.game.playContext
 	playContext.single = imgui.checkbox("single", playContext.single, Text.singleNoteHandler)
+
+	imgui.separator()
+	just.text(Text.gameplayInputs)
+	just.next(0, textSeparation)
+	love.graphics.translate(-15, 0)
+	inputListView:draw(panelW, panelH, true)
 end
 
 local diff_columns = {

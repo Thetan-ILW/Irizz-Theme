@@ -70,6 +70,8 @@ function SelectView:moveScreen(where, exact)
 	if self.screenXTarget == 0 then
 		self:switchToSongSelect()
 		self.collectionsViewConfig:setMode(self, "Collections")
+	elseif self.screenXTarget == 1 then
+		self:switchToSettings()
 	end
 
 	Theme:playSound("songSelectScreenChanged")
@@ -82,6 +84,10 @@ end
 
 function SelectView:switchToSongSelect()
 	self.game.selectModel:noDebouncePullNoteChartSet()
+end
+
+function SelectView:switchToSettings()
+	self.settingsViewConfig:focused()
 end
 
 ---@param dt number
