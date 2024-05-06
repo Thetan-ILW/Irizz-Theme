@@ -173,6 +173,18 @@ local allJudges = {
 	["Lunatic rave 2"] = getJudges(lr2.metadata.range),
 }
 
+local lunaticRaveJudges = {
+	[0] = "Easy",
+	[1] = "Normal",
+	[2] = "Hard",
+	[3] = "Very hard",
+}
+
+local function formatLunaticRave(j)
+	return lunaticRaveJudges[j]
+end
+
+-- Worst function I have ever wrote.
 local function scoreSystem(updated, selectedScoreSystem, irizz, select, playContext)
 	local judges = allJudges[selectedScoreSystem]
 
@@ -182,7 +194,12 @@ local function scoreSystem(updated, selectedScoreSystem, irizz, select, playCont
 		end
 
 		local prevJudge = irizz.judge
-		irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, nil, Text.judgement)
+
+		if irizz.scoreSystem == "Lunatic rave 2" then
+			irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, formatLunaticRave, Text.judgement)
+		else
+			irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, nil, Text.judgement)
+		end
 
 		local alias = metadata[selectedScoreSystem].rangeValueAlias
 		local judge = irizz.judge
@@ -222,6 +239,8 @@ local function scoreSystem(updated, selectedScoreSystem, irizz, select, playCont
 		playContext.timings = table_util.deepcopy(timings.etterna)
 	elseif ss == "Quaver" then
 		playContext.timings = table_util.deepcopy(timings.quaver)
+	elseif ss == "Lunatic rave 2" then
+		playContext.timings = table_util.deepcopy(timings.lr2)
 	end
 end
 
