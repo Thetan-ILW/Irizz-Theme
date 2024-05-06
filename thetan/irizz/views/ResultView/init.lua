@@ -21,6 +21,7 @@ ResultView.currentJudgeName = ""
 ResultView.currentJudge = 0
 
 local osuSkin = nil
+local usesOsuSkin = false
 
 local loading = false
 local canDraw = false
@@ -33,16 +34,18 @@ ResultView.load = thread.coro(function(self)
 
 	self.game.resultController:load()
 
-	local actionModel = self.game.actionModel
-	self.inputMap = InputMap(self, actionModel)
+	local action_model = self.game.actionModel
+	self.inputMap = InputMap(self, action_model)
 
-	local audioSource = "preview"
+	local audio_source = "preview"
 
-	if self.game.gameView:getViewName(self.prevView) == "gameplay" then
-		audioSource = "gameplay"
+	local is_after_gameplay = self.game.gameView:getViewName(self.prevView) == "gameplay"
+
+	if is_after_gameplay == "gameplay" then
+		audio_source = "gameplay"
 	end
 
-	self.layersView = LayersView(self.game, "result", audioSource)
+	self.layersView = LayersView(self.game, "result", audio_source)
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
@@ -59,12 +62,20 @@ ResultView.load = thread.coro(function(self)
 			osuSkin.name = selected_osu_skin
 		end
 
-		self.viewConfig = OsuViewConfig(self.game, osuSkin)
+		if osuSkin then
+			Theme.sounds.osuResult = osuSkin.sounds
+		end
+
+		Theme:updateVolume(self.game)
+
 		self.header = nil
+		self.viewConfig = OsuViewConfig(self.game, osuSkin, is_after_gameplay)
+		usesOsuSkin = true
 	else
 		self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
 		self.header = Header(self.game, "result")
 		self.viewConfig.scoreListView:reloadItems()
+		usesOsuSkin = false
 	end
 
 	self.judgements = self.game.rhythmModel.scoreEngine.scoreSystem.judgements
@@ -82,6 +93,10 @@ ResultView.load = thread.coro(function(self)
 	canDraw = true
 	loading = false
 end)
+
+function ResultView:unload()
+	self.viewConfig:unload()
+end
 
 function ResultView:update()
 	self.layersView:update()
@@ -122,6 +137,13 @@ end
 
 function ResultView:quit()
 	self.game.rhythmModel.audioEngine:unload()
+
+	if usesOsuSkin and osuSkin then
+		if osuSkin.sounds.menuBack then
+			osuSkin.sounds.menuBack:play()
+		end
+	end
+
 	self:changeScreen("selectView")
 end
 
@@ -140,7 +162,6 @@ ResultView.loadScore = thread.coro(function(self, itemIndex)
 
 	if itemIndex then
 		self.game.selectModel:scrollScore(nil, itemIndex)
-		self:updateJudgements()
 	end
 
 	self.viewConfig:loadScore(self)
@@ -162,6 +183,12 @@ ResultView.play = thread.coro(function(self, mode)
 
 	if isResult then
 		return self.view:reload()
+	end
+
+	if usesOsuSkin and osuSkin then
+		if osuSkin.sounds.switchScreen then
+			osuSkin.sounds.switchScreen:play()
+		end
 	end
 
 	self:changeScreen("gameplayView")

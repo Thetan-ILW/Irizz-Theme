@@ -639,11 +639,11 @@ localization.fonts = {
 
 	osuResultView = {
 		title = { "ZenMaruGothic-Black", 36 },
-		creator = { "Titillium-Web-Regular", 24 },
-		playInfo = { "Titillium-Web-Regular", 24 },
-		accuracy = { "Titillium-Web-Regular", 20 },
-		graphInfo = { "Titillium-Web-Regular", 18 },
-		pp = { "Titillium-Web-SemiBold", 36 },
+		creator = { "ZenMaruGothic-Regular", 24 },
+		playInfo = { "ZenMaruGothic-Regular", 24 },
+		accuracy = { "ZenMaruGothic-Regular", 20 },
+		graphInfo = { "ZenMaruGothic-Regular", 18 },
+		pp = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	multiplayerView = {

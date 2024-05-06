@@ -54,7 +54,10 @@ local buttonHoverShader
 
 local modifierIconImages = {}
 
-function OsuViewConfig:new(game, _assets)
+---@param game sphere.GameController
+---@param _assets table
+---@param after_gameplay boolean
+function OsuViewConfig:new(game, _assets, after_gameplay)
 	assets = _assets
 
 	if not assets then
@@ -184,6 +187,18 @@ function OsuViewConfig:new(game, _assets)
 		return texturecolor * color;
         }
 	]])
+
+	if after_gameplay then
+		if assets.sounds.applause then
+			assets.sounds.applause:play()
+		end
+	end
+end
+
+function OsuViewConfig:unload()
+	if assets.sounds.applause then
+		assets.sounds.applause:stop()
+	end
 end
 
 function OsuViewConfig.panels() end
@@ -305,11 +320,6 @@ function OsuViewConfig:loadScore(view)
 
 	modsFormatted = Theme:getModifierString(modifiers)
 	username = view.game.configModel.configs.online.user.name or Text.guest
-
-	-- 9 NLN
-	-- 11 automap
-	-- 16 mirror
-	-- 17 random
 
 	modifierIconImages = {}
 

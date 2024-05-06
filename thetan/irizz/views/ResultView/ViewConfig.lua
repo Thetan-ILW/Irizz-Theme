@@ -66,6 +66,8 @@ function ViewConfig:new(game, custom_config)
 	HitGraph.showLoadedScore = showLoadedScore
 end
 
+function ViewConfig:unload() end
+
 function ViewConfig:loadScore(view)
 	local chartview = view.game.selectModel.chartview
 	local chartdiff = view.game.playContext.chartdiff

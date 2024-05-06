@@ -3,6 +3,7 @@ local defaultLocalization = require("irizz.localization.en")
 local table_util = require("table_util")
 local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
 local utf8validate = require("utf8validate")
+local audio = require("audio")
 
 local Assets = {}
 
@@ -174,6 +175,22 @@ local function findImage(path)
 	return nil
 end
 
+local audio_format = {
+	"ogg",
+	"mp3",
+	"wav",
+}
+
+local function findAudio(path)
+	for _, format in ipairs(audio_format) do
+		local audio_path = path .. "." .. format
+
+		if love.filesystem.getInfo(audio_path) then
+			return audio_path
+		end
+	end
+end
+
 local function getImageFont(group)
 	local font = {}
 
@@ -197,6 +214,15 @@ local function loadImage(path)
 	end
 
 	return nil
+end
+
+local function loadAudio(path)
+	local source = love.filesystem.getSource()
+	path = findAudio(path)
+
+	if path then
+		return audio.newFileSource(source .. "/" .. path)
+	end
 end
 
 function Assets:getOsuResultAssets(skin_path)
@@ -257,6 +283,12 @@ function Assets:getOsuResultAssets(skin_path)
 			automap8 = loadImage(skin_path .. "selection-mod-key8"),
 			automap9 = loadImage(skin_path .. "selection-mod-key9"),
 			automap10 = loadImage(skin_path .. "selection-mod-key10"),
+		},
+
+		sounds = {
+			applause = loadAudio(skin_path .. "applause"),
+			menuBack = loadAudio(skin_path .. "menuback"),
+			switchScreen = loadAudio(skin_path .. "menuhit"),
 		},
 	}
 
