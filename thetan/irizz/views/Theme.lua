@@ -174,7 +174,9 @@ function Theme:updateVolume(game)
 
 	local volume = irizz.uiVolume * v.master
 	for _, item in pairs(self.sounds) do
-		if type(item) == "table" then
+		if item.setVolume then
+			item:setVolume(volume)
+		else -- table
 			for _, sound in pairs(item) do
 				if not sound.setVolume then
 					break
@@ -182,8 +184,6 @@ function Theme:updateVolume(game)
 
 				sound:setVolume(volume)
 			end
-		else
-			item:setVolume(volume)
 		end
 	end
 end
