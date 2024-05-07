@@ -65,8 +65,12 @@ function ViewConfig:updateInfo(view)
 	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
 
 	if diffColumn == "msd_diff" and chartview.msd_diff_data then
-		difficultyValue = Theme.getApproximate(diff, chartview.msd_diff_data, timeRate)
-		patterns = Theme.getMaxAndSecondFromSsr(chartview.msd_diff_data) or Text.noPatterns
+		local msd = Theme.getMsdFromData(chartview.msd_diff_data, timeRate)
+
+		if msd then
+			difficultyValue = msd.overall
+			patterns = Theme.getMaxAndSecondFromMsd(msd) or Text.noPatterns
+		end
 	end
 
 	difficultyColor = Theme:getDifficultyColor(difficultyValue, diffColumn)

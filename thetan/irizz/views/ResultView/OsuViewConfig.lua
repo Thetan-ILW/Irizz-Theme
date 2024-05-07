@@ -261,8 +261,9 @@ function OsuViewConfig:loadScore(view)
 	difficultyFormatted = ("[%0.02f*]"):format(difficulty)
 
 	if diff_column == "msd_diff" and chartdiff.msd_diff_data then
-		difficulty = chartdiff.msd_diff
-		patterns = Theme.getFirstFromSsr(chartdiff.msd_diff_data) or ""
+		local msd = Theme.getMsdFromData(chartdiff.msd_diff_data, time_rate)
+		difficulty = msd.overall
+		patterns = Theme.getFirstFromMsd(msd)
 		patterns = Theme.simplifySsr(patterns)
 		difficultyFormatted = ("[%0.02f %s]"):format(difficulty, patterns)
 	end

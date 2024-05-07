@@ -35,6 +35,7 @@ end
 function ChartInfoModal:onShow()
 	local items = self.game.selectModel.noteChartLibrary.items
 	local index = self.game.selectModel.chartview_index
+	local timeRateModel = self.game.timeRateModel
 
 	self.infoCache = {}
 	self.ssrCache = ""
@@ -53,7 +54,7 @@ function ChartInfoModal:onShow()
 		return
 	end
 
-	local ssr = Theme.getSsrPatterns(item.msd_diff_data)
+	local ssr = Theme.getMsdFromData(item.msd_diff_data, timeRateModel:get())
 
 	if not ssr then
 		return

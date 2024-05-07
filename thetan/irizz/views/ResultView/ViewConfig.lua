@@ -81,8 +81,9 @@ function ViewConfig:loadScore(view)
 	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
 
 	if diff_column == "msd_diff" and chartdiff.msd_diff_data then
-		difficulty = chartdiff.msd_diff
-		patterns = Theme.getMaxAndSecondFromSsr(chartdiff.msd_diff_data):upper() or Text.noPatterns
+		local msd = Theme.getMsdFromData(chartdiff.msd_diff_data, time_rate)
+		difficulty = msd.overall
+		patterns = Theme.getMaxAndSecondFromMsd(msd):upper() or Text.noPatterns
 	end
 
 	difficultyColor = Theme:getDifficultyColor(difficulty, diff_column)

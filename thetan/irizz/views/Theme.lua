@@ -1,7 +1,15 @@
 local assets = require("thetan.irizz.assets")
 local gfx_util = require("gfx_util")
 local math_util = require("math_util")
-local _, etterna_ssr = pcall(require, "libchart.libchart.etterna_ssr")
+local has_minacalc, etterna_msd = pcall(require, "libchart.libchart.etterna_msd")
+
+if has_minacalc then
+	if etterna_msd.getVersion then
+		assert(etterna_msd.getVersion() == "0.1.2", "Update to the latest MinaCalc version.")
+	else
+		assert(false, "Update to the latest MinaCalc version.")
+	end
+end
 
 local ModifierEncoder = require("sphere.models.ModifierEncoder")
 local ModifierModel = require("sphere.models.ModifierModel")
@@ -213,26 +221,24 @@ function Theme.formatDiffColumns(v)
 	return diff_columns_names[v] or ""
 end
 
-function Theme.getMaxAndSecondFromSsr(ssrStr)
-	local ssr = etterna_ssr:decodePatterns(ssrStr)
-
+function Theme.getMaxAndSecondFromMsd(msd)
 	local maxValue = 0
 	local secondValue = 0
 	local maxKey = nil
 	local secondKey = nil
 
-	for key, value in pairs(ssr) do
+	for key, value in pairs(msd) do
 		value = tonumber(value)
-		if value > maxValue then
+		if value > maxValue and key ~= "overall" then
 			maxValue = value
 			maxKey = key
 		end
 	end
 
 	local threshold = maxValue * 0.93
-	for key, value in pairs(ssr) do
+	for key, value in pairs(msd) do
 		value = tonumber(value)
-		if value < maxValue and value >= threshold and value > secondValue then
+		if value < maxValue and value >= threshold and value > secondValue and key ~= "overall" then
 			secondValue = tonumber(value)
 			secondKey = key
 		end
@@ -246,14 +252,12 @@ function Theme.getMaxAndSecondFromSsr(ssrStr)
 	return output
 end
 
-function Theme.getFirstFromSsr(ssrStr)
-	local ssr = etterna_ssr:decodePatterns(ssrStr)
-
+function Theme.getFirstFromMsd(msd)
 	local maxKey = nil
 	local maxValue = 0
-	for key, value in pairs(ssr) do
+	for key, value in pairs(msd) do
 		value = tonumber(value)
-		if value > maxValue then
+		if value > maxValue and key ~= "overall" then
 			maxValue = value
 			maxKey = key
 		end
@@ -282,93 +286,29 @@ function Theme.simplifySsr(pattern)
 	return "NONE"
 end
 
-function Theme.getSsrPatterns(ssrStr)
-	if type(etterna_ssr) ~= "table" then
+function Theme.getMsdPatterns(msd_data)
+	if type(etterna_msd) ~= "table" then
 		return nil
 	end
 
-	local ssr = etterna_ssr:decodePatterns(ssrStr)
+	local ssr = etterna_msd:decode(msd_data)
 	return ssr
 end
 
 function Theme.getSsrPatternNames()
-	return etterna_ssr.orderedPatterns
+	return etterna_msd.orderedSsr
 end
 
-local startRate = 5
-local endRate = 20
-
-local rates = {
-	[5] = -9.596700450446,
-	[6] = -7.5957415414244,
-	[7] = -5.6011114260133,
-	[8] = -3.6665763668184,
-	[9] = -1.8159235652606,
-	[10] = 0,
-	[11] = 1.8084870281745,
-	[12] = 3.5579764407329,
-	[13] = 5.226905998569,
-	[14] = 6.7957089410407,
-	[15] = 8.242713109125,
-	[16] = 9.518206709407,
-	[17] = 10.62611215231,
-	[18] = 11.578847354464,
-	[19] = 12.382336869914,
-	[20] = 13.073366502886,
-}
-
-local patternWeight = {
-	stream = 1.08,
-	jumpstream = 1.2,
-	handstream = 1,
-	stamina = 1.02,
-	jackspeed = 1.2,
-	chordjack = 1.4,
-	technical = 0.99,
-}
-
-local function interpolate(x1, y1, x2, y2, x)
-	return y1 + (x - x1) * (y2 - y1) / (x2 - x1)
-end
-
-function Theme.getApproximate(overall, patterns, timeRate)
-	local index = math.floor(timeRate * 10)
-	local fraction = (timeRate * 10) - index
-
-	local ssr = etterna_ssr:decodePatterns(patterns)
-	local maxValue = 0
-	local maxKey = nil
-
-	for key, value in pairs(ssr) do
-		value = tonumber(value)
-		if value > maxValue then
-			maxValue = value
-			maxKey = key
-		end
+function Theme.getMsdFromData(msd_data, time_rate)
+	if not has_minacalc then
+		return nil
 	end
 
-	if not maxKey then
-		return 0
+	local msds = etterna_msd:decode(msd_data)
+
+	if msds then
+		return etterna_msd.getApproximate(msds, time_rate)
 	end
-
-	local additional = patternWeight[maxKey]
-	local approximate = 0
-
-	if index < startRate then
-		approximate = rates[startRate]
-	elseif index >= endRate then
-		approximate = rates[endRate]
-	elseif fraction == 0 then
-		approximate = rates[index]
-	else
-		local x1 = index / 10
-		local y1 = rates[index]
-		local x2 = (index + 1) / 10
-		local y2 = rates[index + 1]
-		approximate = interpolate(x1, y1, x2, y2, timeRate)
-	end
-
-	return overall + (approximate * additional)
 end
 
 local filterAliasses = {

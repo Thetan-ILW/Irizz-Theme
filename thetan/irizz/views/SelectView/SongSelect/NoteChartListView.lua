@@ -39,7 +39,8 @@ function NoteChartListView:reloadItems()
 		local diff = item.difficulty or 0
 
 		if diffColumn == "msd_diff" and item.msd_diff_data then
-			diff = Theme.getApproximate(diff, item.msd_diff_data, timeRate)
+			local msd = Theme.getMsdFromData(item.msd_diff_data, timeRate)
+			diff = msd and msd.overall or 0
 		else
 			diff = diff * timeRate
 		end
