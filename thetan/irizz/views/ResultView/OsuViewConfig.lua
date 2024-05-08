@@ -278,7 +278,7 @@ function OsuViewConfig:loadScore(view)
 		od = 9
 	end
 
-	ppFormatted = ("%i PP"):format(Theme.getPP(judge.notes, chartview.osu_diff, od, score))
+	ppFormatted = ("%i PP"):format(Theme.getPP(judge.notes, chartview.osu_diff * timeRate, od, score))
 
 	local playContext = view.game.playContext
 	local timings = playContext.timings
