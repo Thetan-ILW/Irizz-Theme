@@ -9,7 +9,7 @@ local Assets = {}
 
 local gfx = love.graphics
 local audioExt = { ".wav", ".ogg", ".mp3" }
-local imageExt = { ".png", ".jpg", ".jpeg" }
+local imageExt = { ".png", ".jpg", ".jpeg", ".bmp", ".tga" }
 
 local function getIrizzItems(directory, cutExtension)
 	local internal = love.filesystem.getDirectoryItems("irizz/" .. directory)
@@ -179,18 +179,10 @@ local char_alias = {
 	percent = "%",
 }
 
-local image_format = {
-	"png",
-	"jpg",
-	"jpeg",
-	"bmp",
-	"tga",
-}
-
 local function findImage(path)
-	for _, format in ipairs(image_format) do
-		local normal = path .. "." .. format
-		local double = path .. "@2x." .. format
+	for _, format in ipairs(imageExt) do
+		local normal = path .. format
+		local double = path .. "@2x" .. format
 
 		if love.filesystem.getInfo(double) then
 			return double
@@ -214,7 +206,7 @@ end
 
 local function findAudio(path)
 	for _, format in ipairs(audioExt) do
-		local audio_path = path .. "." .. format
+		local audio_path = path .. format
 
 		if love.filesystem.getInfo(audio_path) then
 			return audio_path
