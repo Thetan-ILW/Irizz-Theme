@@ -21,19 +21,19 @@ function MountsModal:hide()
 		return
 	end
 
-    self:onHide()
+	self:onHide()
 
-    if self.showTween then
-        self.showTween:stop()
-        self.showTween = nil
-    end
+	if self.showTween then
+		self.showTween:stop()
+		self.showTween = nil
+	end
 
-    self.hideTween = flux.to(self, 0.44, {alpha = -1}):ease("quadout")
+	self.hideTween = flux.to(self, 0.44, { alpha = -1 }):ease("quadout")
 end
 
 function MountsModal:new(game)
-    self.game = game
-    self.viewConfig.mountsListView = MountsListView(game)
+	self.game = game
+	self.viewConfig.mountsListView = MountsListView(game)
 end
 
 return MountsModal

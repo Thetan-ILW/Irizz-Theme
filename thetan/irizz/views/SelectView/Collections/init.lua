@@ -88,6 +88,12 @@ function ViewConfig:osuDirectSearch(view)
 	if delAll then
 		view.game.osudirectModel:setSearchString("")
 	end
+
+	w, h = Layout:move("searchField")
+
+	if just.button("osuDirectFilterLineButton", just.is_over(w, h)) then
+		view:openModal("thetan.irizz.views.modals.FiltersModal")
+	end
 end
 
 function ViewConfig:osuDirectDownloadQueue(view)

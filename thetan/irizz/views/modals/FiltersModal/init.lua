@@ -7,6 +7,10 @@ FiltersModal.name = "FiltersModal"
 FiltersModal.viewConfig = ViewConfig()
 
 function FiltersModal:onQuit()
+	if self.game.selectView:isInOsuDirect() then
+		return
+	end
+
 	self.game.selectModel:noDebouncePullNoteChartSet()
 	self.game.selectModel:pullScore()
 	self.game.selectView:updateFilterLines()

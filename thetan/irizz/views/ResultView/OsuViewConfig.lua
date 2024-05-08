@@ -230,7 +230,7 @@ function OsuViewConfig:loadScore(view)
 	perfectValue.value = judge.counters[counterNames[2]]
 	missValue.value = judge.counters["miss"]
 
-	if judgeName ~= "Soundsphere" then
+	if judgeName ~= "soundsphere" then
 		greatValue.value = judge.counters[counterNames[3]]
 		goodValue.value = judge.counters[counterNames[4]]
 		badValue.value = judge.counters[counterNames[5]]

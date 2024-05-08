@@ -130,6 +130,10 @@ local function searchField(view)
 	w, h = Layout:move("search")
 	love.graphics.setFont(font.filterLine)
 	Theme:textWithShadow(view.chartFilterLine, w, h, "center", "bottom")
+
+	if just.button("filterLineButton", just.is_over(w, h)) then
+		view:openModal("thetan.irizz.views.modals.FiltersModal")
+	end
 end
 
 function ViewConfig:noteChartSets(view)
