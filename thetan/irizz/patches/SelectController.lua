@@ -26,7 +26,7 @@ modulePatcher:insert(module, "update", function(self)
 
 	local selectModel = self.selectModel
 	if selectModel:isChanged() then
-		self.backgroundModel:setBackgroundPath(selectModel:getBackgroundPath())
+		self.backgroundModel:setBackgroundPath(selectModel.chartview)
 		self.previewModel:setAudioPathPreview(selectModel:getAudioPathPreview())
 		self:applyModifierMeta()
 		self.view:notechartChanged()
