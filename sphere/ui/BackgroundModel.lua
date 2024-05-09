@@ -111,7 +111,7 @@ function BackgroundModel:setBackgroundPath(chartview)
 		return
 	end
 
-	local background_path = chartview.location_dir .. "/" .. chartview.background_path
+	local background_path = chartview.location_dir .. "/" .. (chartview.background_path or "")
 
 	if chartview.format == "sm" then
 		if not self.chartview or (self.chartview.location_dir ~= chartview.location_dir) then
