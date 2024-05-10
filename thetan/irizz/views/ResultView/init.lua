@@ -41,8 +41,14 @@ ResultView.load = thread.coro(function(self)
 
 	local is_after_gameplay = self.game.gameView:getViewName(self.prevView) == "gameplay"
 
-	if is_after_gameplay == "gameplay" then
+	if is_after_gameplay then
 		audio_source = "gameplay"
+		local audio_engine = self.game.rhythmModel.audioEngine
+		local music_volume = (audio_engine.volume.master * audio_engine.volume.music) * 0.3
+		local effects_volume = (audio_engine.volume.master * audio_engine.volume.effects) * 0.3
+
+		audio_engine.backgroundContainer:setVolume(music_volume)
+		audio_engine.foregroundContainer:setVolume(effects_volume)
 	end
 
 	self.layersView = LayersView(self.game, "result", audio_source)
