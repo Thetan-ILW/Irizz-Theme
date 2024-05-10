@@ -236,10 +236,12 @@ function ViewConfig:tabButtons()
 
 	if imgui.TextOnlyButton("locationsTab", Text.locations, w, h / 2, "center", tab == Text.locations) then
 		tab = Text.locations
+		Theme:playSound("tabButtonClick")
 	end
 
 	if imgui.TextOnlyButton("databaseTab", Text.database, w, h / 2, "center", tab == Text.database) then
 		tab = Text.database
+		Theme:playSound("tabButtonClick")
 	end
 
 	Layout:move("buttons")

@@ -118,15 +118,18 @@ function ViewConfig:collectionsButtons(view)
 	w, h = Layout:move("button1")
 
 	if imgui.TextOnlyButton("cache", Text.cache, w, h) then
+		Theme:playSound("tabButtonClick")
 	end
 
 	if imgui.TextOnlyButton("osuDirect", Text.osuDirect, w, h) then
 		self:setMode(view, "osu!direct")
+		Theme:playSound("tabButtonClick")
 	end
 
 	w, h = Layout:move("button3")
 	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
 		view:openModal("thetan.irizz.views.modals.MountsModal")
+		Theme:playSound("tabButtonClick")
 	end
 
 	w, h = Layout:move("buttons")

@@ -37,6 +37,10 @@ end
 ---@param count number
 function CollectionListView:scroll(count)
 	self.game.selectModel:scrollCollection(count)
+
+	if math.abs(count) ~= 1 then
+		return
+	end
 	self:playSound()
 end
 
