@@ -417,6 +417,7 @@ localization.textKeybinds = {
 localization.textNotification = {
 	volume = "Volume: %i%%",
 	chartStarted = "%s - %s [%s]\nLength: %s",
+	exportToOsu = "Exported to .osu file",
 }
 
 localization.keybindsGlobal = {

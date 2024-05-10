@@ -49,6 +49,10 @@ function SelectInputMap:createBindings(sv)
 		["openResult"] = function()
 			sv:result()
 		end,
+		["exportToOsu"] = function()
+			sv.game.selectController:exportToOsu()
+			sv.gameView.showMessage("exportToOsu", nil)
+		end,
 	}
 
 	self.view = {

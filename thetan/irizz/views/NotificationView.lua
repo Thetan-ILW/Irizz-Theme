@@ -15,6 +15,7 @@ local show_time = 0
 local message_font
 
 local messages = {
+	exportToOsu = Text.exportToOsu,
 	volumeChanged = Text.volume,
 	chartStarted = Text.chartStarted,
 }

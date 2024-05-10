@@ -7,6 +7,7 @@ return {
 	random = "f2",
 	decreaseTimeRate = "f5",
 	increaseTimeRate = "f6",
+	exportToOsu = { mod = { "ctrl", "shift", "o" } },
 
 	-- Modals
 	showKeybinds = { mod = { "ctrl", "k" } },

@@ -4,6 +4,7 @@ return {
 	normalMode = "escape",
 	deleteLine = { op = { "d", "d" } },
 	quit = { mod = { "shift", "escape" } },
+	exportToOsu = { op = { "e", "o" } },
 
 	-- Modals
 	showKeybinds = { op = { "o", "k" } },
