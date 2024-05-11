@@ -203,6 +203,8 @@ localization.textCollections = {
 	redownload = "Redownload",
 	wait = "Wait...",
 	osuDirectSearchPlaceholder = "Type to search...",
+	locations = "Locations",
+	directories = "Directories",
 }
 
 localization.textChartList = {

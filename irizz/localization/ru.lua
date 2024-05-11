@@ -184,16 +184,15 @@ localization.textSongSelect = {
 }
 
 localization.textCollections = {
-	cache = "Кэш",
 	collections = "Коллекции",
 	osuDirect = "osu!direct",
-	mounts = "Ручная установка",
-	searching = "Статус: поиск карт: %d",
-	creatingCache = "Статус: создания кэша: %0.2f%%",
+	mounts = "Монтирование",
 	download = "Загрузить",
-	redownload = "Перезагрузить",
+	redownload = "Загрузить заново",
 	wait = "Подождите...",
-	osuDirectSearchPlaceholder = "Нажмите чтобы найти...",
+	osuDirectSearchPlaceholder = "Введите чтобы найти...",
+	locations = "Locations",
+	directories = "Directories",
 }
 
 localization.textChartList = {

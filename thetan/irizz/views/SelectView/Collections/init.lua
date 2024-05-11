@@ -117,7 +117,15 @@ function ViewConfig:collectionsButtons(view)
 
 	w, h = Layout:move("button1")
 
-	if imgui.TextOnlyButton("cache", Text.cache, w, h) then
+	local configs = view.game.configModel.configs
+	local settings = configs.settings
+	local ss = settings.select
+
+	local text = ss.locations_in_collections and Text.locations or Text.directories
+
+	if imgui.TextOnlyButton("locations", text, w, h) then
+		ss.locations_in_collections = not ss.locations_in_collections
+		view.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
 		Theme:playSound("tabButtonClick")
 	end
 

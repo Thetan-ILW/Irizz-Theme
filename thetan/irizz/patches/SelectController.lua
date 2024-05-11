@@ -26,7 +26,14 @@ modulePatcher:insert(module, "update", function(self)
 
 	local selectModel = self.selectModel
 	if selectModel:isChanged() then
-		self.backgroundModel:setBackgroundPath(selectModel.chartview)
+		local cv = selectModel.chartview
+
+		if cv then
+			self.backgroundModel:setBackgroundPath(cv.location_dir, cv.background_path or "", cv.format)
+		else
+			self.backgroundModel:setBackgroundPath()
+		end
+
 		self.previewModel:setAudioPathPreview(selectModel:getAudioPathPreview())
 		self:applyModifierMeta()
 		self.view:notechartChanged()
@@ -36,7 +43,7 @@ modulePatcher:insert(module, "update", function(self)
 	if osudirectModel:isChanged() then
 		local backgroundUrl = osudirectModel:getBackgroundUrl()
 		local previewUrl = osudirectModel:getPreviewUrl()
-		self.backgroundModel:setBackgroundPath(backgroundUrl)
+		self.backgroundModel:setBackgroundPath(nil, backgroundUrl, "http")
 		self.previewModel:setAudioPathPreview(previewUrl)
 	end
 

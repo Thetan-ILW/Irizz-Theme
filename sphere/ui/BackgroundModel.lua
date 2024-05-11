@@ -89,11 +89,11 @@ function BackgroundModel:getStepmaniaBackground(chart_path, background_name)
 end
 
 function BackgroundModel:findImageOrDefault()
-	if self.chartview.format == "sm" then
-		local image = self:getStepmaniaBackground(self.chartview.location_dir, self.path)
+	if self.format == "sm" then
+		local image = self:getStepmaniaBackground(self.location_dir, self.background_path)
 
 		if image then
-			return self:loadImage(self.chartview.location_dir .. "/" .. image)
+			return self:loadImage(self.location_dir .. "/" .. image)
 		end
 	end
 
@@ -105,25 +105,28 @@ function BackgroundModel:findImageOrDefault()
 	return self.defaultImages[randomIndex]
 end
 
----@param chartview table?
-function BackgroundModel:setBackgroundPath(chartview)
-	if not chartview then
+---@param location_dir string?
+---@param background_path string?
+---@param format string
+function BackgroundModel:setBackgroundPath(location_dir, background_path, format)
+	if not format then
+		self.path = nil
+		self:loadBackgroundDebounce()
 		return
 	end
 
-	local background_path = chartview.location_dir .. "/" .. (chartview.background_path or "")
-
-	if chartview.format == "sm" then
-		if not self.chartview or (self.chartview.location_dir ~= chartview.location_dir) then
-			self.chartview = chartview
-			self:loadBackgroundDebounce(chartview.background_path)
-		end
-		return
-	end
-
-	if self.path ~= background_path then
-		self.chartview = chartview
+	if format == "http" then
 		self:loadBackgroundDebounce(background_path)
+		return
+	end
+
+	local path = location_dir .. "/" .. background_path
+
+	if self.path ~= path then
+		self.location_dir = location_dir
+		self.background_path = background_path
+		self.format = format
+		self:loadBackgroundDebounce(path)
 	end
 end
 

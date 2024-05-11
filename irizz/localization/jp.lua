@@ -192,7 +192,6 @@ localization.textSongSelect = {
 }
 
 localization.textCollections = {
-	cache = "キャッシュ",
 	collections = "コレクション",
 	osuDirect = "osu!direct",
 	mounts = "マウント",
@@ -202,6 +201,8 @@ localization.textCollections = {
 	redownload = "再ダウンロード",
 	wait = "少しお待ちください...",
 	osuDirectSearchPlaceholder = "検索するには入力してください...",
+	locations = "Locations",
+	directories = "Directories",
 }
 
 localization.textScoreList = {
