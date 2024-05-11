@@ -83,12 +83,13 @@ function GameplayView:draw()
 	local isPlaying = multiplayerModel.room and multiplayerModel.isPlaying
 	if
 		not love.window.hasFocus()
-		and state == "play"
+		and state ~= "pause"
 		and not self.game.rhythmModel.logicEngine.autoplay
 		and not isPlaying
 		and self.game.rhythmModel.inputManager.mode ~= "internal"
 	then
 		self.game.gameplayController:pause()
+		self.pauseScreen:show()
 	end
 end
 

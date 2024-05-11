@@ -627,13 +627,15 @@ function OsuViewConfig:draw(view)
 		return
 	end
 
-	local w, h = Layout:move("base")
+	local w, h = gfx.getDimensions()
+	gfx.origin()
+
 	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.setFont(font.pp)
-	gyatt.frame(ppFormatted, -20, 0, w, h, "right", "bottom")
+	gfx.scale(1)
+	gyatt.frame(ppFormatted, -10, 0, w, h, "right", "bottom")
 
 	if customConfig then
-		gfx.origin()
 		customConfig:draw()
 	end
 end

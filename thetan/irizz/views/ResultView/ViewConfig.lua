@@ -261,7 +261,7 @@ function ViewConfig:scoringStats(view)
 		scrollSpeed = "Const"
 	end
 
-	local pauses = playContext.pauses or 0
+	local pauses = scoreItem.pauses or 999
 	local grade = Scoring.getGrade(scoreSystemName, judge.accuracy)
 	local gradeColor = Scoring.gradeColors[scoreSystemName][grade]
 
