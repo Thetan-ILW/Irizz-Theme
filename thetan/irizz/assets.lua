@@ -313,6 +313,8 @@ function Assets:getOsuResultAssets(skin_path)
 			menuBack = loadAudio(skin_path .. "menuback"),
 			switchScreen = loadAudio(skin_path .. "menuhit"),
 		},
+
+		customConfig = love.filesystem.load(skin_path .. "ResultViewConfig.lua"),
 	}
 
 	return t

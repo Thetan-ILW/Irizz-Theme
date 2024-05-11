@@ -15,6 +15,7 @@ local font
 local OsuViewConfig = class()
 
 local assets
+local customConfig
 
 local judge
 local judgeName
@@ -192,6 +193,11 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		if assets.sounds.applause then
 			assets.sounds.applause:play()
 		end
+	end
+
+	if assets.customConfig then
+		customConfig = assets.customConfig()
+		customConfig:load(game)
 	end
 end
 
@@ -625,6 +631,11 @@ function OsuViewConfig:draw(view)
 	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.setFont(font.pp)
 	gyatt.frame(ppFormatted, -20, 0, w, h, "right", "bottom")
+
+	if customConfig then
+		gfx.origin()
+		customConfig:draw()
+	end
 end
 
 return OsuViewConfig
