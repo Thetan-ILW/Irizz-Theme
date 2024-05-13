@@ -770,7 +770,14 @@ function SettingsTab:Version(view)
 	m.autoUpdate = imgui.checkbox("autoUpdate", m.autoUpdate, Text.autoUpdate)
 
 	imgui.separator()
-	just.text("Irizz theme: " .. IRIZZ_VERSION)
+	if NOESIS_INSTALLED then
+		just.text("Noesis: " .. NOESIS_VERSION)
+	end
+
+	if IRIZZ_VERSION then
+		just.text("Irizz theme: " .. IRIZZ_VERSION)
+	end
+
 	just.text(Text.commit .. version.commit)
 	just.text(Text.commitDate .. version.date)
 
