@@ -8,10 +8,13 @@ local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textNoteSkins
 local Font = Theme:getFonts("noteSkinModal")
+local Container = require("thetan.gyatt.Container")
 
 local Layout = require("thetan.irizz.views.modals.NoteSkinModal.Layout")
 
 local ViewConfig = {}
+
+ViewConfig.container = Container("settingsContainer")
 
 function ViewConfig:noteSkins(view)
 	local w, h = Layout:move("noteSkins")
@@ -21,20 +24,18 @@ function ViewConfig:noteSkins(view)
 	Theme:border(w, h)
 end
 
-local scrollYconfig = 0
-
 function ViewConfig:noteSkinSettings(view)
 	local w, h = Layout:move("noteSkinSettings")
 	Theme:panel(w, h)
 	Theme:border(w, h)
 
-	local selectedNoteSkin = self.noteSkinListView.selectedNoteSkin
+	self.selectedNoteSkin = self.noteSkinListView.selectedNoteSkin
 
-	if not selectedNoteSkin then
+	if not self.selectedNoteSkin then
 		return
 	end
 
-	local config = selectedNoteSkin.config
+	local config = self.selectedNoteSkin.config
 	if not config or not config.draw then
 		love.graphics.setFont(Font.noSettings)
 		love.graphics.setColor(Color.text)
@@ -43,14 +44,15 @@ function ViewConfig:noteSkinSettings(view)
 	end
 
 	love.graphics.setFont(Font.noteSkinSettings)
-	just.push()
-	imgui.Container("NoteSkinView", w, h, h / 20, h, scrollYconfig)
+	local startHeight = just.height
+	self.container:startDraw(w, h)
+	love.graphics.setColor(Color.text)
 	config:draw(w, h)
-	scrollYconfig = imgui.Container()
-	just.pop()
+	self.container.scrollLimit = just.height - startHeight - h
+	self.container.stopDraw()
 end
 
-function ViewConfig:selectedNoteSkin(view)
+function ViewConfig:noteSkinName(view)
 	local w, h = Layout:move("selectedNoteSkin")
 
 	if not self.noteSkinListView.selectedNoteSkin then
@@ -85,7 +87,7 @@ function ViewConfig:draw(view)
 
 	self:noteSkins(view)
 	self:noteSkinSettings(view)
-	self:selectedNoteSkin(view)
+	self:noteSkinName(view)
 end
 
 return ViewConfig

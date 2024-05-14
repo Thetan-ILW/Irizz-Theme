@@ -7,9 +7,17 @@ local NoteSkinModal = Modal + {}
 NoteSkinModal.name = "NoteSkins"
 NoteSkinModal.viewConfig = ViewConfig
 
+function NoteSkinModal:onQuit()
+	local note_skin = self.viewConfig.selectedNoteSkin
+
+	if note_skin then
+		note_skin.config:close()
+	end
+end
+
 function NoteSkinModal:new(game)
-    self.game = game
-    ViewConfig.noteSkinListView = NoteSkinListView(game)
+	self.game = game
+	ViewConfig.noteSkinListView = NoteSkinListView(game)
 end
 
 return NoteSkinModal
