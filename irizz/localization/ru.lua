@@ -446,14 +446,8 @@ localization.fontFamilyList = {
 	["ZenMaruGothic-Medium"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Medium.ttf",
 	},
-	["Titillium-Web-Regular"] = {
-		"irizz/fonts/Titillium_Web/TitilliumWeb-Regular.ttf",
-	},
-	["Titillium-Web-SemiBold"] = {
-		"irizz/fonts/Titillium_Web/TitilliumWeb-SemiBold.ttf",
-	},
-	["Titillium-Web-Bold"] = {
-		"irizz/fonts/Titillium_Web/TitilliumWeb-Bold.ttf",
+	["ZenMaruGothic-Regular"] = {
+		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Regular.ttf",
 	},
 }
 
@@ -477,6 +471,7 @@ localization.fonts = {
 		timeRate = { "ZenMaruGothic-Medium", 32 },
 		mods = { "ZenMaruGothic-Medium", 24 },
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
+		noMods = { "ZenMaruGothic-Medium", 18 },
 	},
 
 	collectionsViewConfig = {
@@ -608,11 +603,11 @@ localization.fonts = {
 
 	osuResultView = {
 		title = { "ZenMaruGothic-Black", 36 },
-		creator = { "Titillium-Web-Regular", 24 },
-		playInfo = { "Titillium-Web-Regular", 24 },
-		accuracy = { "Titillium-Web-Regular", 20 },
-		graphInfo = { "Titillium-Web-Regular", 18 },
-		pp = { "Titillium-Web-SemiBold", 36 },
+		creator = { "ZenMaruGothic-Regular", 24 },
+		playInfo = { "ZenMaruGothic-Regular", 24 },
+		accuracy = { "ZenMaruGothic-Regular", 20 },
+		graphInfo = { "ZenMaruGothic-Regular", 18 },
+		pp = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	multiplayerView = {

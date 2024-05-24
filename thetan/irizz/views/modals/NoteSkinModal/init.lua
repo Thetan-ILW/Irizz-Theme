@@ -10,7 +10,7 @@ NoteSkinModal.viewConfig = ViewConfig
 function NoteSkinModal:onQuit()
 	local note_skin = self.viewConfig.selectedNoteSkin
 
-	if note_skin then
+	if note_skin and note_skin.confg then
 		note_skin.config:close()
 	end
 end

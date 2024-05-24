@@ -134,7 +134,12 @@ function Assets:loadLocalization(file, theme)
 	local localization = file
 
 	if type(file) == "string" then
-		localization = love.filesystem.load(file)()
+		local user, internal = getCustomOrInternal("localization/" .. file)
+		if not user and not internal then
+			return
+		end
+
+		localization = love.filesystem.load(user or internal)()
 	end
 
 	for groupName, group in pairs(localization) do

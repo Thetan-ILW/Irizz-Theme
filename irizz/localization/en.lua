@@ -483,15 +483,6 @@ localization.fontFamilyList = {
 	["ZenMaruGothic-Regular"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Regular.ttf",
 	},
-	["Titillium-Web-Regular"] = {
-		"irizz/fonts/Titillium_Web/TitilliumWeb-Regular.ttf",
-	},
-	["Titillium-Web-SemiBold"] = {
-		"irizz/fonts/Titillium_Web/TitilliumWeb-SemiBold.ttf",
-	},
-	["Titillium-Web-Bold"] = {
-		"irizz/fonts/Titillium_Web/TitilliumWeb-Bold.ttf",
-	},
 }
 
 localization.fonts = {
