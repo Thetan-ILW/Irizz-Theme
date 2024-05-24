@@ -244,7 +244,7 @@ function OsuViewConfig:loadScore(view)
 
 	accuracyValue.value = judge.accuracy
 
-	local score = judge.score or view.judgements["osu!mania OD9"].score or 0
+	local score = judge.score or view.judgements["osu!legacy OD9"].score or 0
 	scoreValue.value = score
 
 	local base = view.game.rhythmModel.scoreEngine.scoreSystem["base"]
@@ -268,8 +268,12 @@ function OsuViewConfig:loadScore(view)
 
 	if diff_column == "msd_diff" and chartdiff.msd_diff_data then
 		local msd = Theme.getMsdFromData(chartdiff.msd_diff_data, time_rate)
-		difficulty = msd.overall
-		patterns = Theme.getFirstFromMsd(msd)
+
+		if msd then
+			difficulty = msd.overall
+			patterns = Theme.getFirstFromMsd(msd)
+		end
+
 		patterns = Theme.simplifySsr(patterns)
 		difficultyFormatted = ("[%0.02f %s]"):format(difficulty, patterns)
 	end
@@ -279,7 +283,7 @@ function OsuViewConfig:loadScore(view)
 	grade = Scoring.getGrade(scoreSystemName, judge.accuracy)
 	local od = view.currentJudge
 
-	if scoreSystemName ~= "osuMania" then
+	if scoreSystemName ~= "osuMania" or scoreSystemName ~= "osuLegacy" then
 		grade = Scoring.convertGradeToOsu(grade)
 		od = 9
 	end
