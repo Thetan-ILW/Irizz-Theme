@@ -281,7 +281,7 @@ function Assets:getOsuResultAssets(skin_path)
 		accuracyNameY = skinini.Fonts.accuracyNameY or 0,
 
 		judge = {
-			marvelous = loadImage(skin_path .. "mania-hit300g-0"),
+			marvelous = loadImage(skin_path .. "mania-hit300g"),
 			perfect = loadImage(skin_path .. "mania-hit300"),
 			great = loadImage(skin_path .. "mania-hit200"),
 			good = loadImage(skin_path .. "mania-hit100"),

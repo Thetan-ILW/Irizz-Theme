@@ -79,7 +79,7 @@ function BackgroundModel:getStepmaniaBackground(chart_path, background_name)
 		local comparable = getComparable(itemName)
 
 		for _, name in ipairs(possibleNames) do
-			if comparable:find(name) then
+			if comparable and comparable:find(name) then
 				if isImage(itemName) then
 					return itemName
 				end
