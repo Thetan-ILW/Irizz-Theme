@@ -121,6 +121,10 @@ function Theme:getModifierString(mods)
 		end
 	end
 
+	if modString == "" then
+		return self.textResult.noMods
+	end
+
 	return modString
 end
 

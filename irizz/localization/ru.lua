@@ -322,6 +322,7 @@ localization.textResult = {
 	rating = "Rating: ",
 	mean = "Mean: ",
 	maxError = "Max error: ",
+	noMods = "Без модификаторов",
 }
 
 localization.textOsuResult = {
