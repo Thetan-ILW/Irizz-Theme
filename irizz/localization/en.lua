@@ -125,6 +125,8 @@ localization.textSettings = {
 	transitionAnimation = "Transition animation",
 	fade = "Fade",
 	shutter = "Shutter",
+	chartPreview = "Chart preview",
+	songSelectOffset = "Song select offset",
 	--
 	osuResultScreen = "osu! result screen",
 	enable = "Enable",
