@@ -29,8 +29,8 @@ function _Layout:draw()
 
 	self:pack("hitGraph", x1[2], y1[4], w1[2], h1[4])
 
-	local x2, w2 = gfx_util.layout(_x, _w, { 1171, -1 })
-	local y2, h2 = gfx_util.layout(_y, _h, { 316, 200, 573, -1 })
+	local x2, w2 = gfx_util.layout(_x, _w, { 1166, -1 })
+	local y2, h2 = gfx_util.layout(_y, _h, { 321, 200, 573, -1 })
 	self:pack("grade", x2[2], y2[2], w2[2], h2[2])
 	self:pack("watch", x2[2], y2[3], w2[2], h2[3])
 
