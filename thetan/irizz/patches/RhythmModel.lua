@@ -7,12 +7,4 @@ modulePatcher:insert("sphere.models.RhythmModel", "unloadAllEngines", function(_
 
 	_self.logicEngine:unload()
 	_self.graphicEngine:unload()
-
-	for _, inputType, inputIndex in _self.noteChart:getInputIterator() do
-		_self.observable:send({
-			name = "keyreleased",
-			virtual = true,
-			inputType .. inputIndex
-		})
-	end
 end)

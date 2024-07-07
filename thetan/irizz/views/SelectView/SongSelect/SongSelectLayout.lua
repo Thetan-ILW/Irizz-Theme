@@ -48,6 +48,7 @@ function _Layout:_modsAndInfo(x, y, w, h)
 end
 
 function _Layout:draw(offset)
+	offset = offset
 	local width, height = love.graphics.getDimensions()
 
 	love.graphics.replaceTransform(gfx_util.transform(self.transform))
@@ -55,7 +56,9 @@ function _Layout:draw(offset)
 	local position = width * offset
 
 	local _x, _y = love.graphics.inverseTransformPoint(position, 0)
+	local _gx, _gy = love.graphics.inverseTransformPoint(0, 0)
 	local _xw, _yh = love.graphics.inverseTransformPoint(width + position, height)
+	local _xwg, _yhg = love.graphics.inverseTransformPoint(width, height)
 
 	local _w, _h = _xw - _x, _yh - _y
 	self:pack("background", _x, _y, _w, _h)
@@ -63,9 +66,11 @@ function _Layout:draw(offset)
 	local gx, gw = gfx_util.layout(_x, _xw, { gap, "*", gap })
 	local gy, gh = gfx_util.layout(_y, _yh, { 64, -1, gap })
 
+	local ggx, ggw = gfx_util.layout(_gx, _xwg, { gap, "*", gap })
+
 	local y1, h1 = gfx_util.layout(gy[2], gh[2], { gap, -0.1, gap, -0.9, gap, 30 })
 
-	self:_footer(gx[2], y1[6], gw[2], h1[6])
+	self:_footer(ggx[2], y1[6], ggw[2], h1[6])
 	self:pack("search", gx[2], y1[2], gw[2], h1[2])
 
 	local x2, w2 = gfx_util.layout(

@@ -25,4 +25,5 @@ return {
 	osuResultSkin = "None",
 	hpGraph = true,
 	showPP = true,
+	songSelectOffset = 0,
 }

@@ -11,6 +11,8 @@ local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.irizz.views.SelectView.SongSelect")
 local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections")
 
+local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
+
 local InputMap = require("thetan.irizz.views.SelectView.InputMap")
 
 ---@class irizz.SelectView: sphere.ScreenView
@@ -24,6 +26,8 @@ SelectView.screenXTarget = 0
 SelectView.chartFilterLine = ""
 SelectView.scoreFilterLine = ""
 
+local songSelectOffset = 0
+
 local playSound = nil
 function SelectView:load()
 	self.game.selectController:load(self)
@@ -31,6 +35,10 @@ function SelectView:load()
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
+
+	self.chartPreviewView = ChartPreviewView(self.game)
+	self.chartPreviewView:load()
+
 	self.selectModel = self.game.selectModel
 
 	playSound = Theme:getStartSound(self.game)
@@ -49,6 +57,7 @@ end
 function SelectView:unload()
 	self.game.selectController:unload()
 	self.collectionsViewConfig = nil
+	self.chartPreviewView:unload()
 end
 
 ---@param where number
@@ -99,6 +108,14 @@ function SelectView:update(dt)
 	end
 
 	self.layersView:update()
+	self.chartPreviewView:update(dt)
+
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
+	local ss_offset = irizz.songSelectOffset
+
+	songSelectOffset = ss_offset
+	self.songSelectViewConfig.position = ss_offset
 end
 
 function SelectView:notechartChanged()
@@ -223,6 +240,7 @@ end
 
 function SelectView:receive(event)
 	self.game.selectController:receive(event)
+	self.chartPreviewView:receive(event)
 
 	if event.name == "keypressed" then
 		if self.inputMap:call("view") then
@@ -241,12 +259,12 @@ function SelectView:draw()
 	local songSelect = self.songSelectViewConfig
 	local collections = self.collectionsViewConfig
 
-	songSelect.layoutDraw(position)
+	songSelect.layoutDraw(position + songSelectOffset)
 	settings.layoutDraw(position - 1)
 	collections.layoutDraw(position + 1)
 
 	local panelsStencil = function()
-		if songSelect.canDraw(position) then
+		if songSelect:canDraw(position + songSelectOffset) then
 			songSelect.panels()
 		end
 
@@ -260,8 +278,9 @@ function SelectView:draw()
 	end
 
 	local function UI()
+		self.chartPreviewView:draw()
 		self.headerView:draw(self)
-		songSelect:draw(self, position)
+		songSelect:draw(self, position + songSelectOffset)
 		collections:draw(self, position + 1)
 		settings:draw(self, position - 1)
 	end

@@ -35,6 +35,9 @@ modulePatcher:insert(module, "update", function(self)
 		end
 
 		self.previewModel:setAudioPathPreview(selectModel:getAudioPathPreview())
+		self.previewModel:onLoad(function()
+			self.chartPreviewModel:setChartview(selectModel.chartview)
+		end)
 		self:applyModifierMeta()
 		self.view:notechartChanged()
 	end

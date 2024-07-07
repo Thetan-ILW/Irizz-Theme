@@ -30,6 +30,8 @@ local boxes = {
 
 local ViewConfig = class()
 
+ViewConfig.position = 0
+
 ---@type irizz.ActionModel
 local actionModel
 
@@ -355,16 +357,16 @@ function ViewConfig.layoutDraw(position)
 	Layout:draw(position)
 end
 
-function ViewConfig.canDraw(position)
-	return math.abs(position) < 1
+function ViewConfig:canDraw(position)
+	return math.abs(position - self.position) < 1
 end
 
 function ViewConfig:draw(view, position)
-	if not self.canDraw(position) then
+	if not self:canDraw(position) then
 		return
 	end
 
-	canUpdate = position == 0
+	canUpdate = position == self.position
 	canUpdate = canUpdate and view:canUpdate()
 	canUpdate = canUpdate and not actionModel.isInsertMode()
 

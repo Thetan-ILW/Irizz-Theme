@@ -625,6 +625,7 @@ function SettingsTab:UI(view)
 
 	just.text(Text.select)
 	just.next(0, textSeparation)
+	ss.chart_preview = imgui.checkbox("ss.chart_preview", ss.chart_preview, "chart preview")
 	irizz.showOnlineCount = imgui.checkbox("irizz.showOnline", irizz.showOnlineCount, Text.showOnlineCount)
 	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
@@ -652,6 +653,9 @@ function SettingsTab:UI(view)
 		local rate = rateType == "exp" and 0 or 1
 		timeRateModel:set(rate)
 	end
+
+	irizz.songSelectOffset =
+		imgui.slider1("irizz.songSelectOffset", irizz.songSelectOffset, "%0.02f", -1, 1, 0.01, "Song select offset")
 
 	imgui.separator()
 	just.text(Text.effects)

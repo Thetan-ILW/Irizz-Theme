@@ -97,7 +97,7 @@ function ViewConfig:loadScore(view)
 	local normalscore = rhythmModel.scoreEngine.scoreSystem.normalscore
 	local scoreEngine = rhythmModel.scoreEngine
 
-	local _inputMode = show and tostring(rhythmModel.noteChart.inputMode) or scoreItem.inputmode
+	local _inputMode = show and tostring(rhythmModel.chart.inputMode) or scoreItem.inputmode
 	inputMode = Format.inputMode(_inputMode)
 
 	local score = not show and scoreItem.score
@@ -118,7 +118,6 @@ function ViewConfig:loadScore(view)
 	ratingFormatted = ("%0.02f PR"):format(scoreItem.rating)
 
 	local scoreSystems = view.game.rhythmModel.scoreEngine.scoreSystem
-	local configs = view.game.configModel.configs
 	judgeName = view.currentJudgeName
 	judge = scoreSystems.judgements[judgeName]
 	scoreSystemName = judge.scoreSystemName
