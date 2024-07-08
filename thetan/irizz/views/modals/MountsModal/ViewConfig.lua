@@ -184,15 +184,15 @@ function ViewConfig:database(view)
 		cacheStatus:update()
 	end
 
-	if imgui.button("compute cds", "Compute missing") then
+	if imgui.button("compute cds", Text.computeMissing) then
 		cacheModel:computeChartdiffs()
 	end
 
-	if imgui.button("compute incomplete cds", "Compute incomplete") then
+	if imgui.button("compute incomplete cds", Text.computeIncomplete) then
 		cacheModel:computeIncompleteChartdiffs()
 	end
 
-	if imgui.button("compute incomplete cds pp", "Compute incomplete, use preview") then
+	if imgui.button("compute incomplete cds pp", Text.computeIncompleteUsePreview) then
 		cacheModel:computeIncompleteChartdiffs(true)
 	end
 

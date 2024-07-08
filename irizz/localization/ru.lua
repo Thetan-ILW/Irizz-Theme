@@ -279,6 +279,9 @@ localization.textMounts = {
 	chartdiffs = "Сложность карты",
 	chartmetas = "Метаданные карты",
 	compute = "Подсчитать",
+	computeMissing = "Подсчитать пропущенные",
+	computeIncomplete = "Подсчитать незаконченные",
+	computeIncompleteUsePreview = "Подсчитать незаконченные, но круче",
 	computed = "Подсчитанно: %i",
 }
 

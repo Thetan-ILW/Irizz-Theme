@@ -291,6 +291,9 @@ localization.textMounts = {
 	chartdiffs = "Chart difficulty / rating",
 	chartmetas = "Chart metadata",
 	compute = "Compute",
+	computeMissing = "Compute missing",
+	computeIncomplete = "Compute incomplete",
+	computeIncompleteUsePreview = "Compute incomplete, use preview",
 	computed = "Computed: %i",
 }
 
