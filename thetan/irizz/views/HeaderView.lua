@@ -210,6 +210,7 @@ end
 
 function ViewConfig:draw(view)
 	Layout:draw()
+	gfx.setColor({ 1, 1, 1, 1 })
 	self:buttons(view)
 	self:vimMode(view)
 	self:rightSide(view)
