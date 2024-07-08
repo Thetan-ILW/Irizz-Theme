@@ -30,8 +30,6 @@ local boxes = {
 
 local ViewConfig = class()
 
-ViewConfig.position = 0
-
 ---@type irizz.ActionModel
 local actionModel
 
@@ -353,12 +351,28 @@ local function footer(view)
 	love.graphics.scale(1, 1)
 end
 
-function ViewConfig.layoutDraw(position)
-	Layout:draw(position)
+function ViewConfig:chartPreview(view, position)
+	local prevCanvas = love.graphics.getCanvas()
+	local canvas = gyatt.getCanvas("chartPreview")
+
+	love.graphics.setCanvas(canvas)
+	love.graphics.clear()
+	view.chartPreviewView:draw()
+	love.graphics.setCanvas({ prevCanvas, stencil = true })
+
+	local width, _ = love.graphics.getDimensions()
+	love.graphics.origin()
+	love.graphics.translate(width * position, 0)
+	love.graphics.setColor({ 1, 1, 1, 1 })
+	love.graphics.draw(canvas)
+end
+
+function ViewConfig.layoutDraw(position, songSelectOffset)
+	Layout:draw(position, songSelectOffset)
 end
 
 function ViewConfig:canDraw(position)
-	return math.abs(position - self.position) < 1
+	return math.abs(position) < 0.99
 end
 
 function ViewConfig:draw(view, position)
@@ -366,10 +380,11 @@ function ViewConfig:draw(view, position)
 		return
 	end
 
-	canUpdate = position == self.position
+	canUpdate = position == 0
 	canUpdate = canUpdate and view:canUpdate()
 	canUpdate = canUpdate and not actionModel.isInsertMode()
 
+	self:chartPreview(view, position)
 	self.panels()
 	searchField(view)
 	self:noteChartSets(view)

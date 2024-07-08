@@ -115,7 +115,6 @@ function SelectView:update(dt)
 	local ss_offset = irizz.songSelectOffset
 
 	songSelectOffset = ss_offset
-	self.songSelectViewConfig.position = ss_offset
 end
 
 function SelectView:notechartChanged()
@@ -259,12 +258,12 @@ function SelectView:draw()
 	local songSelect = self.songSelectViewConfig
 	local collections = self.collectionsViewConfig
 
-	songSelect.layoutDraw(position + songSelectOffset)
+	songSelect.layoutDraw(position, songSelectOffset)
 	settings.layoutDraw(position - 1)
 	collections.layoutDraw(position + 1)
 
 	local panelsStencil = function()
-		if songSelect:canDraw(position + songSelectOffset) then
+		if songSelect:canDraw(position) then
 			songSelect.panels()
 		end
 
@@ -278,9 +277,8 @@ function SelectView:draw()
 	end
 
 	local function UI()
-		self.chartPreviewView:draw()
 		self.headerView:draw(self)
-		songSelect:draw(self, position + songSelectOffset)
+		songSelect:draw(self, position)
 		collections:draw(self, position + 1)
 		settings:draw(self, position - 1)
 	end

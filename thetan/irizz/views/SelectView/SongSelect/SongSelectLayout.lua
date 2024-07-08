@@ -47,7 +47,7 @@ function _Layout:_modsAndInfo(x, y, w, h)
 	self:pack("info2row3", x, y2[3], w, h2[3])
 end
 
-function _Layout:draw(offset)
+function _Layout:draw(offset, panelsOffset)
 	offset = offset
 	local width, height = love.graphics.getDimensions()
 
@@ -55,18 +55,16 @@ function _Layout:draw(offset)
 
 	local position = width * offset
 
-	local _x, _y = love.graphics.inverseTransformPoint(position, 0)
-	local _gx, _gy = love.graphics.inverseTransformPoint(0, 0)
+	local _x, _y = love.graphics.inverseTransformPoint(width * (offset + panelsOffset), 0)
+	local _xg, _ = love.graphics.inverseTransformPoint(position, 0)
 	local _xw, _yh = love.graphics.inverseTransformPoint(width + position, height)
-	local _xwg, _yhg = love.graphics.inverseTransformPoint(width, height)
 
 	local _w, _h = _xw - _x, _yh - _y
 	self:pack("background", _x, _y, _w, _h)
 
 	local gx, gw = gfx_util.layout(_x, _xw, { gap, "*", gap })
+	local ggx, ggw = gfx_util.layout(_xg, _xw, { gap, "*", gap })
 	local gy, gh = gfx_util.layout(_y, _yh, { 64, -1, gap })
-
-	local ggx, ggw = gfx_util.layout(_gx, _xwg, { gap, "*", gap })
 
 	local y1, h1 = gfx_util.layout(gy[2], gh[2], { gap, -0.1, gap, -0.9, gap, 30 })
 
