@@ -277,10 +277,10 @@ function SelectView:draw()
 	end
 
 	local function UI()
-		self.headerView:draw(self)
 		songSelect:draw(self, position)
 		collections:draw(self, position + 1)
 		settings:draw(self, position - 1)
+		self.headerView:draw(self)
 	end
 
 	self.layersView:draw(panelsStencil, UI)
