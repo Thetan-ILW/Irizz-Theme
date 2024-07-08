@@ -78,7 +78,7 @@ local function bottomScreenMenu(self)
 
 	imgui.Label("ctime", self.game.rhythmModel.timeEngine.currentTime, h)
 	just.next(h / 2)
-	imgui.Label("vtime", self.game.rhythmModel.timeEngine.currentVisualTime, h)
+	imgui.Label("vtime", self.game.rhythmModel.timeEngine.visualTimeInfo.time, h)
 	just.next(h / 2)
 	imgui.Label("cindex", self.game.rhythmModel.timeEngine.nearestTime.currentIndex, h)
 
