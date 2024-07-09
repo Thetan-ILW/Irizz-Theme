@@ -6,6 +6,7 @@ localization.textHeader = {
 	settings = "Settings",
 	songs = "Songs",
 	collections = "Collections",
+	leaveRoom = "Leave",
 	notLoggedIn = "Offline",
 	online = "Online: %i",
 }
@@ -377,12 +378,10 @@ localization.textMultiplayer = {
 	enterPassword = "Enter password to join the %s",
 	back = "Back",
 	notConnected = "Trying to connect.\nStatus: %s",
+	join = "Join",
 }
 
-localization.textMultiplayerScreen = {
-	roomName = "Room name: %s",
-	playerCount = "Players: %i",
-}
+localization.textMultiplayerScreen = {}
 
 localization.textChartInfo = {
 	chartInfo = "Chart info",
@@ -429,6 +428,7 @@ localization.textNotification = {
 	volume = "Volume: %i%%",
 	chartStarted = "%s - %s [%s]\nLength: %s",
 	exportToOsu = "Exported to .osu file",
+	cantChangeMods = "Not a host | Free modifiers is not toggled",
 }
 
 localization.keybindsGlobal = {
@@ -655,7 +655,15 @@ localization.fonts = {
 
 	multiplayerView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
-		roomInfo = { "ZenMaruGothic-Black", 24 },
+		roomInfo = { "ZenMaruGothic-Black", 36 },
+		buttons = { "ZenMaruGothic-Medium", 28 },
+		users = { "ZenMaruGothic-Medium", 28 },
+		description = { "ZenMaruGothic-Medium", 20 },
+		chat = { "ZenMaruGothic-Medium", 24 },
+		difficultyValue = { "ZenMaruGothic-Medium", 32 },
+		calculator = { "ZenMaruGothic-Medium", 24 },
+		patterns = { "ZenMaruGothic-Regular", 24 },
+		info = { "ZenMaruGothic-Medium", 28 },
 	},
 
 	keybindsModal = {

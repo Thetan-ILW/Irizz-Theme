@@ -2,19 +2,19 @@ local InputMap = require("thetan.gyatt.InputMap")
 
 local MultiplayerInputMap = InputMap + {}
 
-function MultiplayerInputMap:createBindings(mv, a)
+function MultiplayerInputMap:createBindings(mv)
 	local gameView = mv.game.gameView
 
 	self.modals = {
-		[a.showMods] = function()
+		["showMods"] = function()
 			if mv.room.isFreeNotechart or mv.isHost then
 				gameView:openModal("thetan.irizz.views.modals.ModifierModal")
 			end
 		end,
-		[a.showSkins] = function()
+		["showSkins"] = function()
 			gameView:openModal("thetan.irizz.views.modals.NoteSkinModal")
 		end,
-		[a.showInputs] = function()
+		["showInputs"] = function()
 			gameView:openModal("thetan.irizz.views.modals.InputModal")
 		end,
 	}

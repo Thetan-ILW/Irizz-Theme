@@ -167,6 +167,7 @@ end
 
 function ViewConfig:draw(view)
 	Layout:draw()
+	love.graphics.setLineWidth(4)
 
 	local w, h = Layout:move("base")
 	love.graphics.setColor(0, 0, 0, 0.75)

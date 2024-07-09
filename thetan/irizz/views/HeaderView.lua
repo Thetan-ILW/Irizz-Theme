@@ -30,8 +30,10 @@ function ViewConfig:new(game, screen)
 
 	if screen == "select" then
 		self.buttons = self.songSelectButtons
-	else
+	elseif screen == "result" then
 		self.buttons = self.resultButtons
+	else
+		self.buttons = self.multiplayerButtons
 	end
 end
 
@@ -149,6 +151,30 @@ function ViewConfig:resultButtons(view)
 		if just.mousepressed(1) then
 			view.game.gameView:sendQuitSignal()
 		end
+	end
+end
+
+function ViewConfig:multiplayerButtons(view)
+	gfx.setLineWidth(2)
+	gfx.setLineStyle("smooth")
+	gfx.setFont(font.anyText)
+
+	local w, h = Layout:move("buttons")
+	local r = h / 1.4
+
+	if circleImage(self.gameIcon, r, r * 2) then
+		view.gameView.mainMenuView:toggle()
+	end
+
+	buttonOffset = r * 2
+	local panelHeight = font.anyText:getHeight() + 8
+
+	if button(Text.songs, w, h, panelHeight, false, false) then
+		view.game.gameView:sendQuitSignal()
+	end
+
+	if button(Text.leaveRoom, w, h, panelHeight, false, false) then
+		view:leaveRoom()
 	end
 end
 

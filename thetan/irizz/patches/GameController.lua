@@ -24,8 +24,8 @@ modulePatcher:insert(module, "load", function(self)
 	self.ui.gameplayView = GameplayView(self)
 	self.gameplayView = self.ui.gameplayView
 
-	--self.ui.multiplayerView = MultiplayerView(self)
-	--self.multiplayerView = self.ui.multiplayerView
+	self.ui.multiplayerView = MultiplayerView(self)
+	self.multiplayerView = self.ui.multiplayerView
 
 	self.osuApi = OsuApi(self)
 

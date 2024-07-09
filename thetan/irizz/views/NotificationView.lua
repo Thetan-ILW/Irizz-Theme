@@ -18,6 +18,7 @@ local messages = {
 	exportToOsu = Text.exportToOsu,
 	volumeChanged = Text.volume,
 	chartStarted = Text.chartStarted,
+	cantChangeMods = Text.cantChangeMods,
 }
 
 function NotificationView:init()

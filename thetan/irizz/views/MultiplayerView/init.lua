@@ -20,16 +20,15 @@ MultiplayerView.messages = nil
 
 local viewConfig = {}
 local headerView = {}
-local inputMap = {}
 
 function MultiplayerView:load()
 	self.game.selectModel:setChanged()
-	self.layersView = LayersView(self.game, "preview")
-	viewConfig = ViewConfig()
-	headerView = HeaderView("multiplayer")
+	self.layersView = LayersView(self.game, "select", "preview")
+	viewConfig = ViewConfig(self.game)
+	headerView = HeaderView(self.game, "multiplayer")
 
 	local actionModel = self.game.actionModel
-	inputMap = InputMap(self, actionModel:getGroup("songSelect"))
+	self.inputMap = InputMap(self, actionModel)
 end
 
 ---@param dt number
@@ -53,7 +52,7 @@ end
 
 function MultiplayerView:receive(event)
 	if event.name == "keypressed" then
-		if inputMap:call("modals") then
+		if self.inputMap:call("modals") then
 			return
 		end
 	end
