@@ -787,8 +787,15 @@ function SettingsTab:Version(view)
 
 	imgui.separator()
 	just.text(Text.contributors)
+	just.text("semyon422 - For making soundsphere")
 	just.text("iyase - Translating to Japanese and fixing mistakes")
-	just.text("floob1nk - Translating to Russian")
+	just.text("Floob1nk - Translating to Russian")
+	just.text("GPT 4 - Translating to Japanese (poorly)")
+
+	just.next(0, textSeparation)
+	just.text("Noesis:")
+	just.text("iyase - For allowing to use their skin")
+	just.text("KcHecKa - For allowing to use their skin")
 end
 
 return SettingsTab
