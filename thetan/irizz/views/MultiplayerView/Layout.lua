@@ -38,19 +38,20 @@ function _Layout:draw()
 		{ -0.5, outerPanelsSize, horizontalPanelGap, innerPanelSize, horizontalPanelGap, outerPanelsSize, -0.5 }
 	)
 
+	local x2, w2 = gfx_util.layout(gx[2], gw[2], { -0.5, 750, -0.5 })
+
 	local y2, h2 = gfx_util.layout(y1[4], h1[4], { -0.5, verticalPanelGap, -0.5 })
 
 	self:pack("playerList", x1[2], y2[1], w1[2], h2[1])
-	self:pack("chartInfo", x1[4], y2[1], w1[4], h2[1])
 	self:pack("buttons", x1[6], y2[1], w1[6], h2[1])
-	self:pack("chat", x1[2], y2[3], w1[2] + w1[3] + w1[4] + w1[5] + w1[6], h2[3])
+	self:pack("chat", x2[2], y2[3], w2[2], h2[3])
 
 	local dx, dw = gfx_util.layout(x1[4], w1[4], { 100, -1 })
-	local dy, dh = gfx_util.layout(y2[1], h2[1], { -0.25, -0.8 })
+	local dy, dh = gfx_util.layout(y2[1], h2[1], { -0.25, verticalPanelGap, -0.75 })
 	self:pack("difficulty", x1[4], dy[1], w1[4], dh[1])
 	self:pack("difficultyValue", dx[1], dy[1], dw[1], dh[1])
 	self:pack("difficultyPatterns", dx[2], dy[1], dw[2], dh[1])
-	self:pack("info", x1[4], dy[2], w1[4], dh[2])
+	self:pack("info", x1[4], dy[3], w1[4], dh[3])
 end
 
 return _Layout

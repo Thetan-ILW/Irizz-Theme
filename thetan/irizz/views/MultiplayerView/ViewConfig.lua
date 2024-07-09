@@ -18,7 +18,8 @@ local ViewConfig = class()
 
 local boxes = {
 	"playerList",
-	"chartInfo",
+	"difficulty",
+	"info",
 	"buttons",
 	"chat",
 }
@@ -188,7 +189,11 @@ function ViewConfig:chartInfo(view)
 	local input_mode = Format.inputMode(chartview.chartdiff_inputmode)
 	input_mode = input_mode == "2K" and "TAIKO" or input_mode
 
-	local w, h = Layout:move("chartInfo")
+	local bpm = (chartview.tempo or 0) * view.game.playContext.rate
+	local note_count = chartview.notes_count or 0
+	local format = string.upper(chartview.format or "NONE")
+
+	local w, h = Layout:move("info")
 
 	Theme:panel(w, h)
 
@@ -209,17 +214,29 @@ function ViewConfig:chartInfo(view)
 	w, h = Layout:move("difficultyPatterns")
 	gfx.setColor(Color.text)
 	gfx.setFont(font.patterns)
-	gyatt.frame(patterns, 0, 0, w, h, "center", "center")
+	gyatt.frame(patterns:upper(), 0, 0, w, h, "center", "center")
+
+	w, h = Layout:move("difficulty")
+	Theme:border(w, h)
 
 	w, h = Layout:move("info")
 	gfx.setColor(Color.text)
 	gfx.setFont(font.info)
-	gfx.translate(15, 0)
-	gyatt.text(("Length: %s"):format(length), w)
-	gyatt.text(("LN: %i%%"):format(long_note_ratio), w)
-	gyatt.text(input_mode, w)
+	gyatt.text(("Length: %s"):format(length), w, "center")
+	gyatt.text(("LN: %i%%"):format(long_note_ratio), w, "center")
+	gyatt.text(input_mode, w, "center")
 
-	w, h = Layout:move("chartInfo")
+	gfx.setColor(Color.separator)
+	gfx.translate(0, 8)
+	gfx.rectangle("fill", w / 2 - w / 4, 0, w / 2, 4)
+	gfx.translate(0, 8)
+
+	gfx.setColor(Color.text)
+	gyatt.text(("BPM: %i"):format(bpm), w, "center")
+	gyatt.text(("Notes: %i"):format(note_count), w, "center")
+	gyatt.text(("%s"):format(format), w, "center")
+
+	w, h = Layout:move("info")
 	Theme:border(w, h)
 end
 

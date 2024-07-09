@@ -379,6 +379,7 @@ localization.textMultiplayer = {
 	back = "Back",
 	notConnected = "Trying to connect.\nStatus: %s",
 	join = "Join",
+	noPatterns = "No patterns",
 }
 
 localization.textMultiplayerScreen = {}
