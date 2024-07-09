@@ -417,6 +417,8 @@ localization.textMainMenu = {
 	retry = "Retry",
 	watch = "Watch",
 	submit = "Submit",
+	welcomeToNoesis = "Welcome to Noesis!",
+	welcomeToSoundsphere = "Welcome to soundsphere!",
 }
 
 localization.textKeybinds = {

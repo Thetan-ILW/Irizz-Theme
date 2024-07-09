@@ -68,7 +68,11 @@ local function title()
 	local w, h = Layout:move("screen")
 	gfx.setColor(Color.text)
 	gfx.setFont(font.title)
-	gyatt.frame("IRIZZ | SOUNDSPHERE", 0, -20, w, h, "center", "top")
+	if NOESIS_INSTALLED then
+		gyatt.frame(Text.welcomeToNoesis, 0, -20, w, h, "center", "top")
+	else
+		gyatt.frame(Text.welcomeToSoundsphere, 0, -20, w, h, "center", "top")
+	end
 	gfx.setFont(font.timeOfDay)
 	gyatt.frame(getTimeOfDay(), 0, font.title:getHeight() - 20, w, h, "center", "top")
 end

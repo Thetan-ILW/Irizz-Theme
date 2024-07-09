@@ -132,8 +132,8 @@ localization.textSettings = {
 	showPP = "PPを表示",
 	skin = "スキン",
 	--
-	commit = "コミット: ",
-	commitDate = "日付: ",
+	commit = "Commit: ",
+	commitDate = "Commit date: ",
 	contributors = "貢献者に感謝:",
 	--
 	scoring = "スコアリング",
@@ -410,6 +410,8 @@ localization.textMainMenu = {
 	keyBinds = "Key binds",
 	multiplayer = "Multiplayer",
 	chartEditor = "Chart editor",
+	welcomeToNoesis = "Welcome to Noesis!",
+	welcomeToSoundsphere = "Welcome to soundsphere!",
 }
 
 localization.textKeybinds = {

@@ -115,9 +115,9 @@ localization.textSettings = {
 	groupCharts = "Группировать карты",
 	rateType = "Тип скорости карты",
 	linear = "Линейный",
-	exp = "Exp?", -- экспоненциальный наверное не знаю сокращения xD
+	exp = "Эксп",
 	colorTheme = "Цвет темы",
-	vimMotions = "Vim передвижения",
+	vimMotions = "Vim режим",
 	scrollAcceleration = "Ускорение прокрутки",
 	scrollClickExtraTime = "Scroll click extra time?", --для прокрутки нажать ещё раз
 	chartPreview = "Предпросмотр карты",
@@ -381,17 +381,19 @@ localization.textChartInfo = {
 }
 
 localization.textMainMenu = {
-	morning = "Good morning!",
-	day = "Good day!",
-	evening = "Good evening!",
-	night = "Good night!",
-	modifiers = "Modifiers",
-	filters = "Filters",
-	noteSkins = "Note skins",
-	inputs = "Inputs",
-	keyBinds = "Key binds",
-	multiplayer = "Multiplayer",
-	chartEditor = "Chart editor",
+	morning = "С добрым утром!",
+	day = "Доброго дня!",
+	evening = "Доброго вечера!",
+	night = "Доброй ночи!",
+	modifiers = "Моды",
+	filters = "Фильтры",
+	noteSkins = "Скины",
+	inputs = "Привязки",
+	keyBinds = "Помощь",
+	multiplayer = "Мультиплеер",
+	chartEditor = "Редактор",
+	welcomeToNoesis = "Добро пожаловать в Noesis!",
+	welcomeToSoundsphere = "Добро пожаловать в soundsphere!",
 }
 
 localization.textKeybinds = {
