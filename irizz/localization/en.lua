@@ -295,6 +295,7 @@ localization.textMounts = {
 	computeIncomplete = "Compute incomplete",
 	computeIncompleteUsePreview = "Compute incomplete, use preview",
 	computed = "Computed: %i",
+	notSpecified = "Not specified",
 }
 
 localization.textOnline = {

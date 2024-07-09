@@ -49,7 +49,7 @@ function ViewConfig:mounts(view)
 
 	if just.button("createLocation", overCreate) then
 		local location = locationsRepo:insertLocation({
-			name = "unnamed",
+			name = "Unnamed",
 			is_relative = false,
 			is_internal = false,
 		})
@@ -142,14 +142,12 @@ function ViewConfig:locations(view)
 	end
 
 	just.indent(8)
-	just.text("Status: " .. (selected_loc.status or "unknown"))
-	just.indent(8)
 	just.text("Real path: ")
 	just.indent(8)
 	if path then
 		imgui.url("open dir", path, path, false, w)
 	else
-		just.text("not specified")
+		just.text(Text.notSpecified)
 	end
 end
 

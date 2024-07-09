@@ -22,6 +22,12 @@ function MountsListView:reloadItems()
 	local locationManager = self.game.cacheModel.locationManager
 
 	self.items = locationManager.locations
+
+	for i, v in ipairs(self.items) do
+		if v.id == locationManager.selected_id then
+			self.selectedItemIndex = i
+		end
+	end
 end
 
 function MountsListView:mouseClick(w, h, i)

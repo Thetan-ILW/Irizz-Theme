@@ -294,6 +294,7 @@ localization.textMounts = {
 	computeIncomplete = "不完全な部分を計算",
 	computeIncompleteUsePreview = "不完全な部分を計算、プレビューを使用",
 	computed = "計算済み: %i",
+	notSpecified = "Not specified",
 }
 
 localization.textOnline = {

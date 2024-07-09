@@ -283,6 +283,7 @@ localization.textMounts = {
 	computeIncomplete = "Подсчитать незаконченные",
 	computeIncompleteUsePreview = "Подсчитать незаконченные, но круче",
 	computed = "Подсчитанно: %i",
+	notSpecified = "Не указано",
 }
 
 localization.textOnline = {
