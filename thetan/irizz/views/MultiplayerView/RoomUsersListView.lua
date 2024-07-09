@@ -18,6 +18,8 @@ function RoomUsersListView:new(game)
 	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("multiplayerView")
+	self.text = {}
+	self.text.noItems = ""
 end
 
 local empty = {}
@@ -93,6 +95,28 @@ function RoomUsersListView:drawItem(i, w, h)
 	love.graphics.translate(0, -10)
 	love.graphics.setFont(self.font.description)
 	just.text(description, math.huge)
+
+	if just.button("user" .. i .. "button", just.is_over(w, -h)) then
+		local width = 200
+		self.game.gameView:setContextMenu(function()
+			local close = false
+			just.indent(10)
+			just.text(user.name)
+			love.graphics.line(0, 0, 200, 0)
+			if imgui.TextOnlyButton("Kick", "Kick", width, 55) then
+				multiplayerModel:kickUser(user.id)
+				close = true
+			end
+			if imgui.TextOnlyButton("Give host", "Give host", width, 55) then
+				multiplayerModel:setHost(user.id)
+				close = true
+			end
+			if imgui.TextOnlyButton("Close", "Close", width, 55) then
+				close = true
+			end
+			return close
+		end, width)
+	end
 end
 
 return RoomUsersListView

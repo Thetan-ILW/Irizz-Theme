@@ -664,6 +664,7 @@ localization.fonts = {
 		calculator = { "ZenMaruGothic-Medium", 24 },
 		patterns = { "ZenMaruGothic-Regular", 24 },
 		info = { "ZenMaruGothic-Medium", 28 },
+		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	keybindsModal = {
