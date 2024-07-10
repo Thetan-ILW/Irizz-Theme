@@ -1,25 +1,24 @@
 local class = require("class")
 
-local Layout = require("sphere.views.GameplayView.Layout")
-
 local flux = require("flux")
-local just = require("just")
 local gyatt = require("thetan.gyatt")
+
+local Layout = require("sphere.views.GameplayView.Layout")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
 local Text = Theme.textPauseSubscreen
 local font
 
-local PauseSubscreen = class()
+local PauseScreen = class()
 
-PauseSubscreen.tween = nil
-PauseSubscreen.alpha = 0
+PauseScreen.tween = nil
+PauseScreen.alpha = 0
 
 local shader
 local ambient
 
-function PauseSubscreen:new()
+function PauseScreen:new()
 	local shaders = require("irizz.shaders")
 	shader = shaders.waves
 	ambient = Theme.sounds.pause
@@ -28,7 +27,7 @@ function PauseSubscreen:new()
 	ambient:stop()
 end
 
-function PauseSubscreen:show()
+function PauseScreen:show()
 	if self.tween then
 		self.tween:stop()
 	end
@@ -36,7 +35,7 @@ function PauseSubscreen:show()
 	ambient:play()
 end
 
-function PauseSubscreen:hide()
+function PauseScreen:hide()
 	if self.tween then
 		self.tween:stop()
 	end
@@ -44,11 +43,11 @@ function PauseSubscreen:hide()
 	ambient:stop()
 end
 
-function PauseSubscreen:unload()
+function PauseScreen:unload()
 	ambient:stop()
 end
 
-function PauseSubscreen:shaderImage(game_canvas, alpha)
+function PauseScreen:shaderImage(game_canvas, alpha)
 	local prev_shader = love.graphics.getShader()
 
 	shader:send("time", love.timer.getTime())
@@ -61,14 +60,15 @@ function PauseSubscreen:shaderImage(game_canvas, alpha)
 	love.graphics.setShader(prev_shader)
 end
 
-function PauseSubscreen:pauseText()
+function PauseScreen:pauseText()
+	local screen_w, screen_h = Layout:move("base")
+
 	local text = Text.paused
 	local paused_font = font.paused
 	local width = paused_font:getWidth("P")
 	local height = paused_font:getHeight()
 
 	local total_h = #text * height
-	local screen_h = love.graphics.getHeight()
 
 	local y = (screen_h / 2) - (total_h / 2)
 
@@ -81,8 +81,8 @@ function PauseSubscreen:pauseText()
 		gyatt.text(c)
 	end
 
-	love.graphics.origin()
-	love.graphics.translate(love.graphics.getWidth() - 40 - width, y)
+	screen_w, screen_h = Layout:move("base")
+	love.graphics.translate(screen_w - width - 40, y)
 	for _, c in ipairs(text) do
 		gyatt.text(c)
 	end
@@ -113,15 +113,15 @@ local function button(text, on_click)
 	end
 end
 
-function PauseSubscreen:buttons(view)
-	love.graphics.origin()
+function PauseScreen:buttons(view)
+	local w, h = Layout:move("base")
 	love.graphics.setFont(font.buttons)
 	love.graphics.setColor(Color.text)
 
 	local total_h = (button_height * 3) + (button_spacing * 2)
 
-	local x = (love.graphics.getWidth() / 2) - (button_width / 2)
-	local y = (love.graphics.getHeight() / 2) - (total_h / 2)
+	local x = (w / 2) - (button_width / 2)
+	local y = (h / 2) - (total_h / 2)
 
 	love.graphics.translate(x - 100, y)
 
@@ -143,7 +143,8 @@ function PauseSubscreen:buttons(view)
 	end)
 end
 
-function PauseSubscreen:draw(view, game_canvas)
+function PauseScreen:draw(view, game_canvas)
+	Layout:draw()
 	love.graphics.origin()
 
 	local a = self.alpha
@@ -162,4 +163,4 @@ function PauseSubscreen:draw(view, game_canvas)
 	love.graphics.draw(layer)
 end
 
-return PauseSubscreen
+return PauseScreen
