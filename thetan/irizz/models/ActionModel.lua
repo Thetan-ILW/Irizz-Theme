@@ -293,7 +293,7 @@ function ActionModel.keyPressed(event)
 
 	local key = event[2]
 
-	if tonumber(key) then
+	if tonumber(key) and not ActionModel.isInsertMode() then
 		count = count .. key
 	end
 
