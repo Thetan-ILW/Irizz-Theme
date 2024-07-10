@@ -26,10 +26,12 @@ local boxes = {
 }
 
 local gfx = love.graphics
+local action_model
 
-function ViewConfig:new(game)
+function ViewConfig:new(game, _action_model)
 	font = Theme:getFonts("multiplayerView")
 	self.roomUsersListView = RoomUsersListView(game)
+	action_model = _action_model
 end
 
 function ViewConfig.panels()
@@ -324,8 +326,16 @@ function ViewConfig:chat(view)
 	just.text(">")
 	just.indent(10)
 
-	local changed, left, right
-	changed, chat.message, chat.index, left, right = just.textinput(chat.message, chat.index)
+	local changed = false
+	local left = ""
+	local right = ""
+
+	local vimMotions = action_model.isVimMode()
+
+	if not vimMotions or action_model.isInsertMode() then
+		changed, chat.message, chat.index, left, right = just.textinput(chat.message, chat.index)
+	end
+
 	just.text(left)
 	gfx.line(0, 0, 0, lineHeight)
 	just.text(right)
@@ -334,7 +344,8 @@ function ViewConfig:chat(view)
 	if changed then
 		chat.scroll = overlap
 	end
-	if just.keypressed("return") then
+
+	if just.keypressed("return") and chat.message ~= "" then
 		multiplayerModel:sendMessage(chat.message)
 		chat.message = ""
 	end

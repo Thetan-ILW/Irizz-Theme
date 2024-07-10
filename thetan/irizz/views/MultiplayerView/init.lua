@@ -23,11 +23,12 @@ local headerView = {}
 
 function MultiplayerView:load()
 	self.game.selectModel:setChanged()
+	local actionModel = self.game.actionModel
+
 	self.layersView = LayersView(self.game, "select", "preview")
-	viewConfig = ViewConfig(self.game)
+	viewConfig = ViewConfig(self.game, actionModel)
 	headerView = HeaderView(self.game, "multiplayer")
 
-	local actionModel = self.game.actionModel
 	self.inputMap = InputMap(self, actionModel)
 end
 
