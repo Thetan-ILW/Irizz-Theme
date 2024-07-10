@@ -419,7 +419,7 @@ end
 function ViewConfig:scrollScore(view, delta)
 	local list = self.scoreListView
 
-	list:scroll(delta)
+	list:scrollScore(delta)
 
 	if list.openResult then
 		list.openResult = false
