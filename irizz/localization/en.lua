@@ -382,6 +382,13 @@ localization.textMultiplayer = {
 	noPatterns = "No patterns",
 }
 
+localization.textPauseSubscreen = {
+	paused = { "P", "A", "U", "S", "E", "D" },
+	resume = "Resume",
+	retry = "Retry",
+	quit = "Quit",
+}
+
 localization.textMultiplayerScreen = {}
 
 localization.textChartInfo = {
@@ -687,6 +694,11 @@ localization.fonts = {
 		title = { "ZenMaruGothic-Medium", 72 },
 		timeOfDay = { "ZenMaruGothic-Medium", 48 },
 		buttons = { "ZenMaruGothic-Medium", 24 },
+	},
+
+	pauseSubscreen = {
+		paused = { "ZenMaruGothic-Black", 100 },
+		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 }
 

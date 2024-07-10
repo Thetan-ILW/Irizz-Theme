@@ -448,6 +448,13 @@ localization.keybindsResult = {
 	submitScore = "(Пере)отправить ваш рекорд",
 }
 
+localization.textPauseSubscreen = {
+	paused = { "П", "а", "у", "з", "а" },
+	resume = "Продолжить",
+	retry = "Рестарт",
+	quit = "Выйти",
+}
+
 localization.fontFamilyList = {
 	["ZenMaruGothic-Black"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Black.ttf",
@@ -643,6 +650,11 @@ localization.fonts = {
 		title = { "ZenMaruGothic-Medium", 72 },
 		timeOfDay = { "ZenMaruGothic-Medium", 48 },
 		buttons = { "ZenMaruGothic-Medium", 24 },
+	},
+
+	pauseSubscreen = {
+		paused = { "ZenMaruGothic-Black", 100 },
+		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 }
 

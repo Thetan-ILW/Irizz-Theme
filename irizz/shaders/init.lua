@@ -47,4 +47,37 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
 }
 ]])
 
+shaders.waves = love.graphics.newShader([[
+extern number time;
+extern vec2 screen;
+extern vec4 shaderColor;
+extern number alpha;
+
+vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
+{
+    vec2 uv = screen_coords / screen;
+    
+    // Create wavy pattern
+    float wave = sin(uv.x * 10.0 + time) * 0.5 + 0.5;
+    wave *= sin(uv.y * 8.0 - time * 0.5) * 0.5 + 0.5;
+    
+    // Add some circular glow
+    vec2 center = vec2(0.5, 0.5);
+    float dist = distance(uv, center);
+    float glow = 1.0 - smoothstep(0.0, 0.5, dist);
+    
+    // Combine effects
+    float effect = mix(wave, glow, 0.5);
+    
+    // Sample the original texture (game screen)
+    vec4 texcolor = Texel(tex, texture_coords);
+    
+    // Create cloud color with separate color and alpha control
+    vec4 cloudColor = vec4(shaderColor.rgb, effect * alpha);
+    
+    // Mix the cloud color with the original color
+    return mix(texcolor, cloudColor, cloudColor.a);
+}
+]])
+
 return shaders

@@ -355,6 +355,7 @@ function Assets:get(config, theme)
 	end
 
 	local t = theme.sounds
+	theme.images = {}
 	theme.avatarImage = getIrizzImage("avatar")
 	theme.gameIcon = getIrizzImage("game_icon")
 	t.scrollLargeList = getIrizzSound("ui_sounds/scroll_large_list")
@@ -364,6 +365,9 @@ function Assets:get(config, theme)
 	t.sliderMoved = getIrizzSound("ui_sounds/slider_moved")
 	t.tabButtonClick = getIrizzSound("ui_sounds/tab_button_click")
 	t.songSelectScreenChanged = getIrizzSound("ui_sounds/song_select_screen_changed")
+	t.pause = getIrizzSound("ui_sounds/pause")
+
+	theme.images.button_gradient = getIrizzImage("images/button_gradient")
 
 	theme.colorThemes = getIrizzItems("color_themes/", true)
 

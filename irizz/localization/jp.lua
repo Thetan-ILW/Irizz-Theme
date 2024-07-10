@@ -414,6 +414,13 @@ localization.textMainMenu = {
 	welcomeToSoundsphere = "Welcome to soundsphere!",
 }
 
+localization.textPauseSubscreen = {
+	paused = { "ゲ", "ー", "ム", "が", "一", "時", "停", "止", "中" },
+	resume = "再開",
+	retry = "やり直し",
+	quit = "終了",
+}
+
 localization.textKeybinds = {
 	keybinds = "キーコンフィグ",
 }
@@ -613,6 +620,11 @@ localization.fonts = {
 		title = { "ZenMaruGothic-Medium", 72 },
 		timeOfDay = { "ZenMaruGothic-Medium", 48 },
 		buttons = { "ZenMaruGothic-Medium", 24 },
+	},
+
+	pauseSubscreen = {
+		paused = { "ZenMaruGothic-Black", 56 },
+		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 }
 

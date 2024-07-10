@@ -6,6 +6,7 @@ local PauseScreen = require("thetan.irizz.views.GameplayView.PauseScreen")
 local ScreenView = require("sphere.views.ScreenView")
 local SequenceView = require("sphere.views.SequenceView")
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 
 ---@class sphere.GameplayView: sphere.ScreenView
@@ -70,11 +71,22 @@ function GameplayView:draw()
 	self:keyreleased()
 
 	Layout:draw()
-	Background(self)
-	self.sequenceView:draw()
 	if self.subscreen == "pause" then
-		self.pauseScreen:draw(self)
+		local prev_canvas = love.graphics.getCanvas()
+		local game_canvas = gyatt.getCanvas("playfield")
+
+		love.graphics.setCanvas(game_canvas)
+		love.graphics.clear()
+		Background(self)
+		self.sequenceView:draw()
+		love.graphics.setCanvas(prev_canvas)
+
+		self.pauseScreen:draw(self, game_canvas)
+	else
+		Background(self)
+		self.sequenceView:draw()
 	end
+
 	Foreground(self)
 	just.container()
 
