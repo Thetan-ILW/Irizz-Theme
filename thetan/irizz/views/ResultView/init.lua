@@ -238,4 +238,8 @@ function ResultView:switchJudge(direction)
 	self.viewConfig:loadScore(self)
 end
 
+function ResultView:scrollScore(delta)
+	self.viewConfig:scrollScore(self, delta)
+end
+
 return ResultView

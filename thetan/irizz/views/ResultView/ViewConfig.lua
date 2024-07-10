@@ -416,6 +416,17 @@ function ViewConfig:scores(view)
 	Theme:border(w, h)
 end
 
+function ViewConfig:scrollScore(view, delta)
+	local list = self.scoreListView
+
+	list:scroll(delta)
+
+	if list.openResult then
+		list.openResult = false
+		view:loadScore(list.selectedScoreIndex)
+	end
+end
+
 function ViewConfig:modifiers(view)
 	local w, h = Layout:move("mods")
 

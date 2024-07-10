@@ -92,6 +92,20 @@ function ScoreListView:reloadItems()
 	self.game.selectModel:scrollScore(nil, i)
 end
 
+function ScoreListView:scroll(delta)
+	local i = self.selectedScoreIndex + delta
+	local score = self.items[i]
+
+	if not score then
+		return
+	end
+
+	self.selectedScore = score
+	self.selectedScoreIndex = i
+	self.game.selectModel:scrollScore(nil, i)
+	self.openResult = true
+end
+
 function ScoreListView:mouseClick(w, h, i)
 	if just.is_over(w, h, 0, 0) then
 		if just.mousepressed(1) then

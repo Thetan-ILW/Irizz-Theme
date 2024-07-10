@@ -19,6 +19,12 @@ function ResultInputMap:createBindings(view)
 		["right"] = function()
 			view:switchJudge(1)
 		end,
+		["down"] = function()
+			view:scrollScore(1)
+		end,
+		["up"] = function()
+			view:scrollScore(-1)
+		end,
 	}
 end
 
