@@ -141,21 +141,25 @@ function OsuPauseScreen:updateAudio(view)
 	setVolume(self.backClick, volume)
 end
 
-function OsuPauseScreen:draw(view)
+function OsuPauseScreen:draw(view, game_canvas)
 	love.graphics.origin()
 
 	failed = view.game.rhythmModel.scoreEngine.scoreSystem.hp:isFailed()
 
 	self:updateAudio(view)
 
-	local previousCanvas = love.graphics.getCanvas()
+	love.graphics.setColor({ 1, 1, 1, 1 })
+	love.graphics.setBlendMode("alpha", "premultiplied")
+	love.graphics.draw(game_canvas)
+	love.graphics.setBlendMode("alpha")
+
+	local prev_canvas = love.graphics.getCanvas()
 	local layer = gyatt.getCanvas("pauseOverlay")
 	love.graphics.setCanvas({ layer, stencil = true })
 	love.graphics.clear()
 	self:overlay(view)
 	self:buttons(view)
-	--bottomScreenMenu(view)
-	love.graphics.setCanvas({ previousCanvas, stencil = true })
+	love.graphics.setCanvas({ prev_canvas, stencil = true })
 
 	love.graphics.origin()
 	local a = self.alpha

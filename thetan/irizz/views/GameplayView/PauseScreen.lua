@@ -56,7 +56,9 @@ function PauseScreen:shaderImage(game_canvas, alpha)
 	shader:send("alpha", alpha)
 	love.graphics.setShader(shader)
 	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.setBlendMode("alpha", "premultiplied")
 	love.graphics.draw(game_canvas)
+	love.graphics.setBlendMode("alpha")
 	love.graphics.setShader(prev_shader)
 end
 
