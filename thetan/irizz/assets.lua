@@ -210,6 +210,10 @@ local function findImage(path)
 end
 
 local function findAudio(path)
+	if not path then
+		return
+	end
+
 	for _, format in ipairs(audioExt) do
 		local audio_path = path .. format
 
@@ -410,6 +414,27 @@ function Assets:get(config, theme)
 
 	theme.resultCustomConfig = love.filesystem.load("userdata/ui/result/config.lua")
 	theme.osuSkins, theme.osuSkinNames = getOsuSkins()
+end
+
+function Assets:loadOsuPause(paths)
+	local t = {}
+
+	if not paths then
+		return t
+	end
+
+	t.overlayImage = loadImage(paths.overlay)
+	t.overlayFailImage = loadImage(paths.overlayFail)
+	t.continueImage = loadImage(paths.continue)
+	t.retryImage = loadImage(paths.retry)
+	t.backImage = loadImage(paths.back)
+
+	t.loopAudio = loadAudio(paths.loop)
+	t.continueClick = loadAudio(paths.continueClick)
+	t.retryClick = loadAudio(paths.retryClick)
+	t.backClick = loadAudio(paths.backClick)
+
+	return t
 end
 
 return Assets

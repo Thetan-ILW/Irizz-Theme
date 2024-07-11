@@ -3,6 +3,7 @@ local class = require("class")
 local flux = require("flux")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
+local table_util = require("table_util")
 
 local OsuPauseScreen = class()
 
@@ -10,16 +11,6 @@ OsuPauseScreen.tween = nil
 OsuPauseScreen.alpha = 0
 
 local failed = false
-
-local function newImage(path)
-	local success, image = pcall(love.graphics.newImage, path)
-	return success and image or nil
-end
-
-local function newAudio(path, type)
-	local success, audio = pcall(love.audio.newSource, path, type)
-	return success and audio or nil
-end
 
 local function play(source)
 	if source then
@@ -40,21 +31,8 @@ local function setVolume(source, volume)
 	end
 end
 
-function OsuPauseScreen:new(note_skin)
-	if not note_skin then
-		return
-	end
-
-	self.overlayImage = newImage(note_skin.overlay)
-	self.overlayFailImage = newImage(note_skin.overlayFail)
-	self.continueImage = newImage(note_skin.continue)
-	self.retryImage = newImage(note_skin.retry)
-	self.backImage = newImage(note_skin.back)
-
-	self.loopAudio = newAudio(note_skin.loop, "stream")
-	self.continueClick = newAudio(note_skin.continueClick, "static")
-	self.retryClick = newAudio(note_skin.retryClick, "static")
-	self.backClick = newAudio(note_skin.backClick, "static")
+function OsuPauseScreen:new(assets)
+	table_util.copy(assets, self)
 end
 
 function OsuPauseScreen:show()

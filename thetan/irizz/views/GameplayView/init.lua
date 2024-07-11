@@ -8,6 +8,7 @@ local SequenceView = require("sphere.views.SequenceView")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
+local assets = require("thetan.irizz.assets")
 
 ---@class sphere.GameplayView: sphere.ScreenView
 ---@operator call: sphere.GameplayView
@@ -44,7 +45,7 @@ function GameplayView:load()
 	local note_skin_pause = note_skin.pauseScreen
 
 	if note_skin_pause and note_skin_pause.type == "osu" then
-		self.pauseScreen = OsuPauseScreen(note_skin_pause)
+		self.pauseScreen = OsuPauseScreen(assets:loadOsuPause(note_skin_pause))
 	elseif note_skin_pause and note_skin_pause.instance then
 		self.pauseScreen = note_skin_pause.instance
 	else
