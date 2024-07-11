@@ -627,7 +627,7 @@ function SettingsTab:UI(view)
 	just.next(0, textSeparation)
 	ss.chart_preview = imgui.checkbox("ss.chart_preview", ss.chart_preview, Text.chartPreview)
 	irizz.showOnlineCount = imgui.checkbox("irizz.showOnline", irizz.showOnlineCount, Text.showOnlineCount)
-	s.collapse = imgui.checkbox("s.collapse", s.collapse, Text.groupCharts)
+	ss.collapse = imgui.checkbox("ss.collapse", ss.collapse, Text.groupCharts)
 	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
 	irizz.alwaysShowOriginalMode =
 		imgui.checkbox("irizz.originalMode", irizz.alwaysShowOriginalMode, Text.alwaysShowOriginalMode)
