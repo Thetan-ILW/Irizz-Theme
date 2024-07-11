@@ -3,13 +3,11 @@ local class = require("class")
 local flux = require("flux")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
-local spherefonts = require("sphere.assets.fonts")
-local imgui = require("imgui")
 
-local PauseSubscreen = class()
+local OsuPauseScreen = class()
 
-PauseSubscreen.tween = nil
-PauseSubscreen.alpha = 0
+OsuPauseScreen.tween = nil
+OsuPauseScreen.alpha = 0
 
 local failed = false
 
@@ -30,13 +28,19 @@ local function play(source)
 	end
 end
 
+local function stop(source)
+	if source then
+		source:stop()
+	end
+end
+
 local function setVolume(source, volume)
 	if source then
 		source:setVolume(volume)
 	end
 end
 
-function PauseSubscreen:new(note_skin)
+function OsuPauseScreen:new(note_skin)
 	if not note_skin then
 		return
 	end
@@ -53,7 +57,7 @@ function PauseSubscreen:new(note_skin)
 	self.backClick = newAudio(note_skin.backClick, "static")
 end
 
-function PauseSubscreen:show()
+function OsuPauseScreen:show()
 	if self.tween then
 		self.tween:stop()
 	end
@@ -62,22 +66,21 @@ function PauseSubscreen:show()
 	play(self.loopAudio)
 end
 
-function PauseSubscreen:hide()
+function OsuPauseScreen:hide()
 	if self.tween then
 		self.tween:stop()
 	end
 
 	self.tween = flux.to(self, 0.22, { alpha = 0 }):ease("quadout")
+
+	stop(self.loopAudio)
 end
 
-function PauseSubscreen:unload()
-	if self.loopAudio then
-		self.loopAudio:stop()
-		self.loopAudio:release()
-	end
+function OsuPauseScreen:unload()
+	stop(self.loopAudio)
 end
 
-function PauseSubscreen:overlay(view)
+function OsuPauseScreen:overlay(view)
 	local image = self.overlayImage
 
 	if failed then
@@ -125,7 +128,7 @@ local function button(image, _y)
 	return changed
 end
 
-function PauseSubscreen:buttons(view)
+function OsuPauseScreen:buttons(view)
 	local gameplayController = view.game.gameplayController
 
 	if not failed then
@@ -148,7 +151,7 @@ function PauseSubscreen:buttons(view)
 	end
 end
 
-function PauseSubscreen:updateAudio(view)
+function OsuPauseScreen:updateAudio(view)
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local a = settings.audio
@@ -160,7 +163,7 @@ function PauseSubscreen:updateAudio(view)
 	setVolume(self.backClick, volume)
 end
 
-function PauseSubscreen:draw(view)
+function OsuPauseScreen:draw(view)
 	love.graphics.origin()
 
 	failed = view.game.rhythmModel.scoreEngine.scoreSystem.hp:isFailed()
@@ -182,4 +185,4 @@ function PauseSubscreen:draw(view)
 	love.graphics.draw(layer)
 end
 
-return PauseSubscreen
+return OsuPauseScreen

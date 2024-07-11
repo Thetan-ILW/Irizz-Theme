@@ -63,6 +63,7 @@ function GameplayView:retry()
 	self.game.gameplayController:retry()
 	self.sequenceView:unload()
 	self.sequenceView:load()
+	self.pauseScreen:hide()
 end
 
 function GameplayView:draw()
