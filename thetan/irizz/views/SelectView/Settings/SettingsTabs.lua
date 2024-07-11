@@ -614,7 +614,6 @@ function SettingsTab:UI(view)
 	imgui.separator()
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
-	local s = configs.select
 	local g = settings.graphics
 	local gp = configs.settings.gameplay
 	local ss = settings.select
