@@ -442,6 +442,12 @@ localization.textNotification = {
 	cantChangeMods = "Not a host | Free modifiers is not toggled",
 }
 
+localization.textFreshInstallModal = {
+	importCharts = "You can add charts from other rhythm games.\nWould you like to read and play charts from these directories?",
+	yes = "Yes",
+	no = "No",
+}
+
 localization.keybindsGlobal = {
 	insertMode = "Insert mode",
 	normalMode = "Normal mode",
@@ -706,6 +712,12 @@ localization.fonts = {
 	layersView = {
 		uiLockTitle = { "ZenMaruGothic-Black", 72 },
 		uiLockStatus = { "ZenMaruGothic-Medium", 36 },
+	},
+
+	freshInstallModal = {
+		title = { "ZenMaruGothic-Black", 48 },
+		list = { "ZenMaruGothic-Medium", 24 },
+		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 }
 

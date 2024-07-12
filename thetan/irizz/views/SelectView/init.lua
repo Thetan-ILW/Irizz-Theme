@@ -53,7 +53,7 @@ function SelectView:load()
 	local canAddSongs = #newSongs ~= 0
 
 	if canAddSongs then
-		print(("You can import charts from %i other rhythm game(s)."):format(#newSongs))
+		self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
 	end
 end
 
