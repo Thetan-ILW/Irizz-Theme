@@ -281,10 +281,6 @@ localization.textMounts = {
 	mounts = "Mounts",
 	update = "Update",
 	deleteCache = "Delete cache",
-	processingCharts = "Processing charts...",
-	path = "Path",
-	chartsFound = "Processed / Found",
-	chartsCached = "Charts cached",
 	create = "Create",
 	delete = "Delete",
 	locations = "Locations",
@@ -426,6 +422,13 @@ localization.textMainMenu = {
 	submit = "Submit",
 	welcomeToNoesis = "Welcome to Noesis!",
 	welcomeToSoundsphere = "Welcome to soundsphere!",
+}
+
+localization.textLayersView = {
+	processingCharts = "Processing charts...",
+	path = "Path",
+	chartsFound = "Processed / Found",
+	chartsCached = "Charts cached",
 }
 
 localization.textKeybinds = {
@@ -613,7 +616,6 @@ localization.fonts = {
 		windowText = { "ZenMaruGothic-Medium", 24 },
 		fields = { "ZenMaruGothic-Medium", 28 },
 		path = { "ZenMaruGothic-Black", 48 },
-		status = { "ZenMaruGothic-Medium", 36 },
 		buttons = { "ZenMaruGothic-Medium", 28 },
 	},
 
@@ -699,6 +701,11 @@ localization.fonts = {
 	pauseSubscreen = {
 		paused = { "ZenMaruGothic-Black", 100 },
 		buttons = { "ZenMaruGothic-Medium", 48 },
+	},
+
+	layersView = {
+		uiLockTitle = { "ZenMaruGothic-Black", 72 },
+		uiLockStatus = { "ZenMaruGothic-Medium", 36 },
 	},
 }
 

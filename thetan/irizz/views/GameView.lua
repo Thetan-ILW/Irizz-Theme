@@ -106,7 +106,7 @@ function GameView:draw()
 	self.view:draw()
 
 	if self.modal then
-		self.modal:draw()
+		self.modal:draw(self)
 
 		if self.modal.alpha < 0 then
 			self.modal = nil
@@ -141,6 +141,10 @@ end
 
 ---@param event table
 function GameView:receive(event)
+	if self.game.cacheModel.isProcessing then
+		return
+	end
+
 	self.frameTimeView:receive(event)
 	if not self.view then
 		return

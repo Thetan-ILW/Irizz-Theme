@@ -48,6 +48,13 @@ function SelectView:load()
 
 	self:updateFilterLines()
 	self.layersView = LayersView(self.game, "select", "preview")
+
+	local newSongs = self.game.cacheModel.newSongs
+	local canAddSongs = #newSongs ~= 0
+
+	if canAddSongs then
+		print(("You can import charts from %i other rhythm game(s)."):format(#newSongs))
+	end
 end
 
 function SelectView:beginUnload()

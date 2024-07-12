@@ -43,6 +43,10 @@ end
 function Modal:update() end
 
 function Modal:draw(view)
+	if view.game.cacheModel.isProcessing then
+		return
+	end
+
 	self:update()
 
 	if self.shouldClose and self.alpha > 0.1 then

@@ -3,6 +3,9 @@ local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 
 local Theme = require("thetan.irizz.views.Theme")
+local Color = Theme.colors
+local Text = Theme.textLayersView
+local font
 
 local Layout = require("thetan.irizz.views.LayersLayout")
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
@@ -27,7 +30,7 @@ local panelBlur = 0
 local showSpectrum = false
 local applyShaders = false
 local modalActive = false
-local mainMenuActive = false
+local uiLock = false
 
 local gfx = love.graphics
 
@@ -46,6 +49,8 @@ function LayersView:new(game, screenName, sourceName)
 			return
 		end
 	end
+
+	font = Theme:getFonts("layersView")
 end
 
 ---@param canvas love.Canvas
@@ -195,6 +200,38 @@ function LayersView:drawUI(ui)
 	gfx.setBlendMode("alpha")
 end
 
+function LayersView:uiLock()
+	local cacheModel = self.game.cacheModel
+	local locationManager = self.game.cacheModel.locationManager
+	local selected_loc = locationManager.selected_loc
+	local path = selected_loc.path
+
+	local count = cacheModel.shared.chartfiles_count
+	local current = cacheModel.shared.chartfiles_current
+
+	local w, h = Layout:move("background")
+	gfx.setColor(0, 0, 0, 0.75)
+	gfx.rectangle("fill", 0, 0, w, h)
+
+	local w, h = Layout:move("uiLockTitle")
+	gfx.setColor(Color.text)
+	gfx.setFont(font.uiLockTitle)
+	gfx_util.printFrame(Text.processingCharts, 0, 0, w, h, "center", "center")
+
+	w, h = Layout:move("background")
+	gfx.setFont(font.uiLockStatus)
+	local text = ("%s: %s\n%s: %s/%s\n%s: %0.02f%%"):format(
+		Text.path,
+		path,
+		Text.chartsFound,
+		current,
+		count,
+		Text.chartsCached,
+		current / count * 100
+	)
+	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
+end
+
 function LayersView:update()
 	local configs = self.game.configModel.configs
 	local graphics = configs.settings.graphics
@@ -232,6 +269,8 @@ function LayersView:update()
 	if modalActive then
 		uiAlpha = uiAlpha - self.game.gameView.modal.alpha
 	end
+
+	uiLock = self.game.cacheModel.isProcessing
 end
 
 function LayersView:draw(panelsStencil, ui)
@@ -239,6 +278,11 @@ function LayersView:draw(panelsStencil, ui)
 	Theme:setLines()
 
 	local background = self:drawBackground()
+
+	if uiLock then
+		self:uiLock()
+		return
+	end
 
 	if uiAlpha == 0 then
 		return

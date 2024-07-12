@@ -211,34 +211,6 @@ function ViewConfig:database(view)
 	Theme:border(w, h)
 end
 
-function ViewConfig:uiLock(view)
-	local cacheModel = view.game.cacheModel
-	local locationManager = view.game.cacheModel.locationManager
-	local selected_loc = locationManager.selected_loc
-	local path = selected_loc.path
-
-	local count = cacheModel.shared.chartfiles_count
-	local current = cacheModel.shared.chartfiles_current
-
-	local w, h = Layout:move("modalName")
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.title)
-	gfx_util.printFrame(Text.processingCharts, 0, 0, w, h, "center", "center")
-
-	w, h = Layout:move("base")
-	love.graphics.setFont(Font.status)
-	local text = ("%s: %s\n%s: %s/%s\n%s: %0.02f%%"):format(
-		Text.path,
-		path,
-		Text.chartsFound,
-		current,
-		count,
-		Text.chartsCached,
-		current / count * 100
-	)
-	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
-end
-
 function ViewConfig:tabButtons()
 	local w, h = Layout:move("buttons")
 	love.graphics.setFont(Font.buttons)
@@ -266,11 +238,6 @@ function ViewConfig:draw(view)
 	local w, h = Layout:move("base")
 	love.graphics.setColor(0, 0, 0, 0.75)
 	love.graphics.rectangle("fill", 0, 0, w, h)
-
-	if view.game.cacheModel.isProcessing then
-		self:uiLock(view)
-		return
-	end
 
 	w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
