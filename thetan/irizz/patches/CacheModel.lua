@@ -54,6 +54,10 @@ modulePatcher:insert(module, "load", function(self)
 
 	self.newSongs = {}
 
+	if not NOESIS_INSTALLED then
+		return
+	end
+
 	if jit.os ~= "Windows" then
 		return
 	end
