@@ -1,5 +1,4 @@
 local class = require("class")
-local gyatt = require("thetan.gyatt")
 local ScreenTransition = require("thetan.irizz.views.ScreenTransition")
 local FrameTimeView = require("sphere.views.FrameTimeView")
 local AsyncTasksView = require("sphere.views.AsyncTasksView")

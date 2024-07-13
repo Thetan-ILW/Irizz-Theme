@@ -20,6 +20,7 @@ function FreshInstallModal:onHide()
 
 	self.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
 	self.game.selectModel:noDebouncePullNoteChartSet()
+	self.game.cacheModel.newSongs = {}
 end
 
 local index = 1
