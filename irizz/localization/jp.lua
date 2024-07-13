@@ -421,6 +421,13 @@ localization.textPauseSubscreen = {
 	quit = "終了",
 }
 
+localization.textFreshInstallModal = {
+	importCharts = "You can add charts from other rhythm games.\nWould you like to read and play charts from these directories?",
+	yes = "Yes",
+	no = "No",
+	show = "Show this window everytime the game starts",
+}
+
 localization.textKeybinds = {
 	keybinds = "キーコンフィグ",
 }
@@ -547,9 +554,6 @@ localization.fonts = {
 		mountPaths = { "ZenMaruGothic-Black", 24 },
 		windowText = { "ZenMaruGothic-Medium", 24 },
 		fields = { "ZenMaruGothic-Medium", 28 },
-		path = { "ZenMaruGothic-Black", 48 },
-		status = { "ZenMaruGothic-Medium", 36 },
-		buttons = { "ZenMaruGothic-Medium", 28 },
 	},
 
 	onlineModal = {
@@ -624,6 +628,12 @@ localization.fonts = {
 
 	pauseSubscreen = {
 		paused = { "ZenMaruGothic-Black", 56 },
+		buttons = { "ZenMaruGothic-Medium", 48 },
+	},
+
+	freshInstallModal = {
+		title = { "ZenMaruGothic-Black", 48 },
+		list = { "ZenMaruGothic-Medium", 24 },
 		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 }

@@ -455,6 +455,13 @@ localization.textPauseSubscreen = {
 	quit = "Выйти",
 }
 
+localization.textFreshInstallModal = {
+	importCharts = "Вы можете добавить карты из других игр.\nЖелаете позволить игре использовать карты из этих директорий?",
+	yes = "Да",
+	no = "Нет",
+	show = "Показывать это окно при каждом запуске игры",
+}
+
 localization.fontFamilyList = {
 	["ZenMaruGothic-Black"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Black.ttf",
@@ -654,6 +661,12 @@ localization.fonts = {
 
 	pauseSubscreen = {
 		paused = { "ZenMaruGothic-Black", 100 },
+		buttons = { "ZenMaruGothic-Medium", 48 },
+	},
+
+	freshInstallModal = {
+		title = { "ZenMaruGothic-Black", 48 },
+		list = { "ZenMaruGothic-Medium", 24 },
 		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 }
