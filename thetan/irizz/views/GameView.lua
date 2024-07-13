@@ -140,10 +140,6 @@ end
 
 ---@param event table
 function GameView:receive(event)
-	if self.game.cacheModel.isProcessing then
-		return
-	end
-
 	self.frameTimeView:receive(event)
 	if not self.view then
 		return
@@ -208,6 +204,10 @@ function GameView:openModal(modalName)
 end
 
 function GameView:sendQuitSignal()
+	if self.game.cacheModel.isProcessing then
+		return
+	end
+
 	if self.modal then
 		self.modal:quit()
 		return
