@@ -1,8 +1,17 @@
-local physfs = require("physfs")
 local thread = require("thread")
 
 local modulePatcher = require("ModulePatcher")
 local module = "sphere.persistence.CacheModel"
+
+local function exists(file)
+	local ok, err, code = os.rename(file, file)
+	if not ok then
+		if code == 13 then -- Permission denied, but it exists
+			return true
+		end
+	end
+	return ok, err
+end
 
 local function searchSongs()
 	local paths = {
@@ -27,11 +36,7 @@ local function searchSongs()
 	local songs = {}
 
 	for _, v in ipairs(paths) do
-		local success, _ = physfs.mount(v[2], "found_songs", false)
-		success = success and true or false
-
-		if success then
-			physfs.unmount(v[2])
+		if exists(v[2] .. "/") then
 			table.insert(songs, v)
 		end
 	end
@@ -53,10 +58,6 @@ modulePatcher:insert(module, "load", function(self)
 	self.locationManager:load()
 
 	self.newSongs = {}
-
-	if not NOESIS_INSTALLED then
-		return
-	end
 
 	if jit.os ~= "Windows" then
 		return
