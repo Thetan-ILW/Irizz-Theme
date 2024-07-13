@@ -631,6 +631,11 @@ localization.fonts = {
 		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 
+	layersView = {
+		uiLockTitle = { "ZenMaruGothic-Black", 72 },
+		uiLockStatus = { "ZenMaruGothic-Medium", 36 },
+	},
+
 	freshInstallModal = {
 		title = { "ZenMaruGothic-Black", 48 },
 		list = { "ZenMaruGothic-Medium", 24 },
