@@ -22,7 +22,6 @@ local function searchSongs()
 		{ "Quaver", "C:/Program Files (x86)/Steam/steamapps/common/Quaver/Songs" },
 		{ "Quaver", "C:/Steam/steamapps/common/Quaver/Songs" },
 		{ "Quaver", "D:/Steam/steamapps/common/Quaver/Songs" },
-		{ "Other", "/media/SSD/Charts/BMS_converts" },
 	}
 
 	local songs = {}

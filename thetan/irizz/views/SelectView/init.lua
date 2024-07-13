@@ -49,11 +49,16 @@ function SelectView:load()
 	self:updateFilterLines()
 	self.layersView = LayersView(self.game, "select", "preview")
 
-	local newSongs = self.game.cacheModel.newSongs
-	local canAddSongs = #newSongs ~= 0
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
 
-	if canAddSongs then
-		self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
+	if irizz.showFreshInstallModal then
+		local newSongs = self.game.cacheModel.newSongs
+		local canAddSongs = #newSongs ~= 0
+
+		if canAddSongs then
+			self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
+		end
 	end
 end
 

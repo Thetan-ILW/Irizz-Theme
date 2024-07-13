@@ -1,6 +1,7 @@
 local class = require("class")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
+local imgui = require("thetan.irizz.imgui")
 
 local Layout = require("thetan.irizz.views.modals.FreshInstallModal.Layout")
 
@@ -14,7 +15,7 @@ local ViewConfig = class()
 local gfx = love.graphics
 
 local button_width = 500
-local button_height = 80
+local button_height = 60
 
 local function button(text, on_click)
 	local changed, active, hovered = gyatt.button(text .. "import", gyatt.isOver(button_width, button_height))
@@ -85,6 +86,15 @@ function ViewConfig:draw(view)
 	button(Text.no, function()
 		view:quit()
 	end)
+
+	w, h = Layout:move("base")
+	imgui.setSize(w, h, w / 2.5, 55)
+
+	local configs = view.game.configModel.configs
+	local irizz = configs.irizz
+
+	gfx.translate(15, h - 60)
+	irizz.showFreshInstallModal = imgui.checkbox("showFreshInstallModal ", irizz.showFreshInstallModal, Text.show)
 end
 
 return ViewConfig

@@ -26,4 +26,5 @@ return {
 	hpGraph = true,
 	showPP = true,
 	songSelectOffset = 0,
+	showFreshInstallModal = true,
 }

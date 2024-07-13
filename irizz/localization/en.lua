@@ -446,6 +446,7 @@ localization.textFreshInstallModal = {
 	importCharts = "You can add charts from other rhythm games.\nWould you like to read and play charts from these directories?",
 	yes = "Yes",
 	no = "No",
+	show = "Show this window everytime the game starts",
 }
 
 localization.keybindsGlobal = {
