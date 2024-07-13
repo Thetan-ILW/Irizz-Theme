@@ -13,7 +13,7 @@ function FreshInstallModal:new(game)
 	self.newSongs = self.game.cacheModel.newSongs
 end
 
-function FreshInstallModal:onHide()
+function FreshInstallModal:onQuit()
 	local configs = self.game.configModel.configs
 	local settings = configs.settings
 	local ss = settings.select
