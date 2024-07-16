@@ -152,10 +152,12 @@ function GameView:receive(event)
 	end
 
 	if event.name == "keypressed" then
-		self.actionModel.keyPressed(event)
+		if not event[3] then -- do not repeat
+			self.actionModel.keyPressed(event)
 
-		if self:getViewName() ~= "gameplay" then
-			self.inputMap:call("global")
+			if self:getViewName() ~= "gameplay" then
+				self.inputMap:call("global")
+			end
 		end
 	end
 

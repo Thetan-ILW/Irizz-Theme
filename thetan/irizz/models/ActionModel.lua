@@ -54,6 +54,7 @@ local modFormat = {
 
 function ActionModel:new(configModel)
 	self.configModel = configModel
+	love.keyboard.setKeyRepeat(true)
 end
 
 local function getComboString(t)
