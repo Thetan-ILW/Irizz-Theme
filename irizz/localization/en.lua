@@ -440,6 +440,8 @@ localization.textNotification = {
 	chartStarted = "%s - %s [%s]\nLength: %s",
 	exportToOsu = "Exported to .osu file",
 	cantChangeMods = "Not a host | Free modifiers is not toggled",
+	scrollSpeedChanged = "New scroll speed: %s",
+	offsetChanged = "New local offset: %i",
 }
 
 localization.textFreshInstallModal = {

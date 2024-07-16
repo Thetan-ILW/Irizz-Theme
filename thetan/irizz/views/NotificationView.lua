@@ -19,6 +19,8 @@ local messages = {
 	volumeChanged = Text.volume,
 	chartStarted = Text.chartStarted,
 	cantChangeMods = Text.cantChangeMods,
+	scrollSpeedChanged = Text.scrollSpeedChanged,
+	offsetChanged = Text.offsetChanged,
 }
 
 function NotificationView:init()

@@ -171,15 +171,19 @@ function GameplayView:keypressed()
 	if kp(input.skipIntro) then
 		gameplayController:skipIntro()
 	elseif kp(input.offset.decrease) then
-		gameplayController:increaseLocalOffset(-0.001)
+		local new_offset = gameplayController:increaseLocalOffset(-0.001)
+		self.game.gameView.showMessage("offsetChanged", new_offset * 1000)
 	elseif kp(input.offset.increase) then
-		gameplayController:increaseLocalOffset(0.001)
+		local new_offset = gameplayController:increaseLocalOffset(0.001)
+		self.game.gameView.showMessage("offsetChanged", new_offset * 1000)
 	elseif kp(input.offset.reset) then
 		gameplayController:resetLocalOffset()
 	elseif kp(input.playSpeed.decrease) then
-		gameplayController:increasePlaySpeed(-1)
+		local new_speed = gameplayController:increasePlaySpeed(-1)
+		self.game.gameView.showMessage("scrollSpeedChanged", new_speed)
 	elseif kp(input.playSpeed.increase) then
-		gameplayController:increasePlaySpeed(1)
+		local new_speed = gameplayController:increasePlaySpeed(1)
+		self.game.gameView.showMessage("scrollSpeedChanged", new_speed)
 	end
 
 	local shift = love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")
