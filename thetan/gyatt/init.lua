@@ -13,6 +13,7 @@ gyatt.separator = imgui.separator
 gyatt.setSize = imgui.setSize
 gyatt.button = just.button
 gyatt.isOver = just.is_over
+gyatt.sameline = just.sameline
 
 function gyatt.text(text, w, ax)
 	gyatt.frame(text, 0, 0, w or math.huge, math.huge, ax or "left", "top")

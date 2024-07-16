@@ -10,6 +10,7 @@ local LayersView = require("thetan.irizz.views.LayersView")
 local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.irizz.views.SelectView.SongSelect")
 local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections")
+local OsuSongSelect = require("thetan.irizz.views.SelectView.SongSelect.OsuSongSelect")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
@@ -35,6 +36,8 @@ function SelectView:load()
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
+
+	self.osuSongSelect = OsuSongSelect()
 
 	self.chartPreviewView = ChartPreviewView(self.game)
 	self.chartPreviewView:load()
@@ -131,6 +134,7 @@ end
 
 function SelectView:notechartChanged()
 	self.songSelectViewConfig:updateInfo(self)
+	self.osuSongSelect:updateInfo(self)
 end
 
 function SelectView:play()
@@ -264,7 +268,21 @@ function SelectView:receive(event)
 	end
 end
 
+function SelectView:drawOsu()
+	local function panelsStencil() end
+	local function UI()
+		self.osuSongSelect:draw()
+	end
+
+	self.layersView:draw(panelsStencil, UI)
+end
+
 function SelectView:draw()
+	if true then
+		self:drawOsu()
+		return
+	end
+
 	local position = self.screenX
 	local settings = self.settingsViewConfig
 	local songSelect = self.songSelectViewConfig

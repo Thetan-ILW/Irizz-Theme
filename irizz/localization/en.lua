@@ -512,6 +512,12 @@ localization.fontFamilyList = {
 	["ZenMaruGothic-Regular"] = {
 		"irizz/fonts/ZenMaruGothic/ZenMaruGothic-Regular.ttf",
 	},
+	["Aller"] = {
+		"resources/osu_default_assets/ui_font/Aller_Rg.ttf",
+	},
+	["Aller-Light"] = {
+		"resources/osu_default_assets/ui_font/Aller_Lt.ttf",
+	},
 }
 
 localization.fonts = {
@@ -721,6 +727,19 @@ localization.fonts = {
 		title = { "ZenMaruGothic-Black", 48 },
 		list = { "ZenMaruGothic-Medium", 24 },
 		buttons = { "ZenMaruGothic-Medium", 48 },
+	},
+
+	osuSongSelect = {
+		chartName = { "Aller", 25 },
+		chartedBy = { "Aller", 17 },
+		infoTop = { "Aller", 17 },
+		infoBottom = { "Aller", 12 },
+		dropdown = { "Aller", 19 },
+		groupSort = { "Aller", 30 },
+		username = { "Aller", 20 },
+		belowUsername = { "Aller", 14 },
+		scrollSpeed = { "Aller-Light", 23 },
+		tabs = { "Aller", 14 },
 	},
 }
 
