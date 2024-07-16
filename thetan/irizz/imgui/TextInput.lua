@@ -25,7 +25,7 @@ return function(id, text, index, w, h)
 	love.graphics.setColor(1, 1, 1, 1)
 
 	local clipw = w - h * theme.padding * 2
-	just.clip(love.graphics.rectangle, "fill", 0, 0, clipw + 2, lh)
+	just.clip(love.graphics.rectangle, "fill", 0, 0, clipw + 2, lh + 10)
 
 	local changed, left, right
 	if just.focused_id == id then
@@ -46,6 +46,12 @@ return function(id, text, index, w, h)
 	if not changed and text == "" then
 		love.graphics.setColor(1, 1, 1, 0.5)
 		love.graphics.printf(placeholder, 0, 0, w, "center")
+	end
+
+	if text ~= "" then
+		local font_w = font:getWidth(text)
+		love.graphics.translate((w / 2) - (font_w / 2), 0)
+		love.graphics.rectangle("fill", 0, font:getHeight(), font_w, 4)
 	end
 
 	just.clip()
