@@ -59,13 +59,6 @@ function GameView:_setView(view)
 	}
 
 	self.viewName = viewNames[view]
-
-	if self.viewName ~= "gameplay" then
-		self.actionModel.enable()
-		return
-	end
-
-	self.actionModel.disable()
 end
 
 ---@param view sphere.ScreenView
@@ -73,10 +66,19 @@ function GameView:setView(view)
 	local config = self.game.configModel.configs.irizz
 	local transition = config.transitionAnimation
 	view.gameView = self
+
+	self.actionModel = self.game.actionModel
 	self.screenTransition:transit(function()
+		self.actionModel.disable()
+
 		self.screenTransition:transitAsync(1, 0, transition)
 		self:_setView(view)
 		self.screenTransition:transitAsync(0, 1, transition)
+
+		if self.viewName ~= "gameplay" then
+			self.actionModel.enable()
+			return
+		end
 	end)
 end
 

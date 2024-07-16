@@ -340,6 +340,10 @@ function ActionModel.disable()
 	ActionModel.resetInputs()
 end
 
+function ActionModel.isEnabled()
+	return not disabled
+end
+
 -------------------------------
 
 local order = {

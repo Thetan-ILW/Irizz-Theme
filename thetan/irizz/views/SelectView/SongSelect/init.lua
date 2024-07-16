@@ -115,20 +115,24 @@ local function searchField(view)
 	local config = view.game.configModel.configs.select
 
 	love.graphics.setFont(font.searchField)
+
 	local changed, text = TextInput("SearchField", { config.filterString, Text.searchPlaceholder }, nil, w, h)
 
-	if changed == "text" then
-		view:updateSearch(text)
-	end
+	if actionModel.isEnabled() then
+		if changed == "text" then
+			view:updateSearch(text)
+		end
 
-	local delAll = actionModel.consumeAction("deleteLine")
+		local delAll = actionModel.consumeAction("deleteLine")
 
-	if delAll then
-		view:updateSearch("")
+		if delAll then
+			view:updateSearch("")
+		end
 	end
 
 	w, h = Layout:move("search")
 	love.graphics.setFont(font.filterLine)
+	love.graphics.setColor(Color.text)
 	Theme:textWithShadow(view.chartFilterLine, w, h, "center", "bottom")
 
 	if just.button("filterLineButton", just.is_over(w, h)) then
