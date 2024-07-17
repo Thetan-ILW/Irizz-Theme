@@ -37,7 +37,7 @@ function SelectView:load()
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
 
-	self.osuSongSelect = OsuSongSelect()
+	self.osuSongSelect = OsuSongSelect(self.game)
 
 	self.chartPreviewView = ChartPreviewView(self.game)
 	self.chartPreviewView:load()

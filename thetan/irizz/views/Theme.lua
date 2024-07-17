@@ -100,6 +100,10 @@ function Theme:getFonts(objectName)
 
 	for key, font in pairs(fonts) do
 		loadedFonts[key] = assets:getFont(self.fontFamilyList, font[1], font[2])
+
+		if font[3] then
+			loadedFonts[key]:setFallbacks(assets:getFont(self.fontFamilyList, font[3], font[2]))
+		end
 	end
 
 	return loadedFonts

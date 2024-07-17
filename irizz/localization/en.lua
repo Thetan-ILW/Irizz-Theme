@@ -518,6 +518,9 @@ localization.fontFamilyList = {
 	["Aller-Light"] = {
 		"resources/osu_default_assets/ui_font/Aller_Lt.ttf",
 	},
+	["Aller-Bold"] = {
+		"resources/osu_default_assets/ui_font/Aller_Bd.ttf",
+	},
 }
 
 localization.fonts = {
@@ -730,16 +733,24 @@ localization.fonts = {
 	},
 
 	osuSongSelect = {
-		chartName = { "Aller", 25 },
-		chartedBy = { "Aller", 17 },
-		infoTop = { "Aller", 17 },
+		chartName = { "Aller", 25, "ZenMaruGothic-Medium" },
+		chartedBy = { "Aller", 16, "ZenMaruGothic-Medium" },
+		infoTop = { "Aller-Bold", 16 },
+		infoCenter = { "Aller", 16 },
 		infoBottom = { "Aller", 12 },
 		dropdown = { "Aller", 19 },
 		groupSort = { "Aller", 30 },
-		username = { "Aller", 20 },
+		username = { "Aller", 20, "ZenMaruGothic-Medium" },
 		belowUsername = { "Aller", 14 },
 		scrollSpeed = { "Aller-Light", 23 },
 		tabs = { "Aller", 14 },
+	},
+
+	osuChartSetList = {
+		title = { "Aller", 22, "ZenMaruGothic-Medium" },
+		secondRow = { "Aller", 16, "ZenMaruGothic-Medium" },
+		thirdRow = { "Aller-Bold", 16, "ZenMaruGothic-Medium" },
+		noItems = { "Aller", 36 },
 	},
 }
 

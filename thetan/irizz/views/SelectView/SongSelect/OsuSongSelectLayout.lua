@@ -19,7 +19,7 @@ function _Layout:draw()
 	self:pack("base", _x, _y, _w, _h)
 
 	local x1, w1 = gfx_util.layout(_x, _w, { 224, -1 })
-	local y1, h1 = gfx_util.layout(_y, _h, { 678, -1 })
+	local y1, h1 = gfx_util.layout(_y, _h, { -1, 0 })
 
 	self:pack("bottomButtons", x1[2], y1[2], w1[2], h1[2])
 end
