@@ -16,6 +16,7 @@ NoteChartSetListView.focus = false
 NoteChartSetListView.assets = {}
 NoteChartSetListView.activeTextColor = { 0, 0, 0, 1 }
 NoteChartSetListView.inactiveTextColor = { 1, 1, 1, 1 }
+NoteChartSetListView.animations = {}
 
 function NoteChartSetListView:new(game)
 	ListView:new(game)
@@ -78,6 +79,18 @@ end
 
 local gfx = love.graphics
 
+function NoteChartSetListView:updateAnimations()
+	for i, v in pairs(self.animations) do
+		v = v - 0.003
+
+		self.animations[i] = v
+
+		if v < 0 then
+			self.animations[i] = nil
+		end
+	end
+end
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -93,22 +106,20 @@ function NoteChartSetListView:drawItem(i, w, h)
 		additional = 25 * d_clamped
 	end
 
-	gfx.translate((110 * distance_abs) * 0.4 + additional, (-5 * distance) - 10)
+	local animation = self.animations[i] or 0
 
+	gfx.translate((110 * distance_abs) * 0.4 + additional - (animation * 10), (-5 * distance) - 10)
+
+	animation = animation * 0.5
 	gfx.setColor({
-		1 - (1 - 0.87) * d_clamped,
-		1 - (1 - 0.28) * d_clamped,
-		1 - (1 - 0.57) * d_clamped,
+		1 - (1 - 0.87 - animation) * d_clamped,
+		1 - (1 - 0.28 - animation) * d_clamped,
+		1 - (1 - 0.57 - animation) * d_clamped,
 		1,
 	})
 
 	if gyatt.isOver(w, h, 0, 10) and self.focus then
-		gfx.setColor({
-			1 - (1 - 0.67) * d_clamped,
-			1 - (1 - 0.08) * d_clamped,
-			1 - (1 - 0.37) * d_clamped,
-			1,
-		})
+		self.animations[i] = 0.3
 	end
 
 	gfx.draw(self.assets.listButtonBackground)

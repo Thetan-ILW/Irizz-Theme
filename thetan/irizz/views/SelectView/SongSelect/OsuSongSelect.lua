@@ -448,7 +448,7 @@ local function bottomButtonImage(id, image, mouse_over_image)
 	_, ih = mouse_over_image:getDimensions()
 	gfx.translate(0, -ih)
 	gfx.setColor({ a, a, a, a })
-	gfx.setBlendMode("alpha", "premultiplied")
+	gfx.setBlendMode("add")
 	gfx.draw(mouse_over_image)
 	gfx.setBlendMode("alpha")
 	gfx.translate(0, ih)
@@ -476,10 +476,8 @@ function OsuSongSelect:bottom(view)
 	gfx.scale(1)
 
 	w, h = Layout:move("base")
-	iw, ih = assets.menuBack:getDimensions()
-
-	gfx.translate(0, h - ih)
-	gfx.draw(assets.menuBack)
+	gfx.translate(0, h)
+	bottomButtonImage("back", assets.menuBack, assets.menuBack)
 
 	w, h = Layout:move("bottomButtons")
 	bottomButtonImage("mode", assets.modeButton, assets.modeButtonOver)
@@ -541,6 +539,7 @@ function OsuSongSelect:chartSetList()
 	list.focus = not no_focus
 
 	gfx.translate(756, 82)
+	list:updateAnimations()
 	list:draw(610, 595, true)
 
 	w, h = Layout:move("base")
@@ -635,6 +634,7 @@ function OsuSongSelect:draw(view)
 	self:chartInfo()
 	self:topUI(view)
 	self:mods(view)
+	--print(view.game.chartPreviewModel.graphicEngine.renderer.cvp[1].point:getBeatModulo())
 end
 
 return OsuSongSelect
