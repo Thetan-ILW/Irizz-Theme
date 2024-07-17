@@ -6,6 +6,7 @@ local OsuSongSelect = class()
 
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
+local math_util = require("math_util")
 local Format = require("sphere.views.Format")
 
 local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
@@ -38,6 +39,7 @@ local username = ""
 local is_logged_in = false
 local pp = ""
 local scroll_speed_str = ""
+local update_time = 0
 
 function OsuSongSelect:new(game)
 	avatar = Theme.avatarImage
@@ -45,7 +47,7 @@ function OsuSongSelect:new(game)
 	local content = love.filesystem.read(skin_path .. "skin.ini")
 
 	if not content then
-		return nil
+		error("No osu! skin selected")
 	end
 
 	content = utf8validate(content)
@@ -107,6 +109,7 @@ function OsuSongSelect:updateInfo(view)
 	scroll_speed_str = ("%i (fixed)"):format(speedModel.format[gameplay.speedType]:format(speedModel:get()))
 
 	self.noteChartSetListView:reloadItems()
+	update_time = love.timer.getTime()
 end
 
 local function dropdown(label, w)
@@ -136,12 +139,12 @@ local function tab(label)
 	gyatt.frame(label, 0, 2, 137, 21, "center", "center")
 end
 
-function OsuSongSelect:top()
+function OsuSongSelect:chartInfo()
 	local w, h = Layout:move("base")
 
-	gfx.setColor({ 1, 1, 1, 1 })
-	gfx.draw(assets.panelTop)
+	local a = math_util.clamp(love.timer.getTime() - update_time, 0, 0.25) * 4
 
+	gfx.setColor({ 1, 1, 1, a })
 	gfx.translate(5, 5)
 	gfx.draw(assets.rankedIcon)
 	gfx.translate(-5, -5)
@@ -163,6 +166,13 @@ function OsuSongSelect:top()
 	gyatt.text(("Circles: %s Sliders: %s Spinners: 0"):format(note_count_str, ln_count_str))
 	gfx.setFont(font.infoBottom)
 	gyatt.text(("Keys: %s OD: 8 HP: 8 Star rating: %s"):format(columns_str, difficulty_str))
+end
+
+function OsuSongSelect:top()
+	local w, h = Layout:move("base")
+
+	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.draw(assets.panelTop)
 
 	w, h = Layout:move("base")
 	gfx.translate(10, 120)
@@ -313,6 +323,7 @@ function OsuSongSelect:draw()
 	self:logo()
 	self:top()
 	self:bottom()
+	self:chartInfo()
 	self:topUI()
 	self:scores()
 end
