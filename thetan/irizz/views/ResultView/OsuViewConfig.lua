@@ -612,6 +612,8 @@ local function mods()
 	end
 end
 
+function OsuViewConfig:scrollScore(view, delta) end
+
 function OsuViewConfig:draw(view)
 	Layout:draw()
 

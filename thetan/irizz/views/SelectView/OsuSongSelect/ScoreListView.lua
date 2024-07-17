@@ -155,7 +155,12 @@ function ScoreListView:drawItem(i, w, h)
 		username = item.user.name
 	end
 
-	gfx.setColor({ 0, 0, 0, 0.3 })
+	local background_color = { 0, 0, 0, 0.3 }
+	if just.is_over(w, h) then
+		background_color = { 0.2, 0.2, 0.2, 0.5 }
+	end
+
+	gfx.setColor(background_color)
 	gfx.rectangle("fill", 0, 0, w, 50)
 
 	gfx.push()

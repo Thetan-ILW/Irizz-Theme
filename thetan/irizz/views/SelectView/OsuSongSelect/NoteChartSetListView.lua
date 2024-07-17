@@ -60,6 +60,14 @@ function NoteChartSetListView:scroll(count)
 	self:playSound()
 end
 
+function NoteChartSetListView:mouseClick(w, h, i)
+	if gyatt.isOver(w, h, 0, 0) then
+		if gyatt.mousePressed(1) then
+			self.game.selectModel:scrollNoteChartSet(i - (self.itemIndex + math.floor(self.rows / 2)))
+		end
+	end
+end
+
 local gfx = love.graphics
 
 ---@param i number
@@ -85,6 +93,15 @@ function NoteChartSetListView:drawItem(i, w, h)
 		1 - (1 - 0.57) * d_clamped,
 		1,
 	})
+
+	if gyatt.isOver(w, h, 0, 10) then
+		gfx.setColor({
+			1 - (1 - 0.67) * d_clamped,
+			1 - (1 - 0.08) * d_clamped,
+			1 - (1 - 0.37) * d_clamped,
+			1,
+		})
+	end
 
 	gfx.draw(self.assets.listButtonBackground)
 
