@@ -43,6 +43,8 @@ local scroll_speed_str = ""
 local update_time = 0
 local has_scores = false
 
+local white = { 1, 1, 1, 1 }
+
 local dropdowns = {
 	scoreSource = {
 		focus = false,
@@ -77,6 +79,34 @@ local dropdowns = {
 	},
 }
 
+local buttons = {
+	back = {
+		updateTime = 0,
+		mouseOver = false,
+		rect = { 0, -90, 100, 90 },
+	},
+	mode = {
+		updateTime = 0,
+		mouseOver = false,
+		rect = { 0, -90, 88, 90 },
+	},
+	mods = {
+		updateTime = 0,
+		mouseOver = false,
+		rect = { 0, -90, 74, 90 },
+	},
+	random = {
+		updateTime = 0,
+		mouseOver = false,
+		rect = { 0, -90, 74, 90 },
+	},
+	chartOptions = {
+		updateTime = 0,
+		mouseOver = false,
+		rect = { 0, -90, 74, 90 },
+	},
+}
+
 function OsuSongSelect:new(game)
 	avatar = Theme.avatarImage
 
@@ -99,6 +129,12 @@ function OsuSongSelect:new(game)
 	assets.modsButton = gfx.newImage(skin_path .. "selection-mods@2x.png")
 	assets.randomButton = gfx.newImage(skin_path .. "selection-random@2x.png")
 	assets.optionsButton = gfx.newImage(skin_path .. "selection-options@2x.png")
+
+	assets.modeButtonOver = gfx.newImage(skin_path .. "selection-mode-over@2x.png")
+	assets.modsButtonOver = gfx.newImage(skin_path .. "selection-mods-over@2x.png")
+	assets.randomButtonOver = gfx.newImage(skin_path .. "selection-random-over@2x.png")
+	assets.optionsButtonOver = gfx.newImage(skin_path .. "selection-options-over@2x.png")
+
 	assets.osuLogo = gfx.newImage(skin_path .. "menu-osu@2x.png")
 	assets.tab = gfx.newImage(skin_path .. "selection-tab@2x.png")
 	assets.forum = gfx.newImage(skin_path .. "rank-forum@2x.png")
@@ -188,7 +224,7 @@ local function dropdown(id, w)
 	gfx.rectangle("line", 0, 0, w, 22, 4, 4)
 
 	gfx.translate(3, -1)
-	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setColor(white)
 	gfx.setFont(font.dropdown)
 	gyatt.text(instance.format:format(instance.items[instance.selectedIndex]), w, "left")
 
@@ -244,7 +280,7 @@ local function dropdown(id, w)
 		gfx.setColor(mouse_over and { r, g, b, a } or { 0, 0, 0, 1 })
 		gfx.rectangle("fill", 0, 0, w, 27, 4, 4)
 
-		gfx.setColor({ 1, 1, 1, 1 })
+		gfx.setColor(white)
 		gfx.translate(10, 2)
 		gyatt.text(instance.format:format(v))
 
@@ -277,7 +313,7 @@ local function tab(label)
 	gfx.setColor({ 0.86, 0.08, 0.23, 1 })
 	gfx.draw(assets.tab)
 
-	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setColor(white)
 	gyatt.frame(label, 0, 2, 137, 21, "center", "center")
 end
 
@@ -313,7 +349,7 @@ end
 function OsuSongSelect:top()
 	local w, h = Layout:move("base")
 
-	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setColor(white)
 	gfx.draw(assets.panelTop)
 
 	w, h = Layout:move("base")
@@ -321,7 +357,9 @@ function OsuSongSelect:top()
 	gfx.setColor({ 0.08, 0.51, 0.7, 1 })
 	dropdown("scoreSource", 305)
 
-	gfx.translate(40, -5)
+	w, h = Layout:move("base")
+	gfx.setColor(white)
+	gfx.translate(331, 118)
 	gfx.draw(assets.forum)
 
 	w, h = Layout:move("base")
@@ -377,17 +415,45 @@ function OsuSongSelect:topUI(view)
 	gyatt.frame(scroll_speed_str, -15, 0, w, h, "right", "top")
 end
 
-local function bottomButtonImage(image)
+local function bottomButtonImage(id, image, mouse_over_image)
+	local instance = buttons[id]
+	local rect = instance.rect
+	local mouse_over = gyatt.isOver(rect[3], rect[4], rect[1], rect[2])
+	instance.mouseOver = mouse_over
+
 	local _, ih = image:getDimensions()
 	gfx.translate(0, -ih)
+	gfx.setColor(white)
 	gfx.draw(image)
 	gfx.translate(0, ih)
+
+	local pressed = false
+
+	if mouse_over then
+		instance.updateTime = love.timer.getTime()
+
+		if gyatt.mousePressed(1) then
+			pressed = true
+		end
+	end
+
+	local a = 1 - animate(instance.updateTime, 0.4)
+
+	_, ih = mouse_over_image:getDimensions()
+	gfx.translate(0, -ih)
+	gfx.setColor({ a, a, a, a })
+	gfx.setBlendMode("alpha", "premultiplied")
+	gfx.draw(mouse_over_image)
+	gfx.setBlendMode("alpha")
+	gfx.translate(0, ih)
+
+	return pressed
 end
 
-function OsuSongSelect:bottom()
+function OsuSongSelect:bottom(view)
 	local w, h = Layout:move("base")
 
-	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setColor(white)
 
 	local iw, ih = assets.panelBottom:getDimensions()
 
@@ -397,7 +463,7 @@ function OsuSongSelect:bottom()
 	w, h = Layout:move("base")
 	iw, ih = assets.osuLogo:getDimensions()
 
-	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.setColor(white)
 	gfx.translate(w - (iw * 0.45) + 60, h - (ih * 0.45) + 60)
 	gfx.scale(0.45)
 	gfx.draw(assets.osuLogo)
@@ -410,21 +476,31 @@ function OsuSongSelect:bottom()
 	gfx.draw(assets.menuBack)
 
 	w, h = Layout:move("bottomButtons")
-	bottomButtonImage(assets.modeButton)
+	bottomButtonImage("mode", assets.modeButton, assets.modeButtonOver)
+
 	gfx.translate(92, 0)
 
-	bottomButtonImage(assets.modsButton)
+	if bottomButtonImage("mods", assets.modsButton, assets.modsButtonOver) then
+		view:openModal("thetan.irizz.views.modals.ModifierModal")
+	end
+
 	gfx.translate(77, 0)
 
-	bottomButtonImage(assets.randomButton)
+	if bottomButtonImage("random", assets.randomButton, assets.randomButtonOver) then
+		view.selectModel:scrollRandom()
+	end
+
 	gfx.translate(77, 0)
 
-	bottomButtonImage(assets.optionsButton)
+	if bottomButtonImage("chartOptions", assets.optionsButton, assets.optionsButtonOver) then
+		view:openModal("thetan.irizz.views.modals.MountsModal")
+	end
 
 	w, h = Layout:move("base")
 	gfx.translate(630, 693)
 
 	iw, ih = avatar:getDimensions()
+	gfx.setColor(white)
 	gfx.draw(avatar, 0, 0, 0, 74 / iw, 74 / ih)
 
 	gfx.translate(82, -4)
@@ -517,7 +593,7 @@ function OsuSongSelect:draw(view)
 	self:chartSetList()
 	self:scores(view)
 	self:top()
-	self:bottom()
+	self:bottom(view)
 	self:chartInfo()
 	self:topUI(view)
 end
