@@ -7,6 +7,7 @@ local OsuSongSelect = class()
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 local math_util = require("math_util")
+local table_util = require("table_util")
 local Format = require("sphere.views.Format")
 
 local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
@@ -122,8 +123,11 @@ function OsuSongSelect:new(game)
 	self.scoreListView = ScoreListView(game)
 	self.scoreListView:setAssets(assets)
 
-	local sortModel = game.selectModel.sortModel
-	dropdowns.sort.items = sortModel.names
+	local sort_model = game.selectModel.sortModel
+	dropdowns.sort.items = sort_model.names
+
+	local sort_function = game.configModel.configs.select.sortFunction
+	dropdowns.sort.selectedIndex = table_util.indexof(sort_model.names, sort_function)
 end
 
 function OsuSongSelect:updateInfo(view)
@@ -158,6 +162,7 @@ function OsuSongSelect:updateInfo(view)
 
 	self.noteChartSetListView:reloadItems()
 	self.scoreListView:reloadItems()
+
 	update_time = love.timer.getTime()
 
 	has_scores = #view.game.selectModel.scoreLibrary.items ~= 0
@@ -358,8 +363,8 @@ function OsuSongSelect:topUI(view)
 	local changed, index = dropdown("sort", 192)
 
 	if changed then
-		local sortModel = view.game.selectModel.sortModel
-		local name = sortModel.names[index]
+		local sort_model = view.game.selectModel.sortModel
+		local name = sort_model.names[index]
 
 		if name then
 			view.game.selectModel:setSortFunction(name)
