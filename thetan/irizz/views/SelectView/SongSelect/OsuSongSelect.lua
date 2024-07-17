@@ -38,10 +38,43 @@ local columns_str = ""
 local difficulty_str = ""
 local username = ""
 local is_logged_in = false
-local pp = ""
 local scroll_speed_str = ""
 local update_time = 0
 local has_scores = false
+
+local dropdowns = {
+	scoreSource = {
+		focus = false,
+		updateTime = 0,
+		selectedIndex = 1,
+		format = "%s",
+		mouseOver = false,
+		items = {
+			"Local ranking",
+			"Online ranking",
+			"osu! API ranking",
+		},
+	},
+	group = {
+		focus = false,
+		updateTime = 0,
+		selectedIndex = 1,
+		format = "By %s",
+		mouseOver = false,
+		items = {
+			"charts",
+			"collections",
+		},
+	},
+	sort = {
+		focus = false,
+		updateTime = 0,
+		selectedIndex = 1,
+		format = "By %s",
+		mouseOver = false,
+		items = {},
+	},
+}
 
 function OsuSongSelect:new(game)
 	avatar = Theme.avatarImage
@@ -88,6 +121,9 @@ function OsuSongSelect:new(game)
 
 	self.scoreListView = ScoreListView(game)
 	self.scoreListView:setAssets(assets)
+
+	local sortModel = game.selectModel.sortModel
+	dropdowns.sort.items = sortModel.names
 end
 
 function OsuSongSelect:updateInfo(view)
@@ -127,8 +163,18 @@ function OsuSongSelect:updateInfo(view)
 	has_scores = #view.game.selectModel.scoreLibrary.items ~= 0
 end
 
-local function dropdown(label, w)
+local function animate(time, interval)
+	local t = math.min(love.timer.getTime() - time, interval)
+	local progress = t / interval
+	return math_util.clamp(progress * progress, 0, 1)
+end
+
+local function dropdown(id, w)
+	local instance = dropdowns[id]
+	instance.mouseOver = false
+
 	local r, g, b, a = gfx.getColor()
+	gfx.push()
 	gfx.setColor({ 0, 0, 0, 0.5 })
 	gfx.rectangle("fill", 0, 0, w, 22, 4, 4)
 
@@ -139,11 +185,87 @@ local function dropdown(label, w)
 	gfx.translate(3, -1)
 	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.setFont(font.dropdown)
-	gyatt.text(label, w, "left")
+	gyatt.text(instance.format:format(instance.items[instance.selectedIndex]), w, "left")
 
 	gyatt.sameline()
 	gfx.translate(w - 25, 4)
 	gfx.draw(assets.dropdownArrow)
+	gfx.pop()
+
+	local just_opened = false
+
+	local time = love.timer.getTime()
+
+	if gyatt.mousePressed(1) then
+		local open = gyatt.isOver(w, 22)
+
+		if not instance.focus and open then
+			instance.focus = true
+			instance.updateTime = time
+			just_opened = true
+		elseif instance.focus and open then
+			instance.focus = false
+			instance.updateTime = time
+		end
+	end
+
+	local changed = false
+	local selected = 0
+
+	local prev_canvas = gfx.getCanvas()
+	local canvas = gyatt.getCanvas(id .. "_dropdown")
+
+	gfx.setCanvas({ canvas, stencil = true })
+	gfx.clear()
+
+	gfx.translate(0, 22)
+	for i, v in ipairs(instance.items) do
+		local mouse_over = gyatt.isOver(w, 27)
+
+		if instance.focus then
+			instance.mouseOver = instance.mouseOver or mouse_over
+		end
+
+		if mouse_over and gyatt.mousePressed(1) and instance.focus then
+			selected = i
+			changed = true
+			instance.selectedIndex = i
+			instance.focus = false
+			instance.updateTime = time
+		end
+
+		gfx.push()
+
+		gfx.setColor(mouse_over and { r, g, b, a } or { 0, 0, 0, 1 })
+		gfx.rectangle("fill", 0, 0, w, 27, 4, 4)
+
+		gfx.setColor({ 1, 1, 1, 1 })
+		gfx.translate(10, 2)
+		gyatt.text(instance.format:format(v))
+
+		gfx.pop()
+
+		gfx.translate(0, 27)
+	end
+
+	gfx.setCanvas({ prev_canvas, stencil = true })
+
+	gfx.origin()
+	a = animate(instance.updateTime, 0.15)
+
+	if not instance.focus then
+		a = 1 - a
+	end
+
+	gfx.setColor({ a, a, a, a })
+	gfx.draw(canvas)
+
+	if not changed and gyatt.mousePressed(1) and not just_opened and instance.focus then
+		instance.focus = false
+		instance.updateTime = time
+	end
+
+	return changed, selected
 end
 
 local function tab(label)
@@ -154,16 +276,10 @@ local function tab(label)
 	gyatt.frame(label, 0, 2, 137, 21, "center", "center")
 end
 
-local function animateAlpha()
-	local t = math.min(love.timer.getTime() - update_time, 0.3)
-	local progress = t / 0.3
-	return math_util.clamp(progress * progress, 0, 1)
-end
-
 function OsuSongSelect:chartInfo()
 	local w, h = Layout:move("base")
 
-	local a = animateAlpha()
+	local a = animate(update_time, 0.3)
 
 	gfx.setColor({ 1, 1, 1, a })
 	gfx.translate(5, 5)
@@ -198,7 +314,7 @@ function OsuSongSelect:top()
 	w, h = Layout:move("base")
 	gfx.translate(10, 120)
 	gfx.setColor({ 0.08, 0.51, 0.7, 1 })
-	dropdown("Local ranking", 305)
+	dropdown("scoreSource", 305)
 
 	gfx.translate(40, -5)
 	gfx.draw(assets.forum)
@@ -230,16 +346,25 @@ function OsuSongSelect:top()
 	tab("No grouping")
 end
 
-function OsuSongSelect:topUI()
+function OsuSongSelect:topUI(view)
 	local w, h = Layout:move("base")
 	gfx.translate(890, 29)
 	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
-	dropdown("By Mode", 192)
+	dropdown("group", 192)
 
 	w, h = Layout:move("base")
 	gfx.translate(1159, 29)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
-	dropdown("By Length", 192)
+	local changed, index = dropdown("sort", 192)
+
+	if changed then
+		local sortModel = view.game.selectModel.sortModel
+		local name = sortModel.names[index]
+
+		if name then
+			view.game.selectModel:setSortFunction(name)
+		end
+	end
 
 	w, h = Layout:move("base")
 	gfx.setColor({ 1, 1, 1, 0.5 })
@@ -319,6 +444,15 @@ end
 function OsuSongSelect:chartSetList()
 	local w, h = Layout:move("base")
 	local list = self.noteChartSetListView
+
+	local no_focus = false
+
+	for _, v in pairs(dropdowns) do
+		no_focus = no_focus or v.mouseOver
+	end
+
+	list.focus = not no_focus
+
 	gfx.translate(756, 82)
 	list:draw(610, 595, true)
 
@@ -329,6 +463,14 @@ end
 
 function OsuSongSelect:scores(view)
 	local list = self.scoreListView
+
+	local no_focus = false
+
+	for _, v in pairs(dropdowns) do
+		no_focus = no_focus or v.mouseOver
+	end
+
+	list.focus = not no_focus
 
 	local prev_canvas = gfx.getCanvas()
 	local canvas = gyatt.getCanvas("osuScoreList")
@@ -348,11 +490,12 @@ function OsuSongSelect:scores(view)
 
 		list:draw(378, 420, true)
 	end
+
 	gfx.setCanvas({ prev_canvas, stencil = true })
 
 	gfx.origin()
 	gfx.setBlendMode("alpha", "premultiplied")
-	local a = animateAlpha()
+	local a = animate(update_time, 0.3)
 	gfx.setColor(a, a, a, a)
 	gfx.draw(canvas)
 	gfx.setBlendMode("alpha")
@@ -367,11 +510,11 @@ function OsuSongSelect:draw(view)
 	Layout:draw()
 
 	self:chartSetList()
+	self:scores(view)
 	self:top()
 	self:bottom()
 	self:chartInfo()
-	self:topUI()
-	self:scores(view)
+	self:topUI(view)
 end
 
 return OsuSongSelect

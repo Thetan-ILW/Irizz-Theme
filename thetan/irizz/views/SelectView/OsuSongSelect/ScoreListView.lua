@@ -17,6 +17,7 @@ ScoreListView.openResult = false
 ScoreListView.oneClickOpen = true
 ScoreListView.modLines = {}
 ScoreListView.text = Theme.textScoreList
+ScoreListView.focus = false
 
 function ScoreListView:new(game)
 	self.game = game
@@ -112,6 +113,10 @@ function ScoreListView:scrollScore(delta)
 end
 
 function ScoreListView:mouseClick(w, h, i)
+	if not self.focus then
+		return
+	end
+
 	if just.is_over(w, h, 0, 0) then
 		if just.mousepressed(1) then
 			if self.selectedScoreIndex == i then
@@ -156,7 +161,7 @@ function ScoreListView:drawItem(i, w, h)
 	end
 
 	local background_color = { 0, 0, 0, 0.3 }
-	if just.is_over(w, h) then
+	if just.is_over(w, h) and self.focus then
 		background_color = { 0.2, 0.2, 0.2, 0.5 }
 	end
 

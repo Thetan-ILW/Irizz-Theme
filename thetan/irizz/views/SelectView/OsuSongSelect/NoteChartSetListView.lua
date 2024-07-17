@@ -11,6 +11,7 @@ NoteChartSetListView.rows = 7
 NoteChartSetListView.centerItems = true
 NoteChartSetListView.text = Theme.textChartSetsList
 NoteChartSetListView.staticCursor = false
+NoteChartSetListView.focus = false
 
 NoteChartSetListView.assets = {}
 NoteChartSetListView.activeTextColor = { 0, 0, 0, 1 }
@@ -61,6 +62,10 @@ function NoteChartSetListView:scroll(count)
 end
 
 function NoteChartSetListView:mouseClick(w, h, i)
+	if not self.focus then
+		return
+	end
+
 	if gyatt.isOver(w, h, 0, 0) then
 		if gyatt.mousePressed(1) then
 			self.game.selectModel:scrollNoteChartSet(i - (self.itemIndex + math.floor(self.rows / 2)))
@@ -94,7 +99,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 		1,
 	})
 
-	if gyatt.isOver(w, h, 0, 10) then
+	if gyatt.isOver(w, h, 0, 10) and self.focus then
 		gfx.setColor({
 			1 - (1 - 0.67) * d_clamped,
 			1 - (1 - 0.08) * d_clamped,
