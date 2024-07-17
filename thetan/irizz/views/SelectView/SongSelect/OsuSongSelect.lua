@@ -154,10 +154,16 @@ local function tab(label)
 	gyatt.frame(label, 0, 2, 137, 21, "center", "center")
 end
 
+local function animateAlpha()
+	local t = math.min(love.timer.getTime() - update_time, 0.3)
+	local progress = t / 0.3
+	return math_util.clamp(progress * progress, 0, 1)
+end
+
 function OsuSongSelect:chartInfo()
 	local w, h = Layout:move("base")
 
-	local a = math_util.clamp(love.timer.getTime() - update_time, 0, 0.25) * 4
+	local a = animateAlpha()
 
 	gfx.setColor({ 1, 1, 1, a })
 	gfx.translate(5, 5)
@@ -259,6 +265,15 @@ function OsuSongSelect:bottom()
 	gfx.draw(assets.panelBottom, 0, 0, 0, w / iw, 1)
 
 	w, h = Layout:move("base")
+	iw, ih = assets.osuLogo:getDimensions()
+
+	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.translate(w - (iw * 0.45) + 60, h - (ih * 0.45) + 60)
+	gfx.scale(0.45)
+	gfx.draw(assets.osuLogo)
+	gfx.scale(1)
+
+	w, h = Layout:move("base")
 	iw, ih = assets.menuBack:getDimensions()
 
 	gfx.translate(0, h - ih)
@@ -313,19 +328,34 @@ function OsuSongSelect:chartSetList()
 end
 
 function OsuSongSelect:scores(view)
+	local list = self.scoreListView
+
+	local prev_canvas = gfx.getCanvas()
+	local canvas = gyatt.getCanvas("osuScoreList")
+	gfx.setCanvas({ canvas, stencil = true })
+	gfx.clear()
+
 	local w, h = Layout:move("base")
+
+	gfx.setBlendMode("alpha", "alphamultiply")
 
 	if not has_scores then
 		gfx.translate(20, 298)
 		gfx.setColor({ 1, 1, 1, 1 })
 		gfx.draw(assets.noScores)
-		return
+	else
+		gfx.translate(8, 154)
+
+		list:draw(378, 420, true)
 	end
+	gfx.setCanvas({ prev_canvas, stencil = true })
 
-	gfx.translate(8, 154)
-
-	local list = self.scoreListView
-	list:draw(378, 420, true)
+	gfx.origin()
+	gfx.setBlendMode("alpha", "premultiplied")
+	local a = animateAlpha()
+	gfx.setColor(a, a, a, a)
+	gfx.draw(canvas)
+	gfx.setBlendMode("alpha")
 
 	if list.openResult then
 		list.openResult = false
@@ -333,22 +363,10 @@ function OsuSongSelect:scores(view)
 	end
 end
 
-function OsuSongSelect:logo()
-	local w, h = Layout:move("base")
-	local iw, ih = assets.osuLogo:getDimensions()
-
-	gfx.setColor({ 1, 1, 1, 1 })
-	gfx.translate(w - (iw * 0.45) + 60, h - (ih * 0.45) + 60)
-	gfx.scale(0.45)
-	gfx.draw(assets.osuLogo)
-	gfx.scale(1)
-end
-
 function OsuSongSelect:draw(view)
 	Layout:draw()
 
 	self:chartSetList()
-	self:logo()
 	self:top()
 	self:bottom()
 	self:chartInfo()
