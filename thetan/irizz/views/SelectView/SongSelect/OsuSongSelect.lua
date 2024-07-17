@@ -28,6 +28,7 @@ local gfx = love.graphics
 
 local avatar
 
+local prev_chart_id = 0
 local chart_name = ""
 local charter = ""
 local length_str = ""
@@ -40,6 +41,7 @@ local difficulty_str = ""
 local username = ""
 local is_logged_in = false
 local scroll_speed_str = ""
+local mods_str = ""
 local update_time = 0
 local has_scores = false
 
@@ -199,9 +201,13 @@ function OsuSongSelect:updateInfo(view)
 	self.noteChartSetListView:reloadItems()
 	self.scoreListView:reloadItems()
 
-	update_time = love.timer.getTime()
-
 	has_scores = #view.game.selectModel.scoreLibrary.items ~= 0
+
+	if prev_chart_id ~= chartview.id then
+		update_time = love.timer.getTime()
+	end
+
+	prev_chart_id = chartview.id
 end
 
 local function animate(time, interval)
@@ -587,8 +593,40 @@ function OsuSongSelect:scores(view)
 	end
 end
 
+function OsuSongSelect:mods(view)
+	local w, h = Layout:move("base")
+
+	gfx.translate(104, 633)
+	gfx.setColor({ 1, 1, 1, 0.75 })
+	gfx.setFont(font.mods)
+	gyatt.text(mods_str)
+end
+
+function OsuSongSelect:updateOtherInfo(view)
+	local modifiers = view.game.playContext.modifiers
+	mods_str = Theme:getModifierString(modifiers)
+
+	local rate = view.game.playContext.rate
+	local rate_type = view.game.configModel.configs.settings.gameplay.rate_type
+	local time_rate_model = view.game.timeRateModel
+
+	if rate ~= 1 then
+		local rate_str
+
+		if rate_type == "linear" then
+			rate_str = ("%0.02fx"):format(time_rate_model:get())
+		else
+			rate_str = ("%iQ"):format(time_rate_model:get())
+		end
+
+		mods_str = rate_str .. " " .. mods_str
+	end
+end
+
 function OsuSongSelect:draw(view)
 	Layout:draw()
+
+	self:updateOtherInfo(view)
 
 	self:chartSetList()
 	self:scores(view)
@@ -596,6 +634,7 @@ function OsuSongSelect:draw(view)
 	self:bottom(view)
 	self:chartInfo()
 	self:topUI(view)
+	self:mods(view)
 end
 
 return OsuSongSelect

@@ -744,6 +744,7 @@ localization.fonts = {
 		belowUsername = { "Aller", 14 },
 		scrollSpeed = { "Aller-Light", 23 },
 		tabs = { "Aller", 14 },
+		mods = { "Aller", 41 },
 	},
 
 	osuChartSetList = {

@@ -224,6 +224,7 @@ function SelectView:changeTimeRate(delta)
 		self.game.modifierSelectModel:change()
 		timeRateModel:set(newRate)
 		self.songSelectViewConfig:updateInfo(self)
+		self.osuSongSelect:updateInfo(self)
 	end
 end
 
