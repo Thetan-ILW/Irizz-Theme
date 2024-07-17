@@ -13,6 +13,7 @@ local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
 local utf8validate = require("utf8validate")
 
 local NoteChartSetListView = require("thetan.irizz.views.SelectView.OsuSongSelect.NoteChartSetListView")
+local ScoreListView = require("thetan.irizz.views.SelectView.OsuSongSelect.ScoreListView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -40,6 +41,7 @@ local is_logged_in = false
 local pp = ""
 local scroll_speed_str = ""
 local update_time = 0
+local has_scores = false
 
 function OsuSongSelect:new(game)
 	avatar = Theme.avatarImage
@@ -72,10 +74,20 @@ function OsuSongSelect:new(game)
 	assets.star = gfx.newImage(skin_path .. "star@2x.png")
 	assets.maniaSmallIcon = gfx.newImage(skin_path .. "mode-mania-small@2x.png")
 
+	assets.gradeD = gfx.newImage(skin_path .. "ranking-D-small@2x.png")
+	assets.gradeC = gfx.newImage(skin_path .. "ranking-C-small@2x.png")
+	assets.gradeB = gfx.newImage(skin_path .. "ranking-B-small@2x.png")
+	assets.gradeA = gfx.newImage(skin_path .. "ranking-A-small@2x.png")
+	assets.gradeS = gfx.newImage(skin_path .. "ranking-S-small@2x.png")
+	assets.gradeX = gfx.newImage(skin_path .. "ranking-X-small@2x.png")
+
 	font = Theme:getFonts("osuSongSelect")
 
 	self.noteChartSetListView = NoteChartSetListView(game)
 	self.noteChartSetListView:setAssets(assets)
+
+	self.scoreListView = ScoreListView(game)
+	self.scoreListView:setAssets(assets)
 end
 
 function OsuSongSelect:updateInfo(view)
@@ -109,7 +121,10 @@ function OsuSongSelect:updateInfo(view)
 	scroll_speed_str = ("%i (fixed)"):format(speedModel.format[gameplay.speedType]:format(speedModel:get()))
 
 	self.noteChartSetListView:reloadItems()
+	self.scoreListView:reloadItems()
 	update_time = love.timer.getTime()
+
+	has_scores = #view.game.selectModel.scoreLibrary.items ~= 0
 end
 
 local function dropdown(label, w)
@@ -297,12 +312,25 @@ function OsuSongSelect:chartSetList()
 	gyatt.scrollBar(list, 610, 595)
 end
 
-function OsuSongSelect:scores()
+function OsuSongSelect:scores(view)
 	local w, h = Layout:move("base")
 
-	gfx.translate(20, 298)
-	gfx.setColor({ 1, 1, 1, 1 })
-	gfx.draw(assets.noScores)
+	if not has_scores then
+		gfx.translate(20, 298)
+		gfx.setColor({ 1, 1, 1, 1 })
+		gfx.draw(assets.noScores)
+		return
+	end
+
+	gfx.translate(8, 154)
+
+	local list = self.scoreListView
+	list:draw(378, 420, true)
+
+	if list.openResult then
+		list.openResult = false
+		view:result()
+	end
 end
 
 function OsuSongSelect:logo()
@@ -316,7 +344,7 @@ function OsuSongSelect:logo()
 	gfx.scale(1)
 end
 
-function OsuSongSelect:draw()
+function OsuSongSelect:draw(view)
 	Layout:draw()
 
 	self:chartSetList()
@@ -325,7 +353,7 @@ function OsuSongSelect:draw()
 	self:bottom()
 	self:chartInfo()
 	self:topUI()
-	self:scores()
+	self:scores(view)
 end
 
 return OsuSongSelect

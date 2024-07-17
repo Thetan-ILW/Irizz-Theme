@@ -752,6 +752,13 @@ localization.fonts = {
 		thirdRow = { "Aller-Bold", 16, "ZenMaruGothic-Medium" },
 		noItems = { "Aller", 36 },
 	},
+
+	osuScoreList = {
+		username = { "Aller-Bold", 22, "ZenMaruGothic-Medium" },
+		score = { "Aller", 16 },
+		rightSide = { "Aller", 14 },
+		noItems = { "Aller", 36 },
+	},
 }
 
 return localization

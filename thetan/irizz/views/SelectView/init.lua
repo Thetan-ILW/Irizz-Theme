@@ -271,7 +271,7 @@ end
 function SelectView:drawOsu()
 	local function panelsStencil() end
 	local function UI()
-		self.osuSongSelect:draw()
+		self.osuSongSelect:draw(self)
 	end
 
 	self.layersView:draw(panelsStencil, UI)
