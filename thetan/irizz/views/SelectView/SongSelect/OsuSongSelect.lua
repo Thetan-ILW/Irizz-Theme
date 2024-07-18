@@ -27,6 +27,7 @@ local skin_path = "resources/osu_default_assets/"
 local gfx = love.graphics
 
 local avatar
+local top_panel_quad
 
 local prev_chart_id = 0
 local chart_name = ""
@@ -122,6 +123,8 @@ function OsuSongSelect:new(game)
 	assets.skinini = OsuNoteSkin:parseSkinIni(content)
 
 	assets.panelTop = gfx.newImage(skin_path .. "songselect-top.png")
+	assets.panelTop:setWrap("clamp")
+
 	assets.panelBottom = gfx.newImage(skin_path .. "songselect-bottom.png")
 	assets.rankedIcon = gfx.newImage(skin_path .. "selection-ranked@2x.png")
 	assets.dropdownArrow = gfx.newImage(skin_path .. "dropdown-arrow.png")
@@ -168,6 +171,9 @@ function OsuSongSelect:new(game)
 
 	local sort_function = game.configModel.configs.select.sortFunction
 	dropdowns.sort.selectedIndex = table_util.indexof(sort_model.names, sort_function)
+
+	Layout:draw()
+	self:resolutionUpdated()
 end
 
 function OsuSongSelect:updateInfo(view)
@@ -364,17 +370,17 @@ function OsuSongSelect:top()
 	local w, h = Layout:move("base")
 
 	gfx.setColor(white)
-	gfx.draw(assets.panelTop)
+	gfx.draw(assets.panelTop, top_panel_quad)
 
 	w, h = Layout:move("base")
-	gfx.translate(801, 23)
+	gfx.translate(w - 570, 23)
 	gfx.setFont(font.groupSort)
 	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
 	gyatt.text("Group")
 	gyatt.sameline()
 
 	w, h = Layout:move("base")
-	gfx.translate(1099, 23)
+	gfx.translate(w - 270, 23)
 	gfx.setFont(font.groupSort)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
 	gyatt.text("Sort")
@@ -403,7 +409,7 @@ function OsuSongSelect:topUI(view)
 
 	w, h = Layout:move("base")
 	gfx.setFont(font.tabs)
-	gfx.translate(736, 54)
+	gfx.translate(w - 632, 54)
 	tab("Collections")
 	gfx.translate(118, 0)
 	tab("Recently played")
@@ -415,12 +421,12 @@ function OsuSongSelect:topUI(view)
 	tab("No grouping")
 
 	w, h = Layout:move("base")
-	gfx.translate(890, 29)
+	gfx.translate(w - 479, 29)
 	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
 	dropdown("group", 192)
 
 	w, h = Layout:move("base")
-	gfx.translate(1159, 29)
+	gfx.translate(w - 210, 29)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
 	local changed, index = dropdown("sort", 192)
 
@@ -557,12 +563,12 @@ function OsuSongSelect:chartSetList()
 
 	list.focus = not no_focus
 
-	gfx.translate(756, 82)
+	gfx.translate(w - 610, 82)
 	list:updateAnimations()
 	list:draw(610, 595, true)
 
 	w, h = Layout:move("base")
-	gfx.translate(756, 82)
+	gfx.translate(w - 610, 82)
 	gyatt.scrollBar(list, 610, 595)
 end
 
@@ -649,6 +655,11 @@ function OsuSongSelect:modeLogo()
 	gfx.translate(w / 2 - iw / 2, h / 2 - ih / 2)
 	gfx.setColor({ 1, 1, 1, 0.2 })
 	gfx.draw(image)
+end
+
+function OsuSongSelect:resolutionUpdated()
+	local w, h = Layout:move("base")
+	top_panel_quad = gfx.newQuad(0, 0, w, assets.panelTop:getHeight(), assets.panelTop)
 end
 
 function OsuSongSelect:draw(view)

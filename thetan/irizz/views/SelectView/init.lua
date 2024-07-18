@@ -27,6 +27,7 @@ SelectView.screenXTarget = 0
 SelectView.chartFilterLine = ""
 SelectView.scoreFilterLine = ""
 
+local last_resize_time = math.huge
 local songSelectOffset = 0
 
 local playSound = nil
@@ -130,6 +131,11 @@ function SelectView:update(dt)
 	local ss_offset = irizz.songSelectOffset
 
 	songSelectOffset = ss_offset
+
+	if love.timer.getTime() > last_resize_time + 0.15 then
+		self.osuSongSelect:resolutionUpdated()
+		last_resize_time = math.huge
+	end
 end
 
 function SelectView:notechartChanged()
@@ -266,6 +272,10 @@ function SelectView:receive(event)
 		if self.screenX == 0 then
 			self:songSelectInputs()
 		end
+	end
+
+	if event.name == "resize" then
+		last_resize_time = love.timer.getTime()
 	end
 end
 
