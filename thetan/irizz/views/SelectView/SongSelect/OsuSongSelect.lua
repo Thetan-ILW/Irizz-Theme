@@ -259,6 +259,16 @@ local function dropdown(id, w)
 	local changed = false
 	local selected = 0
 
+	a = animate(instance.updateTime, 0.15)
+
+	if a == 0 then
+		return
+	end
+
+	if not instance.focus then
+		a = 1 - a
+	end
+
 	local prev_canvas = gfx.getCanvas()
 	local canvas = gyatt.getCanvas(id .. "_dropdown")
 
@@ -266,6 +276,7 @@ local function dropdown(id, w)
 	gfx.clear()
 
 	gfx.translate(0, 22)
+
 	for i, v in ipairs(instance.items) do
 		local mouse_over = gyatt.isOver(w, 27)
 
@@ -292,17 +303,12 @@ local function dropdown(id, w)
 
 		gfx.pop()
 
-		gfx.translate(0, 27)
+		gfx.translate(0, 27 * a)
 	end
 
 	gfx.setCanvas({ prev_canvas, stencil = true })
 
 	gfx.origin()
-	a = animate(instance.updateTime, 0.15)
-
-	if not instance.focus then
-		a = 1 - a
-	end
 
 	gfx.setColor({ a, a, a, a })
 	gfx.draw(canvas)
