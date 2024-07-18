@@ -22,8 +22,9 @@ NoteChartSetListView.animations = {}
 function NoteChartSetListView:new(game)
 	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("osuChartSetList")
 	self.scrollSound = Theme.sounds.scrollLargeList
+
+	self:loadFonts()
 end
 
 function NoteChartSetListView:setAssets(assets)
@@ -95,6 +96,12 @@ function NoteChartSetListView:updateAnimations()
 			self.animations[i] = nil
 		end
 	end
+end
+
+function NoteChartSetListView:loadFonts()
+	local ww, wh = love.graphics.getDimensions()
+	gyatt.setTextScale(768 / wh)
+	self.font = Theme:getFonts("osuChartSetList", wh / 768)
 end
 
 ---@param i number

@@ -21,7 +21,7 @@ ScoreListView.animations = {}
 
 function ScoreListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("osuScoreList")
+	self:loadFonts()
 end
 
 function ScoreListView:setAssets(assets)
@@ -156,6 +156,12 @@ function ScoreListView:updateAnimations()
 			self.animations[i] = 0
 		end
 	end
+end
+
+function ScoreListView:loadFonts()
+	local ww, wh = love.graphics.getDimensions()
+	gyatt.setTextScale(768 / wh)
+	self.font = Theme:getFonts("osuScoreList", wh / 768)
 end
 
 ---@param i number

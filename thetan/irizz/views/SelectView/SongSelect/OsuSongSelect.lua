@@ -361,11 +361,11 @@ function OsuSongSelect:chartInfo()
 	gfx.translate(-5, -5)
 
 	gfx.setFont(font.chartName)
-	gfx.translate(38, -6)
+	gfx.translate(39, -5)
 	gyatt.text(chart_name, w, "left")
 
 	gfx.setFont(font.chartedBy)
-	gfx.translate(2, -5)
+	gfx.translate(0, -5)
 	gyatt.text(("Mapped by %s"):format(charter), w, "left")
 
 	w, h = Layout:move("base")
@@ -515,6 +515,31 @@ function OsuSongSelect:bottom(view)
 	gfx.setShader(prev_shader)
 
 	w, h = Layout:move("base")
+	gfx.translate(630, 693)
+
+	iw, ih = avatar:getDimensions()
+	gfx.setColor(white)
+	gfx.draw(avatar, 0, 0, 0, 74 / iw, 74 / ih)
+
+	gfx.translate(82, -4)
+	gfx.setFont(font.username)
+	gyatt.text(username)
+	gfx.setFont(font.belowUsername)
+
+	if not is_logged_in then
+		gyatt.text("Click to sign in!")
+	end
+
+	gfx.translate(40, 40)
+
+	gfx.setColor({ 0.15, 0.15, 0.15, 1 })
+	gfx.rectangle("fill", 0, 0, 199, 12, 8, 8)
+
+	gfx.setLineWidth(1)
+	gfx.setColor({ 0.4, 0.4, 0.4, 1 })
+	gfx.rectangle("line", 0, 0, 199, 12, 6, 6)
+
+	w, h = Layout:move("base")
 	iw, ih = assets.osuLogo:getDimensions()
 
 	gfx.setColor(white)
@@ -553,31 +578,6 @@ function OsuSongSelect:bottom(view)
 	if bottomButtonImage("chartOptions", assets.optionsButton, assets.optionsButtonOver) then
 		view:openModal("thetan.irizz.views.modals.MountsModal")
 	end
-
-	w, h = Layout:move("base")
-	gfx.translate(630, 693)
-
-	iw, ih = avatar:getDimensions()
-	gfx.setColor(white)
-	gfx.draw(avatar, 0, 0, 0, 74 / iw, 74 / ih)
-
-	gfx.translate(82, -4)
-	gfx.setFont(font.username)
-	gyatt.text(username)
-	gfx.setFont(font.belowUsername)
-
-	if not is_logged_in then
-		gyatt.text("Click to sign in!")
-	end
-
-	gfx.translate(40, 40)
-
-	gfx.setColor({ 0.15, 0.15, 0.15, 1 })
-	gfx.rectangle("fill", 0, 0, 199, 12, 8, 8)
-
-	gfx.setLineWidth(1)
-	gfx.setColor({ 0.4, 0.4, 0.4, 1 })
-	gfx.rectangle("line", 0, 0, 199, 12, 6, 6)
 end
 
 function OsuSongSelect:chartSetList()
@@ -691,6 +691,14 @@ end
 function OsuSongSelect:resolutionUpdated()
 	local w, h = Layout:move("base")
 	top_panel_quad = gfx.newQuad(0, 0, w, assets.panelTop:getHeight(), assets.panelTop)
+
+	local ww, wh = love.graphics.getDimensions()
+	gyatt.setTextScale(768 / wh)
+
+	font = Theme:getFonts("osuSongSelect", wh / 768)
+
+	self.noteChartSetListView:loadFonts()
+	self.scoreListView:loadFonts()
 end
 
 function OsuSongSelect:draw(view)

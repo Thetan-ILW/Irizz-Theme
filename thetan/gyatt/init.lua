@@ -7,7 +7,6 @@ local gyatt = {}
 
 gyatt.inputMode = "keyboard"
 gyatt.baseline = gfx_util.printBaseline
-gyatt.frame = gfx_util.printFrame
 gyatt.getCanvas = gfx_util.getCanvas
 gyatt.separator = imgui.separator
 gyatt.setSize = imgui.setSize
@@ -16,9 +15,29 @@ gyatt.isOver = just.is_over
 gyatt.mousePressed = just.mousepressed
 gyatt.sameline = just.sameline
 
+local textTransform = love.math.newTransform()
+local textScale = 1
+
+function gyatt.setTextScale(scale)
+	textTransform = love.math.newTransform(0, 0, 0, scale, scale, 0, 0, 0, 0)
+	textScale = scale
+end
+
 function gyatt.text(text, w, ax)
-	gyatt.frame(text, 0, 0, w or math.huge, math.huge, ax or "left", "top")
-	just.next(0, love.graphics.getFont():getHeight())
+	love.graphics.push()
+	love.graphics.applyTransform(textTransform)
+	gfx_util.printFrame(text, 0, 0, (w or math.huge) / textScale, math.huge, ax or "left", "top")
+	love.graphics.pop()
+	just.next(0, love.graphics.getFont():getHeight() * textScale)
+end
+
+function gyatt.frame(text, x, y, w, h, ax, ay)
+	w = w or math.huge
+	h = h or math.huge
+	love.graphics.push()
+	love.graphics.applyTransform(textTransform)
+	gfx_util.printFrame(text, x, y, w / textScale, h / textScale, ax, ay)
+	love.graphics.pop()
 end
 
 ---@param list irizz.ListView

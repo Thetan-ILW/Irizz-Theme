@@ -94,15 +94,16 @@ function Theme:getDifficultyColor(difficulty, calculatorName)
 end
 
 ---@nodiscard
-function Theme:getFonts(objectName)
+function Theme:getFonts(objectName, scale)
+	scale = scale or 1
 	local fonts = self.fonts[objectName]
 	local loadedFonts = {}
 
 	for key, font in pairs(fonts) do
-		loadedFonts[key] = assets:getFont(self.fontFamilyList, font[1], font[2])
+		loadedFonts[key] = assets:getFont(self.fontFamilyList, font[1], font[2] * scale)
 
 		if font[3] then
-			loadedFonts[key]:setFallbacks(assets:getFont(self.fontFamilyList, font[3], font[2]))
+			loadedFonts[key]:setFallbacks(assets:getFont(self.fontFamilyList, font[3], font[2] * scale))
 		end
 	end
 
