@@ -4,7 +4,6 @@ local Layout = require("thetan.irizz.views.OsuSelectView.Layout")
 
 local ViewConfig = class()
 
-local assets_loader = require("thetan.irizz.assets")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 local math_util = require("math_util")
@@ -110,10 +109,10 @@ local buttons = {
 	},
 }
 
-function ViewConfig:new(game)
+function ViewConfig:new(game, _assets)
 	avatar = Theme.avatarImage
 
-	assets = assets_loader.loadOsuSongSelect("userdata/skins/pink_girl/")
+	assets = _assets
 
 	font = Theme:getFonts("osuSongSelect")
 

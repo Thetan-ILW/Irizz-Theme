@@ -734,6 +734,30 @@ function SettingsTab:UI(view)
 	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil, Text.startSound)
 
 	imgui.separator()
+	just.text(Text.osuSongSelect)
+	just.next(0, textSeparation)
+
+	local load_new_ui = false
+
+	irizz.osuSongSelect, load_new_ui = imgui.checkbox("irizz.osuSongSelect", irizz.osuSongSelect, Text.enable)
+	irizz.osuSongSelectSkin =
+		imgui.combo("irizz.osuSongSelectSkin", irizz.osuSongSelectSkin, Theme.osuSkinNames, nil, Text.skin)
+
+	if load_new_ui then
+		local select_view
+
+		if irizz.osuSongSelect then
+			select_view = require("thetan.irizz.views.OsuSelectView")
+		else
+			select_view = require("thetan.irizz.views.SelectView")
+		end
+
+		view.game.ui.selectView = select_view(view.game)
+		view.game.selectView = view.game.ui.selectView
+		view:changeScreen("selectView")
+	end
+
+	imgui.separator()
 	just.text(Text.osuResultScreen)
 	just.next(0, textSeparation)
 

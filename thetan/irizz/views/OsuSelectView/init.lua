@@ -1,5 +1,6 @@
 local ScreenView = require("sphere.views.ScreenView")
 
+local assets = require("thetan.irizz.assets")
 local Theme = require("thetan.irizz.views.Theme")
 
 local LayersView = require("thetan.irizz.views.LayersView")
@@ -21,8 +22,6 @@ local playSound = nil
 function OsuSelectView:load()
 	self.game.selectController:load(self)
 
-	self.viewConfig = ViewConfig(self.game)
-
 	self.chartPreviewView = ChartPreviewView(self.game)
 	self.chartPreviewView:load()
 
@@ -37,6 +36,10 @@ function OsuSelectView:load()
 
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
+
+	local skin = assets.loadOsuSongSelect(("userdata/skins/%s/"):format(irizz.osuSongSelectSkin))
+
+	self.viewConfig = ViewConfig(self.game, skin)
 
 	if irizz.showFreshInstallModal then
 		local newSongs = self.game.cacheModel.newSongs

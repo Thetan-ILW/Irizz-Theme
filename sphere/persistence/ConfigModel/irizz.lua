@@ -23,6 +23,8 @@ return {
 	transitionAnimation = "circle",
 	osuResultScreen = false,
 	osuResultSkin = "None",
+	osuSongSelect = false,
+	osuSongSelectSkin = "Default",
 	hpGraph = true,
 	showPP = true,
 	songSelectOffset = 0,

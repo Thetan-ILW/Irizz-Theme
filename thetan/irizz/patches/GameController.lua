@@ -16,9 +16,6 @@ modulePatcher:insert(module, "load", function(self)
 	self.ui.gameView = GameView(self)
 	self.gameView = self.ui.gameView
 
-	self.ui.selectView = OsuSelectView(self)
-	self.selectView = self.ui.selectView
-
 	self.ui.resultView = ResultView(self)
 	self.resultView = self.ui.resultView
 
@@ -35,6 +32,14 @@ modulePatcher:insert(module, "load", function(self)
 
 	local configModel = self.configModel
 	local rhythmModel = self.rhythmModel
+
+	if configModel.configs.irizz.osuSongSelect then
+		self.ui.selectView = OsuSelectView(self)
+	else
+		self.ui.selectView = SelectView(self)
+	end
+
+	self.selectView = self.ui.selectView
 
 	rhythmModel.judgements = configModel.configs.judgements
 	rhythmModel.hp = configModel.configs.settings.gameplay.hp
