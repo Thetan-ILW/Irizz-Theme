@@ -134,7 +134,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 	gfx.setColor(mixed_color)
 
 	gfx.translate(20, 12)
-	gfx.draw(self.assets.maniaSmallIcon)
+	gfx.draw(self.assets.maniaSmallIconForCharts)
 
 	gfx.translate(40, -4)
 	gfx.setFont(self.font.title)

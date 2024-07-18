@@ -145,6 +145,8 @@ function OsuSongSelect:new(game)
 	assets.listButtonBackground = gfx.newImage(skin_path .. "menu-button-background@2x.png")
 	assets.star = gfx.newImage(skin_path .. "star@2x.png")
 	assets.maniaSmallIcon = gfx.newImage(skin_path .. "mode-mania-small@2x.png")
+	assets.maniaSmallIconForCharts = gfx.newImage(skin_path .. "mode-mania-small-for-charts@2x.png")
+	assets.maniaIcon = gfx.newImage(skin_path .. "mode-mania@2x.png")
 
 	assets.gradeD = gfx.newImage(skin_path .. "ranking-D-small@2x.png")
 	assets.gradeC = gfx.newImage(skin_path .. "ranking-C-small@2x.png")
@@ -365,16 +367,6 @@ function OsuSongSelect:top()
 	gfx.draw(assets.panelTop)
 
 	w, h = Layout:move("base")
-	gfx.translate(10, 120)
-	gfx.setColor({ 0.08, 0.51, 0.7, 1 })
-	dropdown("scoreSource", 305)
-
-	w, h = Layout:move("base")
-	gfx.setColor(white)
-	gfx.translate(331, 118)
-	gfx.draw(assets.forum)
-
-	w, h = Layout:move("base")
 	gfx.translate(801, 23)
 	gfx.setFont(font.groupSort)
 	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
@@ -386,6 +378,28 @@ function OsuSongSelect:top()
 	gfx.setFont(font.groupSort)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
 	gyatt.text("Sort")
+end
+
+function OsuSongSelect:topUI(view)
+	local w, h = Layout:move("base")
+	gfx.translate(10, 120)
+	gfx.setColor({ 0.08, 0.51, 0.7, 1 })
+	dropdown("scoreSource", 305)
+
+	w, h = Layout:move("base")
+	gfx.setColor(white)
+	gfx.translate(331, 118)
+	gfx.draw(assets.forum)
+
+	if gyatt.isOver(23, 23) and gyatt.mousePressed(1) then
+		love.system.openURL("https://soundsphere.xyz/notecharts")
+		view.gameView.showMessage("Opening the link. Check your browser.", nil, { show_time = 3 })
+	end
+
+	w, h = Layout:move("base")
+	gfx.setColor({ 1, 1, 1, 0.5 })
+	gfx.setFont(font.scrollSpeed)
+	gyatt.frame(scroll_speed_str, -15, 0, w, h, "right", "top")
 
 	w, h = Layout:move("base")
 	gfx.setFont(font.tabs)
@@ -399,10 +413,8 @@ function OsuSongSelect:top()
 	tab("By Difficulty")
 	gfx.translate(118, 0)
 	tab("No grouping")
-end
 
-function OsuSongSelect:topUI(view)
-	local w, h = Layout:move("base")
+	w, h = Layout:move("base")
 	gfx.translate(890, 29)
 	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
 	dropdown("group", 192)
@@ -420,11 +432,6 @@ function OsuSongSelect:topUI(view)
 			view.game.selectModel:setSortFunction(name)
 		end
 	end
-
-	w, h = Layout:move("base")
-	gfx.setColor({ 1, 1, 1, 0.5 })
-	gfx.setFont(font.scrollSpeed)
-	gyatt.frame(scroll_speed_str, -15, 0, w, h, "right", "top")
 end
 
 local function bottomButtonImage(id, image, mouse_over_image)
@@ -634,11 +641,22 @@ function OsuSongSelect:updateOtherInfo(view)
 	end
 end
 
+function OsuSongSelect:modeLogo()
+	local w, h = Layout:move("base")
+	local image = assets.maniaIcon
+	local iw, ih = image:getDimensions()
+
+	gfx.translate(w / 2 - iw / 2, h / 2 - ih / 2)
+	gfx.setColor({ 1, 1, 1, 0.2 })
+	gfx.draw(image)
+end
+
 function OsuSongSelect:draw(view)
 	Layout:draw()
 
 	self:updateOtherInfo(view)
 
+	self:modeLogo()
 	self:chartSetList()
 	self:scores(view)
 	self:top()
