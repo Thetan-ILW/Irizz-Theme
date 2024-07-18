@@ -17,6 +17,7 @@ NoteChartSetListView.mouseScrollEase = { "quartout", 0.45 }
 NoteChartSetListView.assets = {}
 NoteChartSetListView.activeTextColor = { 0, 0, 0, 1 }
 NoteChartSetListView.inactiveTextColor = { 1, 1, 1, 1 }
+NoteChartSetListView.previewIcon = false
 NoteChartSetListView.animations = {}
 
 function NoteChartSetListView:new(game)
@@ -104,6 +105,13 @@ function NoteChartSetListView:loadFonts()
 	self.font = Theme:getFonts("osuChartSetList", wh / 768)
 end
 
+function NoteChartSetListView:update(w, h)
+	ListView.update(self, w, h)
+
+	local irizz = self.game.configModel.configs.irizz
+	self.previewIcon = irizz.osuSongSelectPreviewIcon
+end
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -146,6 +154,11 @@ function NoteChartSetListView:drawItem(i, w, h)
 
 	gfx.setColor(mixed_color)
 
+	if self.previewIcon then
+		gfx.translate(110, 0)
+	end
+
+	gfx.push()
 	gfx.translate(20, 12)
 	gfx.draw(self.assets.maniaSmallIconForCharts)
 
@@ -159,11 +172,12 @@ function NoteChartSetListView:drawItem(i, w, h)
 	gfx.translate(0, -2)
 	gfx.setFont(self.font.thirdRow)
 	gyatt.text(("%s (%s)"):format(item.name, Format.inputMode(item.inputmode)))
+	gfx.pop()
 
-	gfx.translate(0, -5)
+	local iw, ih = self.assets.star:getDimensions()
+
+	gfx.translate(60, h - ih * 0.6 + 10)
 	gfx.scale(0.6)
-
-	local iw = self.assets.star:getWidth()
 
 	for si = 1, 10, 1 do
 		if si >= (item.osu_diff or 0) then

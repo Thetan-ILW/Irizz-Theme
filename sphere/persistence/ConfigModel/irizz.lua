@@ -25,6 +25,7 @@ return {
 	osuResultSkin = "None",
 	osuSongSelect = false,
 	osuSongSelectSkin = "Default",
+	osuSongSelectPreviewIcon = false,
 	hpGraph = true,
 	showPP = true,
 	songSelectOffset = 0,

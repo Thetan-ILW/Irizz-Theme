@@ -130,6 +130,7 @@ localization.textSettings = {
 	songSelectOffset = "Song select offset",
 	--
 	osuSongSelect = "osu! song select",
+	previewIcon = "Preview icon (Shifts text)",
 	osuResultScreen = "osu! result screen",
 	enable = "Enable",
 	showHpGraph = "Show HP graph",

@@ -741,6 +741,8 @@ function SettingsTab:UI(view)
 	local load_new_skin = false
 
 	irizz.osuSongSelect, load_new_ui = imgui.checkbox("irizz.osuSongSelect", irizz.osuSongSelect, Text.enable)
+	irizz.osuSongSelectPreviewIcon =
+		imgui.checkbox("irizz.osuSongSelectPreviewIcon", irizz.osuSongSelectPreviewIcon, Text.previewIcon)
 	irizz.osuSongSelectSkin, load_new_skin =
 		imgui.combo("irizz.osuSongSelectSkin", irizz.osuSongSelectSkin, Theme.osuSkinNames, nil, Text.skin)
 
