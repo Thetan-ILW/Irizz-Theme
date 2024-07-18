@@ -573,7 +573,7 @@ function OsuSongSelect:scores(view)
 		gfx.draw(assets.noScores)
 	else
 		gfx.translate(8, 154)
-
+		list:updateAnimations()
 		list:draw(378, 420, true)
 	end
 

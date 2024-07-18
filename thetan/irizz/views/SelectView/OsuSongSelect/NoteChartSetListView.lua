@@ -81,7 +81,7 @@ local gfx = love.graphics
 
 function NoteChartSetListView:updateAnimations()
 	for i, v in pairs(self.animations) do
-		v = v - 0.003
+		v = v - 0.009
 
 		self.animations[i] = v
 
@@ -119,7 +119,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 	})
 
 	if gyatt.isOver(w, h, 0, 10) and self.focus then
-		self.animations[i] = 0.3
+		self.animations[i] = math_util.clamp((self.animations[i] or 0) + 0.03, 0, 0.7)
 	end
 
 	gfx.draw(self.assets.listButtonBackground)

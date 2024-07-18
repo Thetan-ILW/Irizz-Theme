@@ -1,12 +1,11 @@
 local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
-local gfx_util = require("gfx_util")
 local Format = require("sphere.views.Format")
 local time_util = require("time_util")
+local math_util = require("math_util")
 local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
 
 local ScoreListView = ListView + {}
 
@@ -18,6 +17,7 @@ ScoreListView.oneClickOpen = true
 ScoreListView.modLines = {}
 ScoreListView.text = Theme.textScoreList
 ScoreListView.focus = false
+ScoreListView.animations = {}
 
 function ScoreListView:new(game)
 	self.game = game
@@ -146,6 +146,18 @@ end
 
 local gfx = love.graphics
 
+function ScoreListView:updateAnimations()
+	for i, v in pairs(self.animations) do
+		v = v - 0.009
+
+		self.animations[i] = v
+
+		if v < 0 then
+			self.animations[i] = 0
+		end
+	end
+end
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -160,10 +172,13 @@ function ScoreListView:drawItem(i, w, h)
 		username = item.user.name
 	end
 
-	local background_color = { 0, 0, 0, 0.3 }
+	local a = self.animations[i] or 0
+
 	if just.is_over(w, h) and self.focus then
-		background_color = { 0.2, 0.2, 0.2, 0.5 }
+		self.animations[i] = math_util.clamp(a + 0.05, 0, 0.5)
 	end
+
+	local background_color = { 0 + a * 0.5, 0 + a * 0.5, 0 + a * 0.5, 0.3 + a * 0.2 }
 
 	gfx.setColor(background_color)
 	gfx.rectangle("fill", 0, 0, w, 50)
