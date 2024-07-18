@@ -17,7 +17,6 @@ local NoteChartSetListView = require("thetan.irizz.views.SelectView.OsuSongSelec
 local ScoreListView = require("thetan.irizz.views.SelectView.OsuSongSelect.ScoreListView")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
 local Text = Theme.textSongSelect
 local font
 
@@ -28,6 +27,7 @@ local gfx = love.graphics
 
 local avatar
 local top_panel_quad
+local brighten_shader
 
 local prev_chart_id = 0
 local chart_name = ""
@@ -43,6 +43,7 @@ local username = ""
 local is_logged_in = false
 local scroll_speed_str = ""
 local mods_str = ""
+local current_time = 0
 local update_time = 0
 local chart_list_update_time = 0
 local has_scores = false
@@ -173,9 +174,12 @@ function OsuSongSelect:new(game)
 	local sort_function = game.configModel.configs.select.sortFunction
 	dropdowns.sort.selectedIndex = table_util.indexof(sort_model.names, sort_function)
 
+	local shaders = require("irizz.shaders")
+	brighten_shader = shaders.brighten
+
 	Layout:draw()
 
-	chart_list_update_time = love.timer.getTime() + 0.225
+	chart_list_update_time = love.timer.getTime() + 0.4
 	self:resolutionUpdated()
 end
 
@@ -215,20 +219,20 @@ function OsuSongSelect:updateInfo(view)
 	has_scores = #view.game.selectModel.scoreLibrary.items ~= 0
 
 	if prev_chart_id ~= chartview.id then
-		update_time = love.timer.getTime()
+		update_time = current_time
 	end
 
 	prev_chart_id = chartview.id
 end
 
 local function animate(time, interval)
-	local t = math.min(love.timer.getTime() - time, interval)
+	local t = math.min(current_time - time, interval)
 	local progress = t / interval
 	return math_util.clamp(progress * progress, 0, 1)
 end
 
 local function easeOutCubic(time, interval)
-	local t = math.min(love.timer.getTime() - time, interval)
+	local t = math.min(current_time - time, interval)
 	local progress = t / interval
 	return math_util.clamp(1 - math.pow(1 - progress, 3), 0, 1)
 end
@@ -258,7 +262,7 @@ local function dropdown(id, w)
 
 	local just_opened = false
 
-	local time = love.timer.getTime()
+	local time = current_time
 
 	if gyatt.mousePressed(1) then
 		local open = gyatt.isOver(w, 22)
@@ -276,14 +280,14 @@ local function dropdown(id, w)
 	local changed = false
 	local selected = 0
 
-	a = animate(instance.updateTime, 0.15)
-
-	if a == 0 then
-		return
-	end
+	a = easeOutCubic(instance.updateTime, 0.35)
 
 	if not instance.focus then
 		a = 1 - a
+	end
+
+	if a == 0 then
+		return
 	end
 
 	local prev_canvas = gfx.getCanvas()
@@ -311,7 +315,7 @@ local function dropdown(id, w)
 
 		gfx.push()
 
-		gfx.setColor(mouse_over and { r, g, b, a } or { 0, 0, 0, 1 })
+		gfx.setColor(mouse_over and { r, g, b, 1 } or { 0, 0, 0, 1 })
 		gfx.rectangle("fill", 0, 0, w, 27, 4, 4)
 
 		gfx.setColor(white)
@@ -349,9 +353,9 @@ end
 function OsuSongSelect:chartInfo()
 	local w, h = Layout:move("base")
 
-	local a = animate(update_time, 0.3)
-
+	local a = animate(update_time, 0.2)
 	gfx.setColor({ 1, 1, 1, a })
+
 	gfx.translate(5, 5)
 	gfx.draw(assets.rankedIcon)
 	gfx.translate(-5, -5)
@@ -368,9 +372,17 @@ function OsuSongSelect:chartInfo()
 	gfx.setFont(font.infoTop)
 
 	gfx.translate(5, 38)
+	a = animate(update_time, 0.3)
+	gfx.setColor({ 1, 1, 1, a })
 	gyatt.text(("Length: %s BPM: %s Objects %s"):format(length_str, bpm_str, objects_str), w, "left")
+
+	a = animate(update_time, 0.4)
+	gfx.setColor({ 1, 1, 1, a })
 	gfx.setFont(font.infoCenter)
 	gyatt.text(("Circles: %s Sliders: %s Spinners: 0"):format(note_count_str, ln_count_str))
+
+	a = animate(update_time, 0.5)
+	gfx.setColor({ 1, 1, 1, a })
 	gfx.setFont(font.infoBottom)
 	gyatt.text(("Keys: %s OD: 8 HP: 8 Star rating: %s"):format(columns_str, difficulty_str))
 end
@@ -378,8 +390,15 @@ end
 function OsuSongSelect:top()
 	local w, h = Layout:move("base")
 
+	local a = math_util.clamp((1 - easeOutCubic(update_time, 1)) * 0.15, 0, 0.10)
+
+	local prev_shader = gfx.getShader()
+
+	gfx.setShader(brighten_shader)
+	brighten_shader:send("amount", a)
 	gfx.setColor(white)
 	gfx.draw(assets.panelTop, top_panel_quad)
+	gfx.setShader(prev_shader)
 
 	w, h = Layout:move("base")
 	gfx.translate(w - 570, 23)
@@ -464,7 +483,7 @@ local function bottomButtonImage(id, image, mouse_over_image)
 	local pressed = false
 
 	if mouse_over then
-		instance.updateTime = love.timer.getTime()
+		instance.updateTime = current_time
 
 		if gyatt.mousePressed(1) then
 			pressed = true
@@ -491,8 +510,14 @@ function OsuSongSelect:bottom(view)
 
 	local iw, ih = assets.panelBottom:getDimensions()
 
+	local a = math_util.clamp((1 - easeOutCubic(update_time, 1)) * 0.15, 0, 0.1)
+
+	local prev_shader = gfx.getShader()
+
+	gfx.setShader(brighten_shader)
 	gfx.translate(0, h - ih)
 	gfx.draw(assets.panelBottom, 0, 0, 0, w / iw, 1)
+	gfx.setShader(prev_shader)
 
 	w, h = Layout:move("base")
 	iw, ih = assets.osuLogo:getDimensions()
@@ -676,6 +701,7 @@ end
 function OsuSongSelect:draw(view)
 	Layout:draw()
 
+	current_time = love.timer.getTime()
 	self:updateOtherInfo(view)
 
 	self:modeLogo()

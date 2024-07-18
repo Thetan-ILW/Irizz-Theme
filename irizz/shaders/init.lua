@@ -8,6 +8,16 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
 }
 ]])
 
+shaders.brighten = love.graphics.newShader([[
+extern Image tex;
+extern float amount;
+vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
+{
+    vec4 texturecolor = Texel(tex, texture_coords);
+    return vec4(texturecolor.rgb + amount, texturecolor.a) * color;
+}
+]])
+
 shaders.ca = love.graphics.newShader([[ 
 extern float ch_ab_intensity;
 extern float distortion_intensity;

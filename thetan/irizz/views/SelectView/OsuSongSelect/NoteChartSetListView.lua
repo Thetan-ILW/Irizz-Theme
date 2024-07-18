@@ -102,13 +102,13 @@ function NoteChartSetListView:drawItem(i, w, h)
 	local d_clamped = math_util.clamp(distance_abs, 0, 1)
 	local additional = 0
 
-	if i ~= self.itemIndex then
+	if i ~= self.targetItemIndex then
 		additional = 25 * d_clamped
 	end
 
 	local animation = self.animations[i] or 0
 
-	gfx.translate((110 * distance_abs) * 0.4 + additional - (animation * 10), (-5 * distance) - 10)
+	gfx.translate((110 * distance_abs) * 0.4 - (animation * 10) + additional, (-5 * distance) - 10)
 
 	animation = animation * 0.5
 	gfx.setColor({
