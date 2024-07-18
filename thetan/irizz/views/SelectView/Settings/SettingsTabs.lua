@@ -738,9 +738,10 @@ function SettingsTab:UI(view)
 	just.next(0, textSeparation)
 
 	local load_new_ui = false
+	local load_new_skin = false
 
 	irizz.osuSongSelect, load_new_ui = imgui.checkbox("irizz.osuSongSelect", irizz.osuSongSelect, Text.enable)
-	irizz.osuSongSelectSkin =
+	irizz.osuSongSelectSkin, load_new_skin =
 		imgui.combo("irizz.osuSongSelectSkin", irizz.osuSongSelectSkin, Theme.osuSkinNames, nil, Text.skin)
 
 	if load_new_ui then
@@ -752,9 +753,16 @@ function SettingsTab:UI(view)
 			select_view = require("thetan.irizz.views.SelectView")
 		end
 
+		local current_view = view.game.selectView
+
 		view.game.ui.selectView = select_view(view.game)
 		view.game.selectView = view.game.ui.selectView
-		view:changeScreen("selectView")
+		current_view:changeScreen("selectView")
+	end
+
+	if load_new_skin and irizz.osuSongSelect then
+		local current_view = view.game.selectView
+		current_view:changeScreen("selectView")
 	end
 
 	imgui.separator()

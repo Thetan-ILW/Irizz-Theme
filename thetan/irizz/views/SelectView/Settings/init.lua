@@ -87,6 +87,8 @@ function ViewConfig.canDraw(position)
 end
 
 function ViewConfig:draw(view, position)
+	position = position or 0
+
 	if not self.canDraw(position) then
 		return
 	end

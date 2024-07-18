@@ -14,6 +14,7 @@ return {
 	showFilters = { op = { "o", "f" } },
 	showInputs = { op = { "o", "i" } },
 	showMultiplayer = { op = { "o", "p" } },
+	showSettings = { op = { "o", "o" } },
 	openEditor = { op = { "o", "e" } },
 	openResult = { op = { "o", "r" } },
 

@@ -16,6 +16,7 @@ return {
 	showFilters = { mod = { "ctrl", "f" } },
 	showInputs = { mod = { "ctrl", "i" } },
 	showMultiplayer = { mod = { "ctrl", "m" } },
+	showSettings = { mod = { "ctrl", "o" } },
 	autoPlay = { mod = { "ctrl", "return" } },
 	openEditor = { mod = { "ctrl", "e" } },
 	openResult = { mod = { "ctrl", "r" } },

@@ -67,6 +67,10 @@ function GameView:setView(view)
 	local transition = config.transitionAnimation
 	view.gameView = self
 
+	if self.modal then
+		self.modal.shouldClose = true
+	end
+
 	self.actionModel = self.game.actionModel
 	self.screenTransition:transit(function()
 		self.actionModel.disable()
