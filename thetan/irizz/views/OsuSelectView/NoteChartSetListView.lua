@@ -121,7 +121,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 
 	local animation = self.animations[i] or 0
 
-	gfx.translate((80 * distance_abs) * 0.4 - (animation * 10) + additional, (-5 * distance) - 10)
+	gfx.translate((80 * distance_abs) * 0.4 - (animation * 10) + additional + 10, (-5 * distance) - 10)
 
 	animation = animation * 0.5
 	gfx.setColor({

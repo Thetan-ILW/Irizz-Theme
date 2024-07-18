@@ -4,6 +4,7 @@ local table_util = require("table_util")
 local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
 local utf8validate = require("utf8validate")
 local audio = require("audio")
+local gfx_util = require("gfx_util")
 
 local Assets = {}
 
@@ -433,6 +434,80 @@ function Assets:loadOsuPause(paths)
 	t.continueClick = loadAudio(paths.continueClick)
 	t.retryClick = loadAudio(paths.retryClick)
 	t.backClick = loadAudio(paths.backClick)
+
+	return t
+end
+
+local function loadImageOrDefault(directory, name)
+	local image = loadImage(directory .. name)
+
+	if image then
+		return image
+	end
+
+	image = loadImage("resources/osu_default_assets/" .. name)
+
+	if image then
+		return image
+	end
+
+	return gfx_util.newPixel(0, 0, 0, 0)
+end
+
+local default_skin_ini = {
+	Colours = {
+		SongSelectActiveText = "0,0,0",
+		SongSelectInActiveText = "255,255,255",
+	},
+}
+
+function Assets.loadOsuSongSelect(skin_path)
+	local content = love.filesystem.read(skin_path .. "skin.ini") or love.filesystem.read(skin_path .. "Skin.ini")
+
+	local t = {}
+
+	if content then
+		content = utf8validate(content)
+		t.skinini = OsuNoteSkin:parseSkinIni(content)
+	else
+		t.skinini = default_skin_ini
+	end
+
+	t.panelTop = loadImageOrDefault(skin_path, "songselect-top")
+	t.panelTop:setWrap("clamp")
+
+	t.panelBottom = loadImageOrDefault(skin_path, "songselect-bottom")
+	t.rankedIcon = loadImageOrDefault(skin_path, "selection-ranked")
+	t.dropdownArrow = loadImageOrDefault(skin_path, "dropdown-arrow")
+
+	t.menuBack = loadImageOrDefault(skin_path, "menu-back")
+	t.modeButton = loadImageOrDefault(skin_path, "selection-mode")
+	t.modsButton = loadImageOrDefault(skin_path, "selection-mods")
+	t.randomButton = loadImageOrDefault(skin_path, "selection-random")
+	t.optionsButton = loadImageOrDefault(skin_path, "selection-options")
+
+	t.modeButtonOver = loadImageOrDefault(skin_path, "selection-mode-over")
+	t.modsButtonOver = loadImageOrDefault(skin_path, "selection-mods-over")
+	t.randomButtonOver = loadImageOrDefault(skin_path, "selection-random-over")
+	t.optionsButtonOver = loadImageOrDefault(skin_path, "selection-options-over")
+
+	t.osuLogo = loadImageOrDefault(skin_path, "menu-osu")
+	t.tab = loadImageOrDefault(skin_path, "selection-tab")
+	t.forum = loadImageOrDefault(skin_path, "rank-forum")
+	t.noScores = loadImageOrDefault(skin_path, "selection-norecords")
+
+	t.listButtonBackground = loadImageOrDefault(skin_path, "menu-button-background")
+	t.star = loadImageOrDefault(skin_path, "star")
+	t.maniaSmallIcon = loadImageOrDefault(skin_path, "mode-mania-small")
+	t.maniaSmallIconForCharts = loadImageOrDefault(skin_path, "mode-mania-small-for-charts")
+	t.maniaIcon = loadImageOrDefault(skin_path, "mode-mania")
+
+	t.gradeD = loadImageOrDefault(skin_path, "ranking-D-small")
+	t.gradeC = loadImageOrDefault(skin_path, "ranking-C-small")
+	t.gradeB = loadImageOrDefault(skin_path, "ranking-B-small")
+	t.gradeA = loadImageOrDefault(skin_path, "ranking-A-small")
+	t.gradeS = loadImageOrDefault(skin_path, "ranking-S-small")
+	t.gradeX = loadImageOrDefault(skin_path, "ranking-X-small")
 
 	return t
 end

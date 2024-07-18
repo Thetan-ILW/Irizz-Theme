@@ -742,6 +742,7 @@ localization.fonts = {
 		groupSort = { "Aller", 30 },
 		username = { "Aller", 20, "ZenMaruGothic-Medium" },
 		belowUsername = { "Aller", 14 },
+		rank = { "Aller-Light", 50 },
 		scrollSpeed = { "Aller-Light", 23 },
 		tabs = { "Aller", 14 },
 		mods = { "Aller", 41 },

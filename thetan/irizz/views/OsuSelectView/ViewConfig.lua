@@ -1,29 +1,27 @@
 local class = require("class")
 
-local Layout = require("thetan.irizz.views.SelectView.SongSelect.OsuSongSelectLayout")
+local Layout = require("thetan.irizz.views.OsuSelectView.Layout")
 
-local OsuSongSelect = class()
+local ViewConfig = class()
 
+local assets_loader = require("thetan.irizz.assets")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 local math_util = require("math_util")
 local table_util = require("table_util")
 local Format = require("sphere.views.Format")
 
-local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
-local utf8validate = require("utf8validate")
-
-local NoteChartSetListView = require("thetan.irizz.views.SelectView.OsuSongSelect.NoteChartSetListView")
-local ScoreListView = require("thetan.irizz.views.SelectView.OsuSongSelect.ScoreListView")
+local NoteChartSetListView = require("thetan.irizz.views.OsuSelectView.NoteChartSetListView")
+local ScoreListView = require("thetan.irizz.views.OsuSelectView.ScoreListView")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Text = Theme.textSongSelect
 local font
 
 local assets = {}
-local skin_path = "resources/osu_default_assets/"
 
 local gfx = love.graphics
+
+local window_height
 
 local avatar
 local top_panel_quad
@@ -112,53 +110,10 @@ local buttons = {
 	},
 }
 
-function OsuSongSelect:new(game)
+function ViewConfig:new(game)
 	avatar = Theme.avatarImage
 
-	local content = love.filesystem.read(skin_path .. "skin.ini")
-
-	if not content then
-		error("No osu! skin selected")
-	end
-
-	content = utf8validate(content)
-	assets.skinini = OsuNoteSkin:parseSkinIni(content)
-
-	assets.panelTop = gfx.newImage(skin_path .. "songselect-top.png")
-	assets.panelTop:setWrap("clamp")
-
-	assets.panelBottom = gfx.newImage(skin_path .. "songselect-bottom.png")
-	assets.rankedIcon = gfx.newImage(skin_path .. "selection-ranked@2x.png")
-	assets.dropdownArrow = gfx.newImage(skin_path .. "dropdown-arrow.png")
-
-	assets.menuBack = gfx.newImage(skin_path .. "menu-back@2x.png")
-	assets.modeButton = gfx.newImage(skin_path .. "selection-mode@2x.png")
-	assets.modsButton = gfx.newImage(skin_path .. "selection-mods@2x.png")
-	assets.randomButton = gfx.newImage(skin_path .. "selection-random@2x.png")
-	assets.optionsButton = gfx.newImage(skin_path .. "selection-options@2x.png")
-
-	assets.modeButtonOver = gfx.newImage(skin_path .. "selection-mode-over@2x.png")
-	assets.modsButtonOver = gfx.newImage(skin_path .. "selection-mods-over@2x.png")
-	assets.randomButtonOver = gfx.newImage(skin_path .. "selection-random-over@2x.png")
-	assets.optionsButtonOver = gfx.newImage(skin_path .. "selection-options-over@2x.png")
-
-	assets.osuLogo = gfx.newImage(skin_path .. "menu-osu@2x.png")
-	assets.tab = gfx.newImage(skin_path .. "selection-tab@2x.png")
-	assets.forum = gfx.newImage(skin_path .. "rank-forum@2x.png")
-	assets.noScores = gfx.newImage(skin_path .. "selection-norecords.png")
-
-	assets.listButtonBackground = gfx.newImage(skin_path .. "menu-button-background@2x.png")
-	assets.star = gfx.newImage(skin_path .. "star@2x.png")
-	assets.maniaSmallIcon = gfx.newImage(skin_path .. "mode-mania-small@2x.png")
-	assets.maniaSmallIconForCharts = gfx.newImage(skin_path .. "mode-mania-small-for-charts@2x.png")
-	assets.maniaIcon = gfx.newImage(skin_path .. "mode-mania@2x.png")
-
-	assets.gradeD = gfx.newImage(skin_path .. "ranking-D-small@2x.png")
-	assets.gradeC = gfx.newImage(skin_path .. "ranking-C-small@2x.png")
-	assets.gradeB = gfx.newImage(skin_path .. "ranking-B-small@2x.png")
-	assets.gradeA = gfx.newImage(skin_path .. "ranking-A-small@2x.png")
-	assets.gradeS = gfx.newImage(skin_path .. "ranking-S-small@2x.png")
-	assets.gradeX = gfx.newImage(skin_path .. "ranking-X-small@2x.png")
+	assets = assets_loader.loadOsuSongSelect("userdata/skins/pink_girl/")
 
 	font = Theme:getFonts("osuSongSelect")
 
@@ -183,7 +138,7 @@ function OsuSongSelect:new(game)
 	self:resolutionUpdated()
 end
 
-function OsuSongSelect:updateInfo(view)
+function ViewConfig:updateInfo(view)
 	local chartview = view.game.selectModel.chartview
 	local rate = view.game.playContext.rate
 
@@ -206,7 +161,7 @@ function OsuSongSelect:updateInfo(view)
 	columns_str = Format.inputMode(chartview.chartdiff_inputmode)
 	difficulty_str = ("%0.02f"):format(chartview.osu_diff or 0)
 
-	username = view.game.configModel.configs.online.user.name or "Guest"
+	username = view.game.configModel.configs.online.user.name or "xXx_FortnitePro_xXx"
 	is_logged_in = view.game.configModel.configs.online.user.name == nil
 
 	local speedModel = view.game.speedModel
@@ -350,7 +305,7 @@ local function tab(label)
 	gyatt.frame(label, 0, 2, 137, 21, "center", "center")
 end
 
-function OsuSongSelect:chartInfo()
+function ViewConfig:chartInfo()
 	local w, h = Layout:move("base")
 
 	local a = animate(update_time, 0.2)
@@ -387,7 +342,7 @@ function OsuSongSelect:chartInfo()
 	gyatt.text(("Keys: %s OD: 8 HP: 8 Star rating: %s"):format(columns_str, difficulty_str))
 end
 
-function OsuSongSelect:top()
+function ViewConfig:top()
 	local w, h = Layout:move("base")
 
 	local prev_shader = gfx.getShader()
@@ -411,7 +366,7 @@ function OsuSongSelect:top()
 	gyatt.text("Sort")
 end
 
-function OsuSongSelect:topUI(view)
+function ViewConfig:topUI(view)
 	local w, h = Layout:move("base")
 	gfx.translate(10, 120)
 	gfx.setColor({ 0.08, 0.51, 0.7, 1 })
@@ -500,7 +455,7 @@ local function bottomButtonImage(id, image, mouse_over_image)
 	return pressed
 end
 
-function OsuSongSelect:bottom(view)
+function ViewConfig:bottom(view)
 	local w, h = Layout:move("base")
 
 	gfx.setColor(white)
@@ -517,20 +472,23 @@ function OsuSongSelect:bottom(view)
 	w, h = Layout:move("base")
 	gfx.translate(630, 693)
 
+	gfx.setFont(font.rank)
+	gfx.setColor({ 1, 1, 1, 0.17 })
+	gyatt.frame("#69", -1, 10, 322, 78, "right", "top")
+
 	iw, ih = avatar:getDimensions()
 	gfx.setColor(white)
 	gfx.draw(avatar, 0, 0, 0, 74 / iw, 74 / ih)
 
 	gfx.translate(82, -4)
+
 	gfx.setFont(font.username)
 	gyatt.text(username)
 	gfx.setFont(font.belowUsername)
 
-	if not is_logged_in then
-		gyatt.text("Click to sign in!")
-	end
+	gyatt.text("Performance: 1337pp\nAccuracy: 200.00%\nLv3")
 
-	gfx.translate(40, 40)
+	gfx.translate(40, 22)
 
 	gfx.setColor({ 0.15, 0.15, 0.15, 1 })
 	gfx.rectangle("fill", 0, 0, 199, 12, 8, 8)
@@ -550,7 +508,9 @@ function OsuSongSelect:bottom(view)
 
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
-	bottomButtonImage("back", assets.menuBack, assets.menuBack)
+	if bottomButtonImage("back", assets.menuBack, assets.menuBack) then
+		view.gameView.mainMenuView:toggle()
+	end
 
 	w, h = Layout:move("bottomButtons")
 	bottomButtonImage("mode", assets.modeButton, assets.modeButtonOver)
@@ -580,7 +540,7 @@ function OsuSongSelect:bottom(view)
 	end
 end
 
-function OsuSongSelect:chartSetList()
+function ViewConfig:chartSetList()
 	local w, h = Layout:move("base")
 	local list = self.noteChartSetListView
 
@@ -603,7 +563,7 @@ function OsuSongSelect:chartSetList()
 	gyatt.scrollBar(list, 610, 595)
 end
 
-function OsuSongSelect:scores(view)
+function ViewConfig:scores(view)
 	local list = self.scoreListView
 
 	local no_focus = false
@@ -648,7 +608,7 @@ function OsuSongSelect:scores(view)
 	end
 end
 
-function OsuSongSelect:mods(view)
+function ViewConfig:mods(view)
 	local w, h = Layout:move("base")
 
 	gfx.translate(104, 633)
@@ -657,7 +617,7 @@ function OsuSongSelect:mods(view)
 	gyatt.text(mods_str)
 end
 
-function OsuSongSelect:updateOtherInfo(view)
+function ViewConfig:updateOtherInfo(view)
 	local modifiers = view.game.playContext.modifiers
 	mods_str = Theme:getModifierString(modifiers)
 
@@ -678,7 +638,7 @@ function OsuSongSelect:updateOtherInfo(view)
 	end
 end
 
-function OsuSongSelect:modeLogo()
+function ViewConfig:modeLogo()
 	local w, h = Layout:move("base")
 	local image = assets.maniaIcon
 	local iw, ih = image:getDimensions()
@@ -688,12 +648,13 @@ function OsuSongSelect:modeLogo()
 	gfx.draw(image)
 end
 
-function OsuSongSelect:resolutionUpdated()
+function ViewConfig:resolutionUpdated()
 	local w, h = Layout:move("base")
 	top_panel_quad = gfx.newQuad(0, 0, w, assets.panelTop:getHeight(), assets.panelTop)
 
-	local ww, wh = love.graphics.getDimensions()
+	local wh = love.graphics.getHeight()
 	gyatt.setTextScale(768 / wh)
+	window_height = wh
 
 	font = Theme:getFonts("osuSongSelect", wh / 768)
 
@@ -701,10 +662,11 @@ function OsuSongSelect:resolutionUpdated()
 	self.scoreListView:loadFonts()
 end
 
-function OsuSongSelect:draw(view)
+function ViewConfig:draw(view)
 	Layout:draw()
 
 	current_time = love.timer.getTime()
+	gyatt.setTextScale(768 / window_height)
 
 	local a = math_util.clamp((1 - easeOutCubic(update_time, 1)) * 0.15, 0, 0.10)
 	brighten_shader:send("amount", a)
@@ -719,7 +681,8 @@ function OsuSongSelect:draw(view)
 	self:chartInfo()
 	self:topUI(view)
 	self:mods(view)
-	--print(view.game.chartPreviewModel.graphicEngine.renderer.cvp[1].point:getBeatModulo())
+
+	gyatt.setTextScale(1)
 end
 
-return OsuSongSelect
+return ViewConfig

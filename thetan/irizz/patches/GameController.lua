@@ -1,5 +1,6 @@
 local ActionModel = require("thetan.irizz.models.ActionModel")
 local SelectView = require("thetan.irizz.views.SelectView")
+local OsuSelectView = require("thetan.irizz.views.OsuSelectView")
 local GameplayView = require("thetan.irizz.views.GameplayView")
 local ResultView = require("thetan.irizz.views.ResultView")
 local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
@@ -15,7 +16,7 @@ modulePatcher:insert(module, "load", function(self)
 	self.ui.gameView = GameView(self)
 	self.gameView = self.ui.gameView
 
-	self.ui.selectView = SelectView(self)
+	self.ui.selectView = OsuSelectView(self)
 	self.selectView = self.ui.selectView
 
 	self.ui.resultView = ResultView(self)

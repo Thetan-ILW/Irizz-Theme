@@ -10,7 +10,6 @@ local LayersView = require("thetan.irizz.views.LayersView")
 local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.irizz.views.SelectView.SongSelect")
 local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections")
-local OsuSongSelect = require("thetan.irizz.views.SelectView.SongSelect.OsuSongSelect")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
@@ -37,8 +36,6 @@ function SelectView:load()
 	self.settingsViewConfig = SettingsViewConfig(self.game)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game)
 	self.collectionsViewConfig = CollectionViewConfig(self.game)
-
-	self.osuSongSelect = OsuSongSelect(self.game)
 
 	self.chartPreviewView = ChartPreviewView(self.game)
 	self.chartPreviewView:load()
@@ -131,16 +128,10 @@ function SelectView:update(dt)
 	local ss_offset = irizz.songSelectOffset
 
 	songSelectOffset = ss_offset
-
-	if love.timer.getTime() > last_resize_time + 0.15 then
-		self.osuSongSelect:resolutionUpdated()
-		last_resize_time = math.huge
-	end
 end
 
 function SelectView:notechartChanged()
 	self.songSelectViewConfig:updateInfo(self)
-	self.osuSongSelect:updateInfo(self)
 end
 
 function SelectView:play()
@@ -230,7 +221,6 @@ function SelectView:changeTimeRate(delta)
 		self.game.modifierSelectModel:change()
 		timeRateModel:set(newRate)
 		self.songSelectViewConfig:updateInfo(self)
-		self.osuSongSelect:updateInfo(self)
 	end
 end
 
@@ -273,27 +263,9 @@ function SelectView:receive(event)
 			self:songSelectInputs()
 		end
 	end
-
-	if event.name == "resize" then
-		last_resize_time = love.timer.getTime()
-	end
-end
-
-function SelectView:drawOsu()
-	local function panelsStencil() end
-	local function UI()
-		self.osuSongSelect:draw(self)
-	end
-
-	self.layersView:draw(panelsStencil, UI)
 end
 
 function SelectView:draw()
-	if true then
-		self:drawOsu()
-		return
-	end
-
 	local position = self.screenX
 	local settings = self.settingsViewConfig
 	local songSelect = self.songSelectViewConfig
