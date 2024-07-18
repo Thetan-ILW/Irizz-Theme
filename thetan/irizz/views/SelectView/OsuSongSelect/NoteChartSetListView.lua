@@ -12,6 +12,7 @@ NoteChartSetListView.centerItems = true
 NoteChartSetListView.text = Theme.textChartSetsList
 NoteChartSetListView.staticCursor = false
 NoteChartSetListView.focus = false
+NoteChartSetListView.mouseScrollEase = { "quartout", 0.45 }
 
 NoteChartSetListView.assets = {}
 NoteChartSetListView.activeTextColor = { 0, 0, 0, 1 }
@@ -103,12 +104,12 @@ function NoteChartSetListView:drawItem(i, w, h)
 	local additional = 0
 
 	if i ~= self.targetItemIndex then
-		additional = 25 * d_clamped
+		additional = 50 * d_clamped
 	end
 
 	local animation = self.animations[i] or 0
 
-	gfx.translate((110 * distance_abs) * 0.4 - (animation * 10) + additional, (-5 * distance) - 10)
+	gfx.translate((80 * distance_abs) * 0.4 - (animation * 10) + additional, (-5 * distance) - 10)
 
 	animation = animation * 0.5
 	gfx.setColor({

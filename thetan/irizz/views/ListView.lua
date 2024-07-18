@@ -22,6 +22,9 @@ ListView.font = nil
 ListView.staticCursor = false
 ListView.status = nil
 
+ListView.mouseScrollEase = { "quartout", 0.2 }
+ListView.keyboardScrollEase = "linear"
+
 local nextTime = 0
 local maxInterval = 0.07
 local pressInterval = 0.12
@@ -88,7 +91,7 @@ function ListView:autoScroll(delta, justPressed)
 	pressInterval = maxInterval + self.config.scrollClickExtraTime
 
 	local interval = maxInterval
-	ease = "linear"
+	ease = self.keyboardScrollEase
 
 	interval = justPressed and pressInterval or maxInterval
 
@@ -103,8 +106,8 @@ function ListView:input(w, h)
 	local delta = just.wheel_over(self, just.is_over(w, h))
 	if delta then
 		self:scroll(-delta)
-		ease = "quartout"
-		tweenTime = 0.2
+		ease = self.mouseScrollEase[1]
+		tweenTime = self.mouseScrollEase[2]
 		return
 	end
 
