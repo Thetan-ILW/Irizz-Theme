@@ -44,6 +44,7 @@ local is_logged_in = false
 local scroll_speed_str = ""
 local mods_str = ""
 local update_time = 0
+local chart_list_update_time = 0
 local has_scores = false
 
 local white = { 1, 1, 1, 1 }
@@ -173,6 +174,8 @@ function OsuSongSelect:new(game)
 	dropdowns.sort.selectedIndex = table_util.indexof(sort_model.names, sort_function)
 
 	Layout:draw()
+
+	chart_list_update_time = love.timer.getTime() + 0.225
 	self:resolutionUpdated()
 end
 
@@ -222,6 +225,12 @@ local function animate(time, interval)
 	local t = math.min(love.timer.getTime() - time, interval)
 	local progress = t / interval
 	return math_util.clamp(progress * progress, 0, 1)
+end
+
+local function easeOutCubic(time, interval)
+	local t = math.min(love.timer.getTime() - time, interval)
+	local progress = t / interval
+	return math_util.clamp(1 - math.pow(1 - progress, 3), 0, 1)
 end
 
 local function dropdown(id, w)
@@ -563,7 +572,9 @@ function OsuSongSelect:chartSetList()
 
 	list.focus = not no_focus
 
-	gfx.translate(w - 610, 82)
+	local a = easeOutCubic(chart_list_update_time, 0.7)
+
+	gfx.translate(w - (610 * a), 82)
 	list:updateAnimations()
 	list:draw(610, 595, true)
 
