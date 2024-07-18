@@ -119,10 +119,10 @@ function NoteChartSetListView:drawItem(i, w, h)
 	})
 
 	if gyatt.isOver(w, h, 0, 10) and self.focus then
-		self.animations[i] = math_util.clamp((self.animations[i] or 0) + 0.03, 0, 0.7)
+		self.animations[i] = math_util.clamp((self.animations[i] or 0) + 0.03, 0, 0.55)
 	end
 
-	gfx.draw(self.assets.listButtonBackground)
+	gfx.draw(self.assets.listButtonBackground, 0, (103 - self.assets.listButtonBackground:getHeight()) / 2)
 
 	local mixed_color = {
 		(1 - d_clamped) * self.activeTextColor[1] + d_clamped * self.inactiveTextColor[1],

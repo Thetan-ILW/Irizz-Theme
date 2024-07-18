@@ -85,7 +85,7 @@ local buttons = {
 	back = {
 		updateTime = 0,
 		mouseOver = false,
-		rect = { 0, -90, 100, 90 },
+		rect = { 0, -90, 200, 90 },
 	},
 	mode = {
 		updateTime = 0,
@@ -487,6 +487,12 @@ function OsuSongSelect:bottom(view)
 
 	w, h = Layout:move("bottomButtons")
 	bottomButtonImage("mode", assets.modeButton, assets.modeButtonOver)
+
+	iw, ih = assets.maniaSmallIcon:getDimensions()
+	gfx.translate(-iw / 2 + 45, -ih / 2 - 55)
+	gfx.setColor(white)
+	gfx.draw(assets.maniaSmallIcon)
+	gfx.translate(iw / 2 - 45, ih / 2 + 55)
 
 	gfx.translate(92, 0)
 
