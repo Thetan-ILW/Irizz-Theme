@@ -390,12 +390,9 @@ end
 function OsuSongSelect:top()
 	local w, h = Layout:move("base")
 
-	local a = math_util.clamp((1 - easeOutCubic(update_time, 1)) * 0.15, 0, 0.10)
-
 	local prev_shader = gfx.getShader()
 
 	gfx.setShader(brighten_shader)
-	brighten_shader:send("amount", a)
 	gfx.setColor(white)
 	gfx.draw(assets.panelTop, top_panel_quad)
 	gfx.setShader(prev_shader)
@@ -509,8 +506,6 @@ function OsuSongSelect:bottom(view)
 	gfx.setColor(white)
 
 	local iw, ih = assets.panelBottom:getDimensions()
-
-	local a = math_util.clamp((1 - easeOutCubic(update_time, 1)) * 0.15, 0, 0.1)
 
 	local prev_shader = gfx.getShader()
 
@@ -702,6 +697,10 @@ function OsuSongSelect:draw(view)
 	Layout:draw()
 
 	current_time = love.timer.getTime()
+
+	local a = math_util.clamp((1 - easeOutCubic(update_time, 1)) * 0.15, 0, 0.10)
+	brighten_shader:send("amount", a)
+
 	self:updateOtherInfo(view)
 
 	self:modeLogo()
