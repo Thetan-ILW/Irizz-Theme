@@ -1,18 +1,22 @@
 local ActionModel = require("thetan.skibidi.models.ActionModel")
+local AssetModel = require("thetan.skibidi.models.AssetModel")
+
+local GameView = require("thetan.irizz.views.GameView")
 local SelectView = require("thetan.irizz.views.SelectView")
 local OsuSelectView = require("thetan.osu.views.SelectView")
 local GameplayView = require("thetan.irizz.views.GameplayView")
 local ResultView = require("thetan.irizz.views.ResultView")
 local OsuResultView = require("thetan.osu.views.ResultView")
 local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
+
 local OsuApi = require("thetan.skibidi.models.OsuApi")
-local GameView = require("thetan.irizz.views.GameView")
 
 local modulePatcher = require("ModulePatcher")
 local module = "sphere.controllers.GameController"
 
 modulePatcher:insert(module, "load", function(self)
 	self.actionModel = ActionModel(self.persistence.configModel)
+	self.assetModel = AssetModel()
 
 	self.ui.gameView = GameView(self)
 	self.gameView = self.ui.gameView

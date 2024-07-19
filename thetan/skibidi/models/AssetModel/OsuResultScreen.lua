@@ -10,10 +10,20 @@ local utf8validate = require("utf8validate")
 ---@field sounds table<string, audio.Source?>
 ---@field params table<string, number|string|boolean>
 ---@field imageFonts table<string, table<string, string>>
+---@field skinPath string
 ---@field customConfig (fun(): table)?
 local OsuResultAssets = Assets + {}
 
 OsuResultAssets.defaultsDirectory = "resources/osu_default_assets/"
+
+local defaultSkinIni = {
+	Fonts = {
+		ScorePrefix = "score",
+		ScoreOverlap = 0,
+		accuracyNameX = 0,
+		accuracyNameY = 0,
+	},
+}
 
 local characters = {
 	"0",
@@ -58,16 +68,20 @@ end
 
 ---@param skin_path string
 function OsuResultAssets:new(skin_path)
+	self.skinPath = skin_path
 	skin_path = skin_path .. "/"
 
 	local content = love.filesystem.read(skin_path .. "skin.ini")
 
-	if not content then
-		return nil
-	end
+	---@type table
+	local skinini
 
-	content = utf8validate(content)
-	local skinini = OsuNoteSkin:parseSkinIni(content)
+	if content then
+		content = utf8validate(content)
+		skinini = OsuNoteSkin:parseSkinIni(content)
+	else
+		skinini = defaultSkinIni
+	end
 
 	local score_font_path = skin_path .. skinini.Fonts.ScorePrefix or skin_path .. "score"
 

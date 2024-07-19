@@ -52,17 +52,12 @@ ResultView.load = thread.coro(function(self)
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
 	end
 
+	self:setAssets()
+	self.viewConfig = ViewConfig(self.game, self.assets, is_after_gameplay)
+
 	local configs = self.game.configModel.configs
 	local select = configs.select
 	local irizz = configs.irizz
-	local selected_osu_skin = irizz.osuResultSkin
-
-	self.assets = OsuResultAssets(Theme.osuSkins[selected_osu_skin])
-	self.assets:updateVolume(self.game.configModel)
-
-	Theme.sounds.osuResult = self.assets.sounds
-
-	self.viewConfig = ViewConfig(self.game, self.assets, is_after_gameplay)
 
 	self.judgements = self.game.rhythmModel.scoreEngine.scoreSystem.judgements
 	self.currentJudgeName = select.judgements
@@ -79,6 +74,34 @@ ResultView.load = thread.coro(function(self)
 	canDraw = true
 	loading = false
 end)
+
+function ResultView:setAssets()
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
+
+	---@type string
+	local selected_osu_skin = irizz.osuResultSkin
+
+	---@type skibidi.AssetModel
+	local asset_model = self.game.assetModel
+
+	---@type skibidi.Assets?
+	local assets = asset_model:get("osuResult")
+
+	---@type string
+	local skin_path = Theme.osuSkins[selected_osu_skin]
+
+	if not assets or (assets and assets.skinPath ~= skin_path) then
+		assets = OsuResultAssets(skin_path)
+		asset_model:store("osuResult", assets)
+	end
+
+	---@cast assets skibidi.OsuResultAssets
+	self.assets = assets
+	self.assets:updateVolume(self.game.configModel)
+
+	Theme.sounds.osuResult = self.assets.sounds
+end
 
 function ResultView:unload()
 	self.viewConfig:unload()
