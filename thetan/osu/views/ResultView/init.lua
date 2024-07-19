@@ -7,7 +7,7 @@ local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.osu.views.ResultView.ViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
 
-local OsuResultAssets = require("thetan.skibidi.models.AssetModel.OsuResultScreen")
+local OsuResultAssets = require("thetan.osu.views.ResultView.Assets")
 
 local InputMap = require("thetan.osu.views.ResultView.InputMap")
 
