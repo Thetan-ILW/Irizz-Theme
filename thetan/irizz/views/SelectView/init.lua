@@ -1,6 +1,6 @@
 local flux = require("flux")
 local math_util = require("math_util")
-local ScreenView = require("thetan.irizz.views.ScreenView")
+local ScreenView = require("thetan.skibidi.views.ScreenView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local HeaderView = require("thetan.irizz.views.HeaderView")
@@ -15,7 +15,7 @@ local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
 local InputMap = require("thetan.irizz.views.SelectView.InputMap")
 
----@class irizz.SelectView: irizz.ScreenView
+---@class irizz.SelectView: skibidi.ScreenView
 ---@operator call: irizz.SelectView
 local SelectView = ScreenView + {}
 

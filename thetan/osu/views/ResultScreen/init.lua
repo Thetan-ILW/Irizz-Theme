@@ -8,17 +8,21 @@ local Theme = require("thetan.irizz.views.Theme")
 local Header = require("thetan.irizz.views.HeaderView")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
+local OsuViewConfig = require("thetan.irizz.views.ResultView.OsuViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
 local MainMenuView = require("thetan.irizz.views.MainMenuView")
 
 local InputMap = require("thetan.irizz.views.ResultView.InputMap")
 
----@class irizz.ResultView: skibidi.ScreenView
+---@class irizz.ResultView: irizz.ScreenView
 ---@operator call: irizz.ResultView
 local ResultView = ScreenView + {}
 
 ResultView.currentJudgeName = ""
 ResultView.currentJudge = 0
+
+local osuSkin = nil
+local usesOsuSkin = false
 
 local loading = false
 local canDraw = false
@@ -58,10 +62,29 @@ ResultView.load = thread.coro(function(self)
 	local configs = self.game.configModel.configs
 	local select = configs.select
 	local irizz = configs.irizz
+	local selected_osu_skin = irizz.osuResultSkin
 
-	self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
-	self.header = Header(self.game, "result")
-	self.viewConfig.scoreListView:reloadItems()
+	if irizz.osuResultScreen and selected_osu_skin ~= "None" then
+		if not osuSkin or osuSkin.name ~= selected_osu_skin then
+			osuSkin = assets:getOsuResultAssets(Theme.osuSkins[selected_osu_skin])
+			osuSkin.name = selected_osu_skin
+		end
+
+		if osuSkin then
+			Theme.sounds.osuResult = osuSkin.sounds
+		end
+
+		Theme:updateVolume(self.game)
+
+		self.header = nil
+		self.viewConfig = OsuViewConfig(self.game, osuSkin, is_after_gameplay)
+		usesOsuSkin = true
+	else
+		self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
+		self.header = Header(self.game, "result")
+		self.viewConfig.scoreListView:reloadItems()
+		usesOsuSkin = false
+	end
 
 	self.judgements = self.game.rhythmModel.scoreEngine.scoreSystem.judgements
 	self.currentJudgeName = select.judgements
@@ -124,6 +147,12 @@ end
 function ResultView:quit()
 	self.game.rhythmModel.audioEngine:unload()
 
+	if usesOsuSkin and osuSkin then
+		if osuSkin.sounds.menuBack then
+			osuSkin.sounds.menuBack:play()
+		end
+	end
+
 	self:changeScreen("selectView")
 end
 
@@ -163,6 +192,12 @@ ResultView.play = thread.coro(function(self, mode)
 
 	if isResult then
 		return self.view:reload()
+	end
+
+	if usesOsuSkin and osuSkin then
+		if osuSkin.sounds.switchScreen then
+			osuSkin.sounds.switchScreen:play()
+		end
 	end
 
 	self:changeScreen("gameplayView")

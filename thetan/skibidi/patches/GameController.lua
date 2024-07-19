@@ -1,10 +1,10 @@
-local ActionModel = require("thetan.irizz.models.ActionModel")
+local ActionModel = require("thetan.skibidi.models.ActionModel")
 local SelectView = require("thetan.irizz.views.SelectView")
-local OsuSelectView = require("thetan.irizz.views.OsuSelectView")
+local OsuSelectView = require("thetan.osu.views.SelectView")
 local GameplayView = require("thetan.irizz.views.GameplayView")
 local ResultView = require("thetan.irizz.views.ResultView")
 local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
-local OsuApi = require("thetan.irizz.models.OsuApi")
+local OsuApi = require("thetan.skibidi.models.OsuApi")
 local GameView = require("thetan.irizz.views.GameView")
 
 local modulePatcher = require("ModulePatcher")

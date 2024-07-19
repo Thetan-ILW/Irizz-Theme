@@ -7,7 +7,7 @@ local Container = require("thetan.gyatt.Container")
 local audio = require("audio")
 local version = require("version")
 
-local assets = require("thetan.irizz.assets")
+local assets = require("thetan.skibidi.assets")
 local Theme = require("thetan.irizz.views.Theme")
 local Text = Theme.textSettings
 local cfg = Theme.imgui
@@ -747,10 +747,11 @@ function SettingsTab:UI(view)
 		imgui.combo("irizz.osuSongSelectSkin", irizz.osuSongSelectSkin, Theme.osuSkinNames, nil, Text.skin)
 
 	if load_new_ui then
+		---@type skibidi.ScreenView
 		local select_view
 
 		if irizz.osuSongSelect then
-			select_view = require("thetan.irizz.views.OsuSelectView")
+			select_view = require("thetan.osu.views.SelectView")
 		else
 			select_view = require("thetan.irizz.views.SelectView")
 		end

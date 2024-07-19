@@ -1,17 +1,17 @@
-local ScreenView = require("thetan.irizz.views.ScreenView")
+local ScreenView = require("thetan.skibidi.views.ScreenView")
 
-local assets = require("thetan.irizz.assets")
+local assets = require("thetan.skibidi.assets")
 local Theme = require("thetan.irizz.views.Theme")
 
-local ViewConfig = require("thetan.irizz.views.OsuSelectView.ViewConfig")
+local ViewConfig = require("thetan.osu.views.SelectView.ViewConfig")
 local MainMenuView = require("thetan.irizz.views.MainMenuView")
 local LayersView = require("thetan.irizz.views.LayersView")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
-local InputMap = require("thetan.irizz.views.OsuSelectView.InputMap")
+local InputMap = require("thetan.osu.views.SelectView.InputMap")
 
----@class irizz.OsuSelectView: irizz.ScreenView
+---@class irizz.OsuSelectView: skibidi.ScreenView
 ---@operator call: irizz.OsuSelectView
 local OsuSelectView = ScreenView + {}
 

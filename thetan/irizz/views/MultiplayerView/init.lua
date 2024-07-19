@@ -1,4 +1,4 @@
-local ScreenView = require("sphere.views.ScreenView")
+local ScreenView = require("thetan.skibidi.views.ScreenView")
 
 local LayersView = require("thetan.irizz.views.LayersView")
 local ViewConfig = require("thetan.irizz.views.MultiplayerView.ViewConfig")

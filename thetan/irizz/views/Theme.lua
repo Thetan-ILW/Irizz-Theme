@@ -1,4 +1,4 @@
-local assets = require("thetan.irizz.assets")
+local assets = require("thetan.skibidi.assets")
 local gfx_util = require("gfx_util")
 local math_util = require("math_util")
 local has_minacalc, etterna_msd = pcall(require, "libchart.libchart.etterna_msd")

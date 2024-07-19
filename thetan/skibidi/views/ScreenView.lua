@@ -1,9 +1,9 @@
 local class = require("class")
 
----@class irizz.ScreenView
----@operator call: irizz.ScreenView
+---@class skibidi.ScreenView
+---@operator call: skibidi.ScreenView
 ---@field gameView sphere.GameView
----@field prevView irizz.ScreenView
+---@field prevView skibidi.ScreenView
 ---@field modal irizz.Modal?
 ---@field notificationView irizz.NotificationView
 ---@field actionModel irizz.ActionModel

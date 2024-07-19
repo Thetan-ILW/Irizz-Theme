@@ -1,0 +1,7 @@
+require("thetan.skibidi.patches.GameController")
+require("thetan.skibidi.patches.GameplayController")
+require("thetan.skibidi.patches.Persistence")
+require("thetan.skibidi.patches.RhythmModel")
+require("thetan.skibidi.patches.SelectModel")
+require("thetan.skibidi.patches.SelectController")
+require("thetan.skibidi.patches.CacheModel")

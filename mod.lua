@@ -6,9 +6,9 @@ local IrizzTheme = {
 }
 
 function IrizzTheme:init(mods)
-	love.errhand = require("thetan.irizz.errhand")
+	love.errhand = require("thetan.skibidi.errhand")
 	MODS = mods
-	require("thetan.irizz.patches")
+	require("thetan.skibidi.patches")
 end
 
 return IrizzTheme

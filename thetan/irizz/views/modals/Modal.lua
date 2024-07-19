@@ -8,7 +8,7 @@ local gfx_util = require("gfx_util")
 ---@field name string
 ---@field showTween table?
 ---@field hideTween table?
----@field mainView irizz.ScreenView
+---@field mainView skibidi.ScreenView
 local Modal = class()
 
 Modal.shouldClose = false

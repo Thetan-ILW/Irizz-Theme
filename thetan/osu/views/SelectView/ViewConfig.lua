@@ -1,6 +1,6 @@
 local class = require("class")
 
-local Layout = require("thetan.irizz.views.OsuSelectView.Layout")
+local Layout = require("thetan.osu.views.SelectView.Layout")
 
 local ViewConfig = class()
 
@@ -10,8 +10,8 @@ local math_util = require("math_util")
 local table_util = require("table_util")
 local Format = require("sphere.views.Format")
 
-local NoteChartSetListView = require("thetan.irizz.views.OsuSelectView.NoteChartSetListView")
-local ScoreListView = require("thetan.irizz.views.OsuSelectView.ScoreListView")
+local NoteChartSetListView = require("thetan.osu.views.SelectView.NoteChartSetListView")
+local ScoreListView = require("thetan.osu.views.SelectView.ScoreListView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local font
