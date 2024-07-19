@@ -17,6 +17,7 @@ ScoreListView.oneClickOpen = true
 ScoreListView.modLines = {}
 ScoreListView.text = Theme.textScoreList
 ScoreListView.focus = false
+---@type number[]
 ScoreListView.animations = {}
 
 function ScoreListView:new(game)
@@ -24,6 +25,7 @@ function ScoreListView:new(game)
 	self:loadFonts()
 end
 
+---@param assets osu.OsuSelectAssets
 function ScoreListView:setAssets(assets)
 	self.assets = assets
 end
@@ -160,7 +162,6 @@ end
 
 function ScoreListView:loadFonts()
 	local ww, wh = love.graphics.getDimensions()
-	gyatt.setTextScale(768 / wh)
 	self.font = Theme:getFonts("osuScoreList", wh / 768)
 end
 
@@ -168,6 +169,7 @@ end
 ---@param w number
 ---@param h number
 function ScoreListView:drawItem(i, w, h)
+	local img = self.assets.images
 	local item = self.items[i]
 
 	local source = self.game.configModel.configs.select.scoreSourceName
@@ -194,17 +196,17 @@ function ScoreListView:drawItem(i, w, h)
 	gfx.translate(50, 6)
 
 	if item.score > 9800 then
-		gfx.draw(self.assets.gradeX)
+		gfx.draw(img.gradeX)
 	elseif item.score > 8000 then
-		gfx.draw(self.assets.gradeS)
+		gfx.draw(img.gradeS)
 	elseif item.score > 7000 then
-		gfx.draw(self.assets.gradeA)
+		gfx.draw(img.gradeA)
 	elseif item.score > 6000 then
-		gfx.draw(self.assets.gradeB)
+		gfx.draw(img.gradeB)
 	elseif item.score > 5000 then
-		gfx.draw(self.assets.gradeC)
+		gfx.draw(img.gradeC)
 	else
-		gfx.draw(self.assets.gradeD)
+		gfx.draw(img.gradeD)
 	end
 
 	gfx.translate(44, -5)

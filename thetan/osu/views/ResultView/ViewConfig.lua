@@ -14,7 +14,7 @@ local font
 
 local OsuViewConfig = class()
 
----@type skibidi.OsuResultAssets
+---@type osu.OsuResultAssets
 local assets
 ---@type table<string, love.Image>
 local img
@@ -62,7 +62,7 @@ local buttonHoverShader
 local modifierIconImages = {}
 
 ---@param game sphere.GameController
----@param _assets skibidi.OsuResultAssets
+---@param _assets osu.OsuResultAssets
 ---@param after_gameplay boolean
 function OsuViewConfig:new(game, _assets, after_gameplay)
 	assets = _assets

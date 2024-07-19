@@ -1,11 +1,12 @@
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 
-local assets = require("thetan.skibidi.assets")
 local Theme = require("thetan.irizz.views.Theme")
 
 local ViewConfig = require("thetan.osu.views.SelectView.ViewConfig")
 local MainMenuView = require("thetan.irizz.views.MainMenuView")
 local LayersView = require("thetan.irizz.views.LayersView")
+
+local OsuSelectAssets = require("thetan.osu.views.SelectView.OsuSelectAssets")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
@@ -34,9 +35,10 @@ function OsuSelectView:load()
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
 
-	local skin = assets.loadOsuSongSelect(("userdata/skins/%s/"):format(irizz.osuSongSelectSkin))
+	local assets_path = ("userdata/skins/%s/"):format(irizz.osuSongSelectSkin)
+	local assets = OsuSelectAssets(assets_path)
 
-	self.viewConfig = ViewConfig(self.game, skin)
+	self.viewConfig = ViewConfig(self.game, assets)
 	self.mainMenuView = MainMenuView(self)
 	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
 

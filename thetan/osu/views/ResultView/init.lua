@@ -13,7 +13,7 @@ local InputMap = require("thetan.osu.views.ResultView.InputMap")
 
 ---@class irizz.ResultView: skibidi.ScreenView
 ---@operator call: irizz.ResultView
----@field assets skibidi.OsuResultAssets
+---@field assets osu.OsuResultAssets
 local ResultView = ScreenView + {}
 
 ResultView.currentJudgeName = ""
@@ -96,7 +96,7 @@ function ResultView:setAssets()
 		asset_model:store("osuResult", assets)
 	end
 
-	---@cast assets skibidi.OsuResultAssets
+	---@cast assets osu.OsuResultAssets
 	self.assets = assets
 	self.assets:updateVolume(self.game.configModel)
 

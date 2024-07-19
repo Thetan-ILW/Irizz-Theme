@@ -16,7 +16,10 @@ local ScoreListView = require("thetan.osu.views.SelectView.ScoreListView")
 local Theme = require("thetan.irizz.views.Theme")
 local font
 
-local assets = {}
+---@type osu.OsuSelectAssets
+local assets
+---@type table<string, love.Image>
+local img
 
 local gfx = love.graphics
 
@@ -111,10 +114,13 @@ local buttons = {
 	},
 }
 
+---@param game sphere.GameController
+---@param _assets osu.OsuSelectAssets
 function ViewConfig:new(game, _assets)
 	avatar = Theme.avatarImage
 
 	assets = _assets
+	img = assets.images
 
 	font = Theme:getFonts("osuSongSelect")
 
@@ -213,7 +219,7 @@ local function dropdown(id, w)
 
 	gyatt.sameline()
 	gfx.translate(w - 25, 4)
-	gfx.draw(assets.dropdownArrow)
+	gfx.draw(img.dropdownArrow)
 	gfx.pop()
 
 	local just_opened = false
@@ -300,7 +306,7 @@ end
 
 local function tab(label)
 	gfx.setColor({ 0.86, 0.08, 0.23, 1 })
-	gfx.draw(assets.tab)
+	gfx.draw(img.tab)
 
 	gfx.setColor(white)
 	gyatt.frame(label, 0, 2, 137, 21, "center", "center")
@@ -313,7 +319,7 @@ function ViewConfig:chartInfo()
 	gfx.setColor({ 1, 1, 1, a })
 
 	gfx.translate(5, 5)
-	gfx.draw(assets.rankedIcon)
+	gfx.draw(img.rankedIcon)
 	gfx.translate(-5, -5)
 
 	gfx.setFont(font.chartName)
@@ -350,7 +356,7 @@ function ViewConfig:top()
 
 	gfx.setShader(brighten_shader)
 	gfx.setColor(white)
-	gfx.draw(assets.panelTop, top_panel_quad)
+	gfx.draw(img.panelTop, top_panel_quad)
 	gfx.setShader(prev_shader)
 
 	w, h = Layout:move("base")
@@ -389,7 +395,7 @@ function ViewConfig:topUI(view)
 	w, h = Layout:move("base")
 	gfx.setColor(white)
 	gfx.translate(331, 118)
-	gfx.draw(assets.forum)
+	gfx.draw(img.forum)
 
 	if gyatt.isOver(23, 23) and gyatt.mousePressed(1) then
 		love.system.openURL("https://soundsphere.xyz/notecharts")
@@ -461,13 +467,13 @@ function ViewConfig:bottom(view)
 
 	gfx.setColor(white)
 
-	local iw, ih = assets.panelBottom:getDimensions()
+	local iw, ih = img.panelBottom:getDimensions()
 
 	local prev_shader = gfx.getShader()
 
 	gfx.setShader(brighten_shader)
 	gfx.translate(0, h - ih)
-	gfx.draw(assets.panelBottom, 0, 0, 0, w / iw, 1)
+	gfx.draw(img.panelBottom, 0, 0, 0, w / iw, 1)
 	gfx.setShader(prev_shader)
 
 	w, h = Layout:move("base")
@@ -499,44 +505,44 @@ function ViewConfig:bottom(view)
 	gfx.rectangle("line", 0, 0, 199, 12, 6, 6)
 
 	w, h = Layout:move("base")
-	iw, ih = assets.osuLogo:getDimensions()
+	iw, ih = img.osuLogo:getDimensions()
 
 	gfx.setColor(white)
 	gfx.translate(w - (iw * 0.45) + 60, h - (ih * 0.45) + 60)
 	gfx.scale(0.45)
-	gfx.draw(assets.osuLogo)
+	gfx.draw(img.osuLogo)
 	gfx.scale(1)
 
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
-	if bottomButtonImage("back", assets.menuBack, assets.menuBack) then
+	if bottomButtonImage("back", img.menuBack, img.menuBack) then
 		view.mainMenuView:toggle()
 	end
 
 	w, h = Layout:move("bottomButtons")
-	bottomButtonImage("mode", assets.modeButton, assets.modeButtonOver)
+	bottomButtonImage("mode", img.modeButton, img.modeButtonOver)
 
-	iw, ih = assets.maniaSmallIcon:getDimensions()
+	iw, ih = img.maniaSmallIcon:getDimensions()
 	gfx.translate(-iw / 2 + 45, -ih / 2 - 55)
 	gfx.setColor(white)
-	gfx.draw(assets.maniaSmallIcon)
+	gfx.draw(img.maniaSmallIcon)
 	gfx.translate(iw / 2 - 45, ih / 2 + 55)
 
 	gfx.translate(92, 0)
 
-	if bottomButtonImage("mods", assets.modsButton, assets.modsButtonOver) then
+	if bottomButtonImage("mods", img.modsButton, img.modsButtonOver) then
 		view:openModal("thetan.irizz.views.modals.ModifierModal")
 	end
 
 	gfx.translate(77, 0)
 
-	if bottomButtonImage("random", assets.randomButton, assets.randomButtonOver) then
+	if bottomButtonImage("random", img.randomButton, img.randomButtonOver) then
 		view.selectModel:scrollRandom()
 	end
 
 	gfx.translate(77, 0)
 
-	if bottomButtonImage("chartOptions", assets.optionsButton, assets.optionsButtonOver) then
+	if bottomButtonImage("chartOptions", img.optionsButton, img.optionsButtonOver) then
 		view:openModal("thetan.irizz.views.modals.MountsModal")
 	end
 end
@@ -587,7 +593,7 @@ function ViewConfig:scores(view)
 	if not has_scores then
 		gfx.translate(20, 298)
 		gfx.setColor({ 1, 1, 1, 1 })
-		gfx.draw(assets.noScores)
+		gfx.draw(img.noScores)
 	else
 		gfx.translate(8, 154)
 		list:updateAnimations()
@@ -641,7 +647,7 @@ end
 
 function ViewConfig:modeLogo()
 	local w, h = Layout:move("base")
-	local image = assets.maniaIcon
+	local image = img.maniaIcon
 	local iw, ih = image:getDimensions()
 
 	gfx.translate(w / 2 - iw / 2, h / 2 - ih / 2)
@@ -651,10 +657,9 @@ end
 
 function ViewConfig:resolutionUpdated()
 	local w, h = Layout:move("base")
-	top_panel_quad = gfx.newQuad(0, 0, w, assets.panelTop:getHeight(), assets.panelTop)
+	top_panel_quad = gfx.newQuad(0, 0, w, img.panelTop:getHeight(), img.panelTop)
 
 	local wh = love.graphics.getHeight()
-	gyatt.setTextScale(768 / wh)
 	window_height = wh
 
 	font = Theme:getFonts("osuSongSelect", wh / 768)

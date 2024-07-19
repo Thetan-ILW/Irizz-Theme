@@ -18,6 +18,7 @@ NoteChartSetListView.assets = {}
 NoteChartSetListView.activeTextColor = { 0, 0, 0, 1 }
 NoteChartSetListView.inactiveTextColor = { 1, 1, 1, 1 }
 NoteChartSetListView.previewIcon = false
+---@type number[]
 NoteChartSetListView.animations = {}
 
 function NoteChartSetListView:new(game)
@@ -28,11 +29,15 @@ function NoteChartSetListView:new(game)
 	self:loadFonts()
 end
 
+---@param assets osu.OsuSelectAssets
 function NoteChartSetListView:setAssets(assets)
 	self.assets = assets
 
-	local active_str = self.assets.skinini.Colours.SongSelectActiveText
-	local inactive_str = self.assets.skinini.Colours.SongSelectInactiveText
+	local active_str = self.assets.params.songSelectActiveText
+	local inactive_str = self.assets.params.songSelectInactiveText
+
+	---@cast active_str string
+	---@cast inactive_str string
 
 	if active_str then
 		local colors = string.split(active_str, ",")
@@ -105,7 +110,6 @@ end
 
 function NoteChartSetListView:loadFonts()
 	local ww, wh = love.graphics.getDimensions()
-	gyatt.setTextScale(768 / wh)
 	self.font = Theme:getFonts("osuChartSetList", wh / 768)
 end
 
@@ -120,6 +124,7 @@ end
 ---@param w number
 ---@param h number
 function NoteChartSetListView:drawItem(i, w, h)
+	local img = self.assets.images
 	local item = self.items[i]
 
 	local distance = self.visualItemIndex - i
@@ -147,7 +152,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 		self.animations[i] = math_util.clamp((self.animations[i] or 0) + 0.03, 0, 0.55)
 	end
 
-	gfx.draw(self.assets.listButtonBackground, 0, (103 - self.assets.listButtonBackground:getHeight()) / 2)
+	gfx.draw(img.listButtonBackground, 0, (103 - img.listButtonBackground:getHeight()) / 2)
 
 	local mixed_color = {
 		(1 - d_clamped) * self.activeTextColor[1] + d_clamped * self.inactiveTextColor[1],
@@ -164,7 +169,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 
 	gfx.push()
 	gfx.translate(20, 12)
-	gfx.draw(self.assets.maniaSmallIconForCharts)
+	gfx.draw(img.maniaSmallIconForCharts)
 
 	gfx.translate(40, -4)
 	gfx.setFont(self.font.title)
@@ -178,7 +183,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 	gyatt.text(("%s (%s)"):format(item.name, Format.inputMode(item.inputmode)))
 	gfx.pop()
 
-	local iw, ih = self.assets.star:getDimensions()
+	local iw, ih = img.star:getDimensions()
 
 	gfx.translate(60, h - ih * 0.6 + 10)
 	gfx.scale(0.6)
@@ -188,7 +193,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 			gfx.setColor({ 1, 1, 1, 0.3 })
 		end
 
-		gfx.draw(self.assets.star)
+		gfx.draw(img.star)
 		gfx.translate(iw, 0)
 		gfx.setColor(mixed_color)
 	end

@@ -101,6 +101,7 @@ function Theme:getFonts(objectName, scale)
 
 	for key, font in pairs(fonts) do
 		loadedFonts[key] = assets:getFont(self.fontFamilyList, font[1], font[2] * scale)
+		loadedFonts[key]:setFilter("nearest", "nearest")
 
 		if font[3] then
 			loadedFonts[key]:setFallbacks(assets:getFont(self.fontFamilyList, font[3], font[2] * scale))

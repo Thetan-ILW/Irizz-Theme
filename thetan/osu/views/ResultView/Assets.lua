@@ -3,8 +3,8 @@ local Assets = require("thetan.skibidi.models.AssetModel.Assets")
 local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
 local utf8validate = require("utf8validate")
 
----@class (exact) skibidi.OsuResultAssets : skibidi.Assets
----@operator call: skibidi.OsuResultAssets
+---@class (exact) osu.OsuResultAssets : skibidi.Assets
+---@operator call: osu.OsuResultAssets
 ---@field defaultsDirectory string
 ---@field images table<string, love.Image>
 ---@field sounds table<string, audio.Source?>
@@ -16,7 +16,7 @@ local OsuResultAssets = Assets + {}
 
 OsuResultAssets.defaultsDirectory = "resources/osu_default_assets/"
 
-local defaultSkinIni = {
+local default_skin_ini = {
 	Fonts = {
 		ScorePrefix = "score",
 		ScoreOverlap = 0,
@@ -74,21 +74,21 @@ function OsuResultAssets:new(skin_path)
 	local content = love.filesystem.read(skin_path .. "skin.ini")
 
 	---@type table
-	local skinini
+	local skin_ini
 
 	if content then
 		content = utf8validate(content)
-		skinini = OsuNoteSkin:parseSkinIni(content)
+		skin_ini = OsuNoteSkin:parseSkinIni(content)
 	else
-		skinini = defaultSkinIni
+		skin_ini = default_skin_ini
 	end
 
-	local score_font_path = skin_path .. skinini.Fonts.ScorePrefix or skin_path .. "score"
+	local score_font_path = skin_path .. skin_ini.Fonts.ScorePrefix or skin_path .. "score"
 
 	self.params = {
-		scoreOverlap = skinini.Fonts.ScoreOverlap or 0,
-		accuracyNameX = skinini.Fonts.accuracyNameX or 0,
-		accuracyNameY = skinini.Fonts.accuracyNameY or 0,
+		scoreOverlap = skin_ini.Fonts.ScoreOverlap or 0,
+		accuracyNameX = skin_ini.Fonts.accuracyNameX or 0,
+		accuracyNameY = skin_ini.Fonts.accuracyNameY or 0,
 	}
 
 	self.imageFonts = {
