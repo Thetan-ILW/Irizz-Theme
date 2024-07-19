@@ -1,7 +1,6 @@
-local gyatt = require("thetan.gyatt")
 local flux = require("flux")
 local math_util = require("math_util")
-local ScreenView = require("sphere.views.ScreenView")
+local ScreenView = require("thetan.irizz.views.ScreenView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local HeaderView = require("thetan.irizz.views.HeaderView")
@@ -10,12 +9,13 @@ local LayersView = require("thetan.irizz.views.LayersView")
 local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.irizz.views.SelectView.SongSelect")
 local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections")
+local MainMenuView = require("thetan.irizz.views.MainMenuView")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
 local InputMap = require("thetan.irizz.views.SelectView.InputMap")
 
----@class irizz.SelectView: sphere.ScreenView
+---@class irizz.SelectView: irizz.ScreenView
 ---@operator call: irizz.SelectView
 local SelectView = ScreenView + {}
 
@@ -26,7 +26,6 @@ SelectView.screenXTarget = 0
 SelectView.chartFilterLine = ""
 SelectView.scoreFilterLine = ""
 
-local last_resize_time = math.huge
 local songSelectOffset = 0
 
 local playSound = nil
@@ -48,7 +47,8 @@ function SelectView:load()
 	self.inputMap = InputMap(self, actionModel)
 
 	self:updateFilterLines()
-	self.layersView = LayersView(self.game, "select", "preview")
+	self.mainMenuView = MainMenuView(self)
+	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
 
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
@@ -114,6 +114,8 @@ end
 
 ---@param dt number
 function SelectView:update(dt)
+	ScreenView.update(self, dt)
+
 	self.game.selectController:update()
 
 	if self.screenX == 1 then
@@ -200,10 +202,6 @@ function SelectView:isInOsuDirect()
 	return inOsuDirect and self.screenX == -1
 end
 
-function SelectView:openModal(name)
-	self.game.gameView:openModal(name)
-end
-
 function SelectView:changeTimeRate(delta)
 	if self.modalActive then
 		return
@@ -245,7 +243,7 @@ end
 
 function SelectView:canUpdate()
 	local canUpdate = not self.modalActive
-	canUpdate = canUpdate and (not self.gameView.mainMenuView:isActive())
+	canUpdate = canUpdate and (not self.mainMenuView:isActive())
 
 	return canUpdate
 end
@@ -262,6 +260,12 @@ function SelectView:receive(event)
 		if self.screenX == 0 then
 			self:songSelectInputs()
 		end
+	end
+end
+
+function SelectView:quit()
+	if self.mainMenuView:isActive() then
+		self.mainMenuView:toggle()
 	end
 end
 
@@ -297,6 +301,8 @@ function SelectView:draw()
 	end
 
 	self.layersView:draw(panelsStencil, UI)
+	self.mainMenuView:draw("select", self)
+	self:drawModal()
 end
 
 return SelectView

@@ -1,4 +1,4 @@
-IRIZZ_VERSION = "0.2.1"
+IRIZZ_VERSION = "0.3.0"
 
 local IrizzTheme = {
 	name = "thetan.IrizzTheme",

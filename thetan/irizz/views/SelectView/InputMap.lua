@@ -68,6 +68,9 @@ function SelectInputMap:createBindings(sv)
 		["showFilters"] = function()
 			sv:openModal("thetan.irizz.views.modals.FiltersModal")
 		end,
+		["quit"] = function()
+			sv:sendQuitSignal()
+		end,
 	}
 end
 

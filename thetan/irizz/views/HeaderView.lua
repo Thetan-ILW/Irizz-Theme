@@ -99,7 +99,7 @@ function ViewConfig:songSelectButtons(view)
 	local r = h / 1.4
 
 	if circleImage(self.gameIcon, r, r * 2) then
-		view.gameView.mainMenuView:toggle()
+		view.mainMenuView:toggle()
 	end
 
 	buttonOffset = r * 2

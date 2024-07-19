@@ -573,7 +573,7 @@ function ViewConfig:scores(view)
 		no_focus = no_focus or v.mouseOver
 	end
 
-	list.focus = not no_focus
+	list.focus = not no_focus and has_focus
 
 	local prev_canvas = gfx.getCanvas()
 	local canvas = gyatt.getCanvas("osuScoreList")
