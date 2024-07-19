@@ -57,6 +57,10 @@ end
 
 ---@param count number
 function NoteChartSetListView:scroll(count)
+	if not self.focus then
+		return
+	end
+
 	self.game.selectModel:scrollNoteChartSet(count)
 	if math.abs(count) ~= 1 then
 		return

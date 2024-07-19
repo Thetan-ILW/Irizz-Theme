@@ -103,7 +103,7 @@ local function button(text, icon, spacing, size)
 	return changed
 end
 
-function MainMenu:songSelectButtons()
+function MainMenu:songSelectButtons(view)
 	local w, h = Layout:move("screen")
 
 	local button_count = 7
@@ -148,7 +148,7 @@ function MainMenu:songSelectButtons()
 		end
 
 		self:toggle()
-		gameView.view:changeScreen("editorView")
+		view:changeScreen("editorView")
 	end
 end
 
@@ -204,7 +204,7 @@ function MainMenu:draw(screen_name, view)
 	title()
 
 	if screen_name == "select" then
-		self:songSelectButtons()
+		self:songSelectButtons(view)
 	elseif screen_name == "result" then
 		self:resultButtons(view)
 	end

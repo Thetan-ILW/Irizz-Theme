@@ -13,8 +13,8 @@ local LayersView = require("thetan.irizz.views.LayersView")
 
 local InputMap = require("thetan.irizz.views.ResultView.InputMap")
 
----@class thetan.irizz.ResultView: sphere.ScreenView
----@operator call: thetan.irizz.ResultView
+---@class irizz.ResultView: irizz.ScreenView
+---@operator call: irizz.ResultView
 local ResultView = ScreenView + {}
 
 ResultView.currentJudgeName = ""

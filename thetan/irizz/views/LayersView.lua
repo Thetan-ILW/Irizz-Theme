@@ -11,6 +11,8 @@ local Layout = require("thetan.irizz.views.LayersLayout")
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
 local BackgroundView = require("sphere.views.BackgroundView")
 
+---@class irizz.LayersView
+---@operator call: irizz.LayersView
 local LayersView = class()
 
 local audioSourceName = "preview"
@@ -34,11 +36,13 @@ local uiLock = false
 
 local gfx = love.graphics
 
-function LayersView:new(game, screenName, sourceName)
+function LayersView:new(game, mainMenuView, screenName, sourceName)
 	self.game = game
+	self.mainMenuView = mainMenuView
+
 	screen = screenName
 	audioSourceName = sourceName
-	shaders = require("irizz.shaders.init")
+	shaders = require("irizz.shaders")
 
 	BackgroundView.game = game
 
@@ -264,7 +268,7 @@ function LayersView:update()
 	end
 
 	modalActive = self.game.gameView.modal ~= nil
-	uiAlpha = 1 - self.game.gameView.mainMenuView:getAlpha()
+	uiAlpha = 1 - self.mainMenuView:getAlpha()
 
 	if modalActive then
 		uiAlpha = uiAlpha - self.game.gameView.modal.alpha

@@ -17,9 +17,7 @@ function FiltersModal:onQuit()
 end
 
 function FiltersModal:onShow()
-	if self.game.selectView.isInOsuDirect then
-		self.viewConfig.osuDirect = self.game.selectView:isInOsuDirect()
-	end
+	self.viewConfig.osuDirect = self.mainView:isInOsuDirect()
 end
 
 function FiltersModal:new(game)

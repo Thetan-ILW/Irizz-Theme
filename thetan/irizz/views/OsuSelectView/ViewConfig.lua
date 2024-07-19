@@ -26,6 +26,8 @@ local avatar
 local top_panel_quad
 local brighten_shader
 
+local has_focus = true
+
 local prev_chart_id = 0
 local chart_name = ""
 local charter = ""
@@ -508,7 +510,7 @@ function ViewConfig:bottom(view)
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
 	if bottomButtonImage("back", assets.menuBack, assets.menuBack) then
-		view.gameView.mainMenuView:toggle()
+		view.mainMenuView:toggle()
 	end
 
 	w, h = Layout:move("bottomButtons")
@@ -549,7 +551,7 @@ function ViewConfig:chartSetList()
 		no_focus = no_focus or v.mouseOver
 	end
 
-	list.focus = not no_focus
+	list.focus = not no_focus and has_focus
 
 	local a = easeOutCubic(chart_list_update_time, 0.7)
 
@@ -659,6 +661,10 @@ function ViewConfig:resolutionUpdated()
 
 	self.noteChartSetListView:loadFonts()
 	self.scoreListView:loadFonts()
+end
+
+function ViewConfig:setFocus(value)
+	has_focus = value
 end
 
 function ViewConfig:draw(view)

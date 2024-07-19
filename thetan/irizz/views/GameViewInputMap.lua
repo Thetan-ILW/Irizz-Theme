@@ -15,15 +15,6 @@ end
 
 function GameViewInputMap:createBindings(gv)
 	self.global = {
-		["showKeybinds"] = function()
-			gv:openModal("thetan.irizz.views.modals.KeybindModal")
-		end,
-		["showChartInfo"] = function()
-			gv:openModal("thetan.irizz.views.modals.ChartInfoModal")
-		end,
-		["quit"] = function()
-			gv:sendQuitSignal()
-		end,
 		["increaseVolume"] = function()
 			Theme:changeVolume(gv.game, 1)
 			volumeChanged(gv)

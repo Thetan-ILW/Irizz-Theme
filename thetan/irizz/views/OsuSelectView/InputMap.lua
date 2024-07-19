@@ -1,8 +1,10 @@
 local InputMap = require("thetan.gyatt.InputMap")
 
+---@class irizz.OsuSelectInputMap
+---@operator call: irizz.OsuSelectView
 local SelectInputMap = InputMap + {}
 
----@param sv irizz.SelectView
+---@param sv irizz.OsuSelectView
 function SelectInputMap:createBindings(sv)
 	self.selectModals = {
 		["showMods"] = function()
@@ -19,6 +21,12 @@ function SelectInputMap:createBindings(sv)
 		end,
 		["showSettings"] = function()
 			sv:openModal("thetan.irizz.views.modals.SettingsModal")
+		end,
+		["showKeybinds"] = function()
+			sv:openModal("thetan.irizz.views.modals.KeybindModal")
+		end,
+		["showChartInfo"] = function()
+			sv:openModal("thetan.irizz.views.modals.ChartInfoModal")
 		end,
 	}
 
@@ -64,6 +72,9 @@ function SelectInputMap:createBindings(sv)
 		end,
 		["showFilters"] = function()
 			sv:openModal("thetan.irizz.views.modals.FiltersModal")
+		end,
+		["quit"] = function()
+			sv:sendQuitSignal()
 		end,
 	}
 end

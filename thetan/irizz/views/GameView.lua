@@ -4,13 +4,16 @@ local FrameTimeView = require("sphere.views.FrameTimeView")
 local AsyncTasksView = require("sphere.views.AsyncTasksView")
 local TextTooltipImView = require("sphere.imviews.TextTooltipImView")
 local ContextMenuImView = require("sphere.imviews.ContextMenuImView")
-local MainMenuView = require("thetan.irizz.views.MainMenuView")
 local NotificationView = require("thetan.irizz.views.NotificationView")
 local InputMap = require("thetan.irizz.views.GameViewInputMap")
 local Theme = require("thetan.irizz.views.Theme")
 
 ---@class sphere.GameView
 ---@operator call: sphere.GameView
+---@field view irizz.ScreenView?
+---@field actionModel irizz.ActionModel
+---@field notificationView irizz.NotificationView
+---@field inputMap gyatt.InputMap
 local GameView = class()
 
 ---@param game sphere.GameController
@@ -24,23 +27,20 @@ function GameView:load()
 	Theme:init(self.game)
 
 	self.frameTimeView.game = self.game
-
 	self.frameTimeView:load()
 
+	self.actionModel = self.game.actionModel
+	self.notificationView = NotificationView()
 	self:setView(self.game.selectView)
 
-	self.actionModel = self.game.actionModel
 	self.inputMap = InputMap(self, self.actionModel)
-
-	self.mainMenuView = MainMenuView(self)
-	NotificationView:init()
 end
 
 function GameView:getViewName()
 	return self.viewName
 end
 
----@param view sphere.ScreenView
+---@param view irizz.ScreenView
 function GameView:_setView(view)
 	if self.view then
 		self.view:unload()
@@ -48,6 +48,8 @@ function GameView:_setView(view)
 
 	view.prevView = self.view
 	self.view = view
+	self.view.actionModel = self.actionModel
+	self.view.notificationView = self.notificationView
 	self.view:load()
 
 	local viewNames = {
@@ -61,28 +63,19 @@ function GameView:_setView(view)
 	self.viewName = viewNames[view]
 end
 
----@param view sphere.ScreenView
+---@param view irizz.ScreenView
 function GameView:setView(view)
+	---@type table
 	local config = self.game.configModel.configs.irizz
+
+	---@type string
 	local transition = config.transitionAnimation
 	view.gameView = self
 
-	if self.modal then
-		self.modal.shouldClose = true
-	end
-
-	self.actionModel = self.game.actionModel
 	self.screenTransition:transit(function()
-		self.actionModel.disable()
-
 		self.screenTransition:transitAsync(1, 0, transition)
 		self:_setView(view)
 		self.screenTransition:transitAsync(0, 1, transition)
-
-		if self.viewName ~= "gameplay" then
-			self.actionModel.enable()
-			return
-		end
 	end)
 end
 
@@ -110,15 +103,6 @@ function GameView:draw()
 	self.screenTransition:drawBefore()
 	self.view:draw()
 
-	if self.modal then
-		self.modal:draw(self)
-
-		if self.modal.alpha < 0 then
-			self.modal = nil
-			self.view.modalActive = false
-		end
-	end
-
 	if self.contextMenu and ContextMenuImView(self.contextMenuWidth) then
 		if ContextMenuImView(self.contextMenu()) then
 			self.contextMenu = nil
@@ -129,9 +113,6 @@ function GameView:draw()
 		TextTooltipImView(self.tooltip)
 		self.tooltip = nil
 	end
-
-	self.mainMenuView:draw(self:getViewName(), self.view)
-	NotificationView:draw()
 
 	self.screenTransition:drawAfter()
 	self.frameTimeView:draw()
@@ -181,54 +162,6 @@ end
 
 function GameView.showMessage(...)
 	NotificationView:show(...)
-end
-
----@param modal table
-function GameView:setModal(modal)
-	local opennedModal = self.modal
-	if not opennedModal then
-		self.modal = modal
-		self.modal.alpha = 0
-		self.modal:show()
-		self.view.modalActive = true
-		return
-	end
-
-	if opennedModal.name == modal.name then
-		self.modal.shouldClose = true
-	end
-end
-
-function GameView:closeModal()
-	if self.modal then
-		self.modal.shouldClose = true
-	end
-	self.view.modalActive = false
-end
-
-function GameView:openModal(modalName)
-	local modal = require(modalName)(self.game)
-	self:setModal(modal)
-end
-
-function GameView:sendQuitSignal()
-	if self.game.cacheModel.isProcessing then
-		return
-	end
-
-	if self.modal then
-		self.modal:quit()
-		return
-	end
-
-	if self.mainMenuView:isActive() then
-		self.mainMenuView:toggle()
-		return
-	end
-
-	if self.view.quit then
-		self.view:quit()
-	end
 end
 
 return GameView

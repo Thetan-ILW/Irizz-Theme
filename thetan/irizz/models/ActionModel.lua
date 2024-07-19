@@ -2,6 +2,7 @@ local class = require("class")
 local table_util = require("table_util")
 
 ---@class irizz.ActionModel
+---@operator call: irizz.ActionModel
 local ActionModel = class()
 
 ---@enum VimMode

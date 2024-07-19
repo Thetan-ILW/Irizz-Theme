@@ -1,20 +1,19 @@
-local ScreenView = require("sphere.views.ScreenView")
+local ScreenView = require("thetan.irizz.views.ScreenView")
 
 local assets = require("thetan.irizz.assets")
 local Theme = require("thetan.irizz.views.Theme")
 
-local LayersView = require("thetan.irizz.views.LayersView")
 local ViewConfig = require("thetan.irizz.views.OsuSelectView.ViewConfig")
+local MainMenuView = require("thetan.irizz.views.MainMenuView")
+local LayersView = require("thetan.irizz.views.LayersView")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
 local InputMap = require("thetan.irizz.views.OsuSelectView.InputMap")
 
----@class irizz.OsuSelectView: sphere.ScreenView
+---@class irizz.OsuSelectView: irizz.ScreenView
 ---@operator call: irizz.OsuSelectView
 local OsuSelectView = ScreenView + {}
-
-OsuSelectView.modalActive = false
 
 local last_resize_time = math.huge
 
@@ -29,10 +28,8 @@ function OsuSelectView:load()
 
 	playSound = Theme:getStartSound(self.game)
 
-	local actionModel = self.game.actionModel
-	self.inputMap = InputMap(self, actionModel)
-
-	self.layersView = LayersView(self.game, "select", "preview")
+	self.inputMap = InputMap(self, self.actionModel)
+	self.actionModel.enable()
 
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
@@ -40,6 +37,8 @@ function OsuSelectView:load()
 	local skin = assets.loadOsuSongSelect(("userdata/skins/%s/"):format(irizz.osuSongSelectSkin))
 
 	self.viewConfig = ViewConfig(self.game, skin)
+	self.mainMenuView = MainMenuView(self)
+	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
 
 	if irizz.showFreshInstallModal then
 		local newSongs = self.game.cacheModel.newSongs
@@ -61,6 +60,10 @@ function OsuSelectView:unload()
 end
 ---@param dt number
 function OsuSelectView:update(dt)
+	ScreenView.update(self, dt)
+
+	self.viewConfig:setFocus(self.modal == nil)
+
 	self.game.selectController:update()
 
 	self.layersView:update()
@@ -77,10 +80,6 @@ function OsuSelectView:notechartChanged()
 end
 
 function OsuSelectView:play()
-	if not self:canUpdate() then
-		return
-	end
-
 	if not self.game.selectModel:notechartExists() then
 		return
 	end
@@ -103,10 +102,6 @@ function OsuSelectView:result()
 	if self.game.selectModel:isPlayed() then
 		self:changeScreen("resultView")
 	end
-end
-
-function OsuSelectView:openModal(name)
-	self.game.gameView:openModal(name)
 end
 
 function OsuSelectView:changeTimeRate(delta)
@@ -149,7 +144,7 @@ function OsuSelectView:receive(event)
 			return
 		end
 
-		if self.modalActive then
+		if self.modal then
 			return false
 		end
 
@@ -161,6 +156,12 @@ function OsuSelectView:receive(event)
 	end
 end
 
+function OsuSelectView:quit()
+	if self.mainMenuView:isActive() then
+		self.mainMenuView:toggle()
+	end
+end
+
 function OsuSelectView:draw()
 	local function panelsStencil() end
 	local function UI()
@@ -168,6 +169,10 @@ function OsuSelectView:draw()
 	end
 
 	self.layersView:draw(panelsStencil, UI)
+
+	self.mainMenuView:draw("select", self)
+
+	self:drawModal()
 end
 
 return OsuSelectView

@@ -1,3 +1,4 @@
+local class = require("class")
 local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -5,7 +6,9 @@ local Text = Theme.textNotification
 local Color = Theme.colors
 local font
 
-local NotificationView = {}
+---@class irizz.NotificationView
+---@operator call: irizz.NotificationView
+local NotificationView = class()
 
 local hide_time = 0.4
 local animation_start_time = 0
@@ -23,7 +26,7 @@ local messages = {
 	offsetChanged = Text.offsetChanged,
 }
 
-function NotificationView:init()
+function NotificationView:new()
 	font = Theme:getFonts("notifications")
 end
 

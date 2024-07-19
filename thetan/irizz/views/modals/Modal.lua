@@ -3,9 +3,14 @@ local flux = require("flux")
 
 local gfx_util = require("gfx_util")
 
+---@class irizz.Modal
+---@operator call: irizz.Modal
+---@field name string
+---@field showTween table?
+---@field hideTween table?
+---@field mainView irizz.ScreenView
 local Modal = class()
 
-Modal.name = nil
 Modal.shouldClose = false
 Modal.alpha = 0
 
