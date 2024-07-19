@@ -224,21 +224,6 @@ local function findAudio(path)
 	end
 end
 
-local function getImageFont(group)
-	local font = {}
-
-	for _, v in ipairs(characters) do
-		local file = findImage(("%s-%s"):format(group, v))
-
-		if file then
-			local key = char_alias[v] and char_alias[v] or v
-			font[key] = file
-		end
-	end
-
-	return font
-end
-
 local function loadImage(path)
 	path = findImage(path)
 
@@ -258,77 +243,7 @@ local function loadAudio(path)
 	end
 end
 
-function Assets:getOsuResultAssets(skin_path)
-	skin_path = skin_path .. "/"
-
-	local content = love.filesystem.read(skin_path .. "skin.ini")
-
-	if not content then
-		return nil
-	end
-
-	content = utf8validate(content)
-	local skinini = OsuNoteSkin:parseSkinIni(content)
-
-	local score_font_path = skin_path .. skinini.Fonts.ScorePrefix or skin_path .. "score"
-
-	local t = {
-		title = loadImage(skin_path .. "ranking-title"),
-		panel = loadImage(skin_path .. "ranking-panel"),
-		graph = loadImage(skin_path .. "ranking-graph"),
-		menuBack = loadImage(skin_path .. "menu-back"),
-		maxCombo = loadImage(skin_path .. "ranking-maxcombo"),
-		accuracy = loadImage(skin_path .. "ranking-accuracy"),
-		replay = loadImage(skin_path .. "pause-replay"),
-		scoreFont = getImageFont(score_font_path),
-		scoreOverlap = skinini.Fonts.ScoreOverlap or 0,
-		accuracyNameX = skinini.Fonts.accuracyNameX or 0,
-		accuracyNameY = skinini.Fonts.accuracyNameY or 0,
-
-		judge = {
-			marvelous = loadImage(skin_path .. "mania-hit300g"),
-			perfect = loadImage(skin_path .. "mania-hit300"),
-			great = loadImage(skin_path .. "mania-hit200"),
-			good = loadImage(skin_path .. "mania-hit100"),
-			bad = loadImage(skin_path .. "mania-hit50"),
-			miss = loadImage(skin_path .. "mania-hit0"),
-		},
-
-		grade = {
-			SS = loadImage(skin_path .. "ranking-X"),
-			S = loadImage(skin_path .. "ranking-S"),
-			A = loadImage(skin_path .. "ranking-A"),
-			B = loadImage(skin_path .. "ranking-B"),
-			C = loadImage(skin_path .. "ranking-C"),
-			D = loadImage(skin_path .. "ranking-D"),
-		},
-		modifiers = {
-			noLongNote = loadImage(skin_path .. "selection-mod-nolongnote"),
-			mirror = loadImage(skin_path .. "selection-mod-mirror"),
-			random = loadImage(skin_path .. "selection-mod-random"),
-			doubleTime = loadImage(skin_path .. "selection-mod-doubletime"),
-			halfTime = loadImage(skin_path .. "selection-mod-halftime"),
-			autoPlay = loadImage(skin_path .. "selection-mod-autoplay"),
-			automap4 = loadImage(skin_path .. "selection-mod-key4"),
-			automap5 = loadImage(skin_path .. "selection-mod-key5"),
-			automap6 = loadImage(skin_path .. "selection-mod-key6"),
-			automap7 = loadImage(skin_path .. "selection-mod-key7"),
-			automap8 = loadImage(skin_path .. "selection-mod-key8"),
-			automap9 = loadImage(skin_path .. "selection-mod-key9"),
-			automap10 = loadImage(skin_path .. "selection-mod-key10"),
-		},
-
-		sounds = {
-			applause = loadAudio(skin_path .. "applause"),
-			menuBack = loadAudio(skin_path .. "menuback"),
-			switchScreen = loadAudio(skin_path .. "menuhit"),
-		},
-
-		customConfig = love.filesystem.load(skin_path .. "ResultViewConfig.lua"),
-	}
-
-	return t
-end
+function Assets:getOsuResultAssets(skin_path) end
 
 local function getOsuSkins()
 	local skins = love.filesystem.getDirectoryItems("userdata/skins/")

@@ -1,12 +1,13 @@
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 local thread = require("thread")
 local math_util = require("math_util")
-local assets = require("thetan.skibidi.assets")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.osu.views.ResultView.ViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
+
+local OsuResultAssets = require("thetan.skibidi.models.AssetModel.OsuResultScreen")
 
 local InputMap = require("thetan.osu.views.ResultView.InputMap")
 
@@ -56,13 +57,10 @@ ResultView.load = thread.coro(function(self)
 	local irizz = configs.irizz
 	local selected_osu_skin = irizz.osuResultSkin
 
-	self.assets = assets:getOsuResultAssets(Theme.osuSkins[selected_osu_skin])
+	self.assets = OsuResultAssets(Theme.osuSkins[selected_osu_skin])
+	self.assets:updateVolume(self.game.configModel)
 
-	if self.assets then
-		Theme.sounds.osuResult = self.assets.sounds
-	end
-
-	Theme:updateVolume(self.game)
+	Theme.sounds.osuResult = self.assets.sounds
 
 	self.viewConfig = ViewConfig(self.game, self.assets, is_after_gameplay)
 
@@ -87,6 +85,11 @@ function ResultView:unload()
 end
 
 function ResultView:update()
+	if loading then
+		return
+	end
+
+	self.assets:updateVolume(self.game.configModel)
 	self.layersView:update()
 	self.game.previewModel:update()
 end

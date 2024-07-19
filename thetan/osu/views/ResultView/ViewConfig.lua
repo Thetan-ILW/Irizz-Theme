@@ -14,7 +14,12 @@ local font
 
 local OsuViewConfig = class()
 
+---@type skibidi.OsuResultAssets
 local assets
+---@type table<string, love.Image>
+local img
+
+---@type table
 local customConfig
 
 local judge
@@ -53,20 +58,24 @@ local gfx = love.graphics
 
 local buttonHoverShader
 
+---@type love.Image[]
 local modifierIconImages = {}
 
 ---@param game sphere.GameController
----@param _assets table
+---@param _assets skibidi.OsuResultAssets
 ---@param after_gameplay boolean
 function OsuViewConfig:new(game, _assets, after_gameplay)
 	assets = _assets
+	img = assets.images
 
 	if not assets then
 		error("\n\nSelect valid osu! skin in the `Settings > UI > osu! result screen` \n\n")
 	end
 
 	font = Theme:getFonts("osuResultView")
-	local overlap = -assets.scoreOverlap
+	local overlap = -assets.params.scoreOverlap
+
+	local score_font = assets.imageFonts.scoreFont
 
 	marvelousValue = ImageValueView({
 		x = 0,
@@ -76,7 +85,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		format = "%ix",
 		scale = 1.1,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	perfectValue = ImageValueView({
@@ -87,7 +96,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		format = "%ix",
 		scale = 1.1,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	greatValue = ImageValueView({
@@ -98,7 +107,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		format = "%ix",
 		scale = 1.1,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	goodValue = ImageValueView({
@@ -109,7 +118,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		format = "%ix",
 		scale = 1.1,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	badValue = ImageValueView({
@@ -120,7 +129,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		format = "%ix",
 		scale = 1.1,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	missValue = ImageValueView({
@@ -131,7 +140,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		format = "%ix",
 		scale = 1.1,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	comboValue = ImageValueView({
@@ -142,7 +151,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		format = "%ix",
 		scale = 1.1,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	accuracyValue = ImageValueView({
@@ -154,7 +163,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		multiplier = 100,
 		scale = 1.1,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	scoreValue = ImageValueView({
@@ -166,7 +175,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 		multiplier = 1,
 		scale = 1.2,
 		overlap = overlap,
-		files = assets.scoreFont,
+		files = score_font,
 	})
 
 	marvelousValue:load()
@@ -336,27 +345,27 @@ function OsuViewConfig:loadScore(view)
 		local id = mod.id
 
 		if id == 9 then
-			table.insert(modifierIconImages, assets.modifiers.noLongNote)
+			table.insert(modifierIconImages, img.noLongNote)
 		elseif id == 11 then
-			table.insert(modifierIconImages, assets.modifiers[("automap%i"):format(mod.value)])
+			table.insert(modifierIconImages, img[("automap%i"):format(mod.value)])
 		elseif id == 16 then
-			table.insert(modifierIconImages, assets.modifiers.mirror)
+			table.insert(modifierIconImages, img.mirror)
 		elseif id == 17 then
-			table.insert(modifierIconImages, assets.modifiers.random)
+			table.insert(modifierIconImages, img.random)
 		end
 	end
 
 	if timeRate == 1.5 then
-		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+		table.insert(modifierIconImages, img.doubleTime)
 	elseif timeRate == (1.5 * 1.5) then
-		table.insert(modifierIconImages, assets.modifiers.doubleTime)
-		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+		table.insert(modifierIconImages, img.doubleTime)
+		table.insert(modifierIconImages, img.doubleTime)
 	elseif timeRate == (1.5 * 1.5 * 1.5) then
-		table.insert(modifierIconImages, assets.modifiers.doubleTime)
-		table.insert(modifierIconImages, assets.modifiers.doubleTime)
-		table.insert(modifierIconImages, assets.modifiers.doubleTime)
+		table.insert(modifierIconImages, img.doubleTime)
+		table.insert(modifierIconImages, img.doubleTime)
+		table.insert(modifierIconImages, img.doubleTime)
 	elseif timeRate == 0.75 then
-		table.insert(modifierIconImages, assets.modifiers.halfTime)
+		table.insert(modifierIconImages, img.halfTime)
 	end
 end
 
@@ -368,11 +377,9 @@ function OsuViewConfig:title(view)
 
 	gfx.setColor({ 1, 1, 1, 1 })
 
-	if assets.title then
-		w, h = Layout:move("titleImage")
-		local iw, ih = assets.title:getDimensions()
-		gfx.draw(assets.title, w - iw, 0)
-	end
+	w, h = Layout:move("titleImage")
+	local iw, ih = img.title:getDimensions()
+	gfx.draw(img.title, w - iw, 0)
 
 	w, h = Layout:move("title")
 
@@ -447,9 +454,7 @@ function OsuViewConfig:panel()
 
 	gfx.setColor({ 1, 1, 1, 1 })
 
-	if assets.panel then
-		gfx.draw(assets.panel, 0, 0, 0)
-	end
+	gfx.draw(img.panel, 0, 0, 0)
 
 	centerFrame(scoreValue, "score")
 
@@ -460,61 +465,65 @@ function OsuViewConfig:panel()
 	frame(badValue, "column2", "row3")
 	frame(missValue, "column4", "row3")
 
-	judgeFrame(assets.judge.marvelous, "column3", "row1")
-	judgeFrame(assets.judge.perfect, "column1", "row1")
-	judgeFrame(assets.judge.great, "column1", "row2")
-	judgeFrame(assets.judge.good, "column3", "row2")
-	judgeFrame(assets.judge.bad, "column1", "row3")
-	judgeFrame(assets.judge.miss, "column3", "row3")
+	judgeFrame(img.judgeMarvelous, "column3", "row1")
+	judgeFrame(img.judgePerfect, "column1", "row1")
+	judgeFrame(img.judgeGreat, "column1", "row2")
+	judgeFrame(img.judgeGood, "column3", "row2")
+	judgeFrame(img.judgeBad, "column1", "row3")
+	judgeFrame(img.judgeMiss, "column3", "row3")
 
 	frame(comboValue, "combo")
 	frame(accuracyValue, "accuracy")
 
 	Layout:move("comboText")
-	gfx.draw(assets.maxCombo)
+	gfx.draw(img.maxCombo)
 	Layout:move("accuracyText")
-	gfx.draw(assets.accuracy)
+	gfx.draw(img.accuracy)
 
 	w, h = Layout:move("accuracy")
 	gfx.scale(768 / 1080)
 	gfx.setFont(font.accuracy)
-	gyatt.frame(judgeName, 0 + assets.accuracyNameX, -20 + assets.accuracyNameY, w + 40, h, "center", "top")
+	gyatt.frame(
+		judgeName,
+		0 + assets.params.accuracyNameX,
+		-20 + assets.params.accuracyNameY,
+		w + 40,
+		h,
+		"center",
+		"top"
+	)
 	gfx.scale(1)
 end
 
 function OsuViewConfig:grade()
-	local image = assets.grade[grade]
+	local image = img["grade" .. grade]
 
-	if image then
-		Layout:move("grade")
-		local iw, ih = image:getDimensions()
+	Layout:move("grade")
+	local iw, ih = image:getDimensions()
 
-		local x = iw / 2
-		local y = ih / 2
-		gfx.draw(image, -x, -y)
-	end
+	local x = iw / 2
+	local y = ih / 2
+	gfx.draw(image, -x, -y)
 end
 
 local function rightSideButtons(view)
 	local w, h = Layout:move("base", "watch")
 
-	if assets.replay then
-		local iw, ih = assets.replay:getDimensions()
-		gfx.translate(w - iw, 0)
+	local iw, ih = img.replay:getDimensions()
+	gfx.translate(w - iw, 0)
 
-		local changed, _, hovered = just.button("replayButton", just.is_over(iw, ih))
+	local changed, _, hovered = just.button("replayButton", just.is_over(iw, ih))
 
-		if not hovered then
-			gfx.setColor(1, 1, 1, 0.7)
-		end
-
-		if changed then
-			view:play("replay")
-		end
-
-		gfx.draw(assets.replay, 0, 0)
-		gfx.setColor(1, 1, 1, 1)
+	if not hovered then
+		gfx.setColor(1, 1, 1, 0.7)
 	end
+
+	if changed then
+		view:play("replay")
+	end
+
+	gfx.draw(img.replay, 0, 0)
+	gfx.setColor(1, 1, 1, 1)
 end
 
 local function graphInfo()
@@ -540,9 +549,7 @@ local function hitGraph(view)
 	gfx.translate(0, 4)
 	gfx.setColor({ 1, 1, 1, 1 })
 
-	if assets.graph then
-		gfx.draw(assets.graph)
-	end
+	gfx.draw(img.graph)
 
 	if hpGraph then
 		h = h * 0.86
@@ -570,24 +577,22 @@ end
 local function backButton(view)
 	local w, h = Layout:move("base")
 
-	if assets.menuBack then
-		local iw, ih = assets.menuBack:getDimensions()
+	local iw, ih = img.menuBack:getDimensions()
 
-		gfx.translate(0, h - ih)
-		local changed, _, hovered = just.button("backButton", just.is_over(iw, ih))
+	gfx.translate(0, h - ih)
+	local changed, _, hovered = just.button("backButton", just.is_over(iw, ih))
 
-		local prev_shader = gfx.getShader()
+	local prev_shader = gfx.getShader()
 
-		if hovered then
-			gfx.setShader(buttonHoverShader)
-		end
+	if hovered then
+		gfx.setShader(buttonHoverShader)
+	end
 
-		gfx.draw(assets.menuBack, 0, 0)
-		gfx.setShader(prev_shader)
+	gfx.draw(img.menuBack, 0, 0)
+	gfx.setShader(prev_shader)
 
-		if changed then
-			view:quit()
-		end
+	if changed then
+		view:quit()
 	end
 end
 
@@ -609,8 +614,6 @@ local function mods()
 		gfx.translate(-iw / 2, 0)
 	end
 end
-
-function OsuViewConfig:scrollScore(view, delta) end
 
 function OsuViewConfig:draw(view)
 	Layout:draw()
