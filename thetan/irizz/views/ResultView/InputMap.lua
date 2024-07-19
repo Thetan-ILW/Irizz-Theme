@@ -25,6 +25,9 @@ function ResultInputMap:createBindings(view)
 		["up"] = function()
 			view:scrollScore(-1)
 		end,
+		["quit"] = function()
+			view:sendQuitSignal()
+		end,
 	}
 end
 

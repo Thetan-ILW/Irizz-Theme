@@ -1,4 +1,4 @@
-local ScreenView = require("sphere.views.ScreenView")
+local ScreenView = require("thetan.irizz.views.ScreenView")
 local thread = require("thread")
 local table_util = require("table_util")
 local math_util = require("math_util")
@@ -10,6 +10,7 @@ local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
 local OsuViewConfig = require("thetan.irizz.views.ResultView.OsuViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
+local MainMenuView = require("thetan.irizz.views.MainMenuView")
 
 local InputMap = require("thetan.irizz.views.ResultView.InputMap")
 
@@ -51,7 +52,8 @@ ResultView.load = thread.coro(function(self)
 		audio_engine.foregroundContainer:setVolume(effects_volume)
 	end
 
-	self.layersView = LayersView(self.game, "result", audio_source)
+	self.mainMenuView = MainMenuView(self)
+	self.layersView = LayersView(self.game, self.mainMenuView, "result", audio_source)
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
@@ -128,6 +130,7 @@ function ResultView:draw()
 	end
 
 	self.layersView:draw(panels, UI)
+	self.mainMenuView:draw("result", self)
 end
 
 function ResultView:receive(event)
