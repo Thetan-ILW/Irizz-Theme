@@ -2,7 +2,7 @@ local class = require("class")
 local gyatt = require("thetan.gyatt")
 local just = require("just")
 
-local Layout = love.filesystem.load("thetan/irizz/views/ResultView/OsuLayout.lua")()
+local Layout = require("thetan.osu.views.ResultView.Layout")
 local ImageValueView = require("thetan.irizz.views.ResultView.ImageValueView")
 local Scoring = require("thetan.irizz.views.ResultView.Scoring")
 local HitGraph = require("thetan.irizz.views.ResultView.HitGraph")
@@ -221,8 +221,6 @@ local function showLoadedScore(view)
 end
 
 function OsuViewConfig:loadScore(view)
-	Layout = love.filesystem.load("thetan/irizz/views/ResultView/OsuLayout.lua")()
-
 	local chartview = view.game.selectModel.chartview
 	local configs = view.game.configModel.configs
 	local irizz = configs.irizz

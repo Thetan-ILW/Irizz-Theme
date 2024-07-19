@@ -1,28 +1,22 @@
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 local thread = require("thread")
-local table_util = require("table_util")
 local math_util = require("math_util")
 local assets = require("thetan.skibidi.assets")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Header = require("thetan.irizz.views.HeaderView")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
-local ViewConfig = require("thetan.irizz.views.ResultView.ViewConfig")
-local OsuViewConfig = require("thetan.irizz.views.ResultView.OsuViewConfig")
+local ViewConfig = require("thetan.osu.views.ResultView.ViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
-local MainMenuView = require("thetan.irizz.views.MainMenuView")
 
-local InputMap = require("thetan.irizz.views.ResultView.InputMap")
+local InputMap = require("thetan.osu.views.ResultView.InputMap")
 
----@class irizz.ResultView: irizz.ScreenView
+---@class irizz.ResultView: skibidi.ScreenView
 ---@operator call: irizz.ResultView
+---@field assets skibidi.OsuResultAssets
 local ResultView = ScreenView + {}
 
 ResultView.currentJudgeName = ""
 ResultView.currentJudge = 0
-
-local osuSkin = nil
-local usesOsuSkin = false
 
 local loading = false
 local canDraw = false
@@ -35,8 +29,7 @@ ResultView.load = thread.coro(function(self)
 
 	self.game.resultController:load()
 
-	local action_model = self.game.actionModel
-	self.inputMap = InputMap(self, action_model)
+	self.inputMap = InputMap(self, self.actionModel)
 
 	local audio_source = "preview"
 
@@ -52,8 +45,7 @@ ResultView.load = thread.coro(function(self)
 		audio_engine.foregroundContainer:setVolume(effects_volume)
 	end
 
-	self.mainMenuView = MainMenuView(self)
-	self.layersView = LayersView(self.game, self.mainMenuView, "result", audio_source)
+	self.layersView = LayersView(self.game, nil, "result", audio_source)
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
@@ -64,27 +56,15 @@ ResultView.load = thread.coro(function(self)
 	local irizz = configs.irizz
 	local selected_osu_skin = irizz.osuResultSkin
 
-	if irizz.osuResultScreen and selected_osu_skin ~= "None" then
-		if not osuSkin or osuSkin.name ~= selected_osu_skin then
-			osuSkin = assets:getOsuResultAssets(Theme.osuSkins[selected_osu_skin])
-			osuSkin.name = selected_osu_skin
-		end
+	self.assets = assets:getOsuResultAssets(Theme.osuSkins[selected_osu_skin])
 
-		if osuSkin then
-			Theme.sounds.osuResult = osuSkin.sounds
-		end
-
-		Theme:updateVolume(self.game)
-
-		self.header = nil
-		self.viewConfig = OsuViewConfig(self.game, osuSkin, is_after_gameplay)
-		usesOsuSkin = true
-	else
-		self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
-		self.header = Header(self.game, "result")
-		self.viewConfig.scoreListView:reloadItems()
-		usesOsuSkin = false
+	if self.assets then
+		Theme.sounds.osuResult = self.assets.sounds
 	end
+
+	Theme:updateVolume(self.game)
+
+	self.viewConfig = ViewConfig(self.game, self.assets, is_after_gameplay)
 
 	self.judgements = self.game.rhythmModel.scoreEngine.scoreSystem.judgements
 	self.currentJudgeName = select.judgements
@@ -130,7 +110,6 @@ function ResultView:draw()
 	end
 
 	self.layersView:draw(panels, UI)
-	self.mainMenuView:draw("result", self)
 end
 
 function ResultView:receive(event)
@@ -147,10 +126,8 @@ end
 function ResultView:quit()
 	self.game.rhythmModel.audioEngine:unload()
 
-	if usesOsuSkin and osuSkin then
-		if osuSkin.sounds.menuBack then
-			osuSkin.sounds.menuBack:play()
-		end
+	if self.assets.sounds.menuBack then
+		self.assets.sounds.menuBack:play()
 	end
 
 	self:changeScreen("selectView")
@@ -194,10 +171,8 @@ ResultView.play = thread.coro(function(self, mode)
 		return self.view:reload()
 	end
 
-	if usesOsuSkin and osuSkin then
-		if osuSkin.sounds.switchScreen then
-			osuSkin.sounds.switchScreen:play()
-		end
+	if self.assets.sounds.switchScreen then
+		self.assets.sounds.switchScreen:play()
 	end
 
 	self:changeScreen("gameplayView")
@@ -239,10 +214,6 @@ function ResultView:switchJudge(direction)
 	end
 
 	self.viewConfig:loadScore(self)
-end
-
-function ResultView:scrollScore(delta)
-	self.viewConfig:scrollScore(self, delta)
 end
 
 return ResultView

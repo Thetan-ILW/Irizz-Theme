@@ -3,6 +3,7 @@ local SelectView = require("thetan.irizz.views.SelectView")
 local OsuSelectView = require("thetan.osu.views.SelectView")
 local GameplayView = require("thetan.irizz.views.GameplayView")
 local ResultView = require("thetan.irizz.views.ResultView")
+local OsuResultView = require("thetan.osu.views.ResultView")
 local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
 local OsuApi = require("thetan.skibidi.models.OsuApi")
 local GameView = require("thetan.irizz.views.GameView")
@@ -16,7 +17,7 @@ modulePatcher:insert(module, "load", function(self)
 	self.ui.gameView = GameView(self)
 	self.gameView = self.ui.gameView
 
-	self.ui.resultView = ResultView(self)
+	self.ui.resultView = OsuResultView(self)
 	self.resultView = self.ui.resultView
 
 	self.ui.gameplayView = GameplayView(self)

@@ -268,7 +268,11 @@ function LayersView:update()
 	end
 
 	modalActive = self.game.gameView.modal ~= nil
-	uiAlpha = 1 - self.mainMenuView:getAlpha()
+	uiAlpha = 1
+
+	if self.mainMenuView then
+		uiAlpha = uiAlpha - self.mainMenuView:getAlpha()
+	end
 
 	if modalActive then
 		uiAlpha = uiAlpha - self.game.gameView.modal.alpha
