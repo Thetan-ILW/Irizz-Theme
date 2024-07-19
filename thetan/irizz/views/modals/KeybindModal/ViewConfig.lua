@@ -54,11 +54,7 @@ end
 function ViewConfig:draw(view)
 	Layout:draw()
 
-	local w, h = Layout:move("base")
-	love.graphics.setColor(0, 0, 0, 0.75)
-	love.graphics.rectangle("fill", 0, 0, w, h)
-
-	w, h = Layout:move("modalName")
+	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.title)
 	gyatt.frame(Text.keybinds, 0, 0, w, h, "center", "center")

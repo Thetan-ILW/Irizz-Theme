@@ -71,6 +71,9 @@ end
 
 function ScreenView:drawModal()
 	if self.modal then
+		love.graphics.origin()
+		love.graphics.setColor({ 0, 0, 0, self.modal.alpha * 0.75 })
+		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 		self.modal:draw(self)
 	end
 end

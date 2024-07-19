@@ -47,11 +47,7 @@ function ViewConfig:draw(view)
 	self.availableModifierListView:reloadItems()
 	self.modifierListView:reloadItems()
 
-	local w, h = Layout:move("base")
-	love.graphics.setColor(0, 0, 0, 0.75)
-	love.graphics.rectangle("fill", 0, 0, w, h)
-
-	w, h = Layout:move("modalName")
+	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(Font.title)
 	gfx_util.printFrame(Text.modifiers, 0, 0, w, h, "center", "center")

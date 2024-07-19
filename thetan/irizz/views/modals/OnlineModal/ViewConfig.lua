@@ -98,10 +98,6 @@ end
 function ViewConfig:draw(view)
 	Layout:draw()
 
-	local w, h = Layout:move("base")
-	love.graphics.setColor(0, 0, 0, 0.2)
-	love.graphics.rectangle("fill", 0, 0, w, h)
-
 	active = next(view.game.configModel.configs.online.session)
 	self:status(view)
 
