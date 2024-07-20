@@ -20,6 +20,8 @@ local font
 local assets
 ---@type table<string, love.Image>
 local img
+---@type table<string, audio.Source>
+local snd
 
 local gfx = love.graphics
 
@@ -117,15 +119,15 @@ local buttons = {
 ---@param game sphere.GameController
 ---@param _assets osu.OsuSelectAssets
 function ViewConfig:new(game, _assets)
-	avatar = Theme.avatarImage
+	avatar = _assets.images.avatar
 
 	assets = _assets
 	img = assets.images
+	snd = assets.sounds
 
 	font = Theme:getFonts("osuSongSelect")
 
-	self.noteChartSetListView = NoteChartSetListView(game)
-	self.noteChartSetListView:setAssets(assets)
+	self.noteChartSetListView = NoteChartSetListView(game, assets)
 
 	self.scoreListView = ScoreListView(game)
 	self.scoreListView:setAssets(assets)
@@ -207,7 +209,15 @@ end
 
 local function dropdown(id, w)
 	local instance = dropdowns[id]
-	instance.mouseOver = false
+
+	local mouse_over_button = gyatt.isOver(w, 22)
+
+	if mouse_over_button and not instance.mouseOver then
+		snd.hoverSelectableBox:stop()
+		snd.hoverSelectableBox:play()
+	end
+
+	instance.mouseOver = mouse_over_button
 
 	local r, g, b, a = gfx.getColor()
 	gfx.push()
@@ -437,6 +447,12 @@ local function bottomButtonImage(id, image, mouse_over_image)
 	local instance = buttons[id]
 	local rect = instance.rect
 	local mouse_over = gyatt.isOver(rect[3], rect[4], rect[1], rect[2])
+
+	if mouse_over and not instance.mouseOver then
+		snd.hoverSelectableBox:stop()
+		snd.hoverSelectableBox:play()
+	end
+
 	instance.mouseOver = mouse_over
 
 	local _, ih = image:getDimensions()

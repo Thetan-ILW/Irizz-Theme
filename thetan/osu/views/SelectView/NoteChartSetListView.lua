@@ -21,16 +21,12 @@ NoteChartSetListView.previewIcon = false
 ---@type number[]
 NoteChartSetListView.animations = {}
 
-function NoteChartSetListView:new(game)
+---@param game sphere.GameController
+---@param assets osu.OsuSelectAssets
+function NoteChartSetListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
-	self.scrollSound = Theme.sounds.scrollLargeList
 
-	self:loadFonts()
-end
-
----@param assets osu.OsuSelectAssets
-function NoteChartSetListView:setAssets(assets)
 	self.assets = assets
 
 	local active_str = self.assets.params.songSelectActiveText
@@ -48,6 +44,10 @@ function NoteChartSetListView:setAssets(assets)
 		local colors = string.split(inactive_str, ",")
 		self.inactiveTextColor = { tonumber(colors[1]) / 255, tonumber(colors[2]) / 255, tonumber(colors[3]) / 255, 1 }
 	end
+
+	self.scrollSound = assets.sounds.selectChart
+
+	self:loadFonts()
 end
 
 function NoteChartSetListView:reloadItems()

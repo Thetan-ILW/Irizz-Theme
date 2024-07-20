@@ -95,6 +95,14 @@ end
 function Assets.loadAudio(path, use_sound_data)
 	path = Assets.findAudio(path)
 
+	if path then
+		local info = love.filesystem.getInfo(path)
+
+		if info.size and info.size < 45 then -- Empty audio, would crash the game
+			return
+		end
+	end
+
 	if path and use_sound_data then
 		local success, result = pcall(audio.newSource, getSoundData(path))
 

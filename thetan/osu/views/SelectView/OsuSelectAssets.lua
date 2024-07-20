@@ -42,6 +42,7 @@ function OsuSelectAssets:new(skin_path)
 	}
 
 	self.images = {
+		avatar = self.loadImage("userdata/avatar") or self.emptyImage(),
 		panelTop = self:loadImageOrDefault(skin_path, "songselect-top"),
 
 		panelBottom = self:loadImageOrDefault(skin_path, "songselect-bottom"),
@@ -76,6 +77,15 @@ function OsuSelectAssets:new(skin_path)
 		gradeA = self:loadImageOrDefault(skin_path, "ranking-A-small"),
 		gradeS = self:loadImageOrDefault(skin_path, "ranking-S-small"),
 		gradeX = self:loadImageOrDefault(skin_path, "ranking-X-small"),
+	}
+
+	self.sounds = {
+		selectChart = self:loadAudioOrDefault(skin_path, "select-difficulty"),
+		selectGroup = self:loadAudioOrDefault(skin_path, "select-expand"),
+		backButtonClick = self:loadAudioOrDefault(skin_path, "back-button-click"),
+		hoverSelectableBox = self:loadAudioOrDefault(skin_path, "click-short"),
+		hoverAboveCharts = self:loadAudioOrDefault(skin_path, "menuclick"),
+		hoverMenuBack = self:loadAudioOrDefault(skin_path, "menu-back-hover"),
 	}
 
 	self.images.panelTop:setWrap("clamp")
