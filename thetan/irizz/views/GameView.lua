@@ -49,6 +49,7 @@ function GameView:_setView(view)
 	view.prevView = self.view
 	self.view = view
 	self.view.actionModel = self.actionModel
+	self.view.assetModel = self.game.assetModel
 	self.view.notificationView = self.notificationView
 	self.view:load()
 

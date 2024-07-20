@@ -7,6 +7,7 @@ local class = require("class")
 ---@field modal irizz.Modal?
 ---@field notificationView irizz.NotificationView
 ---@field actionModel irizz.ActionModel
+---@field assetModel skibidi.AssetModel
 local ScreenView = class()
 
 ---@param game sphere.GameController

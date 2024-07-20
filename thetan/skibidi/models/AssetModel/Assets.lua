@@ -12,6 +12,9 @@ local gfx_util = require("gfx_util")
 ---@field errors string[]
 local Assets = class()
 
+Assets.images = {}
+Assets.sounds = {}
+Assets.params = {}
 Assets.errors = {}
 
 ---@type string

@@ -81,26 +81,19 @@ function ResultView:setAssets()
 
 	---@type string
 	local selected_osu_skin = irizz.osuResultSkin
-
-	---@type skibidi.AssetModel
-	local asset_model = self.game.assetModel
+	local skin_path = ("userdata/skins/%s/"):format(selected_osu_skin)
 
 	---@type skibidi.Assets?
-	local assets = asset_model:get("osuResult")
-
-	---@type string
-	local skin_path = Theme.osuSkins[selected_osu_skin]
+	local assets = self.assetModel:get("osuResult")
 
 	if not assets or (assets and assets.skinPath ~= skin_path) then
 		assets = OsuResultAssets(skin_path)
-		asset_model:store("osuResult", assets)
+		self.assetModel:store("osuResult", assets)
 	end
 
 	---@cast assets osu.OsuResultAssets
 	self.assets = assets
 	self.assets:updateVolume(self.game.configModel)
-
-	Theme.sounds.osuResult = self.assets.sounds
 end
 
 function ResultView:unload()

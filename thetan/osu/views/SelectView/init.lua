@@ -32,15 +32,14 @@ function OsuSelectView:load()
 	self.inputMap = InputMap(self, self.actionModel)
 	self.actionModel.enable()
 
-	local configs = self.game.configModel.configs
-	local irizz = configs.irizz
+	self:setAssets()
 
-	local assets_path = ("userdata/skins/%s/"):format(irizz.osuSongSelectSkin)
-	local assets = OsuSelectAssets(assets_path)
-
-	self.viewConfig = ViewConfig(self.game, assets)
+	self.viewConfig = ViewConfig(self.game, self.assets)
 	self.mainMenuView = MainMenuView(self)
 	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
+
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
 
 	if irizz.showFreshInstallModal then
 		local newSongs = self.game.cacheModel.newSongs
@@ -50,6 +49,26 @@ function OsuSelectView:load()
 			self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
 		end
 	end
+end
+
+function OsuSelectView:setAssets()
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
+
+	---@type string
+	local skin_path = ("userdata/skins/%s/"):format(irizz.osuSongSelectSkin)
+
+	---@type skibidi.Assets?
+	local assets = self.assetModel:get("osuSelect")
+
+	if not assets or (assets and assets.skinPath ~= skin_path) then
+		assets = OsuSelectAssets(skin_path)
+		self.assetModel:store("osuSelect", assets)
+	end
+
+	---@cast assets osu.OsuSelectAssets
+	self.assets = assets
+	self.assets:updateVolume(self.game.configModel)
 end
 
 function OsuSelectView:beginUnload()
@@ -63,6 +82,8 @@ end
 ---@param dt number
 function OsuSelectView:update(dt)
 	ScreenView.update(self, dt)
+
+	self.assets:updateVolume(self.game.configModel)
 
 	self.viewConfig:setFocus(self.modal == nil)
 

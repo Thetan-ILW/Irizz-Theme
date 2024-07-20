@@ -6,6 +6,7 @@ local utf8validate = require("utf8validate")
 ---@class (exact) osu.OsuSelectAssets : skibidi.Assets
 ---@operator call: osu.OsuSelectAssets
 ---@field defaultsDirectory string
+---@field skinPath string
 ---@field images table<string, love.Image>
 ---@field sounds table<string, audio.Source?>
 ---@field params table<string, number|string|boolean>
@@ -21,6 +22,8 @@ local default_skin_ini = {
 }
 
 function OsuSelectAssets:new(skin_path)
+	self.skinPath = skin_path
+
 	local content = love.filesystem.read(skin_path .. "skin.ini") or love.filesystem.read(skin_path .. "Skin.ini")
 
 	---@type table

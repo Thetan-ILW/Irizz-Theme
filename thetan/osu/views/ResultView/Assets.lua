@@ -69,7 +69,6 @@ end
 ---@param skin_path string
 function OsuResultAssets:new(skin_path)
 	self.skinPath = skin_path
-	skin_path = skin_path .. "/"
 
 	local content = love.filesystem.read(skin_path .. "skin.ini")
 
