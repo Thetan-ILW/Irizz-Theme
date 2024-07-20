@@ -10,18 +10,27 @@ local Color = Theme.colors
 local Text = Theme.textPauseSubscreen
 local font
 
+---@class irizz.PauseScreen
+---@operator call: irizz.IrizzAssets
 local PauseScreen = class()
 
+---@type table?
 PauseScreen.tween = nil
 PauseScreen.alpha = 0
 
+---@type table<string, love.Image[]>
+local img
+---@type love.Shader
 local shader
+---@type audio.Source
 local ambient
 
-function PauseScreen:new()
+---@param assets irizz.IrizzAssets
+function PauseScreen:new(assets)
 	local shaders = require("irizz.shaders")
+	img = assets.images
 	shader = shaders.waves
-	ambient = Theme.sounds.pause
+	ambient = assets.sounds.pauseAmbient
 
 	font = Theme:getFonts("pauseSubscreen")
 	ambient:stop()
@@ -47,6 +56,8 @@ function PauseScreen:unload()
 	ambient:stop()
 end
 
+---@param game_canvas love.Canvas
+---@param alpha number
 function PauseScreen:shaderImage(game_canvas, alpha)
 	local prev_shader = love.graphics.getShader()
 
@@ -94,6 +105,8 @@ local button_width = 500
 local button_height = 80
 local button_spacing = 30
 
+---@param text string
+---@param on_click function
 local function button(text, on_click)
 	local changed, active, hovered = gyatt.button(text .. "pause", gyatt.isOver(button_width, button_height))
 
@@ -103,7 +116,7 @@ local function button(text, on_click)
 		love.graphics.setColor(Color.accent)
 	end
 
-	local button_gradient = Theme.images.button_gradient
+	local button_gradient = img.buttonGradient
 	love.graphics.draw(button_gradient, 0, 0, 0, 1, 5)
 	gyatt.frame(text, 0, 0, button_width, button_height, "center", "center")
 	love.graphics.draw(button_gradient, 0, button_height, 0, 1, 5)

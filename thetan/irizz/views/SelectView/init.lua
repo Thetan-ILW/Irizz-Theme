@@ -48,7 +48,7 @@ function SelectView:load()
 
 	if not assets then
 		assets = IrizzAssets()
-		self.assetModel:store("irizz", self.assets)
+		self.assetModel:store("irizz", assets)
 	end
 
 	---@cast assets irizz.IrizzAssets

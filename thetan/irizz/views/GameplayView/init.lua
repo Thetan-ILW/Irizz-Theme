@@ -7,10 +7,9 @@ local SequenceView = require("sphere.views.SequenceView")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
-local assets = require("thetan.skibidi.assets")
 
----@class sphere.GameplayView: skibidi.ScreenView
----@operator call: sphere.GameplayView
+---@class irizz.GameplayView: skibidi.ScreenView
+---@operator call: irizz.GameplayView
 local GameplayView = ScreenView + {}
 
 ---@param game sphere.GameController
@@ -35,13 +34,16 @@ function GameplayView:load()
 	sequence_view:setSequenceConfig(note_skin.playField)
 	sequence_view:load()
 
-	local chartview = self.game.selectModel.chartview
+	local assets = self.assetModel:get("irizz")
+	assert(assets, "Irizz assets not loaded")
+	---@cast assets irizz.IrizzAssets
 
+	self.pauseScreen = PauseScreen(assets)
+
+	local chartview = self.game.selectModel.chartview
 	local length = time_util.format((chartview.duration or 0) / self.game.playContext.rate)
 	local values = { chartview.artist, chartview.title, chartview.name, length }
 	self.game.gameView.showMessage("chartStarted", values, { show_time = 2, small_text = true })
-
-	self.pauseScreen = PauseScreen()
 end
 
 function GameplayView:unload()

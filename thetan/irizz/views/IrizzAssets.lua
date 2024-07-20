@@ -73,7 +73,7 @@ function IrizzAssets:new()
 		sliderMoved = IrizzAssets:loadAudioOrDefault("", "ui_sounds/slider_moved"),
 		tabButtonClick = IrizzAssets:loadAudioOrDefault("", "ui_sounds/tab_button_click"),
 		songSelectScreenChanged = IrizzAssets:loadAudioOrDefault("", "ui_sounds/song_select_screen_changed"),
-		pause = IrizzAssets:loadAudioOrDefault("", "ui_sounds/pause"),
+		pauseAmbient = IrizzAssets:loadAudioOrDefault("", "ui_sounds/pause"),
 	}
 
 	local sounds = getItems(start_sounds, true)
