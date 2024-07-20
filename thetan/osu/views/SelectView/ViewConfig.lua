@@ -33,7 +33,7 @@ local has_focus = true
 
 local prev_chart_id = 0
 local chart_name = ""
-local charter = ""
+local charter_row = ""
 local length_str = ""
 local bpm_str = ""
 local objects_str = ""
@@ -154,7 +154,13 @@ function ViewConfig:updateInfo(view)
 	end
 
 	chart_name = string.format("%s - %s [%s]", chartview.artist, chartview.title, chartview.name)
-	charter = chartview.creator
+	local chart_format = chartview.format
+
+	if chart_format == "sm" then
+		charter_row = ("From %s"):format(chartview.set_dir)
+	else
+		charter_row = ("Mapped by %s"):format(chartview.creator)
+	end
 
 	local note_count = chartview.notes_count or 0
 	local ln_count = chartview.long_notes_count or 0
@@ -328,7 +334,7 @@ function ViewConfig:chartInfo()
 
 	gfx.setFont(font.chartedBy)
 	gfx.translate(0, -5)
-	gyatt.text(("Mapped by %s"):format(charter), w, "left")
+	gyatt.text(charter_row, w, "left")
 
 	w, h = Layout:move("base")
 	gfx.setFont(font.infoTop)

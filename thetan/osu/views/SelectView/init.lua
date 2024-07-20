@@ -79,6 +79,7 @@ function OsuSelectView:unload()
 	self.game.selectController:unload()
 	self.chartPreviewView:unload()
 end
+
 ---@param dt number
 function OsuSelectView:update(dt)
 	ScreenView.update(self, dt)

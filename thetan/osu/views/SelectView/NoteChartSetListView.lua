@@ -177,7 +177,18 @@ function NoteChartSetListView:drawItem(i, w, h)
 
 	gfx.translate(0, -3)
 	gfx.setFont(self.font.secondRow)
-	gyatt.text(("%s // %s"):format(item.artist, item.creator))
+
+	---@type string
+	local second_row
+
+	if item.format == "sm" then
+		second_row = ("%s // %s"):format(item.artist, item.set_dir)
+	else
+		second_row = ("%s // %s"):format(item.artist, item.creator)
+	end
+
+	gyatt.text(second_row)
+
 	gfx.translate(0, -2)
 	gfx.setFont(self.font.thirdRow)
 	gyatt.text(("%s (%s)"):format(item.name, Format.inputMode(item.inputmode)))
