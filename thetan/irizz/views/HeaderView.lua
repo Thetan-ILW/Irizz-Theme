@@ -11,6 +11,10 @@ local Color = Theme.colors
 local Text = Theme.textHeader
 local font
 
+---@class irizz.HeaderView
+---@operator call: irizz.HeaderView
+---@field gameIcon love.Image
+---@field avatar love.Image
 local ViewConfig = class()
 
 ---@type irizz.ActionModel
@@ -19,12 +23,13 @@ local actionModel
 local gfx = love.graphics
 
 ---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
 ---@param screen "select" | "result" | "multiplayer"
-function ViewConfig:new(game, screen)
+function ViewConfig:new(game, assets, screen)
 	font = Theme:getFonts("header")
 
-	self.gameIcon = Theme.gameIcon
-	self.avatarImage = Theme.avatarImage
+	self.gameIcon = assets.images.gameIcon
+	self.avatar = assets.images.avatar
 	self.screen = screen
 	actionModel = game.actionModel
 
@@ -37,6 +42,9 @@ function ViewConfig:new(game, screen)
 	end
 end
 
+---@param image love.Image
+---@param r number
+---@param x number
 local function circleImage(image, r, x)
 	local imageW = (r * 2) / image:getPixelWidth()
 	local imageH = (r * 2) / image:getPixelHeight()
@@ -222,7 +230,7 @@ function ViewConfig:rightSide(view)
 	local r = h / 1.4
 	local panelHeight = font.anyText:getHeight() + 8
 
-	circleImage(self.avatarImage, r, w)
+	circleImage(self.avatar, r, w)
 
 	buttonOffset = -r * 2
 	button(username, w, h, panelHeight, true)

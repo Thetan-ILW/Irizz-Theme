@@ -35,10 +35,12 @@ local actionModel
 
 local canUpdate = false
 
-function ViewConfig:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(game, assets)
 	actionModel = game.actionModel
-	self.noteChartSetListView = NoteChartSetListView(game)
-	self.noteChartListView = NoteChartListView(game)
+	self.noteChartSetListView = NoteChartSetListView(game, assets)
+	self.noteChartListView = NoteChartListView(game, assets)
 	self.scoreListView = ScoreListView(game)
 	self.osuScoreListView = OsuScoreListView(game)
 	font = Theme:getFonts("songSelectViewConfig")

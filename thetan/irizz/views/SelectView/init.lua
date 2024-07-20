@@ -4,6 +4,7 @@ local ScreenView = require("thetan.skibidi.views.ScreenView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local HeaderView = require("thetan.irizz.views.HeaderView")
+local IrizzAssets = require("thetan.irizz.views.IrizzAssets")
 
 local LayersView = require("thetan.irizz.views.LayersView")
 local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
@@ -17,6 +18,7 @@ local InputMap = require("thetan.irizz.views.SelectView.InputMap")
 
 ---@class irizz.SelectView: skibidi.ScreenView
 ---@operator call: irizz.SelectView
+---@field assets irizz.IrizzAssets
 local SelectView = ScreenView + {}
 
 SelectView.modalActive = false
@@ -28,30 +30,40 @@ SelectView.scoreFilterLine = ""
 
 local songSelectOffset = 0
 
-local playSound = nil
+---@type audio.Source
+local start_sound = nil
+
 function SelectView:load()
 	self.game.selectController:load(self)
-	self.headerView = HeaderView(self.game, "select")
-	self.settingsViewConfig = SettingsViewConfig(self.game)
-	self.songSelectViewConfig = SongSelectViewConfig(self.game)
-	self.collectionsViewConfig = CollectionViewConfig(self.game)
 
 	self.chartPreviewView = ChartPreviewView(self.game)
 	self.chartPreviewView:load()
 
 	self.selectModel = self.game.selectModel
 
-	playSound = Theme:getStartSound(self.game)
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
 
-	local actionModel = self.game.actionModel
-	self.inputMap = InputMap(self, actionModel)
+	local assets = self.assetModel:get("irizz")
+
+	if not assets then
+		assets = IrizzAssets()
+		self.assetModel:store("irizz", self.assets)
+	end
+
+	---@cast assets irizz.IrizzAssets
+	self.assets = assets
+
+	self.headerView = HeaderView(self.game, self.assets, "select")
+	self.settingsViewConfig = SettingsViewConfig(self.game, self.assets)
+	self.songSelectViewConfig = SongSelectViewConfig(self.game, self.assets)
+	self.collectionsViewConfig = CollectionViewConfig(self.game)
+
+	self.inputMap = InputMap(self, self.actionModel)
 
 	self:updateFilterLines()
 	self.mainMenuView = MainMenuView(self)
 	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
-
-	local configs = self.game.configModel.configs
-	local irizz = configs.irizz
 
 	if irizz.showFreshInstallModal then
 		local newSongs = self.game.cacheModel.newSongs
@@ -100,9 +112,7 @@ function SelectView:moveScreen(where, exact)
 end
 
 ---@param dt number
-function SelectView:updateSettings(dt)
-	playSound = Theme:getStartSound(self.game)
-end
+function SelectView:updateSettings(dt) end
 
 function SelectView:switchToSongSelect()
 	self.game.selectModel:noDebouncePullNoteChartSet()
@@ -115,6 +125,8 @@ end
 ---@param dt number
 function SelectView:update(dt)
 	ScreenView.update(self, dt)
+
+	self.assets:updateVolume(self.game.configModel)
 
 	self.game.selectController:update()
 
@@ -145,9 +157,11 @@ function SelectView:play()
 		return
 	end
 
-	if playSound ~= nil then
-		playSound:play()
-	end
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
+
+	start_sound = self.assets.startSounds[irizz.startSound]
+	start_sound:play()
 
 	local multiplayerModel = self.game.multiplayerModel
 	if multiplayerModel.room and not multiplayerModel.isPlaying then

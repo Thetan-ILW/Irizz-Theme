@@ -16,6 +16,9 @@ local InputListView = require("thetan.irizz.views.modals.InputModal.InputListVie
 
 local SettingsTab = class()
 
+---@type string[]
+local start_sound_names
+
 local textSeparation = 15
 local panelW = 0
 local panelH = 0
@@ -23,7 +26,10 @@ local inputListView
 
 SettingsTab.container = Container("settingsContainer")
 
-function SettingsTab:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function SettingsTab:new(game, assets)
+	start_sound_names = assets.startSoundNames
 	inputListView = InputListView(game)
 end
 
@@ -731,7 +737,7 @@ function SettingsTab:UI(view)
 	end
 
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
-	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, Theme.sounds.startNames, nil, Text.startSound)
+	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, start_sound_names, nil, Text.startSound)
 
 	imgui.separator()
 	just.text(Text.osuSongSelect)

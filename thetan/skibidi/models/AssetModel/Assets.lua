@@ -1,6 +1,7 @@
 local class = require("class")
 
 local audio = require("audio")
+local source = require("audio.Source")
 local gfx_util = require("gfx_util")
 
 ---@class skibidi.Assets
@@ -80,12 +81,32 @@ function Assets.loadImage(path)
 	end
 end
 
+---@param sound_path string
+---@return audio.SoundData
+local function getSoundData(sound_path)
+	local file_data = love.filesystem.newFileData(sound_path)
+	return audio.SoundData(file_data:getFFIPointer(), file_data:getSize())
+end
+
 ---@param path string
+---@param use_sound_data boolean?
 ---@return audio.Source?
-function Assets.loadAudio(path)
+--- Note: use_sound_data for loading audio from mounted directories (moddedgame/charts)
+function Assets.loadAudio(path, use_sound_data)
 	path = Assets.findAudio(path)
 
+	if path and use_sound_data then
+		local success, result = pcall(audio.newSource, getSoundData(path))
+
+		if success then
+			return result
+		end
+
+		table.insert(Assets.errors, ("Failed to load sound using SoundData %s | %s"):format(path, result))
+	end
+
 	if path then
+		---@type string
 		path = source_directory .. "/" .. path
 		local success, result = pcall(audio.newFileSource, path)
 
@@ -93,10 +114,41 @@ function Assets.loadAudio(path)
 			return result
 		end
 
-		table.insert(Assets.errors, ("Failed to load sound %s"):format(path))
+		table.insert(Assets.errors, ("Failed to load sound %s | %s"):format(path, result))
 	end
 end
 
+---@type love.Image?
+local empty_image = nil
+
+---@return love.Image
+function Assets.emptyImage()
+	if empty_image then
+		return empty_image
+	end
+
+	empty_image = gfx_util.newPixel(0, 0, 0, 0)
+
+	return empty_image
+end
+
+---@type audio.Source?
+local empty_audio
+
+---@return audio.Source
+function Assets.emptyAudio()
+	if empty_audio then
+		return empty_audio
+	end
+
+	empty_audio = source()
+
+	return empty_audio
+end
+
+---@param directory string
+---@param name string
+---@return love.Image
 function Assets:loadImageOrDefault(directory, name)
 	local image = Assets.loadImage(directory .. name)
 
@@ -110,7 +162,28 @@ function Assets:loadImageOrDefault(directory, name)
 		return image
 	end
 
-	return gfx_util.newPixel(0, 0, 0, 0)
+	table.insert(Assets.errors, ("Image not found %s"):format(name))
+	return self.emptyImage()
+end
+
+---@param directory string
+---@param name string
+---@return audio.Source
+function Assets:loadAudioOrDefault(directory, name)
+	local sound = Assets.loadAudio(directory .. name)
+
+	if sound then
+		return sound
+	end
+
+	sound = Assets.loadAudio(self.defaultsDirectory .. name, true)
+
+	if sound then
+		return sound
+	end
+
+	table.insert(Assets.errors, ("Audio not found %s"):format(name))
+	return self.emptyAudio()
 end
 
 ---@param config_model sphere.ConfigModel

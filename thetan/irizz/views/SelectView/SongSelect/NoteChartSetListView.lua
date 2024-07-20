@@ -6,17 +6,21 @@ local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
 
+---@class irizz.NoteChartSetListView : irizz.ListView
+---@operator call: irizz.NoteChartSetListView
 local NoteChartSetListView = ListView + {}
 
 NoteChartSetListView.rows = 13
 NoteChartSetListView.centerItems = true
 NoteChartSetListView.text = Theme.textChartSetsList
 
-function NoteChartSetListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function NoteChartSetListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("noteChartSetListView")
-	self.scrollSound = Theme.sounds.scrollLargeList
+	self.scrollSound = assets.sounds.scrollLargeList
 end
 
 function NoteChartSetListView:reloadItems()

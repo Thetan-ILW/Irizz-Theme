@@ -7,6 +7,8 @@ local Format = require("sphere.views.Format")
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
 
+---@class irizz.NoteChartListView : irizz.ListView
+---@operator call: irizz.NoteChartSetListView
 local NoteChartListView = ListView + {}
 
 NoteChartListView.rows = 7
@@ -17,11 +19,13 @@ NoteChartListView.text = Theme.textChartList
 local action
 local config
 
-function NoteChartListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function NoteChartListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("noteChartListView")
-	self.scrollSound = Theme.sounds.scrollSmallList
+	self.scrollSound = assets.sounds.scrollSmallList
 	config = game.configModel.configs.irizz
 
 	self.actionModel = self.game.actionModel

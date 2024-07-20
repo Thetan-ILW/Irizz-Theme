@@ -17,6 +17,8 @@ ScoreListView.oneClickOpen = false
 ScoreListView.modLines = {}
 ScoreListView.text = Theme.textScoreList
 
+---@param game sphere.GameController
+---@param oneClickOpen boolean
 function ScoreListView:new(game, oneClickOpen)
 	self.game = game
 	self.oneClickOpen = oneClickOpen or false

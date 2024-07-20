@@ -8,6 +8,10 @@ local Color = Theme.colors
 
 ---@class irizz.ListView
 ---@operator call: irizz.ListView
+---@field scrollSound audio.Source
+---@field font love.Font
+---@field status string
+---@field text table<string, string>
 local ListView = class()
 
 ListView.centerItems = false

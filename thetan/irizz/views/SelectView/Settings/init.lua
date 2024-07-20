@@ -24,9 +24,12 @@ local tabs = {
 
 local currentTab = tabs[1][2]
 
-function ViewConfig:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(game, assets)
 	self.game = game
-	self.settingsPanel = SettingsTab(game)
+
+	self.settingsPanel = SettingsTab(game, assets)
 
 	Font = Theme:getFonts("settingsViewConfig")
 end
