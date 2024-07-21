@@ -1,4 +1,5 @@
 local Assets = require("thetan.skibidi.models.AssetModel.Assets")
+local Localization = require("thetan.skibidi.models.AssetModel.Localization")
 
 local OsuNoteSkin = require("sphere.models.NoteSkinModel.OsuNoteSkin")
 local utf8validate = require("utf8validate")
@@ -10,6 +11,7 @@ local utf8validate = require("utf8validate")
 ---@field images table<string, love.Image>
 ---@field sounds table<string, audio.Source?>
 ---@field params table<string, number|string|boolean>
+---@field localization skibidi.Localization
 local OsuSelectAssets = Assets + {}
 
 OsuSelectAssets.defaultsDirectory = "resources/osu_default_assets/"
@@ -23,6 +25,8 @@ local default_skin_ini = {
 
 function OsuSelectAssets:new(skin_path)
 	self.skinPath = skin_path
+
+	self.localization = Localization("thetan/osu/localization/en.lua", love.graphics.getHeight() / 768)
 
 	local content = love.filesystem.read(skin_path .. "skin.ini") or love.filesystem.read(skin_path .. "Skin.ini")
 

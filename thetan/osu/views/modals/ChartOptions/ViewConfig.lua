@@ -34,7 +34,7 @@ function ViewConfig:new(assets)
 	local red = { 0.91, 0.19, 0, 1 }
 	local gray = { 0.42, 0.42, 0.42, 1 }
 
-	font = Theme:getFonts("osuChartOptionsModal")
+	font = assets.localization.fontGroups.chartOptionsModal
 	local b_font = font.buttons
 
 	manage_locations = Button(assets, {
@@ -120,11 +120,16 @@ function ViewConfig:draw(view)
 	local a = gyatt.easeOutCubic(open_time, 1) * 50
 
 	gfx.translate(50 - a, 0)
-	manage_locations:draw()
+	if manage_locations:draw() then
+		view.mainView:switchModal("thetan.irizz.views.modals.MountsModal")
+	end
 	gfx.translate(a - 50, 0)
 
 	gfx.translate(-50 + a, 0)
-	chart_info:draw()
+	if chart_info:draw() then
+		view.mainView:switchModal("thetan.irizz.views.modals.ChartInfoModal")
+	end
+
 	gfx.translate(-a + 50, 0)
 
 	gfx.translate(50 - a, 0)
@@ -148,6 +153,8 @@ function ViewConfig:draw(view)
 		view:quit()
 	end
 	gfx.translate(-a + 50, 0)
+
+	gyatt.setTextScale(1)
 end
 
 return ViewConfig

@@ -30,7 +30,7 @@ function Button:new(assets, params)
 	self.imageRight = img.buttonRight
 
 	self.text = params.text
-	self.font = params.font
+	self.font = assets.localization.fontGroups.chartOptionsModal
 	self.scale = params.scale or 1
 	self.width = params.width or 1
 	self.color = params.color or { 1, 1, 1, 1 }
@@ -106,7 +106,7 @@ function Button:draw()
 
 	gfx.setShader(prev_shader)
 
-	gfx.setFont(self.font)
+	gfx.setFont(self.font.buttons)
 	gfx.setColor({ 1, 1, 1, 1 })
 	ui.frameWithShadow(self.text, 0, 0, self.totalW, self.totalH, "center", "center")
 

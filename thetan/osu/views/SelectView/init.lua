@@ -190,6 +190,8 @@ function OsuSelectView:drawCursor()
 end
 
 function OsuSelectView:resolutionUpdated()
+	self.assets.localization:updateScale(gfx.getHeight() / 768)
+
 	self.viewConfig:resolutionUpdated()
 
 	if self.modal then

@@ -1,5 +1,7 @@
 local class = require("class")
 
+local delay = require("delay")
+
 ---@class skibidi.ScreenView
 ---@operator call: skibidi.ScreenView
 ---@field gameView sphere.GameView
@@ -46,13 +48,18 @@ function ScreenView:closeModal()
 		self.modal.shouldClose = true
 	end
 
-	self.view.modalActive = false
+	self.modalActive = false
 end
 
 function ScreenView:openModal(modalName)
 	---@type irizz.Modal
 	local modal = require(modalName)(self.game)
 	self:setModal(modal)
+end
+
+function ScreenView:switchModal(modalName)
+	self:closeModal()
+	delay.debounce(self, "modalSwitchDebounce", 0.22, self.openModal, self, modalName)
 end
 
 function ScreenView:load() end
