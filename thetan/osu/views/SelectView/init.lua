@@ -14,8 +14,6 @@ local InputMap = require("thetan.osu.views.SelectView.InputMap")
 ---@operator call: irizz.OsuSelectView
 local OsuSelectView = ScreenView + {}
 
-local last_resize_time = math.huge
-
 function OsuSelectView:load()
 	self.game.selectController:load(self)
 
@@ -44,8 +42,6 @@ function OsuSelectView:load()
 			self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
 		end
 	end
-
-	love.mouse.setVisible(false)
 end
 
 function OsuSelectView:setAssets()
@@ -70,7 +66,6 @@ end
 
 function OsuSelectView:beginUnload()
 	self.game.selectController:beginUnload()
-	love.mouse.setVisible(true)
 end
 
 function OsuSelectView:unload()
@@ -90,11 +85,6 @@ function OsuSelectView:update(dt)
 
 	self.layersView:update()
 	self.chartPreviewView:update(dt)
-
-	if love.timer.getTime() > last_resize_time + 0.15 then
-		self.viewConfig:resolutionUpdated()
-		last_resize_time = math.huge
-	end
 end
 
 function OsuSelectView:notechartChanged()
@@ -114,6 +104,14 @@ function OsuSelectView:play()
 	end
 
 	self:changeScreen("gameplayView")
+end
+
+function OsuSelectView:edit()
+	if not self.game.selectModel:notechartExists() then
+		return
+	end
+
+	self:changeScreen("editorView")
 end
 
 function OsuSelectView:result()
@@ -171,10 +169,6 @@ function OsuSelectView:receive(event)
 
 		self.inputMap:call("select")
 	end
-
-	if event.name == "resize" then
-		last_resize_time = love.timer.getTime()
-	end
 end
 
 function OsuSelectView:quit()
@@ -193,6 +187,14 @@ function OsuSelectView:drawCursor()
 	local cursor = self.assets.images.cursor
 	local iw, ih = cursor:getDimensions()
 	gfx.draw(cursor, x - iw / 2, y - ih / 2)
+end
+
+function OsuSelectView:resolutionUpdated()
+	self.viewConfig:resolutionUpdated()
+
+	if self.modal then
+		self.modal.viewConfig:resolutionUpdated()
+	end
 end
 
 function OsuSelectView:draw()

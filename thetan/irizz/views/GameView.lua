@@ -16,6 +16,8 @@ local Theme = require("thetan.irizz.views.Theme")
 ---@field inputMap gyatt.InputMap
 local GameView = class()
 
+local last_resize_time = math.huge
+
 ---@param game sphere.GameController
 function GameView:new(game)
 	self.game = game
@@ -93,6 +95,12 @@ function GameView:update(dt)
 	if not self.view then
 		return
 	end
+
+	if love.timer.getTime() > last_resize_time + 0.15 then
+		self.view:resolutionUpdated()
+		last_resize_time = math.huge
+	end
+
 	self.view:update(dt)
 end
 
@@ -149,6 +157,10 @@ function GameView:receive(event)
 
 	if event.name == "focus" then
 		self.actionModel.resetInputs()
+	end
+
+	if event.name == "resize" then
+		last_resize_time = love.timer.getTime()
 	end
 
 	self.view:receive(event)

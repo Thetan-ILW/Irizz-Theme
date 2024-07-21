@@ -763,6 +763,11 @@ localization.fonts = {
 		rightSide = { "Aller", 14 },
 		noItems = { "Aller", 36 },
 	},
+
+	osuChartOptionsModal = {
+		title = { "Aller-Light", 33 },
+		buttons = { "Aller", 42 },
+	},
 }
 
 return localization

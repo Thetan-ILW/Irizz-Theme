@@ -59,6 +59,7 @@ function ScreenView:load() end
 function ScreenView:beginUnload() end
 function ScreenView:unload() end
 function ScreenView:quit() end
+function ScreenView:resolutionUpdated() end
 
 ---@param event table
 function ScreenView:receive(event) end

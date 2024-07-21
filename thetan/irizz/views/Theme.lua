@@ -93,6 +93,9 @@ function Theme:getDifficultyColor(difficulty, calculatorName)
 	}
 end
 
+---@param objectName string
+---@param scale number?
+---@return table<string, love.Font>
 ---@nodiscard
 function Theme:getFonts(objectName, scale)
 	scale = scale or 1

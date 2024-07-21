@@ -51,11 +51,7 @@ function SelectInputMap:createBindings(sv)
 			sv:play()
 		end,
 		["openEditor"] = function()
-			if not sv.game.selectModel:notechartExists() then
-				return
-			end
-
-			sv:changeScreen("editorView")
+			sv:edit()
 		end,
 		["openResult"] = function()
 			sv:result()

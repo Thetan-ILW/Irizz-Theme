@@ -71,6 +71,10 @@ function OsuSelectAssets:new(skin_path)
 		maniaSmallIconForCharts = self:loadImageOrDefault(skin_path, "mode-mania-small-for-charts"),
 		maniaIcon = self:loadImageOrDefault(skin_path, "mode-mania"),
 
+		buttonLeft = self:loadImageOrDefault(skin_path, "button-left"),
+		buttonMiddle = self:loadImageOrDefault(skin_path, "button-middle"),
+		buttonRight = self:loadImageOrDefault(skin_path, "button-right"),
+
 		gradeD = self:loadImageOrDefault(skin_path, "ranking-D-small"),
 		gradeC = self:loadImageOrDefault(skin_path, "ranking-C-small"),
 		gradeB = self:loadImageOrDefault(skin_path, "ranking-B-small"),
@@ -92,6 +96,10 @@ function OsuSelectAssets:new(skin_path)
 	}
 
 	self.images.panelTop:setWrap("clamp")
+
+	for _, v in ipairs(self.errors) do
+		print(v)
+	end
 end
 
 return OsuSelectAssets

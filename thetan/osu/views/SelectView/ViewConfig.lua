@@ -204,12 +204,6 @@ local function animate(time, interval)
 	return math_util.clamp(progress * progress, 0, 1)
 end
 
-local function easeOutCubic(time, interval)
-	local t = math.min(current_time - time, interval)
-	local progress = t / interval
-	return math_util.clamp(1 - math.pow(1 - progress, 3), 0, 1)
-end
-
 local function dropdown(id, w)
 	local instance = dropdowns[id]
 
@@ -261,7 +255,7 @@ local function dropdown(id, w)
 	local changed = false
 	local selected = 0
 
-	a = easeOutCubic(instance.updateTime, 0.35)
+	a = gyatt.easeOutCubic(instance.updateTime, 0.35)
 
 	if not instance.focus then
 		a = 1 - a
@@ -568,7 +562,7 @@ function ViewConfig:bottom(view)
 	gfx.translate(77, 0)
 
 	if bottomButtonImage("chartOptions", img.optionsButton, img.optionsButtonOver) then
-		view:openModal("thetan.irizz.views.modals.MountsModal")
+		view:openModal("thetan.osu.views.modals.ChartOptions")
 	end
 end
 
@@ -584,7 +578,7 @@ function ViewConfig:chartSetList()
 
 	list.focus = not no_focus and has_focus
 
-	local a = easeOutCubic(chart_list_update_time, 0.7)
+	local a = gyatt.easeOutCubic(chart_list_update_time, 0.7)
 
 	gfx.translate(w - (610 * a), 82)
 	list:updateAnimations()
@@ -703,7 +697,7 @@ function ViewConfig:draw(view)
 	current_time = love.timer.getTime()
 	gyatt.setTextScale(768 / window_height)
 
-	local a = math_util.clamp((1 - easeOutCubic(update_time, 1)) * 0.15, 0, 0.10)
+	local a = math_util.clamp((1 - gyatt.easeOutCubic(update_time, 1)) * 0.15, 0, 0.10)
 	brighten_shader:send("amount", a)
 
 	self:updateOtherInfo(view)

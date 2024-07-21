@@ -1,6 +1,7 @@
 local gfx_util = require("gfx_util")
 local imgui = require("thetan.irizz.imgui")
 local just = require("just")
+local math_util = require("math_util")
 local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 
 local gyatt = {}
@@ -13,6 +14,7 @@ gyatt.setSize = imgui.setSize
 gyatt.button = just.button
 gyatt.isOver = just.is_over
 gyatt.mousePressed = just.mousepressed
+gyatt.next = just.next
 gyatt.sameline = just.sameline
 
 local textTransform = love.math.newTransform()
@@ -82,6 +84,15 @@ function gyatt.spectrum(frequencies, count, w, h)
 		local y = h - rh + r
 		love.graphics.rectangle("fill", x, y, rw, rh, r, r)
 	end
+end
+
+---@param time number
+---@param interval number
+---@return number
+function gyatt.easeOutCubic(time, interval)
+	local t = math.min(love.timer.getTime() - time, interval)
+	local progress = t / interval
+	return math_util.clamp(1 - math.pow(1 - progress, 3), 0, 1)
 end
 
 return gyatt
