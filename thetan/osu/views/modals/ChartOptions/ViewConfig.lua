@@ -35,10 +35,12 @@ function ViewConfig:new(assets)
 	local gray = { 0.42, 0.42, 0.42, 1 }
 
 	font = assets.localization.fontGroups.chartOptionsModal
+	local text = assets.localization.textGroups.chartOptionsModal
+
 	local b_font = font.buttons
 
 	manage_locations = Button(assets, {
-		text = "1. Manage locations",
+		text = text.manageLocations,
 		scale = scale,
 		width = width,
 		color = green,
@@ -46,7 +48,7 @@ function ViewConfig:new(assets)
 	})
 
 	chart_info = Button(assets, {
-		text = "2. Chart info",
+		text = text.chartInfo,
 		scale = scale,
 		width = width,
 		color = purple,
@@ -54,7 +56,7 @@ function ViewConfig:new(assets)
 	})
 
 	filters = Button(assets, {
-		text = "3. Filters",
+		text = text.filters,
 		scale = scale,
 		width = width,
 		color = green,
@@ -62,7 +64,7 @@ function ViewConfig:new(assets)
 	})
 
 	edit = Button(assets, {
-		text = "4. Edit",
+		text = text.edit,
 		scale = scale,
 		width = width,
 		color = red,
@@ -70,7 +72,7 @@ function ViewConfig:new(assets)
 	})
 
 	file_manager = Button(assets, {
-		text = "5. Open in file manager",
+		text = text.fileManager,
 		scale = scale,
 		width = width,
 		color = purple,
@@ -78,7 +80,7 @@ function ViewConfig:new(assets)
 	})
 
 	cancel = Button(assets, {
-		text = "6. Close",
+		text = text.cancel,
 		scale = scale,
 		width = width,
 		color = gray,
@@ -88,12 +90,10 @@ function ViewConfig:new(assets)
 	open_time = love.timer.getTime()
 end
 
-local window_height = love.graphics.getHeight()
+local window_height = gfx.getHeight()
 
 function ViewConfig:resolutionUpdated()
-	local wh = love.graphics.getHeight()
-	window_height = wh
-	font = Theme:getFonts("osuChartOptionsModal", wh / 768)
+	window_height = gfx.getHeight()
 end
 
 function ViewConfig:draw(view)

@@ -25,4 +25,20 @@ function ui.frameWithShadow(text, x, y, w, h, ax, ay)
 	gyatt.frame(text, x, y, w, h, ax, ay)
 end
 
+---@param text string
+---@param x number?
+---@param ax string?
+function ui.textWithShadow(text, x, ax)
+	local r, g, b, a = gfx.getColor()
+
+	gfx.push()
+	gfx.setColor(shadow)
+	gfx.translate(0, 2)
+	gyatt.text(text, x, ax)
+	gfx.pop()
+
+	gfx.setColor({ r, g, b, a })
+	gyatt.text(text, x, ax)
+end
+
 return ui

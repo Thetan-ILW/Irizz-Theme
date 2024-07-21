@@ -674,6 +674,20 @@ function ViewConfig:modeLogo()
 	gfx.draw(image)
 end
 
+function ViewConfig:chartPreview(view)
+	local prevCanvas = love.graphics.getCanvas()
+	local canvas = gyatt.getCanvas("chartPreview")
+
+	gfx.setCanvas(canvas)
+	gfx.clear()
+	view.chartPreviewView:draw()
+	gfx.setCanvas({ prevCanvas, stencil = true })
+
+	gfx.origin()
+	gfx.setColor({ 1, 1, 1, 1 })
+	gfx.draw(canvas)
+end
+
 function ViewConfig:resolutionUpdated()
 	local w, h = Layout:move("base")
 	top_panel_quad = gfx.newQuad(0, 0, w, img.panelTop:getHeight(), img.panelTop)
@@ -702,6 +716,7 @@ function ViewConfig:draw(view)
 
 	self:updateOtherInfo(view)
 
+	self:chartPreview(view)
 	self:modeLogo()
 	self:chartSetList()
 	self:scores(view)

@@ -16,6 +16,7 @@ function ChartOptionsModal:new(game)
 	---@cast assets osu.OsuSelectAssets
 
 	self.viewConfig = ViewConfig(assets)
+	self.viewConfig:resolutionUpdated()
 end
 
 return ChartOptionsModal

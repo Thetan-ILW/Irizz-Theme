@@ -1,7 +1,6 @@
 local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
-local Format = require("sphere.views.Format")
-local time_util = require("time_util")
+local ui = require("thetan.osu.ui")
 local math_util = require("math_util")
 local gyatt = require("thetan.gyatt")
 
@@ -211,15 +210,15 @@ function ScoreListView:drawItem(i, w, h)
 
 	gfx.translate(44, -5)
 	gfx.setFont(self.font.username)
-	gyatt.text(username)
+	ui.textWithShadow(username)
 
 	gfx.setFont(self.font.score)
-	gyatt.text(("Score: %i"):format(item.score))
+	ui.textWithShadow(("Score: %i"):format(item.score))
 	gfx.pop()
 
 	gfx.setFont(self.font.rightSide)
-	gyatt.frame(("%s [%0.02fx]"):format(mods, item.rate), -4, 0, w, 50, "right", "top")
-	gyatt.frame(("Accuracy: %0.02f"):format(item.accuracy * 1000), -4, 0, w, 50, "right", "center")
+	ui.frameWithShadow(("%s [%0.02fx]"):format(mods, item.rate), -4, 0, w, 50, "right", "top")
+	ui.frameWithShadow(("Accuracy: %0.02f"):format(item.accuracy * 1000), -4, 0, w, 50, "right", "center")
 
 	local improvement = "-"
 
@@ -227,7 +226,7 @@ function ScoreListView:drawItem(i, w, h)
 		improvement = ("+%i"):format(item.score - self.items[i + 1].score)
 	end
 
-	gyatt.frame(improvement, -4, 0, w, 50, "right", "bottom")
+	ui.frameWithShadow(improvement, -4, 0, w, 50, "right", "bottom")
 end
 
 return ScoreListView

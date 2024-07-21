@@ -32,7 +32,6 @@ function Localization:updateScale(font_scale)
 		return
 	end
 
-	local old_fonts = self.fontGroups
 	self.fontScale = font_scale
 	self:setFonts()
 end

@@ -2,10 +2,15 @@ local l = {}
 
 l.textGroups = {
 	songSelect = {
-		group = "Group!",
+		group = "Group",
 	},
 	chartOptionsModal = {
-		manageLocations = "1. Manage locations!",
+		manageLocations = "1. Manage locations",
+		chartInfo = "2. Chart info",
+		filters = "3. Filters",
+		edit = "4. Edit",
+		fileManager = "5. Open in file manager",
+		cancel = "6. Cancel",
 	},
 }
 
