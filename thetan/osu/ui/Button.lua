@@ -1,6 +1,7 @@
 local class = require("class")
 
 local gyatt = require("thetan.gyatt")
+local ui = require("thetan.osu.ui")
 
 ---@class osu.ui.Button
 ---@operator call: osu.ui.Button
@@ -16,7 +17,7 @@ local gyatt = require("thetan.gyatt")
 ---@field private imageMiddle love.Image
 ---@field private imageRight love.Image
 ---@field private hover boolean
----@field private hoverTime number
+---@field private hoverUpdateTime number
 ---@field private brightenShader love.Shader
 local Button = class()
 
@@ -42,7 +43,7 @@ function Button:new(assets, params)
 	self.totalH = self.imageLeft:getHeight() * self.scale
 
 	self.hover = false
-	self.hoverTime = -math.huge
+	self.hoverUpdateTime = -math.huge
 
 	self.brightenShader = require("irizz.shaders").brighten
 end
@@ -59,8 +60,8 @@ local gfx = love.graphics
 function Button:update()
 	local mouse_over = gyatt.isOver(self.totalW, self.totalH)
 
-	if not self.hover and mouse_over then
-		self.hoverTime = love.timer.getTime()
+	if (not self.hover and mouse_over) or (self.hover and not mouse_over) then
+		self.hoverUpdateTime = love.timer.getTime()
 	end
 
 	self.hover = mouse_over
@@ -85,7 +86,7 @@ function Button:draw()
 
 	gfx.setShader(self.brightenShader)
 
-	local a = gyatt.easeOutCubic(self.hoverTime, 0.3) * 0.3
+	local a = gyatt.easeOutCubic(self.hoverUpdateTime, 0.2) * 0.3
 
 	if not self.hover then
 		a = 0.3 - a
@@ -106,10 +107,8 @@ function Button:draw()
 	gfx.setShader(prev_shader)
 
 	gfx.setFont(self.font)
-	gfx.setColor({ 0, 0, 0, 0.7 })
-	gyatt.frame(self.text, 0, 2, self.totalW, self.totalH, "center", "center")
 	gfx.setColor({ 1, 1, 1, 1 })
-	gyatt.frame(self.text, 0, 0, self.totalW, self.totalH, "center", "center")
+	ui.frameWithShadow(self.text, 0, 0, self.totalW, self.totalH, "center", "center")
 
 	gyatt.next(0, self.totalH + self.spacing)
 

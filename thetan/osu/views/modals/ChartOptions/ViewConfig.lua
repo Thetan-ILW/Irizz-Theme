@@ -4,6 +4,7 @@ local Layout = require("thetan.osu.views.OsuLayout")
 local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
+
 ---@type table<string, love.Font>
 local font
 
@@ -21,6 +22,8 @@ local filters ---@type osu.ui.Button
 local edit ---@type osu.ui.Button
 local file_manager ---@type osu.ui.Button
 local cancel ---@type osu.ui.Button
+
+local open_time = 0
 
 ---@param assets osu.OsuSelectAssets
 function ViewConfig:new(assets)
@@ -81,6 +84,8 @@ function ViewConfig:new(assets)
 		color = gray,
 		font = b_font,
 	})
+
+	open_time = love.timer.getTime()
 end
 
 local window_height = love.graphics.getHeight()
@@ -112,21 +117,37 @@ function ViewConfig:draw(view)
 	local total_h = (h / 2) - ((bh / 2) * 6) - (manage_locations.spacing * 5) / 2
 	gfx.translate(w / 2 - bw / 2, 10 + total_h)
 
-	manage_locations:draw()
-	chart_info:draw()
-	filters:draw()
+	local a = gyatt.easeOutCubic(open_time, 1) * 50
 
+	gfx.translate(50 - a, 0)
+	manage_locations:draw()
+	gfx.translate(a - 50, 0)
+
+	gfx.translate(-50 + a, 0)
+	chart_info:draw()
+	gfx.translate(-a + 50, 0)
+
+	gfx.translate(50 - a, 0)
+	filters:draw()
+	gfx.translate(a - 50, 0)
+
+	gfx.translate(-50 + a, 0)
 	if edit:draw() then
 		view.mainView:edit()
 	end
+	gfx.translate(-a + 50, 0)
 
+	gfx.translate(50 - a, 0)
 	if file_manager:draw() then
 		view.game.selectController:openDirectory()
 	end
+	gfx.translate(a - 50, 0)
 
+	gfx.translate(-50 + a, 0)
 	if cancel:draw() then
 		view:quit()
 	end
+	gfx.translate(-a + 50, 0)
 end
 
 return ViewConfig
