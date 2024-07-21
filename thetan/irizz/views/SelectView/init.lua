@@ -317,6 +317,7 @@ function SelectView:draw()
 	self.layersView:draw(panelsStencil, UI)
 	self.mainMenuView:draw("select", self)
 	self:drawModal()
+	self.notificationView:draw()
 end
 
 return SelectView

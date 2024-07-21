@@ -1,5 +1,6 @@
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 
+local gyatt = require("thetan.gyatt")
 local Theme = require("thetan.irizz.views.Theme")
 
 local ViewConfig = require("thetan.osu.views.SelectView.ViewConfig")
@@ -18,7 +19,6 @@ local OsuSelectView = ScreenView + {}
 
 local last_resize_time = math.huge
 
-local playSound = nil
 function OsuSelectView:load()
 	self.game.selectController:load(self)
 
@@ -26,8 +26,6 @@ function OsuSelectView:load()
 	self.chartPreviewView:load()
 
 	self.selectModel = self.game.selectModel
-
-	playSound = Theme:getStartSound(self.game)
 
 	self.inputMap = InputMap(self, self.actionModel)
 	self.actionModel.enable()
@@ -42,13 +40,15 @@ function OsuSelectView:load()
 	local irizz = configs.irizz
 
 	if irizz.showFreshInstallModal then
-		local newSongs = self.game.cacheModel.newSongs
-		local canAddSongs = #newSongs ~= 0
+		local new_songs = self.game.cacheModel.newSongs
+		local can_add_songs = #new_songs ~= 0
 
-		if canAddSongs then
+		if can_add_songs then
 			self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
 		end
 	end
+
+	love.mouse.setVisible(false)
 end
 
 function OsuSelectView:setAssets()
@@ -73,6 +73,7 @@ end
 
 function OsuSelectView:beginUnload()
 	self.game.selectController:beginUnload()
+	love.mouse.setVisible(true)
 end
 
 function OsuSelectView:unload()
@@ -108,13 +109,9 @@ function OsuSelectView:play()
 		return
 	end
 
-	if playSound ~= nil then
-		playSound:play()
-	end
-
-	local multiplayerModel = self.game.multiplayerModel
-	if multiplayerModel.room and not multiplayerModel.isPlaying then
-		multiplayerModel:pushNotechart()
+	local multiplayer_model = self.game.multiplayerModel
+	if multiplayer_model.room and not multiplayer_model.isPlaying then
+		multiplayer_model:pushNotechart()
 		self:changeScreen("multiplayerView")
 		return
 	end
@@ -136,14 +133,17 @@ function OsuSelectView:changeTimeRate(delta)
 	local configs = self.game.configModel.configs
 	local g = configs.settings.gameplay
 
-	local timeRateModel = self.game.timeRateModel
-	local range = timeRateModel.range[g.rate_type]
+	local time_rate_model = self.game.timeRateModel
 
-	local newRate = timeRateModel:get() + range[3] * delta
+	---@type table
+	local range = time_rate_model.range[g.rate_type]
 
-	if newRate ~= timeRateModel:get() then
+	---@type number
+	local new_rate = time_rate_model:get() + range[3] * delta
+
+	if new_rate ~= time_rate_model:get() then
 		self.game.modifierSelectModel:change()
-		timeRateModel:set(newRate)
+		time_rate_model:set(new_rate)
 		self.viewConfig:updateInfo(self)
 	end
 end
@@ -186,6 +186,18 @@ function OsuSelectView:quit()
 	end
 end
 
+local gfx = love.graphics
+
+function OsuSelectView:drawCursor()
+	gfx.origin()
+
+	local x, y = love.mouse.getPosition()
+
+	local cursor = self.assets.images.cursor
+	local iw, ih = cursor:getDimensions()
+	gfx.draw(cursor, x - iw / 2, y - ih / 2)
+end
+
 function OsuSelectView:draw()
 	local function panelsStencil() end
 	local function UI()
@@ -197,6 +209,8 @@ function OsuSelectView:draw()
 	self.mainMenuView:draw("select", self)
 
 	self:drawModal()
+	self.notificationView:draw()
+	self:drawCursor()
 end
 
 return OsuSelectView

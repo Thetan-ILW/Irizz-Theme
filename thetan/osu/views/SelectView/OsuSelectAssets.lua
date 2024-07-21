@@ -77,6 +77,9 @@ function OsuSelectAssets:new(skin_path)
 		gradeA = self:loadImageOrDefault(skin_path, "ranking-A-small"),
 		gradeS = self:loadImageOrDefault(skin_path, "ranking-S-small"),
 		gradeX = self:loadImageOrDefault(skin_path, "ranking-X-small"),
+
+		cursor = self:loadImageOrDefault(skin_path, "cursor"),
+		cursorTrail = self:loadImageOrDefault(skin_path, "cursortrail"),
 	}
 
 	self.sounds = {
