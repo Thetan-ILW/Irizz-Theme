@@ -25,10 +25,13 @@ local snd
 
 local gfx = love.graphics
 
-local window_height
+local window_height = 0
 
+---@type love.Image
 local avatar
+---@type love.Image
 local top_panel_quad
+---@type love.Shader
 local brighten_shader
 
 local has_focus = true
@@ -242,7 +245,7 @@ local function dropdown(id, w)
 
 	local time = current_time
 
-	if gyatt.mousePressed(1) then
+	if gyatt.mousePressed(1) and has_focus then
 		local open = gyatt.isOver(w, 22)
 
 		if not instance.focus and open then
@@ -283,7 +286,7 @@ local function dropdown(id, w)
 			instance.mouseOver = instance.mouseOver or mouse_over
 		end
 
-		if mouse_over and gyatt.mousePressed(1) and instance.focus then
+		if mouse_over and gyatt.mousePressed(1) and instance.focus and has_focus then
 			selected = i
 			changed = true
 			instance.selectedIndex = i
@@ -448,7 +451,7 @@ local function bottomButtonImage(id, image, mouse_over_image)
 	local rect = instance.rect
 	local mouse_over = gyatt.isOver(rect[3], rect[4], rect[1], rect[2])
 
-	if mouse_over and not instance.mouseOver then
+	if mouse_over and not instance.mouseOver and has_focus then
 		snd.hoverSelectableBox:stop()
 		snd.hoverSelectableBox:play()
 	end
@@ -463,7 +466,7 @@ local function bottomButtonImage(id, image, mouse_over_image)
 
 	local pressed = false
 
-	if mouse_over then
+	if mouse_over and has_focus then
 		instance.updateTime = current_time
 
 		if gyatt.mousePressed(1) then

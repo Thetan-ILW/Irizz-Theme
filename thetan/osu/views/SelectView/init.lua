@@ -1,8 +1,5 @@
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 
-local gyatt = require("thetan.gyatt")
-local Theme = require("thetan.irizz.views.Theme")
-
 local ViewConfig = require("thetan.osu.views.SelectView.ViewConfig")
 local MainMenuView = require("thetan.irizz.views.MainMenuView")
 local LayersView = require("thetan.irizz.views.LayersView")
