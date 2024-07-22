@@ -3,6 +3,9 @@ local l = {}
 l.textGroups = {
 	songSelect = {
 		group = "Group",
+		search = "Search %s",
+		noMatches = "No matches found.",
+		matchesFound = "%i match(es) found.",
 	},
 	chartOptionsModal = {
 		manageLocations = "1. Manage locations",
@@ -17,6 +20,7 @@ l.textGroups = {
 l.fontFiles = {
 	["ZenMaruGothic-Black"] = "irizz/fonts/ZenMaruGothic/ZenMaruGothic-Black.ttf",
 	["ZenMaruGothic-Medium"] = "irizz/fonts/ZenMaruGothic/ZenMaruGothic-Medium.ttf",
+	["ZenMaruGothic-Bold"] = "irizz/fonts/ZenMaruGothic/ZenMaruGothic-Bold.ttf",
 	["ZenMaruGothic-Regular"] = "irizz/fonts/ZenMaruGothic/ZenMaruGothic-Regular.ttf",
 	["Aller"] = "resources/osu_default_assets/ui_font/Aller_Rg.ttf",
 	["Aller-Light"] = "resources/osu_default_assets/ui_font/Aller_Lt.ttf",
@@ -38,6 +42,8 @@ l.fontGroups = {
 		scrollSpeed = { "Aller-Light", 23 },
 		tabs = { "Aller", 14 },
 		mods = { "Aller", 41 },
+		search = { "Aller-Bold", 18, "ZenMaruGothic-Bold" },
+		searchMatches = { "Aller-Bold", 15 },
 	},
 
 	chartSetList = {

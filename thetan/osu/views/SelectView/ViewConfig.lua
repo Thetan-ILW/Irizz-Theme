@@ -132,13 +132,11 @@ function ViewConfig:new(game, _assets)
 	img = assets.images
 	snd = assets.sounds
 
-	font = Theme:getFonts("osuSongSelect")
+	font = assets.localization.fontGroups.songSelect
 
 	self.noteChartSetListView = NoteChartSetListView(game, assets)
 	self.collectionListView = CollectionListView(game, assets)
-
-	self.scoreListView = ScoreListView(game)
-	self.scoreListView:setAssets(assets)
+	self.scoreListView = ScoreListView(game, assets)
 
 	local sort_model = game.selectModel.sortModel
 	dropdowns.sort.items = sort_model.names
@@ -551,7 +549,6 @@ function ViewConfig:bottom(view)
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
 	if bottomButtonImage("back", img.menuBack, img.menuBack) then
-		view.mainMenuView:toggle()
 	end
 
 	w, h = Layout:move("bottomButtons")
@@ -718,6 +715,8 @@ function ViewConfig:modeLogo()
 	gfx.draw(image)
 end
 
+function ViewConfig:search() end
+
 function ViewConfig:chartPreview(view)
 	local prevCanvas = love.graphics.getCanvas()
 	local canvas = gyatt.getCanvas("chartPreview")
@@ -738,11 +737,6 @@ function ViewConfig:resolutionUpdated()
 
 	local wh = love.graphics.getHeight()
 	window_height = wh
-
-	font = Theme:getFonts("osuSongSelect", wh / 768)
-
-	self.noteChartSetListView:loadFonts()
-	self.scoreListView:loadFonts()
 end
 
 function ViewConfig:setFocus(value)
@@ -765,6 +759,7 @@ function ViewConfig:draw(view)
 
 	if selected_group == "charts" then
 		self:chartSetList()
+		self:search()
 	else
 		self:collectionList(view)
 	end

@@ -19,14 +19,12 @@ ScoreListView.focus = false
 ---@type number[]
 ScoreListView.animations = {}
 
-function ScoreListView:new(game)
-	self.game = game
-	self:loadFonts()
-end
-
+---@param game sphere.GameController
 ---@param assets osu.OsuSelectAssets
-function ScoreListView:setAssets(assets)
+function ScoreListView:new(game, assets)
+	self.game = game
 	self.assets = assets
+	self.font = assets.localization.fontGroups.scoreList
 end
 
 local modOrder = {

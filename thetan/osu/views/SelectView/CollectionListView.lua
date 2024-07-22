@@ -27,6 +27,7 @@ function CollectionListView:new(game, assets)
 	self.game = game
 
 	self.assets = assets
+	self.font = assets.localization.fontGroups.chartSetList
 
 	local active_str = self.assets.params.songSelectActiveText
 	local inactive_str = self.assets.params.songSelectInactiveText
@@ -45,8 +46,6 @@ function CollectionListView:new(game, assets)
 	end
 
 	self.scrollSound = assets.sounds.selectChart
-
-	self:loadFonts()
 end
 
 function CollectionListView:reloadItems()
@@ -107,11 +106,6 @@ function CollectionListView:updateAnimations()
 			self.animations[i] = nil
 		end
 	end
-end
-
-function CollectionListView:loadFonts()
-	local ww, wh = love.graphics.getDimensions()
-	self.font = Theme:getFonts("osuChartSetList", wh / 768)
 end
 
 function CollectionListView:update(w, h)
