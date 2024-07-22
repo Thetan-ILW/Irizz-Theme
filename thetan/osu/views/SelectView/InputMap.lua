@@ -48,7 +48,7 @@ function SelectInputMap:createBindings(sv)
 			sv:changeTimeRate(1)
 		end,
 		["play"] = function()
-			sv:play()
+			sv:select()
 		end,
 		["openEditor"] = function()
 			sv:edit()
@@ -59,6 +59,12 @@ function SelectInputMap:createBindings(sv)
 		["exportToOsu"] = function()
 			sv.game.selectController:exportToOsu()
 			sv.gameView.showMessage("exportToOsu", nil)
+		end,
+		["moveScreenLeft"] = function()
+			sv:changeGroup("charts")
+		end,
+		["moveScreenRight"] = function()
+			sv:changeGroup("last_visited_locations")
 		end,
 	}
 

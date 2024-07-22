@@ -403,9 +403,9 @@ function ViewConfig:top()
 	tab("No grouping")
 end
 
-function ViewConfig:groupSelected(view, index)
-	selected_group = dropdowns.group.items[index or 1]
-	view:changeGroup(selected_group)
+function ViewConfig:selectGroup(name)
+	selected_group = name
+	dropdowns.group.selectedIndex = table_util.indexof(dropdowns.group.items, name)
 	chart_list_update_time = love.timer.getTime() + 0.4
 end
 
@@ -436,7 +436,7 @@ function ViewConfig:topUI(view)
 	local changed, index = dropdown("group", 192)
 
 	if changed then
-		self:groupSelected(view, index)
+		view:changeGroup(dropdowns.group.items[index or 1])
 	end
 
 	w, h = Layout:move("base")

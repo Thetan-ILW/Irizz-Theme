@@ -31,6 +31,8 @@ function OsuSelectView:load()
 	self.mainMenuView = MainMenuView(self)
 	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
 
+	self.game.selectModel.collectionLibrary:load(true)
+
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
 
@@ -143,9 +145,10 @@ function OsuSelectView:changeTimeRate(delta)
 	end
 end
 
-local previous_collections_group = "charts"
+local selected_group = "charts"
+local previous_collections_group = "locations"
 
----@param name "charts" | "locations" | "directories"
+---@param name "charts" | "locations" | "directories" | "last_visited_locations"
 function OsuSelectView:changeGroup(name)
 	if name == "charts" then
 		self.game.selectModel:noDebouncePullNoteChartSet()
@@ -163,7 +166,20 @@ function OsuSelectView:changeGroup(name)
 
 		self.viewConfig.collectionListView:reloadItems()
 		previous_collections_group = name
+	elseif name == "last_visited_locations" then
+		name = previous_collections_group
 	end
+
+	selected_group = name
+	self.viewConfig:selectGroup(name)
+end
+
+function OsuSelectView:select()
+	if selected_group == "charts" then
+		self:play()
+	end
+
+	self:changeGroup("charts")
 end
 
 function OsuSelectView:updateSearch(text)
