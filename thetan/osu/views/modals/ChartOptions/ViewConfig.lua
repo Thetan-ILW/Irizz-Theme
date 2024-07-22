@@ -3,8 +3,6 @@ local Layout = require("thetan.osu.views.OsuLayout")
 
 local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
-
 ---@type table<string, love.Font>
 local font
 
@@ -12,6 +10,7 @@ local Button = require("thetan.osu.ui.Button")
 
 ---@class osu.ChartOptionsModalViewConfig: IViewConfig
 ---@operator call: osu.ChartOptionsModalViewConfig
+---@field assets osu.OsuSelectAssets
 local ViewConfig = IViewConfig + {}
 
 local gfx = love.graphics
@@ -27,12 +26,21 @@ local open_time = 0
 
 ---@param assets osu.OsuSelectAssets
 function ViewConfig:new(assets)
+	self.assets = assets
+	self:loadUI()
+
+	open_time = love.timer.getTime()
+end
+
+function ViewConfig:loadUI()
 	local scale = 0.9
 	local width = 2.76
 	local green = { 0.52, 0.72, 0.12, 1 }
 	local purple = { 0.72, 0.4, 0.76, 1 }
 	local red = { 0.91, 0.19, 0, 1 }
 	local gray = { 0.42, 0.42, 0.42, 1 }
+
+	local assets = self.assets
 
 	font = assets.localization.fontGroups.chartOptionsModal
 	local text = assets.localization.textGroups.chartOptionsModal
@@ -86,14 +94,13 @@ function ViewConfig:new(assets)
 		color = gray,
 		font = b_font,
 	})
-
-	open_time = love.timer.getTime()
 end
 
 local window_height = gfx.getHeight()
 
 function ViewConfig:resolutionUpdated()
 	window_height = gfx.getHeight()
+	self:loadUI()
 end
 
 function ViewConfig:draw(view)
