@@ -143,6 +143,29 @@ function OsuSelectView:changeTimeRate(delta)
 	end
 end
 
+local previous_collections_group = "charts"
+
+---@param name "charts" | "locations" | "directories"
+function OsuSelectView:changeGroup(name)
+	if name == "charts" then
+		self.game.selectModel:noDebouncePullNoteChartSet()
+	elseif name == "locations" then
+		if previous_collections_group ~= "locations" then
+			self.game.selectModel.collectionLibrary:load(true)
+		end
+
+		self.viewConfig.collectionListView:reloadItems()
+		previous_collections_group = name
+	elseif name == "directories" then
+		if previous_collections_group ~= "directories" then
+			self.game.selectModel.collectionLibrary:load(false)
+		end
+
+		self.viewConfig.collectionListView:reloadItems()
+		previous_collections_group = name
+	end
+end
+
 function OsuSelectView:updateSearch(text)
 	local config = self.game.configModel.configs.select
 	local selectModel = self.game.selectModel

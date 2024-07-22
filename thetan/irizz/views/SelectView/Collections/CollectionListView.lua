@@ -15,7 +15,7 @@ function CollectionListView:new(game)
 	ListView:new(game)
 	self.game = game
 	self.font = Theme:getFonts("collectionsListView")
-	self.scrollSound = Theme.sounds.scrollLargeList
+	self.scrollSound = require("audio.Source")()
 end
 
 function CollectionListView:reloadItems()

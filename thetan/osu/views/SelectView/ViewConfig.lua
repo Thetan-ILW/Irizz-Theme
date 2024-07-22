@@ -11,6 +11,7 @@ local table_util = require("table_util")
 local Format = require("sphere.views.Format")
 
 local NoteChartSetListView = require("thetan.osu.views.SelectView.NoteChartSetListView")
+local CollectionListView = require("thetan.osu.views.SelectView.CollectionListView")
 local ScoreListView = require("thetan.osu.views.SelectView.ScoreListView")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -55,6 +56,8 @@ local update_time = 0
 local chart_list_update_time = 0
 local has_scores = false
 
+local selected_group = "charts"
+
 local white = { 1, 1, 1, 1 }
 
 local dropdowns = {
@@ -78,7 +81,8 @@ local dropdowns = {
 		mouseOver = false,
 		items = {
 			"charts",
-			"collections",
+			"locations",
+			"directories",
 		},
 	},
 	sort = {
@@ -131,6 +135,7 @@ function ViewConfig:new(game, _assets)
 	font = Theme:getFonts("osuSongSelect")
 
 	self.noteChartSetListView = NoteChartSetListView(game, assets)
+	self.collectionListView = CollectionListView(game, assets)
 
 	self.scoreListView = ScoreListView(game)
 	self.scoreListView:setAssets(assets)
@@ -187,6 +192,7 @@ function ViewConfig:updateInfo(view)
 	scroll_speed_str = ("%i (fixed)"):format(speedModel.format[gameplay.speedType]:format(speedModel:get()))
 
 	self.noteChartSetListView:reloadItems()
+	self.collectionListView:reloadItems()
 	self.scoreListView:reloadItems()
 
 	has_scores = #view.game.selectModel.scoreLibrary.items ~= 0
@@ -423,12 +429,18 @@ function ViewConfig:topUI(view)
 	w, h = Layout:move("base")
 	gfx.translate(w - 479, 29)
 	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
-	dropdown("group", 192)
+	local changed, index = dropdown("group", 192)
+
+	if changed then
+		selected_group = dropdowns.group.items[index or 1]
+		view:changeGroup(selected_group)
+		chart_list_update_time = love.timer.getTime() + 0.4
+	end
 
 	w, h = Layout:move("base")
 	gfx.translate(w - 210, 29)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
-	local changed, index = dropdown("sort", 192)
+	changed, index = dropdown("sort", 192)
 
 	if changed then
 		local sort_model = view.game.selectModel.sortModel
@@ -589,6 +601,29 @@ function ViewConfig:chartSetList()
 	gyatt.scrollBar(list, 610, 595)
 end
 
+function ViewConfig:collectionList()
+	local w, h = Layout:move("base")
+	local list = self.collectionListView
+
+	local no_focus = false
+
+	for _, v in pairs(dropdowns) do
+		no_focus = no_focus or v.mouseOver
+	end
+
+	list.focus = not no_focus and has_focus
+
+	local a = gyatt.easeOutCubic(chart_list_update_time, 0.7)
+
+	gfx.translate(w - (610 * a), 82)
+	list:updateAnimations()
+	list:draw(610, 595, true)
+
+	w, h = Layout:move("base")
+	gfx.translate(w - 610, 82)
+	gyatt.scrollBar(list, 610, 595)
+end
+
 function ViewConfig:scores(view)
 	local list = self.scoreListView
 
@@ -718,7 +753,13 @@ function ViewConfig:draw(view)
 
 	self:chartPreview(view)
 	self:modeLogo()
-	self:chartSetList()
+
+	if selected_group == "charts" then
+		self:chartSetList()
+	else
+		self:collectionList()
+	end
+
 	self:scores(view)
 	self:top()
 	self:bottom(view)
