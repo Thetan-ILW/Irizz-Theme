@@ -8,6 +8,7 @@ local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 local math_util = require("math_util")
 local table_util = require("table_util")
+local msd_util = require("thetan.skibidi.msd_util")
 local Format = require("sphere.views.Format")
 
 local NoteChartSetListView = require("thetan.osu.views.SelectView.NoteChartSetListView")
@@ -155,6 +156,7 @@ end
 
 function ViewConfig:updateInfo(view)
 	local chartview = view.game.selectModel.chartview
+	---@type number
 	local rate = view.game.playContext.rate
 
 	if not chartview then
@@ -180,7 +182,25 @@ function ViewConfig:updateInfo(view)
 	ln_count_str = tostring(ln_count or 0)
 
 	columns_str = Format.inputMode(chartview.chartdiff_inputmode)
-	difficulty_str = ("%0.02f"):format(chartview.osu_diff or 0)
+
+	---@type string
+	local diff_column = view.game.configModel.configs.settings.select.diff_column
+
+	if diff_column == "msd_diff" and chartview.msd_diff_data then
+		local msd = msd_util.getMsdFromData(chartview.msd_diff_data, rate)
+
+		if msd then
+			local difficulty = msd.overall
+			local pattern = msd_util.simplifySsr(msd_util.getFirstFromMsd(msd))
+			difficulty_str = ("%0.02f %s"):format(difficulty, pattern)
+		end
+	elseif diff_column == "enps_diff" then
+		difficulty_str = ("%0.02f ENPS"):format(chartview.enps_diff or 0)
+	elseif diff_column == "osu_diff" then
+		difficulty_str = ("%0.02f*"):format(chartview.osu_diff or 0)
+	else
+		difficulty_str = ("%0.02f"):format(chartview.user_diff or 0)
+	end
 
 	username = view.game.configModel.configs.online.user.name or "xXx_FortnitePro_xXx"
 	is_logged_in = view.game.configModel.configs.online.user.name == nil
