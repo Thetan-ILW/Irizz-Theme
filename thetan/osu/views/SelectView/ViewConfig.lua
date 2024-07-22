@@ -405,6 +405,12 @@ function ViewConfig:top()
 	tab("No grouping")
 end
 
+function ViewConfig:groupSelected(view, index)
+	selected_group = dropdowns.group.items[index or 1]
+	view:changeGroup(selected_group)
+	chart_list_update_time = love.timer.getTime() + 0.4
+end
+
 function ViewConfig:topUI(view)
 	local w, h = Layout:move("base")
 	gfx.translate(10, 120)
@@ -432,9 +438,7 @@ function ViewConfig:topUI(view)
 	local changed, index = dropdown("group", 192)
 
 	if changed then
-		selected_group = dropdowns.group.items[index or 1]
-		view:changeGroup(selected_group)
-		chart_list_update_time = love.timer.getTime() + 0.4
+		self:groupSelected(view, index)
 	end
 
 	w, h = Layout:move("base")
@@ -601,7 +605,7 @@ function ViewConfig:chartSetList()
 	gyatt.scrollBar(list, 610, 595)
 end
 
-function ViewConfig:collectionList()
+function ViewConfig:collectionList(view)
 	local w, h = Layout:move("base")
 	local list = self.collectionListView
 
@@ -622,6 +626,11 @@ function ViewConfig:collectionList()
 	w, h = Layout:move("base")
 	gfx.translate(w - 610, 82)
 	gyatt.scrollBar(list, 610, 595)
+
+	if list.selected then
+		self:groupSelected(view, table_util.indexof(dropdowns.group, "charts"))
+		list.selected = false
+	end
 end
 
 function ViewConfig:scores(view)
@@ -757,7 +766,7 @@ function ViewConfig:draw(view)
 	if selected_group == "charts" then
 		self:chartSetList()
 	else
-		self:collectionList()
+		self:collectionList(view)
 	end
 
 	self:scores(view)

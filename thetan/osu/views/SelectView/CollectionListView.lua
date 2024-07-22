@@ -82,11 +82,15 @@ function CollectionListView:mouseClick(w, h, i)
 
 	if gyatt.isOver(w, h, 0, 0) then
 		if gyatt.mousePressed(1) then
+			if i == self.itemIndex + math.floor(self.rows / 2) then
+				self.selected = true
+			end
+
 			if self.itemIndex - i == -7 then
 				return
 			end
 
-			--self.game.selectModel:scrollNoteChartSet(i - (self.itemIndex + math.floor(self.rows / 2)))
+			self.game.selectModel:scrollCollection(i - (self.itemIndex + math.floor(self.rows / 2)))
 		end
 	end
 end
