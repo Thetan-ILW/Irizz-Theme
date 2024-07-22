@@ -11,6 +11,8 @@ local table_util = require("table_util")
 local msd_util = require("thetan.skibidi.msd_util")
 local Format = require("sphere.views.Format")
 
+local TextInput = require("thetan.irizz.imgui.TextInput")
+
 local NoteChartSetListView = require("thetan.osu.views.SelectView.NoteChartSetListView")
 local CollectionListView = require("thetan.osu.views.SelectView.CollectionListView")
 local ScoreListView = require("thetan.osu.views.SelectView.ScoreListView")
@@ -24,6 +26,9 @@ local assets
 local img
 ---@type table<string, audio.Source>
 local snd
+
+---@type skibidi.ActionModel
+local action_model
 
 local gfx = love.graphics
 
@@ -132,6 +137,8 @@ function ViewConfig:new(game, _assets)
 	assets = _assets
 	img = assets.images
 	snd = assets.sounds
+
+	action_model = game.actionModel
 
 	font = assets.localization.fontGroups.songSelect
 
@@ -249,13 +256,14 @@ local function dropdown(id, w)
 	gfx.setLineWidth(1)
 	gfx.rectangle("line", 0, 0, w, 22, 4, 4)
 
+	gfx.push()
 	gfx.translate(3, -1)
 	gfx.setColor(white)
 	gfx.setFont(font.dropdown)
 	gyatt.text(instance.format:format(instance.items[instance.selectedIndex]), w, "left")
+	gfx.pop()
 
-	gyatt.sameline()
-	gfx.translate(w - 25, 4)
+	gfx.translate(w - 25, 2)
 	gfx.draw(img.dropdownArrow)
 	gfx.pop()
 
@@ -645,7 +653,7 @@ function ViewConfig:collectionList(view)
 	gyatt.scrollBar(list, 610, 595)
 
 	if list.selected then
-		self:groupSelected(view, table_util.indexof(dropdowns.group, "charts"))
+		view:changeGroup("charts")
 		list.selected = false
 	end
 end
@@ -735,7 +743,52 @@ function ViewConfig:modeLogo()
 	gfx.draw(image)
 end
 
-function ViewConfig:search() end
+function ViewConfig:search(view)
+	local width = 364
+	local w, h = Layout:move("base")
+	gfx.translate(w - width, 82)
+	gfx.setColor({ 0, 0, 0, 0.2 })
+	gfx.rectangle("fill", 0, 0, width, 35)
+
+	gfx.translate(15, 5)
+	gfx.setColor({ 0.68, 1, 0.18, 1 })
+	gfx.setFont(font.search)
+	gyatt.text("Search:", w)
+	gfx.translate(5, 0)
+
+	gfx.setColor(white)
+	gyatt.sameline()
+
+	local vim_motions = action_model.isVimMode()
+
+	if not vim_motions or action_model.isInsertMode() then
+		gyatt.focus("SearchField")
+	end
+
+	local config = view.game.configModel.configs.select
+
+	gfx.push()
+	local changed, text = TextInput("SearchField", { config.filterString, "" }, nil, w, h) -- PLEASE, REWRITE THIS THING
+	gfx.pop()
+
+	if text == "" then
+		gyatt.text("Type to search!")
+	else
+		gyatt.text(text)
+	end
+
+	if action_model.isEnabled() then
+		if changed == "text" then
+			view:updateSearch(text)
+		end
+
+		local delete_all = action_model.consumeAction("deleteLine")
+
+		if delete_all then
+			view:updateSearch("")
+		end
+	end
+end
 
 function ViewConfig:chartPreview(view)
 	local prevCanvas = love.graphics.getCanvas()
@@ -779,7 +832,7 @@ function ViewConfig:draw(view)
 
 	if selected_group == "charts" then
 		self:chartSetList()
-		self:search()
+		self:search(view)
 	else
 		self:collectionList(view)
 	end

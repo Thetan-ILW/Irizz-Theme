@@ -16,6 +16,7 @@ gyatt.isOver = just.is_over
 gyatt.mousePressed = just.mousepressed
 gyatt.next = just.next
 gyatt.sameline = just.sameline
+gyatt.focus = just.focus
 
 local textTransform = love.math.newTransform()
 local textScale = 1
@@ -30,7 +31,9 @@ function gyatt.text(text, w, ax)
 	love.graphics.applyTransform(textTransform)
 	gfx_util.printFrame(text, 0, 0, (w or math.huge) / textScale, math.huge, ax or "left", "top")
 	love.graphics.pop()
-	just.next(0, love.graphics.getFont():getHeight() * textScale)
+
+	local font = love.graphics.getFont()
+	just.next(font:getWidth(text) * textScale, font:getHeight() * textScale)
 end
 
 function gyatt.frame(text, x, y, w, h, ax, ay)
