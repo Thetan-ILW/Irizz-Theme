@@ -36,8 +36,10 @@ function Button:new(assets, params)
 	self.color = params.color or { 1, 1, 1, 1 }
 	self.spacing = params.spacing or 15
 
+	self.middleAdditionalScale = 283 / (self.imageMiddle:getPixelWidth() / self.imageMiddle:getDPIScale())
+
 	self.totalW = self.imageLeft:getWidth() * self.scale
-		+ self.imageMiddle:getWidth() * self.scale * self.width
+		+ self.imageMiddle:getWidth() * self.scale * self.width * self.middleAdditionalScale
 		+ self.imageRight:getWidth() * self.scale
 
 	self.totalH = self.imageLeft:getHeight() * self.scale
@@ -99,8 +101,8 @@ function Button:draw()
 	gfx.push()
 	gfx.draw(left, 0, 0, 0, scale, scale)
 	gfx.translate(left:getWidth() * scale, 0)
-	gfx.draw(middle, 0, 0, 0, scale * self.width, scale)
-	gfx.translate(middle:getWidth() * scale * self.width, 0)
+	gfx.draw(middle, 0, 0, 0, scale * self.width * self.middleAdditionalScale, scale)
+	gfx.translate(middle:getWidth() * scale * self.width * self.middleAdditionalScale, 0)
 	gfx.draw(right, 0, 0, 0, scale, scale)
 	gfx.pop()
 

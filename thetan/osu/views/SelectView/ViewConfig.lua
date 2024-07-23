@@ -550,12 +550,6 @@ local function bottomButtonImage(id, image, mouse_over_image)
 
 	instance.mouseOver = mouse_over
 
-	local _, ih = image:getDimensions()
-	gfx.translate(0, -ih)
-	gfx.setColor(white)
-	gfx.draw(image)
-	gfx.translate(0, ih)
-
 	local pressed = false
 
 	if mouse_over and has_focus then
@@ -566,14 +560,21 @@ local function bottomButtonImage(id, image, mouse_over_image)
 		end
 	end
 
-	local a = 1 - animate(instance.updateTime, 0.4)
+	local a = math_util.clamp(animate(instance.updateTime, 0.4), 0, 1)
+
+	local _, ih = image:getDimensions()
+
+	gfx.translate(0, -ih)
+	gfx.setColor({ 1, 1, 1, a })
+	gfx.draw(image)
+	gfx.translate(0, ih)
+
+	a = 1 - a
 
 	_, ih = mouse_over_image:getDimensions()
 	gfx.translate(0, -ih)
-	gfx.setColor({ a, a, a, a })
-	gfx.setBlendMode("add")
+	gfx.setColor({ 1, 1, 1, a })
 	gfx.draw(mouse_over_image)
-	gfx.setBlendMode("alpha")
 	gfx.translate(0, ih)
 
 	return pressed
