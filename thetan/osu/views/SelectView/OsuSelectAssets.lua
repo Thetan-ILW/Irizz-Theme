@@ -12,6 +12,7 @@ local utf8validate = require("utf8validate")
 ---@field sounds table<string, audio.Source?>
 ---@field params table<string, number|string|boolean>
 ---@field localization skibidi.Localization
+---@field selectViewConfig function?
 local OsuSelectAssets = Assets + {}
 
 OsuSelectAssets.defaultsDirectory = "resources/osu_default_assets/"
@@ -100,6 +101,8 @@ function OsuSelectAssets:new(skin_path)
 	}
 
 	self.images.panelTop:setWrap("clamp")
+
+	self.selectViewConfig = love.filesystem.load(skin_path .. "SelectViewConfig.lua")
 
 	for _, v in ipairs(self.errors) do
 		print(v)

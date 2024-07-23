@@ -10,8 +10,8 @@ local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
 local InputMap = require("thetan.osu.views.SelectView.InputMap")
 
----@class irizz.OsuSelectView: skibidi.ScreenView
----@operator call: irizz.OsuSelectView
+---@class osu.OsuSelectView: skibidi.ScreenView
+---@operator call: osu.OsuSelectView
 local OsuSelectView = ScreenView + {}
 
 function OsuSelectView:load()
@@ -27,7 +27,12 @@ function OsuSelectView:load()
 
 	self:setAssets()
 
-	self.viewConfig = ViewConfig(self.game, self.assets)
+	if self.assets.selectViewConfig then
+		self.viewConfig = self.assets.selectViewConfig()(self.game, self.assets)
+	else
+		self.viewConfig = ViewConfig(self.game, self.assets)
+	end
+
 	self.mainMenuView = MainMenuView(self)
 	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
 
