@@ -7,6 +7,7 @@ local table_util = require("table_util")
 ---@field fontGroups table<string, table<string, love.Font>>
 ---@field textGroups table<string, table<string, string>>
 ---@field currentFile table
+---@field currentFilePath string
 ---@field fontInstances table<string, table<string, love.Font>>
 local Localization = class()
 
@@ -22,6 +23,7 @@ end
 
 ---@param filepath string
 function Localization:loadFile(filepath)
+	self.currentFilePath = filepath
 	self.currentFile = love.filesystem.load(filepath)()
 	self:setFonts()
 	self:setText()

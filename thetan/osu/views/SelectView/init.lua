@@ -56,18 +56,24 @@ function OsuSelectView:setAssets()
 	local irizz = configs.irizz
 
 	---@type string
+	local language = irizz.language
+
+	---@type string
 	local skin_path = ("userdata/skins/%s/"):format(irizz.osuSongSelectSkin)
 
 	---@type skibidi.Assets?
 	local assets = self.assetModel:get("osuSelect")
+	local localization_filepath = self.assetModel:getLocalizationFileName("osu", language)
 
 	if not assets or (assets and assets.skinPath ~= skin_path) then
-		assets = OsuSelectAssets(skin_path)
+		local default_localization = self.assetModel:getLocalizationFileName("osu", "English")
+		assets = OsuSelectAssets(skin_path, default_localization)
 		self.assetModel:store("osuSelect", assets)
 	end
 
 	---@cast assets osu.OsuSelectAssets
 	self.assets = assets
+	self.assets:loadLocalization(localization_filepath)
 	self.assets:updateVolume(self.game.configModel)
 end
 

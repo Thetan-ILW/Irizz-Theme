@@ -18,6 +18,9 @@ local CollectionListView = require("thetan.osu.views.SelectView.CollectionListVi
 local ScoreListView = require("thetan.osu.views.SelectView.ScoreListView")
 
 local Theme = require("thetan.irizz.views.Theme")
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
 local font
 
 ---@type osu.OsuSelectAssets
@@ -66,12 +69,34 @@ local selected_group = "charts"
 
 local white = { 1, 1, 1, 1 }
 
+local groupAlias = {}
+local function formatGroupSort(s)
+	return groupAlias[s] or ("You forgor " .. s)
+end
+
+local function setFormat()
+	groupAlias = {
+		charts = text.byCharts,
+		locations = text.byLocations,
+		directories = text.byDirectories,
+		id = text.byId,
+		title = text.byTitle,
+		artist = text.byArtist,
+		difficulty = text.byDifficulty,
+		level = text.byLevel,
+		length = text.byLength,
+		bpm = text.byBpm,
+		modtime = text.byModTime,
+		["set modtime"] = text.bySetModTime,
+		["last played"] = text.byLastPlayed,
+	}
+end
+
 local dropdowns = {
 	scoreSource = {
 		focus = false,
 		updateTime = 0,
 		selectedIndex = 1,
-		format = "%s",
 		mouseOver = false,
 		items = {
 			"Local ranking",
@@ -83,7 +108,7 @@ local dropdowns = {
 		focus = false,
 		updateTime = 0,
 		selectedIndex = 1,
-		format = "By %s",
+		format = formatGroupSort,
 		mouseOver = false,
 		items = {
 			"charts",
@@ -95,7 +120,7 @@ local dropdowns = {
 		focus = false,
 		updateTime = 0,
 		selectedIndex = 1,
-		format = "By %s",
+		format = formatGroupSort,
 		mouseOver = false,
 		items = {},
 	},
@@ -140,7 +165,10 @@ function ViewConfig:new(game, _assets)
 
 	action_model = game.actionModel
 
+	text = assets.localization.textGroups.songSelect
 	font = assets.localization.fontGroups.songSelect
+
+	setFormat()
 
 	self.noteChartSetListView = NoteChartSetListView(game, assets)
 	self.collectionListView = CollectionListView(game, assets)
@@ -174,9 +202,9 @@ function ViewConfig:updateInfo(view)
 	local chart_format = chartview.format
 
 	if chart_format == "sm" then
-		charter_row = ("From %s"):format(chartview.set_dir)
+		charter_row = (text.from):format(chartview.set_dir)
 	else
-		charter_row = ("Mapped by %s"):format(chartview.creator)
+		charter_row = (text.mappedBy):format(chartview.creator)
 	end
 
 	local note_count = chartview.notes_count or 0
@@ -212,9 +240,9 @@ function ViewConfig:updateInfo(view)
 	username = view.game.configModel.configs.online.user.name or "xXx_FortnitePro_xXx"
 	is_logged_in = view.game.configModel.configs.online.user.name == nil
 
-	local speedModel = view.game.speedModel
+	local speed_model = view.game.speedModel
 	local gameplay = view.game.configModel.configs.settings.gameplay
-	scroll_speed_str = ("%i (fixed)"):format(speedModel.format[gameplay.speedType]:format(speedModel:get()))
+	scroll_speed_str = ("%i (fixed)"):format(speed_model.format[gameplay.speedType]:format(speed_model:get()))
 
 	self.noteChartSetListView:reloadItems()
 	self.collectionListView:reloadItems()
@@ -226,9 +254,12 @@ function ViewConfig:updateInfo(view)
 		update_time = current_time
 	end
 
+	---@type number
 	prev_chart_id = chartview.id
 end
 
+---@param time number
+---@param interval number
 local function animate(time, interval)
 	local t = math.min(current_time - time, interval)
 	local progress = t / interval
@@ -260,7 +291,13 @@ local function dropdown(id, w)
 	gfx.translate(3, -1)
 	gfx.setColor(white)
 	gfx.setFont(font.dropdown)
-	gyatt.text(instance.format:format(instance.items[instance.selectedIndex]), w, "left")
+
+	if instance.format then
+		gyatt.text(instance.format(instance.items[instance.selectedIndex]), w, "left")
+	else
+		gyatt.text(instance.items[instance.selectedIndex], w, "left")
+	end
+
 	gfx.pop()
 
 	gfx.translate(w - 25, 2)
@@ -327,7 +364,12 @@ local function dropdown(id, w)
 
 		gfx.setColor(white)
 		gfx.translate(10, 2)
-		gyatt.text(instance.format:format(v))
+
+		if instance.format then
+			gyatt.text(instance.format(v))
+		else
+			gyatt.text(v)
+		end
 
 		gfx.pop()
 
@@ -381,17 +423,17 @@ function ViewConfig:chartInfo()
 	gfx.translate(5, 38)
 	a = animate(update_time, 0.3)
 	gfx.setColor({ 1, 1, 1, a })
-	gyatt.text(("Length: %s BPM: %s Objects %s"):format(length_str, bpm_str, objects_str), w, "left")
+	gyatt.text(text.chartInfoFirstRow:format(length_str, bpm_str, objects_str), w, "left")
 
 	a = animate(update_time, 0.4)
 	gfx.setColor({ 1, 1, 1, a })
 	gfx.setFont(font.infoCenter)
-	gyatt.text(("Circles: %s Sliders: %s Spinners: 0"):format(note_count_str, ln_count_str))
+	gyatt.text(text.chartInfoFirstRow:format(note_count_str, ln_count_str, 0))
 
 	a = animate(update_time, 0.5)
 	gfx.setColor({ 1, 1, 1, a })
 	gfx.setFont(font.infoBottom)
-	gyatt.text(("Keys: %s OD: 8 HP: 8 Star rating: %s"):format(columns_str, difficulty_str))
+	gyatt.text(text.chartInfoFirstRow:format(columns_str, 0, 0, difficulty_str))
 end
 
 function ViewConfig:top()
@@ -408,27 +450,27 @@ function ViewConfig:top()
 	gfx.translate(w - 570, 23)
 	gfx.setFont(font.groupSort)
 	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
-	gyatt.text("Group")
+	gyatt.text(text.group)
 	gyatt.sameline()
 
 	w, h = Layout:move("base")
 	gfx.translate(w - 270, 23)
 	gfx.setFont(font.groupSort)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
-	gyatt.text("Sort")
+	gyatt.text(text.sort)
 
 	w, h = Layout:move("base")
 	gfx.setFont(font.tabs)
 	gfx.translate(w - 632, 54)
-	tab("Collections")
+	tab(text.collections)
 	gfx.translate(118, 0)
-	tab("Recently played")
+	tab(text.recent)
 	gfx.translate(118, 0)
-	tab("By Artist")
+	tab(text.artist)
 	gfx.translate(118, 0)
-	tab("By Difficulty")
+	tab(text.difficulty)
 	gfx.translate(118, 0)
-	tab("No grouping")
+	tab(text.noGrouping)
 end
 
 function ViewConfig:selectGroup(name)
@@ -753,7 +795,7 @@ function ViewConfig:search(view)
 	gfx.translate(15, 5)
 	gfx.setColor({ 0.68, 1, 0.18, 1 })
 	gfx.setFont(font.search)
-	gyatt.text("Search:", w)
+	gyatt.text(text.search, w)
 	gfx.translate(5, 0)
 
 	gfx.setColor(white)
@@ -768,18 +810,18 @@ function ViewConfig:search(view)
 	local config = view.game.configModel.configs.select
 
 	gfx.push()
-	local changed, text = TextInput("SearchField", { config.filterString, "" }, nil, w, h) -- PLEASE, REWRITE THIS THING
+	local changed, _text = TextInput("SearchField", { config.filterString, "" }, nil, w, h) -- PLEASE, REWRITE THIS THING
 	gfx.pop()
 
-	if text == "" then
+	if _text == "" then
 		gyatt.text("Type to search!")
 	else
-		gyatt.text(text)
+		gyatt.text(_text)
 	end
 
 	if action_model.isEnabled() then
 		if changed == "text" then
-			view:updateSearch(text)
+			view:updateSearch(_text)
 		end
 
 		local delete_all = action_model.consumeAction("deleteLine")

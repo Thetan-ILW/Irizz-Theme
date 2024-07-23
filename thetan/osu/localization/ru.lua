@@ -2,53 +2,18 @@ local l = {}
 
 l.textGroups = {
 	songSelect = {
-		mappedBy = "Mapped by %s",
-		from = "From %s",
-		chartInfoFirstRow = "Length: %s BPM: %i Objects: %i",
-		chartInfoSecondRow = "Circles: %i Sliders: %i Spinners: %i",
-		chartInfoThirdRow = "Keys: %s OD: %g HP: %g Star rating: %s",
-		--
-		localRanking = "Local ranking",
-		onlineRankin = "Online ranking",
-		osuApiRanking = "osu! API ranking",
-		score = "Score: ",
-		accuracy = "Accuracy: ",
-		noMods = "No mods",
-		hasMods = "Has mods",
-		--
-		collections = "Collections",
-		recent = "Recent",
-		artist = "Artist",
-		difficulty = "Difficulty",
-		noGrouping = "No grouping",
-		--
-		group = "Group",
-		sort = "Sort",
-		byCharts = "By Charts",
-		byLocations = "By Locations",
-		byDirectories = "By Directories",
-		byId = "By ID",
-		byTitle = "By Title",
-		byArtist = "By Artist",
-		byDifficulty = "By Difficulty",
-		byLevel = "By Level",
-		byLength = "By Length",
-		byBpm = "By BPM",
-		byModTime = "By Mod. time",
-		bySetModTime = "By Set Mod. time",
-		byLastPlayed = "By Last played",
-		--
-		search = "Search:",
-		noMatches = "No matches found.",
-		matchesFound = "%i match(es) found.",
+		group = "Группа",
+		search = "Искать %s",
+		noMatches = "Совпадений не найдено..",
+		matchesFound = "%i совпадений найдено",
 	},
 	chartOptionsModal = {
-		manageLocations = "1. Manage locations",
-		chartInfo = "2. Chart info",
-		filters = "3. Filters",
-		edit = "4. Edit",
-		fileManager = "5. Open in file manager",
-		cancel = "6. Cancel",
+		manageLocations = "1. Управление локациями",
+		chartInfo = "2. Информация о карте",
+		filters = "3. Фильтры",
+		edit = "4. Редактировать",
+		fileManager = "5. Открыть в файловом менеджере",
+		cancel = "6. Отмена",
 	},
 }
 
@@ -78,7 +43,7 @@ l.fontGroups = {
 		tabs = { "Aller", 14 },
 		mods = { "Aller", 41 },
 		search = { "Aller-Bold", 18, "ZenMaruGothic-Bold" },
-		searchMatches = { "Aller-Bold", 15 },
+		searchMatches = { "Aller-Bold", 15, "ZenMaruGothic-Bold" },
 	},
 
 	chartSetList = {
@@ -97,7 +62,7 @@ l.fontGroups = {
 
 	chartOptionsModal = {
 		title = { "Aller-Light", 33 },
-		buttons = { "Aller", 42 },
+		buttons = { "Aller", 42, "ZenMaruGothic-Regular" },
 	},
 }
 

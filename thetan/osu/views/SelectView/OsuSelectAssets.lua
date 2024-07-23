@@ -24,10 +24,10 @@ local default_skin_ini = {
 	},
 }
 
-function OsuSelectAssets:new(skin_path)
+---@param skin_path string
+---@param localization_file string
+function OsuSelectAssets:new(skin_path, localization_file)
 	self.skinPath = skin_path
-
-	self.localization = Localization("thetan/osu/localization/en.lua", love.graphics.getHeight() / 768)
 
 	local content = love.filesystem.read(skin_path .. "skin.ini") or love.filesystem.read(skin_path .. "Skin.ini")
 
@@ -40,6 +40,8 @@ function OsuSelectAssets:new(skin_path)
 	else
 		skin_ini = default_skin_ini
 	end
+
+	self:loadLocalization(localization_file)
 
 	self.params = {
 		songSelectActiveText = skin_ini.Colours.SongSelectActiveText,
@@ -106,6 +108,18 @@ function OsuSelectAssets:new(skin_path)
 
 	for _, v in ipairs(self.errors) do
 		print(v)
+	end
+end
+
+---@param filepath string
+function OsuSelectAssets:loadLocalization(filepath)
+	if not self.localization then
+		self.localization = Localization(filepath, love.graphics.getHeight() / 768)
+		return
+	end
+
+	if self.localization.currentFilePath ~= filepath then
+		self.localization:loadFile(filepath)
 	end
 end
 

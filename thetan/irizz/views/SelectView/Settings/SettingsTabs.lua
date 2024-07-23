@@ -648,6 +648,7 @@ function SettingsTab:UI(view)
 	if currentLanguage ~= newLanguage then
 		irizz.language = newLanguage.name
 		assets:loadLocalization(newLanguage.fileName, Theme)
+		view.game.selectView:changeScreen("selectView")
 	end
 
 	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, Text.rateType)
