@@ -2,9 +2,9 @@ local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
 local ui = require("thetan.osu.ui")
 local math_util = require("math_util")
-local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
+---@type table<string, string>
+local text
 
 local ScoreListView = ListView + {}
 
@@ -14,7 +14,6 @@ ScoreListView.selectedScore = nil
 ScoreListView.openResult = false
 ScoreListView.oneClickOpen = true
 ScoreListView.modLines = {}
-ScoreListView.text = Theme.textScoreList
 ScoreListView.focus = false
 ---@type number[]
 ScoreListView.animations = {}
@@ -25,6 +24,7 @@ function ScoreListView:new(game, assets)
 	self.game = game
 	self.assets = assets
 	self.font = assets.localization.fontGroups.scoreList
+	text = assets.localization.textGroups.scoreList
 end
 
 local modOrder = {
@@ -40,7 +40,7 @@ local modOrder = {
 
 function ScoreListView:getModifiers(modifiers)
 	if #modifiers == 0 then
-		return self.text.noMods
+		return ""
 	end
 
 	local max = 3
@@ -70,7 +70,7 @@ function ScoreListView:getModifiers(modifiers)
 	end
 
 	if modLine:len() == 0 then
-		modLine = self.text.hasMods
+		modLine = text.hasMods
 	end
 
 	return modLine
@@ -157,11 +157,6 @@ function ScoreListView:updateAnimations()
 	end
 end
 
-function ScoreListView:loadFonts()
-	local ww, wh = love.graphics.getDimensions()
-	self.font = Theme:getFonts("osuScoreList", wh / 768)
-end
-
 ---@param i number
 ---@param w number
 ---@param h number
@@ -211,17 +206,28 @@ function ScoreListView:drawItem(i, w, h)
 	ui.textWithShadow(username)
 
 	gfx.setFont(self.font.score)
-	ui.textWithShadow(("Score: %i"):format(item.score))
+	ui.textWithShadow(("%s: %i"):format(text.score, item.score))
 	gfx.pop()
 
 	gfx.setFont(self.font.rightSide)
-	ui.frameWithShadow(("%s [%0.02fx]"):format(mods, item.rate), -4, 0, w, 50, "right", "top")
-	ui.frameWithShadow(("Accuracy: %0.02f"):format(item.accuracy * 1000), -4, 0, w, 50, "right", "center")
+
+	if item.rate ~= 1 then
+		ui.frameWithShadow(("%s [%0.02fx]"):format(mods, item.rate), -4, 0, w, 50, "right", "top")
+	else
+		ui.frameWithShadow(("%s"):format(mods), -4, 0, w, 50, "right", "top")
+	end
+
+	ui.frameWithShadow(("%0.02f NS"):format(item.accuracy * 1000), -4, 0, w, 50, "right", "center")
 
 	local improvement = "-"
 
 	if self.items[i + 1] then
-		improvement = ("+%i"):format(item.score - self.items[i + 1].score)
+		---@type number
+		local difference = item.score - self.items[i + 1].score
+
+		if difference > 0 then
+			improvement = ("+%i"):format(difference)
+		end
 	end
 
 	ui.frameWithShadow(improvement, -4, 0, w, 50, "right", "bottom")

@@ -428,12 +428,12 @@ function ViewConfig:chartInfo()
 	a = animate(update_time, 0.4)
 	gfx.setColor({ 1, 1, 1, a })
 	gfx.setFont(font.infoCenter)
-	gyatt.text(text.chartInfoFirstRow:format(note_count_str, ln_count_str, 0))
+	gyatt.text(text.chartInfoSecondRow:format(note_count_str, ln_count_str, 0))
 
 	a = animate(update_time, 0.5)
 	gfx.setColor({ 1, 1, 1, a })
 	gfx.setFont(font.infoBottom)
-	gyatt.text(text.chartInfoFirstRow:format(columns_str, 0, 0, difficulty_str))
+	gyatt.text(text.chartInfoThirdRow:format(columns_str, 8, 8, difficulty_str))
 end
 
 function ViewConfig:top()
@@ -786,6 +786,7 @@ function ViewConfig:modeLogo()
 end
 
 function ViewConfig:search(view)
+	local insert_mode = action_model.isInsertMode()
 	local width = 364
 	local w, h = Layout:move("base")
 	gfx.translate(w - width, 82)
@@ -795,7 +796,7 @@ function ViewConfig:search(view)
 	gfx.translate(15, 5)
 	gfx.setColor({ 0.68, 1, 0.18, 1 })
 	gfx.setFont(font.search)
-	gyatt.text(text.search, w)
+	gyatt.text(insert_mode and text.searchInsert or text.search, w)
 	gfx.translate(5, 0)
 
 	gfx.setColor(white)
@@ -803,7 +804,7 @@ function ViewConfig:search(view)
 
 	local vim_motions = action_model.isVimMode()
 
-	if not vim_motions or action_model.isInsertMode() then
+	if not vim_motions or insert_mode then
 		gyatt.focus("SearchField")
 	end
 
@@ -814,7 +815,7 @@ function ViewConfig:search(view)
 	gfx.pop()
 
 	if _text == "" then
-		gyatt.text("Type to search!")
+		gyatt.text(text.typeToSearch)
 	else
 		gyatt.text(_text)
 	end

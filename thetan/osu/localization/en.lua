@@ -11,10 +11,6 @@ l.textGroups = {
 		localRanking = "Local ranking",
 		onlineRankin = "Online ranking",
 		osuApiRanking = "osu! API ranking",
-		score = "Score: ",
-		accuracy = "Accuracy: ",
-		noMods = "No mods",
-		hasMods = "Has mods",
 		--
 		collections = "Collections",
 		recent = "Recent",
@@ -39,8 +35,14 @@ l.textGroups = {
 		byLastPlayed = "By Last played",
 		--
 		search = "Search:",
+		searchInsert = "Search (Insert):",
+		typeToSearch = "Type to search!",
 		noMatches = "No matches found.",
 		matchesFound = "%i match(es) found.",
+	},
+	scoreList = {
+		score = "Score",
+		hasMods = "Has mods",
 	},
 	chartOptionsModal = {
 		manageLocations = "1. Manage locations",
