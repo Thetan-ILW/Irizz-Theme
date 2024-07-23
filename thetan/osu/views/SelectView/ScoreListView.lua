@@ -185,28 +185,32 @@ function ScoreListView:drawItem(i, w, h)
 
 	gfx.push()
 	gfx.setColor({ 1, 1, 1, 1 })
-	gfx.translate(50, 6)
+
+	local grade = img.gradeD
 
 	if item.score > 9800 then
-		gfx.draw(img.gradeX)
+		grade = img.gradeX
 	elseif item.score > 8000 then
-		gfx.draw(img.gradeS)
+		grade = img.gradeS
 	elseif item.score > 7000 then
-		gfx.draw(img.gradeA)
+		grade = img.gradeA
 	elseif item.score > 6000 then
-		gfx.draw(img.gradeB)
+		grade = img.gradeB
 	elseif item.score > 5000 then
-		gfx.draw(img.gradeC)
-	else
-		gfx.draw(img.gradeD)
+		grade = img.gradeC
 	end
 
-	gfx.translate(44, -5)
+	gfx.push()
+	gfx.translate(-grade:getWidth() / 2 + 67, h / 2 - (grade:getHeight() / 2) - 1)
+	gfx.draw(grade)
+	gfx.pop()
+
+	gfx.translate(94, 0)
 	gfx.setFont(self.font.username)
 	ui.textWithShadow(username)
 
 	gfx.setFont(self.font.score)
-	ui.textWithShadow(("%s: %i"):format(text.score, item.score))
+	ui.textWithShadow(("%s: %i (%ix)"):format(text.score, item.score, item.max_combo))
 	gfx.pop()
 
 	gfx.setFont(self.font.rightSide)

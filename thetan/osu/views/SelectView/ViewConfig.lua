@@ -436,6 +436,20 @@ function ViewConfig:chartInfo()
 	gyatt.text(text.chartInfoThirdRow:format(columns_str, 8, 8, difficulty_str))
 end
 
+---@param to_text boolean
+local function moveToSort(to_text)
+	local w, h = Layout:move("base")
+	local text_x = font.groupSort:getWidth(text.sort) * (768 / window_height) + 5
+	gfx.translate(w - 209 - (to_text and text_x or 0), 0)
+end
+
+---@param to_text boolean
+local function moveToGroup(to_text)
+	moveToSort(true)
+	local text_x = font.groupSort:getWidth(text.group) * (768 / window_height) + 5
+	gfx.translate(-208 - (to_text and text_x or 0), 0)
+end
+
 function ViewConfig:top()
 	local w, h = Layout:move("base")
 
@@ -446,18 +460,17 @@ function ViewConfig:top()
 	gfx.draw(img.panelTop, top_panel_quad)
 	gfx.setShader(prev_shader)
 
-	w, h = Layout:move("base")
-	gfx.translate(w - 570, 23)
 	gfx.setFont(font.groupSort)
-	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
-	gyatt.text(text.group)
-	gyatt.sameline()
 
-	w, h = Layout:move("base")
-	gfx.translate(w - 270, 23)
-	gfx.setFont(font.groupSort)
+	moveToSort(true)
+	gfx.translate(0, 23)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
 	gyatt.text(text.sort)
+
+	moveToGroup(true)
+	gfx.translate(0, 23)
+	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
+	gyatt.text(text.group)
 
 	w, h = Layout:move("base")
 	gfx.setFont(font.tabs)
@@ -501,18 +514,10 @@ function ViewConfig:topUI(view)
 	gyatt.frame(scroll_speed_str, -15, 0, w, h, "right", "top")
 
 	w, h = Layout:move("base")
-	gfx.translate(w - 479, 29)
-	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
-	local changed, index = dropdown("group", 192)
-
-	if changed then
-		view:changeGroup(dropdowns.group.items[index or 1])
-	end
-
-	w, h = Layout:move("base")
-	gfx.translate(w - 210, 29)
+	moveToSort(false)
+	gfx.translate(0, 29)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
-	changed, index = dropdown("sort", 192)
+	local changed, index = dropdown("sort", 192)
 
 	if changed then
 		local sort_model = view.game.selectModel.sortModel
@@ -521,6 +526,15 @@ function ViewConfig:topUI(view)
 		if name then
 			view.game.selectModel:setSortFunction(name)
 		end
+	end
+
+	moveToGroup(false)
+	gfx.translate(0, 29)
+	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
+	changed, index = dropdown("group", 192)
+
+	if changed then
+		view:changeGroup(dropdowns.group.items[index or 1])
 	end
 end
 
@@ -627,7 +641,9 @@ function ViewConfig:bottom(view)
 	iw, ih = img.maniaSmallIcon:getDimensions()
 	gfx.translate(-iw / 2 + 45, -ih / 2 - 55)
 	gfx.setColor(white)
+	gfx.setBlendMode("add")
 	gfx.draw(img.maniaSmallIcon)
+	gfx.setBlendMode("alpha")
 	gfx.translate(iw / 2 - 45, ih / 2 + 55)
 
 	gfx.translate(92, 0)
