@@ -1,7 +1,6 @@
 local ListView = require("thetan.irizz.views.ListView")
-local just = require("just")
+local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
-local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -12,20 +11,22 @@ local NoteChartSetListView = ListView + {}
 
 NoteChartSetListView.rows = 13
 NoteChartSetListView.centerItems = true
-NoteChartSetListView.text = Theme.textChartSetsList
 
 ---@param game sphere.GameController
 ---@param assets irizz.IrizzAssets
 function NoteChartSetListView:new(game, assets)
-	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("noteChartSetListView")
 	self.scrollSound = assets.sounds.scrollLargeList
+
+	self.font = assets.localization.fontGroups.noteChartSetListView
+	self.text = assets.localization.textGroups.noteChartSetListView
 end
 
 function NoteChartSetListView:reloadItems()
 	self.stateCounter = self.game.selectModel.noteChartSetStateCounter
 	self.items = self.game.selectModel.noteChartSetLibrary.items
+	---@type boolean
+	self.staticCursor = self.game.configModel.configs.irizz.staticCursor
 end
 
 ---@return number
@@ -43,31 +44,23 @@ function NoteChartSetListView:scroll(count)
 	self:playSound()
 end
 
+local gfx = love.graphics
+
 ---@param i number
 ---@param w number
 ---@param h number
 function NoteChartSetListView:drawItem(i, w, h)
 	local item = self.items[i]
 
-	local irizz = self.game.configModel.configs.irizz
-	local drawLength = irizz.chartLengthBeforeArtist
-
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
-	local length = time_util.format((item.duration or 0) / self.game.playContext.rate)
-	local firstLine
+	gfx.setColor(Color.text)
+	gfx.translate(15, 0)
 
-	if drawLength then
-		firstLine = ("[%s] %s"):format(length, item.artist)
-	else
-		firstLine = item.artist
-	end
-
-	love.graphics.setColor(Color.text)
-	love.graphics.translate(0, 4)
-	just.indent(15)
-
-	TextCellImView(math.huge, h, "left", firstLine, item.title, self.font.artist, self.font.title)
+	gfx.setFont(self.font.artist)
+	gyatt.frame(item.artist, 0, 0, math.huge, h, "left", "top")
+	gfx.setFont(self.font.title)
+	gyatt.frame(item.title or "", 0, -5, math.huge, h, "left", "bottom")
 end
 
 return NoteChartSetListView

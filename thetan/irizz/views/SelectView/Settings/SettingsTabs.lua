@@ -637,8 +637,6 @@ function SettingsTab:UI(view)
 	irizz.alwaysShowOriginalMode =
 		imgui.checkbox("irizz.originalMode", irizz.alwaysShowOriginalMode, Text.alwaysShowOriginalMode)
 
-	irizz.chartLengthBeforeArtist =
-		imgui.checkbox("irizz.chartLengthBeforeArtist", irizz.chartLengthBeforeArtist, Text.chartLengthBeforeArtist)
 	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, Text.difficulty)
 
 	local currentLanguage = irizz.language

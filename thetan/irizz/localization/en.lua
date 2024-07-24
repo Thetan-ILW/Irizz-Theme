@@ -214,7 +214,7 @@ l.textGroups = {
 		noMods = "No mods.",
 		hasMods = "Has mods",
 	},
-	chartSetsList = {
+	noteChartSetList = {
 		noItems = "No chart sets!",
 	},
 	queueList = {

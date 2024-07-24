@@ -42,7 +42,6 @@ function ListView:new(game)
 
 	self.game = game
 	self.config = configs.irizz
-	self.staticCursor = self.config.staticCursor
 
 	self.actionModel = self.game.actionModel
 end

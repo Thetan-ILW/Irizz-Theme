@@ -5,7 +5,6 @@ return {
 	judge = "",
 	health = "",
 	staticCursor = true,
-	chartLengthBeforeArtist = false,
 	panelBlur = 4,
 	chromatic_aberration = 0.008,
 	distortion = 0.004,
