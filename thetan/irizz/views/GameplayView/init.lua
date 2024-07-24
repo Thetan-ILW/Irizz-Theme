@@ -38,6 +38,7 @@ function GameplayView:load()
 	assert(assets, "Irizz assets not loaded")
 	---@cast assets irizz.IrizzAssets
 
+	self.assets = assets
 	self.pauseScreen = PauseScreen(assets)
 
 	local chartview = self.game.selectModel.chartview
@@ -102,6 +103,7 @@ end
 
 ---@param dt number
 function GameplayView:update(dt)
+	self.assets:updateVolume(self.game.configModel)
 	self.game.gameplayController:update(dt)
 
 	local state = self.game.pauseModel.state

@@ -25,6 +25,7 @@ function AssetModel:get(name)
 end
 
 local localization_directories = {
+	irizz = "thetan/irizz/localization/",
 	osu = "thetan/osu/localization/",
 }
 

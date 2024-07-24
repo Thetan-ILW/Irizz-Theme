@@ -1,4 +1,5 @@
 local Assets = require("thetan.skibidi.models.AssetModel.Assets")
+local Localization = require("thetan.skibidi.models.AssetModel.Localization")
 
 local table_util = require("table_util")
 
@@ -9,6 +10,7 @@ local table_util = require("table_util")
 ---@field sounds table<string, audio.Source>
 ---@field startSounds table<string, audio.Source>
 ---@field startSoundNames string[]
+---@field localization skibidi.Localization
 ---@field errors string[]
 local IrizzAssets = Assets + {}
 
@@ -105,6 +107,18 @@ function IrizzAssets:updateVolume(config_model)
 
 	for _, item in pairs(self.startSounds) do
 		item:setVolume(volume)
+	end
+end
+
+---@param filepath string
+function IrizzAssets:loadLocalization(filepath)
+	if not self.localization then
+		self.localization = Localization(filepath, love.graphics.getHeight() / 1080)
+		return
+	end
+
+	if self.localization.currentFilePath ~= filepath then
+		self.localization:loadFile(filepath)
 	end
 end
 

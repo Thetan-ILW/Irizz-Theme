@@ -50,8 +50,10 @@ function Localization:loadFont(name, size)
 		return self.fontInstances[name][size_str]
 	end
 
-	---@type string
+	---@type string?
 	local filename = self.currentFile.fontFiles[name]
+	assert(filename, "Font path is not specified for " .. name)
+
 	local font = love.graphics.newFont(filename, size * self.fontScale)
 
 	self.fontInstances[name] = self.fontInstances[name] or {}
@@ -77,7 +79,13 @@ function Localization:setFonts()
 				font:setFallbacks(self:loadFont(params[3], params[2]))
 			end
 
-			font:setFilter("nearest", "nearest")
+			local filter = "nearest"
+
+			if params[4] then
+				filter = params[4].linearFilter and "linear" or filter
+			end
+
+			font:setFilter(filter or "nearest", filter or "nearest")
 
 			fonts[name] = font
 		end

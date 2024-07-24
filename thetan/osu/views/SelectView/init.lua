@@ -188,6 +188,7 @@ end
 function OsuSelectView:select()
 	if selected_group == "charts" then
 		self:play()
+		return
 	end
 
 	self:changeGroup("charts")

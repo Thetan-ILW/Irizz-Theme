@@ -1,5 +1,6 @@
 local flux = require("flux")
 local math_util = require("math_util")
+local gyatt = require("thetan.gyatt")
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -44,15 +45,7 @@ function SelectView:load()
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
 
-	local assets = self.assetModel:get("irizz")
-
-	if not assets then
-		assets = IrizzAssets()
-		self.assetModel:store("irizz", assets)
-	end
-
-	---@cast assets irizz.IrizzAssets
-	self.assets = assets
+	self:loadAssets()
 
 	self.headerView = HeaderView(self.game, self.assets, "select")
 	self.settingsViewConfig = SettingsViewConfig(self.game, self.assets)
@@ -73,6 +66,27 @@ function SelectView:load()
 			self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
 		end
 	end
+end
+
+function SelectView:loadAssets()
+	local configs = self.game.configModel.configs
+	local irizz = configs.irizz
+
+	local language = irizz.language
+
+	local assets = self.assetModel:get("irizz")
+
+	local localization_filepath = self.assetModel:getLocalizationFileName("irizz", language)
+
+	if not assets then
+		assets = IrizzAssets(self.assetModel:getLocalizationFileName("irizz", "English"))
+		self.assetModel:store("irizz", assets)
+	end
+
+	---@cast assets irizz.IrizzAssets
+	self.assets = assets
+	self.assets:loadLocalization(localization_filepath)
+	self.assets:updateVolume(self.game.configModel)
 end
 
 function SelectView:beginUnload()
@@ -283,6 +297,13 @@ function SelectView:quit()
 	end
 end
 
+local window_height = 1080
+
+function SelectView:resolutionUpdated()
+	window_height = love.graphics.getHeight()
+	self.assets.localization:updateScale(window_height / 1080)
+end
+
 function SelectView:draw()
 	local position = self.screenX
 	local settings = self.settingsViewConfig
@@ -307,6 +328,8 @@ function SelectView:draw()
 		end
 	end
 
+	gyatt.setTextScale(1080 / window_height)
+
 	local function UI()
 		songSelect:draw(self, position)
 		collections:draw(self, position + 1)
@@ -318,6 +341,8 @@ function SelectView:draw()
 	self.mainMenuView:draw("select", self)
 	self:drawModal()
 	self.notificationView:draw()
+
+	gyatt.setTextScale(1)
 end
 
 return SelectView

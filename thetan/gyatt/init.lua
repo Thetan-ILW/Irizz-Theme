@@ -17,31 +17,43 @@ gyatt.mousePressed = just.mousepressed
 gyatt.next = just.next
 gyatt.sameline = just.sameline
 gyatt.focus = just.focus
+gyatt.textInput = just.textinput
 
-local textTransform = love.math.newTransform()
-local textScale = 1
+local text_transform = love.math.newTransform()
+local text_scale = 1
+local global_scale = 1
 
 function gyatt.setTextScale(scale)
-	textTransform = love.math.newTransform(0, 0, 0, scale, scale, 0, 0, 0, 0)
-	textScale = scale
+	text_transform = love.math.newTransform(0, 0, 0, scale, scale, 0, 0, 0, 0)
+	text_scale = scale
+end
+
+function gyatt.getTextScale()
+	return text_scale
+end
+
+function gyatt.scale(scale) -- For Irizz footer :|
+	global_scale = scale
 end
 
 function gyatt.text(text, w, ax)
 	love.graphics.push()
-	love.graphics.applyTransform(textTransform)
-	gfx_util.printFrame(text, 0, 0, (w or math.huge) / textScale, math.huge, ax or "left", "top")
+	love.graphics.applyTransform(text_transform)
+	love.graphics.scale(global_scale, global_scale)
+	gfx_util.printFrame(text, 0, 0, (w or math.huge) / (global_scale * text_scale), math.huge, ax or "left", "top")
 	love.graphics.pop()
 
 	local font = love.graphics.getFont()
-	just.next(font:getWidth(text) * textScale, font:getHeight() * textScale)
+	just.next(font:getWidth(text) * text_scale, font:getHeight() * text_scale)
 end
 
 function gyatt.frame(text, x, y, w, h, ax, ay)
 	w = w or math.huge
 	h = h or math.huge
 	love.graphics.push()
-	love.graphics.applyTransform(textTransform)
-	gfx_util.printFrame(text, x, y, w / textScale, h / textScale, ax, ay)
+	love.graphics.applyTransform(text_transform)
+	love.graphics.scale(global_scale, global_scale)
+	gfx_util.printFrame(text, x, y, w / (text_scale * global_scale), h / (text_scale * global_scale), ax, ay)
 	love.graphics.pop()
 end
 

@@ -13,6 +13,7 @@ local ui = require("thetan.osu.ui")
 ---@field spacing number
 ---@field private totalW number
 ---@field private totalH number
+---@field private middleAdditionalScale number
 ---@field private imageLeft love.Image
 ---@field private imageMiddle love.Image
 ---@field private imageRight love.Image
