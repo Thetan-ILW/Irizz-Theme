@@ -4,9 +4,9 @@ l.textGroups = {
 	songSelect = {
 		mappedBy = "Mapped by %s",
 		from = "From %s",
-		chartInfoFirstRow = "Length: %s BPM: %i Objects: %i",
-		chartInfoSecondRow = "Circles: %i Sliders: %i Spinners: %i",
-		chartInfoThirdRow = "Keys: %s OD: %g HP: %g Star rating: %s",
+		chartInfoFirstRow = "Length: %s BPM: %s Objects: %s",
+		chartInfoSecondRow = "Circles: %s Sliders: %s Spinners: %s",
+		chartInfoThirdRow = "Keys: %s OD: %s HP: %s Star rating: %s",
 		--
 		localRanking = "Local ranking",
 		onlineRankin = "Online ranking",

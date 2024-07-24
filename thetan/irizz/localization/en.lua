@@ -206,15 +206,15 @@ l.textGroups = {
 		locations = "Locations",
 		directories = "Directories",
 	},
-	chartList = {
+	noteChartListView = {
 		noItems = "No charts!",
 	},
-	scoreList = {
+	scoreListView = {
 		noItems = "No scores!",
 		noMods = "No mods.",
 		hasMods = "Has mods",
 	},
-	noteChartSetList = {
+	noteChartSetListView = {
 		noItems = "No chart sets!",
 	},
 	queueList = {
@@ -502,10 +502,8 @@ l.fontGroups = {
 	},
 
 	noteChartListView = {
-		inputMode = { "ZenMaruGothic-Black", 18 },
-		difficulty = { "ZenMaruGothic-Black", 24 },
-		creator = { "ZenMaruGothic-Black", 18 },
-		name = { "ZenMaruGothic-Black", 24 },
+		firstRow = { "ZenMaruGothic-Black", 18 },
+		secondRow = { "ZenMaruGothic-Black", 24 },
 		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 

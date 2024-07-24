@@ -16,8 +16,8 @@ NoteChartSetListView.centerItems = true
 ---@param assets irizz.IrizzAssets
 function NoteChartSetListView:new(game, assets)
 	self.game = game
-	self.scrollSound = assets.sounds.scrollLargeList
 
+	self.scrollSound = assets.sounds.scrollLargeList
 	self.font = assets.localization.fontGroups.noteChartSetListView
 	self.text = assets.localization.textGroups.noteChartSetListView
 end

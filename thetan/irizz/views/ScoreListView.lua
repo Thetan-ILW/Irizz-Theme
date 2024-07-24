@@ -1,5 +1,5 @@
 local ListView = require("thetan.irizz.views.ListView")
-local just = require("just")
+local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 local Format = require("sphere.views.Format")
 local time_util = require("time_util")
@@ -7,6 +7,8 @@ local time_util = require("time_util")
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
 
+---@class irizz.ScoreListView : irizz.ListView
+---@operator call: irizz.ScoreListView
 local ScoreListView = ListView + {}
 
 ScoreListView.rows = 7
@@ -15,14 +17,15 @@ ScoreListView.selectedScore = nil
 ScoreListView.openResult = false
 ScoreListView.oneClickOpen = false
 ScoreListView.modLines = {}
-ScoreListView.text = Theme.textScoreList
 
 ---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
 ---@param oneClickOpen boolean
-function ScoreListView:new(game, oneClickOpen)
+function ScoreListView:new(game, assets, oneClickOpen)
 	self.game = game
 	self.oneClickOpen = oneClickOpen or false
-	self.font = Theme:getFonts("scoreListView")
+	self.font = assets.localization.fontGroups.scoreListView
+	self.text = assets.localization.textGroups.scoreListView
 end
 
 local modOrder = {
@@ -110,8 +113,8 @@ function ScoreListView:scrollScore(delta)
 end
 
 function ScoreListView:mouseClick(w, h, i)
-	if just.is_over(w, h, 0, 0) then
-		if just.mousepressed(1) then
+	if gyatt.isOver(w, h, 0, 0) then
+		if gyatt.mousePressed(1) then
 			if self.selectedScoreIndex == i then
 				self.openResult = true
 				return
@@ -130,12 +133,15 @@ function ScoreListView:mouseClick(w, h, i)
 end
 
 function ScoreListView:input(w, h)
-	local delta = just.wheel_over(self, just.is_over(w, h))
+	local delta = gyatt.wheelOver(self, gyatt.isOver(w, h))
+
 	if delta then
 		self:scroll(-delta)
 		return
 	end
 end
+
+local gfx = love.graphics
 
 ---@param i number
 ---@param w number
@@ -151,23 +157,20 @@ function ScoreListView:drawItem(i, w, h)
 	end
 
 	self:drawItemBody(w, h, i, i == self.selectedScoreIndex)
-	local xIndent = 10
-	local yIndent = 0
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(self.font.line1)
-	gfx_util.printFrame(string.format("#%i %s", i, username), xIndent, yIndent, w, h, "left", "top")
-	gfx_util.printFrame(
-		string.format("[%s] %0.02fx", Format.inputMode(item.inputmode), item.rate),
-		-xIndent,
-		yIndent,
-		w,
-		h,
-		"right",
-		"top"
-	)
-	love.graphics.setFont(self.font.line2)
-	gfx_util.printFrame(string.format("Score: %i", item.score), xIndent, -yIndent, w, h, "left", "bottom")
-	gfx_util.printFrame(time_util.time_ago_in_words(item.time), -xIndent, -yIndent, w, h, "right", "bottom")
+
+	gfx.setColor(Color.text)
+
+	gfx.setFont(self.font.line1)
+	gfx.translate(10, 0)
+	gyatt.frame(("#%i %s"):format(i, username), 0, 0, w, h, "left", "top")
+	gfx.translate(-20, 0)
+	gyatt.frame(("[%s] %0.02fx"):format(Format.inputMode(item.inputmode), item.rate), 0, 0, w, h, "right", "top")
+
+	gfx.setFont(self.font.line2)
+	gfx.translate(20, 0)
+	gyatt.frame(("Score: %i"):format(item.score), 0, 0, w, h, "left", "bottom")
+	gfx.translate(-20, 0)
+	gyatt.frame(time_util.time_ago_in_words(item.time), 0, 0, w, h, "right", "bottom")
 end
 
 return ScoreListView

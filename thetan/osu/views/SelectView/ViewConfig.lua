@@ -428,12 +428,12 @@ function ViewConfig:chartInfo()
 	a = animate(update_time, 0.4)
 	gfx.setColor({ 1, 1, 1, a })
 	gfx.setFont(font.infoCenter)
-	gyatt.text(text.chartInfoSecondRow:format(note_count_str, ln_count_str, 0))
+	gyatt.text(text.chartInfoSecondRow:format(note_count_str, ln_count_str, ""))
 
 	a = animate(update_time, 0.5)
 	gfx.setColor({ 1, 1, 1, a })
 	gfx.setFont(font.infoBottom)
-	gyatt.text(text.chartInfoThirdRow:format(columns_str, 8, 8, difficulty_str))
+	gyatt.text(text.chartInfoThirdRow:format(columns_str, "8", "8", difficulty_str))
 end
 
 ---@param to_text boolean

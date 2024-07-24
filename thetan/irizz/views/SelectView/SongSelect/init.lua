@@ -47,7 +47,7 @@ function ViewConfig:new(game, assets)
 	actionModel = game.actionModel
 	self.noteChartSetListView = NoteChartSetListView(game, assets)
 	self.noteChartListView = NoteChartListView(game, assets)
-	self.scoreListView = ScoreListView(game)
+	self.scoreListView = ScoreListView(game, assets)
 	self.osuScoreListView = OsuScoreListView(game)
 
 	font = assets.localization.fontGroups.songSelect

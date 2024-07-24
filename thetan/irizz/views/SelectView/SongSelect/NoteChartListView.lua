@@ -1,7 +1,5 @@
 local ListView = require("thetan.irizz.views.ListView")
-local just = require("just")
 local gyatt = require("thetan.gyatt")
-local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
 local Format = require("sphere.views.Format")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -14,21 +12,17 @@ local NoteChartListView = ListView + {}
 NoteChartListView.rows = 7
 NoteChartListView.centerItems = true
 NoteChartListView.chartInfo = {}
-NoteChartListView.text = Theme.textChartList
-
-local action
-local config
 
 ---@param game sphere.GameController
 ---@param assets irizz.IrizzAssets
 function NoteChartListView:new(game, assets)
-	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("noteChartListView")
-	self.scrollSound = assets.sounds.scrollSmallList
-	config = game.configModel.configs.irizz
-
+	self.config = game.configModel.configs.irizz
 	self.actionModel = self.game.actionModel
+
+	self.scrollSound = assets.sounds.scrollSmallList
+	self.font = assets.localization.fontGroups.noteChartListView
+	self.text = assets.localization.textGroups.noteChartListView
 end
 
 function NoteChartListView:reloadItems()
@@ -55,7 +49,7 @@ function NoteChartListView:reloadItems()
 			difficulty = item.level and "Lv." .. item.level or difficulty
 		end
 
-		local _inputMode = config.alwaysShowOriginalMode and item.inputmode or item.chartdiff_inputmode
+		local _inputMode = self.config.alwaysShowOriginalMode and item.inputmode or item.chartdiff_inputmode
 
 		local inputMode = Format.inputMode(_inputMode)
 		inputMode = inputMode == "2K" and "TAIKO" or inputMode
@@ -89,7 +83,8 @@ function NoteChartListView:scroll(count)
 end
 
 function NoteChartListView:input(w, h)
-	local delta = just.wheel_over(self, just.is_over(w, h))
+	local delta = gyatt.wheelOver(self, gyatt.isOver(w, h))
+
 	if delta then
 		self:scroll(-delta)
 	end
@@ -104,6 +99,8 @@ function NoteChartListView:input(w, h)
 	end
 end
 
+local gfx = love.graphics
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -112,15 +109,19 @@ function NoteChartListView:drawItem(i, w, h)
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
-	love.graphics.setColor(Color.text)
-	love.graphics.translate(0, 4)
+	gfx.setColor(Color.text)
+	gfx.translate(15, 4)
 
-	just.indent(15)
-	TextCellImView(50, h, "left", item.inputMode, item.difficulty, self.font.inputMode, self.font.difficulty)
+	gfx.setFont(self.font.firstRow)
+	gyatt.frame(item.inputMode, 0, 0, w, h, "left", "top")
+	gfx.translate(60, 0)
+	gyatt.frame(item.creator, 0, 0, w, h, "left", "top")
 
-	just.sameline()
-	just.indent(20)
-	TextCellImView(math.huge, h, "left", item.creator, item.name, self.font.creator, self.font.name)
+	gfx.translate(-60, 0)
+	gfx.setFont(self.font.secondRow)
+	gyatt.frame(item.difficulty, 0, -5, w, h, "left", "bottom")
+	gfx.translate(60, 0)
+	gyatt.frame(item.name, 0, -5, w, h, "left", "bottom")
 end
 
 return NoteChartListView

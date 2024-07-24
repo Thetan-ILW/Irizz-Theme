@@ -205,7 +205,8 @@ function ListView:draw(w, h, update)
 	if #self.items == 0 then
 		love.graphics.setColor(Color.text)
 		love.graphics.setFont(self.font.noItems)
-		gyatt.frame(self.status or (self.text and self.text.noItems or ""), 0, 0, w, h, "center", "center")
+		local text = self.text.noItems or ""
+		gyatt.frame(self.status or text, 0, 0, w, h, "center", "center")
 		return
 	end
 
