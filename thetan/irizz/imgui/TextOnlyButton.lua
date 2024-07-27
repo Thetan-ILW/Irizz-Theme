@@ -1,5 +1,5 @@
 local just = require("just")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -12,9 +12,9 @@ return function(id, text, w, h, align, active)
 	local color = hovered and Color.buttonHover or Color.button
 	color = active and Color.select or color
 	love.graphics.setColor(color)
-	love.graphics.rectangle("fill", 0, 2, w, h-2)
+	love.graphics.rectangle("fill", 0, 2, w, h - 2)
 	love.graphics.setColor(Color.separator)
-	love.graphics.rectangle("fill", w/2 - w/4, h-2, w/2, 4)
+	love.graphics.rectangle("fill", w / 2 - w / 4, h - 2, w / 2, 4)
 
 	local font = love.graphics.getFont()
 	local fh = font:getHeight()
@@ -26,7 +26,7 @@ return function(id, text, w, h, align, active)
 	end
 
 	love.graphics.setColor(1, 1, 1, 1)
-	gfx_util.printFrame(text, p, 0, w - p * 2, h, align, "center")
+	gyatt.frame(text, p, 0, w - p * 2, h, align, "center")
 
 	just.next(w, h)
 

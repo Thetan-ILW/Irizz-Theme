@@ -1,6 +1,7 @@
 local class = require("class")
 
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
 local table_util = require("table_util")
 local Container = require("thetan.gyatt.Container")
@@ -9,7 +10,9 @@ local version = require("version")
 
 local assets = require("thetan.skibidi.assets")
 local Theme = require("thetan.irizz.views.Theme")
-local Text = Theme.textSettings
+
+---@type table<string, string>
+local text
 local cfg = Theme.imgui
 
 local InputListView = require("thetan.irizz.views.modals.InputModal.InputListView")
@@ -29,6 +32,7 @@ SettingsTab.container = Container("settingsContainer")
 ---@param game sphere.GameController
 ---@param assets irizz.IrizzAssets
 function SettingsTab:new(game, assets)
+	text = assets.localization.textGroups.settings
 	start_sound_names = assets.startSoundNames
 	inputListView = InputListView(game)
 end
@@ -68,19 +72,19 @@ end
 ---@param v number?
 ---@return string
 local function formatActionOnFail(v)
-	return Text[v] or ""
+	return text[v] or ""
 end
 
 ---@param v number?
 ---@return string
 local function formatSpeedType(v)
-	return Text[v] or ""
+	return text[v] or ""
 end
 
 ---@param v number?
 ---@return string
 local function formatTempoFactor(v)
-	return Text[v] or ""
+	return text[v] or ""
 end
 
 local function formatNoteSkin(v)
@@ -107,7 +111,7 @@ function SettingsTab:Gameplay(view)
 	local speedRange = speedModel.range[g.speedType]
 	local speedFormat = speedModel.format[g.speedType]
 
-	just.text(Text.scrollSpeed)
+	gyatt.text(text.scrollSpeed)
 	just.next(0, textSeparation)
 
 	local newSpeed = imgui.slider1(
@@ -117,11 +121,11 @@ function SettingsTab:Gameplay(view)
 		speedRange[1],
 		speedRange[2],
 		speedRange[3],
-		Text.scrollSpeed
+		text.scrollSpeed
 	)
 	speedModel:set(newSpeed)
 
-	g.speedType = imgui.combo("speedType", g.speedType, speedModel.types, formatSpeedType, Text.speedType)
+	g.speedType = imgui.combo("speedType", g.speedType, speedModel.types, formatSpeedType, text.speedType)
 
 	g.longNoteShortening = imgui.slider1(
 		"shortening",
@@ -130,7 +134,7 @@ function SettingsTab:Gameplay(view)
 		-300,
 		0,
 		10,
-		Text.lnShortening
+		text.lnShortening
 	) / 1000
 
 	g.tempoFactor = imgui.combo(
@@ -138,36 +142,36 @@ function SettingsTab:Gameplay(view)
 		g.tempoFactor,
 		{ "average", "primary", "minimum", "maximum" },
 		formatTempoFactor,
-		Text.tempoFactor
+		text.tempoFactor
 	)
 	if g.tempoFactor == "primary" then
-		g.primaryTempo = imgui.slider1("primaryTempo", g.primaryTempo, Text.bpm, 60, 240, 1, Text.primaryTempo)
+		g.primaryTempo = imgui.slider1("primaryTempo", g.primaryTempo, text.bpm, 60, 240, 1, text.primaryTempo)
 	end
 
-	g.swapVelocityType = imgui.checkbox("swapVelocityType", g.swapVelocityType, Text.taikoSV)
+	g.swapVelocityType = imgui.checkbox("swapVelocityType", g.swapVelocityType, text.taikoSV)
 
 	if not g.swapVelocityType then
-		g.scaleSpeed = imgui.checkbox("scaleSpeed", g.scaleSpeed, Text.scaleScrollSpeed)
+		g.scaleSpeed = imgui.checkbox("scaleSpeed", g.scaleSpeed, text.scaleScrollSpeed)
 	end
 	g.eventBasedRender = g.swapVelocityType
 	g.scaleSpeed = g.swapVelocityType and true or g.scaleSpeed
 	local playContext = view.game.playContext
-	playContext.const = imgui.checkbox("const", playContext.const, Text.const)
+	playContext.const = imgui.checkbox("const", playContext.const, text.const)
 
 	imgui.separator()
-	just.text(Text.waitTime)
+	gyatt.text(text.waitTime)
 	just.next(0, textSeparation)
-	g.time.prepare = imgui.slider1("time.prepare", g.time.prepare, "%0.1f", 0.5, 3, 0.1, Text.prepare)
-	g.time.playPause = imgui.slider1("time.playPause", g.time.playPause, "%0.1f", 0, 2, 0.1, Text.playPause)
-	g.time.playRetry = imgui.slider1("time.playRetry", g.time.playRetry, "%0.1f", 0, 2, 0.1, Text.playRetry)
-	g.time.pausePlay = imgui.slider1("time.pausePlay", g.time.pausePlay, "%0.1f", 0, 2, 0.1, Text.pausePlay)
-	g.time.pauseRetry = imgui.slider1("time.pauseRetry", g.time.pauseRetry, "%0.1f", 0, 2, 0.1, Text.pauseRetry)
+	g.time.prepare = imgui.slider1("time.prepare", g.time.prepare, "%0.1f", 0.5, 3, 0.1, text.prepare)
+	g.time.playPause = imgui.slider1("time.playPause", g.time.playPause, "%0.1f", 0, 2, 0.1, text.playPause)
+	g.time.playRetry = imgui.slider1("time.playRetry", g.time.playRetry, "%0.1f", 0, 2, 0.1, text.playRetry)
+	g.time.pausePlay = imgui.slider1("time.pausePlay", g.time.pausePlay, "%0.1f", 0, 2, 0.1, text.pausePlay)
+	g.time.pauseRetry = imgui.slider1("time.pauseRetry", g.time.pauseRetry, "%0.1f", 0, 2, 0.1, text.pauseRetry)
 
 	local input_mode = tostring(view.game.selectController.state.inputMode)
 
 	if input_mode ~= "" then
 		imgui.separator()
-		just.text(Text.noteSkin)
+		gyatt.text(text.noteSkin)
 		just.next(0, textSeparation)
 
 		local selected_note_skin = view.game.noteSkinModel:getNoteSkin(input_mode)
@@ -254,9 +258,9 @@ local function scoreSystem(updated, selectedScoreSystem, irizz, select, playCont
 		local prevJudge = irizz.judge
 
 		if irizz.scoreSystem == "Lunatic rave 2" then
-			irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, formatLunaticRave, Text.judgement)
+			irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, formatLunaticRave, text.judgement)
 		else
-			irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, nil, Text.judgement)
+			irizz.judge = imgui.combo("irizz.judge", irizz.judge, judges, nil, text.judgement)
 		end
 
 		local alias = metadata[selectedScoreSystem].rangeValueAlias
@@ -315,10 +319,10 @@ local function noteTiming(value, minimum, positive, label)
 end
 
 local function noteTimingGroup(note, hitLabel, missLabel)
-	note.hit[1] = noteTiming(note.hit[1], 0, false, hitLabel .. Text.early)
-	note.miss[1] = noteTiming(note.miss[1], note.hit[1], false, missLabel .. Text.early)
-	note.hit[2] = noteTiming(note.hit[2], 0, true, hitLabel .. Text.late)
-	note.miss[2] = noteTiming(note.miss[2], note.hit[2], true, missLabel .. Text.late)
+	note.hit[1] = noteTiming(note.hit[1], 0, false, hitLabel .. text.early)
+	note.miss[1] = noteTiming(note.miss[1], note.hit[1], false, missLabel .. text.early)
+	note.hit[2] = noteTiming(note.hit[2], 0, true, hitLabel .. text.late)
+	note.miss[2] = noteTiming(note.miss[2], note.hit[2], true, missLabel .. text.late)
 end
 
 function SettingsTab:Scoring(view)
@@ -329,40 +333,40 @@ function SettingsTab:Scoring(view)
 	local g = settings.gameplay
 
 	imgui.separator()
-	just.text(Text.scoring)
+	gyatt.text(text.scoring)
 	just.next(0, textSeparation)
 
 	local prevScoreSystem = irizz.scoreSystem
-	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, scoreSystems, nil, Text.scoreSystem)
+	irizz.scoreSystem = imgui.combo("irizz.scoreSystem", irizz.scoreSystem, scoreSystems, nil, text.scoreSystem)
 
 	scoreSystem(prevScoreSystem ~= irizz.scoreSystem, irizz.scoreSystem, irizz, select, view.game.playContext)
 	local noteTimings = view.game.playContext.timings
-	noteTimings.nearest = imgui.checkbox("timings.nearest", noteTimings.nearest, Text.nearest)
+	noteTimings.nearest = imgui.checkbox("timings.nearest", noteTimings.nearest, text.nearest)
 
 	local note = noteTimings.ShortNote
 	local ln = noteTimings.LongNoteStart
 	local release = noteTimings.LongNoteEnd
 
 	imgui.separator()
-	noteTimingGroup(note, Text.noteHitWindow, Text.noteMissWindow)
+	noteTimingGroup(note, text.noteHitWindow, text.noteMissWindow)
 	imgui.separator()
-	noteTimingGroup(ln, Text.lnHitWindow, Text.lnMissWindow)
+	noteTimingGroup(ln, text.lnHitWindow, text.lnMissWindow)
 	imgui.separator()
-	noteTimingGroup(release, Text.releaseHitWindow, Text.releaseMissWindow)
+	noteTimingGroup(release, text.releaseHitWindow, text.releaseMissWindow)
 
 	imgui.separator()
-	just.text(Text.hp)
+	gyatt.text(text.hp)
 	just.next(0, textSeparation)
-	g.hp.shift = imgui.checkbox("hp.shift", g.hp.shift, Text.hpShift)
-	g.hp.notes = math.min(math.max(imgui.intButtons("hp.notes", g.hp.notes, 1, Text.hpNotes), 0), 100)
+	g.hp.shift = imgui.checkbox("hp.shift", g.hp.shift, text.hpShift)
+	g.hp.notes = math.min(math.max(imgui.intButtons("hp.notes", g.hp.notes, 1, text.hpNotes), 0), 100)
 	g.actionOnFail =
-		imgui.combo("actionOnFail", g.actionOnFail, { "none", "pause", "quit" }, formatActionOnFail, Text.actionOnFail)
+		imgui.combo("actionOnFail", g.actionOnFail, { "none", "pause", "quit" }, formatActionOnFail, text.actionOnFail)
 
 	imgui.separator()
-	just.text(Text.other)
+	gyatt.text(text.other)
 	just.next(0, textSeparation)
-	g.ratingHitTimingWindow = intButtonsMs("ratingHitTimingWindow", g.ratingHitTimingWindow, Text.ratingHitWindow)
-	g.lastMeanValues = imgui.intButtons("lastMeanValues", g.lastMeanValues, 1, Text.lastMeanValues)
+	g.ratingHitTimingWindow = intButtonsMs("ratingHitTimingWindow", g.ratingHitTimingWindow, text.ratingHitWindow)
+	g.lastMeanValues = imgui.intButtons("lastMeanValues", g.lastMeanValues, 1, text.lastMeanValues)
 end
 
 local formats = { "osu", "qua", "sm", "ksh" }
@@ -387,16 +391,16 @@ function SettingsTab:Timings(view)
 	local of = g.offset_format
 	local oam = g.offset_audio_mode
 
-	just.text(Text.timingsTab)
+	gyatt.text(text.timingsTab)
 	just.next(0, textSeparation)
 
-	g.offset.input = intButtonsMs("input offset", g.offset.input, Text.inputOffest)
-	g.offset.visual = intButtonsMs("visual offset", g.offset.visual, Text.visualOffset)
-	g.offsetScale.input = imgui.checkbox("offsetScale.input", g.offsetScale.input, Text.multiplyInputOffset)
-	g.offsetScale.visual = imgui.checkbox("offsetScale.visual", g.offsetScale.visual, Text.multiplyVisualOffset)
+	g.offset.input = intButtonsMs("input offset", g.offset.input, text.inputOffest)
+	g.offset.visual = intButtonsMs("visual offset", g.offset.visual, text.visualOffset)
+	g.offsetScale.input = imgui.checkbox("offsetScale.input", g.offsetScale.input, text.multiplyInputOffset)
+	g.offsetScale.visual = imgui.checkbox("offsetScale.visual", g.offsetScale.visual, text.multiplyVisualOffset)
 
 	imgui.separator()
-	imgui.text(Text.chartFormatOffsets)
+	gyatt.text(text.chartFormatOffsets)
 	just.next(0, textSeparation)
 
 	for _, format in ipairs(formats) do
@@ -404,7 +408,7 @@ function SettingsTab:Timings(view)
 	end
 
 	imgui.separator()
-	imgui.text(Text.audioModeOffsets)
+	gyatt.text(text.audioModeOffsets)
 	just.next(0, textSeparation)
 
 	for _, audio_mode in ipairs(audio_modes) do
@@ -415,7 +419,7 @@ end
 ---@param mode string
 ---@return string
 local function formatVolumeType(mode)
-	return Text[mode] or ""
+	return text[mode] or ""
 end
 
 function SettingsTab:Audio(view)
@@ -426,11 +430,11 @@ function SettingsTab:Audio(view)
 	local a = settings.audio
 	local g = settings.gameplay
 
-	just.text(Text.volume)
+	gyatt.text(text.volume)
 	just.next(0, textSeparation)
 
 	a.volumeType =
-		imgui.combo("a.volumeType", a.volumeType, { "linear", "logarithmic" }, formatVolumeType, Text.volumeType)
+		imgui.combo("a.volumeType", a.volumeType, { "linear", "logarithmic" }, formatVolumeType, text.volumeType)
 
 	local v = a.volume
 
@@ -438,17 +442,17 @@ function SettingsTab:Audio(view)
 	local oldUi = irizz.uiVolume
 
 	if a.volumeType == "linear" then
-		v.master = imgui.slider1("v.master", v.master * 100, "%i%%", 0, 100, 1, Text.master) / 100
-		v.music = imgui.slider1("v.music", v.music * 100, "%i%%", 0, 100, 1, Text.music) / 100
-		v.effects = imgui.slider1("v.effects", v.effects * 100, "%i%%", 0, 100, 1, Text.effects) / 100
-		v.metronome = imgui.slider1("v.metronome", v.metronome * 100, "%i%%", 0, 100, 1, Text.metronome) / 100
-		irizz.uiVolume = imgui.slider1("irizz.uiVolume", irizz.uiVolume * 100, "%i%%", 0, 100, 1, Text.uiVolume) / 100
+		v.master = imgui.slider1("v.master", v.master * 100, "%i%%", 0, 100, 1, text.master) / 100
+		v.music = imgui.slider1("v.music", v.music * 100, "%i%%", 0, 100, 1, text.music) / 100
+		v.effects = imgui.slider1("v.effects", v.effects * 100, "%i%%", 0, 100, 1, text.effects) / 100
+		v.metronome = imgui.slider1("v.metronome", v.metronome * 100, "%i%%", 0, 100, 1, text.metronome) / 100
+		irizz.uiVolume = imgui.slider1("irizz.uiVolume", irizz.uiVolume * 100, "%i%%", 0, 100, 1, text.uiVolume) / 100
 	elseif a.volumeType == "logarithmic" then
-		v.master = imgui.lfslider("v.master", v.master, "%ddB", -60, 0, 1, Text.master)
-		v.music = imgui.lfslider("v.music", v.music, "%ddB", -60, 0, 1, Text.music)
-		v.effects = imgui.lfslider("v.effects", v.effects, "%ddB", -60, 0, 1, Text.effects)
-		v.metronome = imgui.lfslider("v.metronome", v.metronome, "%ddB", -60, 0, 1, Text.metronome)
-		irizz.uiVolume = imgui.lfslider("irizz.uiVolume", irizz.uiVolume, "%ddB", -60, 0, 1, Text.uiVolume)
+		v.master = imgui.lfslider("v.master", v.master, "%ddB", -60, 0, 1, text.master)
+		v.music = imgui.lfslider("v.music", v.music, "%ddB", -60, 0, 1, text.music)
+		v.effects = imgui.lfslider("v.effects", v.effects, "%ddB", -60, 0, 1, text.effects)
+		v.metronome = imgui.lfslider("v.metronome", v.metronome, "%ddB", -60, 0, 1, text.metronome)
+		irizz.uiVolume = imgui.lfslider("irizz.uiVolume", irizz.uiVolume, "%ddB", -60, 0, 1, text.uiVolume)
 	end
 
 	if v.master ~= oldMaster or irizz.uiVolume ~= oldUi then
@@ -458,37 +462,37 @@ function SettingsTab:Audio(view)
 	local mode = a.mode
 
 	local pitch = mode.primary == "bass_sample" and true or false
-	pitch = imgui.checkbox("audioPitch", pitch, Text.audioPitch)
+	pitch = imgui.checkbox("audioPitch", pitch, text.audioPitch)
 
 	local audioMode = pitch and "bass_sample" or "bass_fx_tempo"
 
 	mode.primary = audioMode
 	mode.secondary = audioMode
 
-	g.autoKeySound = imgui.checkbox("autoKeySound", g.autoKeySound, Text.autoKeySound)
-	a.midi.constantVolume = imgui.checkbox("midi.constantVolume", a.midi.constantVolume, Text.midiConstantVolume)
+	g.autoKeySound = imgui.checkbox("autoKeySound", g.autoKeySound, text.autoKeySound)
+	a.midi.constantVolume = imgui.checkbox("midi.constantVolume", a.midi.constantVolume, text.midiConstantVolume)
 
 	local m = settings.miscellaneous
-	m.muteOnUnfocus = imgui.checkbox("muteOnUnfocus", m.muteOnUnfocus, Text.muteOnUnfocus)
+	m.muteOnUnfocus = imgui.checkbox("muteOnUnfocus", m.muteOnUnfocus, text.muteOnUnfocus)
 
 	imgui.separator()
-	just.text(Text.audioDevice)
+	gyatt.text(text.audioDevice)
 	just.next(0, textSeparation)
 
 	local audioInfo = audio.getInfo()
-	just.text(Text.latency .. audioInfo.latency .. "ms")
+	gyatt.text(text.latency .. audioInfo.latency .. "ms")
 	just.next(0, textSeparation)
-	a.device.period = imgui.slider1("d.period", a.device.period, "%dms", 1, 50, 1, Text.updatePeriod)
-	a.device.buffer = imgui.slider1("d.buffer", a.device.buffer, "%dms", 1, 50, 1, Text.bufferLength)
-	a.adjustRate = imgui.slider1("a.adjustRate", a.adjustRate, "%0.2f", 0, 1, 0.01, Text.adjustRate)
+	a.device.period = imgui.slider1("d.period", a.device.period, "%dms", 1, 50, 1, text.updatePeriod)
+	a.device.buffer = imgui.slider1("d.buffer", a.device.buffer, "%dms", 1, 50, 1, text.bufferLength)
+	a.adjustRate = imgui.slider1("a.adjustRate", a.adjustRate, "%0.2f", 0, 1, 0.01, text.adjustRate)
 
-	if imgui.button("apply device", Text.apply) then
+	if imgui.button("apply device", text.apply) then
 		audio.setDevicePeriod(a.device.period)
 		audio.setDeviceBuffer(a.device.buffer)
 		audio.reinit()
 	end
 	just.sameline()
-	if imgui.button("reset device", Text.reset) then
+	if imgui.button("reset device", text.reset) then
 		a.device.period = audio.default_dev_period
 		a.device.buffer = audio.default_dev_buffer
 		audio.setDevicePeriod(a.device.period)
@@ -512,19 +516,19 @@ local vsyncNames = {
 ---@param v number?
 ---@return string
 local function formatVsync(v)
-	return Text[vsyncNames[v]] or ""
+	return text[vsyncNames[v]] or ""
 end
 
 ---@param v number?
 ---@return string
 local function formatFullscreenType(v)
-	return Text[v] or ""
+	return text[v] or ""
 end
 
 ---@param v number?
 ---@return string
 local function formatCursor(v)
-	return Text[v] or ""
+	return text[v] or ""
 end
 
 function SettingsTab:Video(view)
@@ -534,10 +538,10 @@ function SettingsTab:Video(view)
 	local g = settings.graphics
 	local gp = settings.gameplay
 
-	just.text(Text.videoTab)
+	gyatt.text(text.videoTab)
 	just.next(0, textSeparation)
 
-	g.fps = imgui.intButtons("fps", g.fps, 2, Text.fpsLimit)
+	g.fps = imgui.intButtons("fps", g.fps, 2, text.fpsLimit)
 
 	local flags = g.mode.flags
 
@@ -546,29 +550,29 @@ function SettingsTab:Video(view)
 		flags.fullscreentype,
 		{ "desktop", "exclusive" },
 		formatFullscreenType,
-		Text.fullscreenType
+		text.fullscreenType
 	)
 	self.modes = self.modes or love.window.getFullscreenModes()
-	g.mode.window = imgui.combo("mode.window", g.mode.window, self.modes, formatMode, Text.startupWindowResolution)
-	flags.vsync = imgui.combo("flags.vsync", flags.vsync, { 1, 0, -1 }, formatVsync, Text.vsync)
+	g.mode.window = imgui.combo("mode.window", g.mode.window, self.modes, formatMode, text.startupWindowResolution)
+	flags.vsync = imgui.combo("flags.vsync", flags.vsync, { 1, 0, -1 }, formatVsync, text.vsync)
 	flags.msaa = imgui.combo("flags.msaa", flags.msaa, { 0, 1, 2, 4, 8, 16 }, nil, "MSAA")
-	flags.fullscreen = imgui.checkbox("flags.fullscreen", flags.fullscreen, Text.fullscreen)
-	g.vsyncOnSelect = imgui.checkbox("vsyncOnSelect", g.vsyncOnSelect, Text.vsyncOnSelect)
-	g.dwmflush = imgui.checkbox("dwmflush", g.dwmflush, Text.dwmFlush)
+	flags.fullscreen = imgui.checkbox("flags.fullscreen", flags.fullscreen, text.fullscreen)
+	g.vsyncOnSelect = imgui.checkbox("vsyncOnSelect", g.vsyncOnSelect, text.vsyncOnSelect)
+	g.dwmflush = imgui.checkbox("dwmflush", g.dwmflush, text.dwmFlush)
 
 	imgui.separator()
-	just.text(Text.backgroundAnimation)
+	gyatt.text(text.backgroundAnimation)
 	just.next(0, textSeparation)
-	gp.bga.video = imgui.checkbox("bga.video", gp.bga.video, Text.video)
-	gp.bga.image = imgui.checkbox("bga.image", gp.bga.image, Text.image)
+	gp.bga.video = imgui.checkbox("bga.video", gp.bga.video, text.video)
+	gp.bga.image = imgui.checkbox("bga.image", gp.bga.image, text.image)
 
 	imgui.separator()
-	just.text(Text.camera)
+	gyatt.text(text.camera)
 	just.next(0, textSeparation)
 	local p = g.perspective
-	p.camera = imgui.checkbox("p.camera", p.camera, Text.enableCamera)
-	p.rx = imgui.checkbox("p.rx", p.rx, Text.allowRotateX)
-	p.ry = imgui.checkbox("p.ry", p.ry, Text.allowRotateY)
+	p.camera = imgui.checkbox("p.camera", p.camera, text.enableCamera)
+	p.rx = imgui.checkbox("p.rx", p.rx, text.allowRotateX)
+	p.ry = imgui.checkbox("p.ry", p.ry, text.allowRotateY)
 end
 
 function SettingsTab:Inputs(view)
@@ -577,15 +581,15 @@ function SettingsTab:Inputs(view)
 	local settings = configs.settings
 	local g = settings.graphics
 
-	just.text(Text.inputsTab)
+	gyatt.text(text.inputsTab)
 	just.next(0, textSeparation)
-	g.asynckey = imgui.checkbox("asynckey", g.asynckey, Text.threadedInput)
+	g.asynckey = imgui.checkbox("asynckey", g.asynckey, text.threadedInput)
 
 	local playContext = view.game.playContext
-	playContext.single = imgui.checkbox("single", playContext.single, Text.singleNoteHandler)
+	playContext.single = imgui.checkbox("single", playContext.single, text.singleNoteHandler)
 
 	imgui.separator()
-	just.text(Text.gameplayInputs)
+	gyatt.text(text.gameplayInputs)
 	just.next(0, textSeparation)
 	love.graphics.translate(-15, 0)
 	inputListView:draw(panelW, panelH, true)
@@ -601,11 +605,11 @@ local diff_columns = {
 ---@param v number?
 ---@return string
 local function formatRateType(v)
-	return Text[v] or ""
+	return text[v] or ""
 end
 
 local function formatColorType(v)
-	return Text[v] or ""
+	return text[v] or ""
 end
 
 local function formatLocalization(v)
@@ -613,7 +617,7 @@ local function formatLocalization(v)
 end
 
 local function formatTranisiton(v)
-	return Text[v] or ""
+	return text[v] or ""
 end
 
 function SettingsTab:UI(view)
@@ -628,20 +632,20 @@ function SettingsTab:UI(view)
 
 	local timeRateModel = view.game.timeRateModel
 
-	just.text(Text.select)
+	gyatt.text(text.select)
 	just.next(0, textSeparation)
-	ss.chart_preview = imgui.checkbox("ss.chart_preview", ss.chart_preview, Text.chartPreview)
-	irizz.showOnlineCount = imgui.checkbox("irizz.showOnline", irizz.showOnlineCount, Text.showOnlineCount)
-	ss.collapse = imgui.checkbox("ss.collapse", ss.collapse, Text.groupCharts)
-	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, Text.showNonManiaCharts)
+	ss.chart_preview = imgui.checkbox("ss.chart_preview", ss.chart_preview, text.chartPreview)
+	irizz.showOnlineCount = imgui.checkbox("irizz.showOnline", irizz.showOnlineCount, text.showOnlineCount)
+	ss.collapse = imgui.checkbox("ss.collapse", ss.collapse, text.groupCharts)
+	m.showNonManiaCharts = imgui.checkbox("showNonManiaCharts", m.showNonManiaCharts, text.showNonManiaCharts)
 	irizz.alwaysShowOriginalMode =
-		imgui.checkbox("irizz.originalMode", irizz.alwaysShowOriginalMode, Text.alwaysShowOriginalMode)
+		imgui.checkbox("irizz.originalMode", irizz.alwaysShowOriginalMode, text.alwaysShowOriginalMode)
 
-	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, Text.difficulty)
+	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, text.difficulty)
 
 	local currentLanguage = irizz.language
 	local newLanguage =
-		imgui.combo("irizz.language", irizz.language, Theme.localizations, formatLocalization, Text.language)
+		imgui.combo("irizz.language", irizz.language, Theme.localizations, formatLocalization, text.language)
 
 	if currentLanguage ~= newLanguage then
 		irizz.language = newLanguage.name
@@ -649,7 +653,7 @@ function SettingsTab:UI(view)
 		view.game.selectView:changeScreen("selectView")
 	end
 
-	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, Text.rateType)
+	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, text.rateType)
 	if rateType ~= gp.rate_type then
 		view.game.modifierSelectModel:change()
 		gp.rate_type = rateType
@@ -659,14 +663,14 @@ function SettingsTab:UI(view)
 	end
 
 	irizz.songSelectOffset =
-		imgui.slider1("irizz.songSelectOffset", irizz.songSelectOffset, "%0.02f", -1, 1, 0.01, Text.songSelectOffset)
+		imgui.slider1("irizz.songSelectOffset", irizz.songSelectOffset, "%0.02f", -1, 1, 0.01, text.songSelectOffset)
 
 	imgui.separator()
-	just.text(Text.effects)
+	gyatt.text(text.effects)
 	just.next(0, textSeparation)
-	irizz.showSpectrum = imgui.checkbox("irizz.showSpectrum", irizz.showSpectrum, Text.showSpectrum)
-	irizz.backgroundEffects = imgui.checkbox("irizz.backgroundEffects", irizz.backgroundEffects, Text.backgroundEffects)
-	irizz.panelBlur = imgui.slider1("irizz.panelBlur", irizz.panelBlur, "%i", 0, 10, 1, Text.panelBlur)
+	irizz.showSpectrum = imgui.checkbox("irizz.showSpectrum", irizz.showSpectrum, text.showSpectrum)
+	irizz.backgroundEffects = imgui.checkbox("irizz.backgroundEffects", irizz.backgroundEffects, text.backgroundEffects)
+	irizz.panelBlur = imgui.slider1("irizz.panelBlur", irizz.panelBlur, "%i", 0, 10, 1, text.panelBlur)
 	irizz.chromatic_aberration = imgui.slider1(
 		"irizz.ch_ab",
 		irizz.chromatic_aberration * 1000,
@@ -674,48 +678,48 @@ function SettingsTab:UI(view)
 		0,
 		100,
 		1,
-		Text.ch_ab
+		text.ch_ab
 	) * 0.001
 
-	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, Text.distortion)
+	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, text.distortion)
 		* 0.001
 
 	irizz.spectrum =
-		imgui.combo("irizz.spectrum", irizz.spectrum, { "solid", "inverted" }, formatColorType, Text.spectrum)
+		imgui.combo("irizz.spectrum", irizz.spectrum, { "solid", "inverted" }, formatColorType, text.spectrum)
 
 	irizz.transitionAnimation = imgui.combo(
 		"irizz.transitionAnimation",
 		irizz.transitionAnimation,
 		{ "circle", "fade", "shutter" },
 		formatTranisiton,
-		Text.transitionAnimation
+		text.transitionAnimation
 	)
 
 	imgui.separator()
-	just.text(Text.collections)
+	gyatt.text(text.collections)
 	just.next(0, textSeparation)
 	local changed = false
 	ss.locations_in_collections, changed =
-		imgui.checkbox("s.locations_in_collections", ss.locations_in_collections, Text.showLocations)
+		imgui.checkbox("s.locations_in_collections", ss.locations_in_collections, text.showLocations)
 
 	if changed then
 		view.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
 	end
 
 	imgui.separator()
-	just.text(Text.uiTab)
+	gyatt.text(text.uiTab)
 	just.next(0, textSeparation)
 
 	changed = false
-	irizz.vimMotions, changed = imgui.checkbox("irizz.vimMotions", irizz.vimMotions, Text.vimMotions)
+	irizz.vimMotions, changed = imgui.checkbox("irizz.vimMotions", irizz.vimMotions, text.vimMotions)
 
 	if changed then
 		view.game.actionModel:updateActions()
 	end
 
-	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, Text.staticCursor)
+	irizz.staticCursor = imgui.checkbox("irizz.staticCursor", irizz.staticCursor, text.staticCursor)
 	irizz.scrollAcceleration =
-		imgui.checkbox("irizz.scrollAcceleration", irizz.scrollAcceleration, Text.scrollAcceleration)
+		imgui.checkbox("irizz.scrollAcceleration", irizz.scrollAcceleration, text.scrollAcceleration)
 
 	irizz.scrollClickExtraTime = imgui.slider1(
 		"irizz.scrollClickExtraTime",
@@ -724,32 +728,32 @@ function SettingsTab:UI(view)
 		0,
 		0.25,
 		0.01,
-		Text.scrollClickExtraTime
+		text.scrollClickExtraTime
 	)
 
 	local colorTheme = irizz.colorTheme
-	local newColorTheme = imgui.combo("irizz.colorTheme", colorTheme, Theme.colorThemes, nil, Text.colorTheme)
+	local newColorTheme = imgui.combo("irizz.colorTheme", colorTheme, Theme.colorThemes, nil, text.colorTheme)
 
 	if colorTheme ~= newColorTheme then
 		irizz.colorTheme = newColorTheme
 		assets:updateColorTheme(newColorTheme, Theme)
 	end
 
-	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, Text.cursor)
-	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, start_sound_names, nil, Text.startSound)
+	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, text.cursor)
+	irizz.startSound = imgui.combo("irizz.startSound", irizz.startSound, start_sound_names, nil, text.startSound)
 
 	imgui.separator()
-	just.text(Text.osuSongSelect)
+	gyatt.text(text.osuSongSelect)
 	just.next(0, textSeparation)
 
 	local load_new_ui = false
 	local load_new_skin = false
 
-	irizz.osuSongSelect, load_new_ui = imgui.checkbox("irizz.osuSongSelect", irizz.osuSongSelect, Text.enable)
+	irizz.osuSongSelect, load_new_ui = imgui.checkbox("irizz.osuSongSelect", irizz.osuSongSelect, text.enable)
 	irizz.osuSongSelectPreviewIcon =
-		imgui.checkbox("irizz.osuSongSelectPreviewIcon", irizz.osuSongSelectPreviewIcon, Text.previewIcon)
+		imgui.checkbox("irizz.osuSongSelectPreviewIcon", irizz.osuSongSelectPreviewIcon, text.previewIcon)
 	irizz.osuSongSelectSkin, load_new_skin =
-		imgui.combo("irizz.osuSongSelectSkin", irizz.osuSongSelectSkin, Theme.osuSkinNames, nil, Text.skin)
+		imgui.combo("irizz.osuSongSelectSkin", irizz.osuSongSelectSkin, Theme.osuSkinNames, nil, text.skin)
 
 	if load_new_ui then
 		---@type skibidi.ScreenView
@@ -774,35 +778,35 @@ function SettingsTab:UI(view)
 	end
 
 	imgui.separator()
-	just.text(Text.osuResultScreen)
+	gyatt.text(text.osuResultScreen)
 	just.next(0, textSeparation)
 
-	irizz.osuResultScreen = imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, Text.enable)
-	irizz.hpGraph = imgui.checkbox("irizz.hpGraph", irizz.hpGraph, Text.showHpGraph)
-	irizz.showPP = imgui.checkbox("irizz.showPP", irizz.showPP, Text.showPP)
+	irizz.osuResultScreen = imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, text.enable)
+	irizz.hpGraph = imgui.checkbox("irizz.hpGraph", irizz.hpGraph, text.showHpGraph)
+	irizz.showPP = imgui.checkbox("irizz.showPP", irizz.showPP, text.showPP)
 
 	if #Theme.osuSkinNames == 0 then
 		Theme.osuSkinNames = { "None" }
 	end
 
-	irizz.osuResultSkin = imgui.combo("irizz.osuResultSkin", irizz.osuResultSkin, Theme.osuSkinNames, nil, Text.skin)
+	irizz.osuResultSkin = imgui.combo("irizz.osuResultSkin", irizz.osuResultSkin, Theme.osuSkinNames, nil, text.skin)
 
 	imgui.separator()
 
-	just.text(Text.dim)
+	gyatt.text(text.dim)
 	just.next(0, textSeparation)
 	local dim = g.dim
-	dim.select = imgui.slider1("dim.select", dim.select, "%0.2f", 0, 1, 0.01, Text.select)
-	dim.gameplay = imgui.slider1("dim.gameplay", dim.gameplay, "%0.2f", 0, 1, 0.01, Text.gameplay)
-	dim.result = imgui.slider1("dim.result", dim.result, "%0.2f", 0, 1, 0.01, Text.result)
+	dim.select = imgui.slider1("dim.select", dim.select, "%0.2f", 0, 1, 0.01, text.select)
+	dim.gameplay = imgui.slider1("dim.gameplay", dim.gameplay, "%0.2f", 0, 1, 0.01, text.gameplay)
+	dim.result = imgui.slider1("dim.result", dim.result, "%0.2f", 0, 1, 0.01, text.result)
 
 	imgui.separator()
-	just.text(Text.blur)
+	gyatt.text(text.blur)
 	just.next(0, textSeparation)
 	local blur = g.blur
-	blur.select = imgui.slider1("blur.select", blur.select, "%d", 0, 20, 1, Text.select)
-	blur.gameplay = imgui.slider1("blur.gameplay", blur.gameplay, "%d", 0, 20, 1, Text.gameplay)
-	blur.result = imgui.slider1("blur.result", blur.result, "%d", 0, 20, 1, Text.result)
+	blur.select = imgui.slider1("blur.select", blur.select, "%d", 0, 20, 1, text.select)
+	blur.gameplay = imgui.slider1("blur.gameplay", blur.gameplay, "%d", 0, 20, 1, text.gameplay)
+	blur.result = imgui.slider1("blur.result", blur.result, "%d", 0, 20, 1, text.result)
 end
 
 function SettingsTab:Version(view)
@@ -810,31 +814,31 @@ function SettingsTab:Version(view)
 	local settings = view.game.configModel.configs.settings
 	local m = settings.miscellaneous
 	just.next(0, textSeparation)
-	m.autoUpdate = imgui.checkbox("autoUpdate", m.autoUpdate, Text.autoUpdate)
+	m.autoUpdate = imgui.checkbox("autoUpdate", m.autoUpdate, text.autoUpdate)
 
 	imgui.separator()
 	if NOESIS_INSTALLED then
-		just.text("Noesis: " .. NOESIS_VERSION)
+		gyatt.text("Noesis: " .. NOESIS_VERSION)
 	end
 
 	if IRIZZ_VERSION then
-		just.text("Irizz theme: " .. IRIZZ_VERSION)
+		gyatt.text("Irizz theme: " .. IRIZZ_VERSION)
 	end
 
-	just.text(Text.commit .. version.commit)
-	just.text(Text.commitDate .. version.date)
+	gyatt.text(text.commit .. version.commit)
+	gyatt.text(text.commitDate .. version.date)
 
 	imgui.separator()
-	just.text(Text.contributors)
-	just.text("semyon422 - For making soundsphere")
-	just.text("iyase - Translating to Japanese and fixing mistakes")
-	just.text("Floob1nk - Translating to Russian")
-	just.text("GPT 4 - Translating to Japanese (poorly)")
+	gyatt.text(text.contributors)
+	gyatt.text("semyon422 - For making soundsphere")
+	gyatt.text("iyase - Translating to Japanese and fixing mistakes")
+	gyatt.text("Floob1nk - Translating to Russian")
+	gyatt.text("GPT 4 - Translating to Japanese (poorly)")
 
-	just.next(0, textSeparation)
-	just.text("Noesis:")
-	just.text("iyase - For allowing to use their skin")
-	just.text("KcHecKa - For allowing to use their skin")
+	gyatt.next(0, textSeparation)
+	gyatt.text("Noesis:")
+	gyatt.text("iyase - For allowing to use their skin")
+	gyatt.text("KcHecKa - For allowing to use their skin")
 end
 
 return SettingsTab

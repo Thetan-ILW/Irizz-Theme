@@ -6,8 +6,10 @@ local Layout = require("thetan.irizz.views.SelectView.Settings.SettingsLayout")
 local SettingsTab = require("thetan.irizz.views.SelectView.Settings.SettingsTabs")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Text = Theme.textSettings
-local Font
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
 local ViewConfig = class()
 
@@ -29,9 +31,10 @@ local currentTab = tabs[1][2]
 function ViewConfig:new(game, assets)
 	self.game = game
 
-	self.settingsPanel = SettingsTab(game, assets)
+	font = assets.localization.fontGroups.settings
+	text = assets.localization.textGroups.settings
 
-	Font = Theme:getFonts("settingsViewConfig")
+	self.settingsPanel = SettingsTab(game, assets)
 end
 
 function ViewConfig:focused()
@@ -63,10 +66,10 @@ function ViewConfig:tabs(view)
 	local tabsCount = #tabs
 	h = h / tabsCount
 
-	love.graphics.setFont(Font.tabs)
+	love.graphics.setFont(font.tabs)
 
 	for i, tab in ipairs(tabs) do
-		local label = Text[tab[1]]
+		local label = text[tab[1]]
 		local methodName = tab[2]
 		if imgui.TextOnlyButton(label, label, w, h, "center", methodName == currentTab) then
 			currentTab = methodName

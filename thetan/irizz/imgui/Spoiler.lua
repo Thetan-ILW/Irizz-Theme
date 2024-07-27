@@ -1,6 +1,5 @@
 local just = require("just")
-local theme = require("imgui.theme")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 
 local height = 0
 local height_start = 0
@@ -29,16 +28,16 @@ return function(id, w, h, preview)
 			love.graphics.rectangle("fill", 0, 0, w, size, cfg.rounding, cfg.rounding)
 			love.graphics.setColor(Color.uiFrames)
 			love.graphics.rectangle("line", 0, 0, w, size, cfg.rounding, cfg.rounding)
-			love.graphics.polygon("line", w-20,h/4, w-30,h/1.6, w-40,h/4)
+			love.graphics.polygon("line", w - 20, h / 4, w - 30, h / 1.6, w - 40, h / 4)
 
 			love.graphics.setColor(Color.text)
-			gfx_util.printFrame(tostring(preview), 0, -2, w, size, "center", "center")
+			gyatt.frame(tostring(preview), 0, -2, w, size, "center", "center")
 
 			if open_frame_id == id then
 				just.clip(love.graphics.rectangle, "fill", 0, 0, 0, 0)
 				return true
 			end
-			just.next(w + size/10, h + cfg.nextItemOffset)
+			just.next(w + size / 10, h + cfg.nextItemOffset)
 			return
 		end
 
@@ -61,7 +60,7 @@ return function(id, w, h, preview)
 
 	h = base_height
 	if open_frame_id then
-		just.next(width + size/10, h + cfg.nextItemOffset)
+		just.next(width + size / 10, h + cfg.nextItemOffset)
 		open_frame_id = nil
 		return
 	end
@@ -69,5 +68,5 @@ return function(id, w, h, preview)
 	love.graphics.setColor(Color.accent)
 	love.graphics.rectangle("line", 0, 0, w, height, cfg.rounding)
 
-	just.next(width + size/10, height + cfg.nextItemOffset)
+	just.next(width + size / 10, height + cfg.nextItemOffset)
 end

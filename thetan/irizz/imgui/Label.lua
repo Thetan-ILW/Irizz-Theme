@@ -1,5 +1,5 @@
 local just = require("just")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 
 return function(id, text, h)
 	local font = love.graphics.getFont()
@@ -7,7 +7,7 @@ return function(id, text, h)
 
 	just.mouse_over(id, just.is_over(w, h), "mouse")
 
-	gfx_util.printFrame(text, 0, 0, w, h, "left", "center")
+	gyatt.frame(text, 0, 0, w, h, "left", "center")
 
 	just.next(w, h)
 

@@ -1,5 +1,4 @@
 local just = require("just")
-local theme = require("imgui.theme")
 local Spoiler = require("thetan.irizz.imgui.Spoiler")
 local TextOnlyButton = require("thetan.irizz.imgui.TextOnlyButton")
 

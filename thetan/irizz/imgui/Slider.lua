@@ -1,7 +1,6 @@
 local just = require("just")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 local map = require("math_util").map
-local theme = require("imgui.theme")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -23,8 +22,8 @@ return function(id, value, w, h, displayValue)
 	local new_value, active, hovered = just.slider(id, over, pos, value)
 
 	local size = cfg.size
-	local size4 = size/4
-	local size2 = size/2
+	local size4 = size / 4
+	local size2 = size / 2
 
 	love.graphics.setColor(Color.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, size, cfg.rounding, cfg.rounding)
@@ -33,14 +32,14 @@ return function(id, value, w, h, displayValue)
 
 	local x = map(math.min(math.max(value, 0), 1), 0, 1, size2, w - size2)
 	love.graphics.setColor(Color.accent)
-	love.graphics.rectangle("fill", size4, size4, x, size2, cfg.rounding/2, cfg.rounding/2)
+	love.graphics.rectangle("fill", size4, size4, x, size2, cfg.rounding / 2, cfg.rounding / 2)
 	love.graphics.setColor(Color.darkerAccent)
-	love.graphics.rectangle("line", size4, size4, x, size2, cfg.rounding/2, cfg.rounding/2)
+	love.graphics.rectangle("line", size4, size4, x, size2, cfg.rounding / 2, cfg.rounding / 2)
 	love.graphics.setColor(Color.uiFrames)
-	love.graphics.rectangle("line", x - size4, size4, size2, size2, cfg.rounding/2, cfg.rounding/2)
+	love.graphics.rectangle("line", x - size4, size4, size2, size2, cfg.rounding / 2, cfg.rounding / 2)
 
 	if displayValue then
-		local width = love.graphics.getFont():getWidth(displayValue)
+		local width = love.graphics.getFont():getWidth(displayValue) * gyatt.getTextScale()
 		local tx = (w - width) / 2
 		if x >= w / 2 then
 			love.graphics.setColor(Color.darkText)
@@ -49,10 +48,10 @@ return function(id, value, w, h, displayValue)
 			love.graphics.setColor(Color.text)
 			tx = math.max(tx, x + size / 2)
 		end
-		gfx_util.printFrame(displayValue, tx, -2, width, size, "left", "center")
+		gyatt.frame(displayValue, tx, -3, w, size, "left", "center")
 	end
 
-	just.next(w + size/10, size)
+	just.next(w + size / 10, size)
 
 	return new_value
 end
