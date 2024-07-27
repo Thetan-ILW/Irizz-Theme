@@ -1,5 +1,4 @@
 local gfx_util = require("gfx_util")
-local imgui = require("thetan.irizz.imgui")
 local just = require("just")
 local math_util = require("math_util")
 local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
@@ -8,8 +7,6 @@ local gyatt = {}
 
 gyatt.inputMode = "keyboard"
 gyatt.getCanvas = gfx_util.getCanvas
-gyatt.separator = imgui.separator
-gyatt.setSize = imgui.setSize
 gyatt.button = just.button
 gyatt.isOver = just.is_over
 gyatt.wheelOver = just.wheel_over

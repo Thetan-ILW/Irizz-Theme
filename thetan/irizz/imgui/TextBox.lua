@@ -1,5 +1,5 @@
 local just = require("just")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -56,7 +56,7 @@ return function(id, text, index, w, h, password)
 			drawableText = string.rep("*", #text)
 		end
 
-		gfx_util.printFrame(drawableText, 0, -3, w, h, "center", "center")
+		gyatt.frame(drawableText, 0, -3, w, h, "center", "center")
 		local offset = just.text(right)
 		just.indent(-offset)
 	else
@@ -68,12 +68,12 @@ return function(id, text, index, w, h, password)
 			drawableText = string.rep("*", #text)
 		end
 
-		gfx_util.printFrame(drawableText, 0, -3, w, h, "center", "center")
+		gyatt.frame(drawableText, 0, -3, w, h, "center", "center")
 	end
 
 	if not changed and text == "" then
 		love.graphics.setColor(1, 1, 1, 0.5)
-		gfx_util.printFrame(placeholder, 0, -3, w, h, "center", "center")
+		gyatt.frame(placeholder, 0, -3, w, h, "center", "center")
 	end
 
 	just.clip()

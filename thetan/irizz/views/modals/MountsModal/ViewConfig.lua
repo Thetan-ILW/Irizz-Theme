@@ -1,7 +1,10 @@
-local gfx_util = require("gfx_util")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
+
 local imgui = require("thetan.irizz.imgui")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
+
+local MountsListView = require("thetan.irizz.views.modals.MountsModal.MountsListView")
 
 local TextBox = require("thetan.irizz.imgui.TextBox")
 
@@ -9,12 +12,28 @@ local Layout = require("thetan.irizz.views.modals.MountsModal.Layout")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textMounts
-local Font = Theme:getFonts("mountsModal")
 
-local ViewConfig = {}
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
-local tab = Text.locations
+---@class irizz.MountsModalViewConfig : IViewConfig
+---@operator call: irizz.MountsModalViewConfig
+local ViewConfig = IViewConfig + {}
+
+local tab = ""
+
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(game, assets)
+	self.mountsListView = MountsListView(game, assets)
+
+	font = assets.localization.fontGroups.mountsModal
+	text = assets.localization.textGroups.mountsModal
+
+	tab = text.locations
+end
 
 function ViewConfig:mounts(view)
 	local locationsRepo = view.game.cacheModel.locationsRepo
@@ -33,7 +52,7 @@ function ViewConfig:mounts(view)
 
 	w, h = Layout:move("listButton")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.buttons)
+	love.graphics.setFont(font.buttons)
 
 	w = w / 2
 
@@ -45,7 +64,7 @@ function ViewConfig:mounts(view)
 		love.graphics.setColor(Color.text)
 	end
 
-	gfx_util.printFrame(Text.create, 0, -3, w, h, "center", "center")
+	gyatt.frame(text.create, 0, -3, w, h, "center", "center")
 
 	if just.button("createLocation", overCreate) then
 		local location = locationsRepo:insertLocation({
@@ -66,7 +85,7 @@ function ViewConfig:mounts(view)
 		love.graphics.setColor(Color.text)
 	end
 
-	gfx_util.printFrame(Text.delete, 0, -3, w, h, "center", "center")
+	gyatt.frame(text.delete, 0, -3, w, h, "center", "center")
 
 	if just.button("deleteLocation", overDelete) then
 		if not selected_loc.is_internal then
@@ -90,7 +109,7 @@ function ViewConfig:locations(view)
 
 	local w, h = Layout:move("window")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.windowText)
+	love.graphics.setFont(font.windowText)
 
 	local uiW = w / 2.5
 	local uiH = Theme.imgui.size
@@ -108,46 +127,46 @@ function ViewConfig:locations(view)
 	local path = selected_loc.path
 
 	if not selected_loc.is_internal then
-		love.graphics.setFont(Font.fields)
+		love.graphics.setFont(font.fields)
 
-		local changed, text = TextBox("loc name", { selected_loc.name, "Name" }, nil, w, h, false)
+		local changed, input = TextBox("loc name", { selected_loc.name, "Name" }, nil, w, h, false)
 		if changed then
 			locationsRepo:updateLocation({
 				id = selected_loc.id,
-				name = text,
+				name = input,
 			})
 			locationManager:selectLocations()
 			locationManager:selectLocation(selected_loc.id)
 		end
 
-		love.graphics.setFont(Font.windowText)
+		love.graphics.setFont(font.windowText)
 		love.graphics.setColor(Color.text)
 	end
 
-	if imgui.button("cache_button", Text.update) then
+	if imgui.button("cache_button", text.update) then
 		view.game.selectController:updateCacheLocation(selected_loc.id)
 	end
 
 	just.sameline()
 	just.indent(15)
 
-	if imgui.button("reset dir", Text.deleteCache) then
+	if imgui.button("reset dir", text.deleteCache) then
 		locationManager:deleteCharts(selected_loc.id)
 		view.game.selectModel:noDebouncePullNoteChartSet()
 	end
 
 	if selected_loc.is_internal then
 		just.indent(8)
-		just.text("Internal")
+		gyatt.text("Internal")
 	end
 
 	just.indent(8)
-	just.text("Real path: ")
+	gyatt.text("Real path: ")
 	just.indent(8)
 	if path then
 		imgui.url("open dir", path, path, false, w)
 	else
-		just.text(Text.notSpecified)
+		gyatt.text(text.notSpecified)
 	end
 end
 
@@ -162,14 +181,14 @@ function ViewConfig:database(view)
 	imgui.separator()
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.textHeader)
-	gyatt.text(Text.chartdiffs, w, "left")
+	love.graphics.setFont(font.textHeader)
+	gyatt.text(text.chartdiffs, w, "left")
 
-	love.graphics.setFont(Font.windowText)
-	gyatt.text(Text.computed:format(cacheStatus.chartdiffs), w, "left")
+	love.graphics.setFont(font.windowText)
+	gyatt.text(text.computed:format(cacheStatus.chartdiffs), w, "left")
 	love.graphics.translate(0, 15)
 
-	if imgui.button("computeScores", Text.compute) then
+	if imgui.button("computeScores", text.compute) then
 		cacheModel:computeChartdiffs()
 		cacheStatus:update()
 	end
@@ -177,32 +196,32 @@ function ViewConfig:database(view)
 	just.sameline()
 	just.indent(15)
 
-	if imgui.button("delete chartdiffs", Text.delete) then
+	if imgui.button("delete chartdiffs", text.delete) then
 		view.game.cacheModel.chartdiffsRepo:deleteChartdiffs()
 		cacheStatus:update()
 	end
 
-	if imgui.button("compute cds", Text.computeMissing) then
+	if imgui.button("compute cds", text.computeMissing) then
 		cacheModel:computeChartdiffs()
 	end
 
-	if imgui.button("compute incomplete cds", Text.computeIncomplete) then
+	if imgui.button("compute incomplete cds", text.computeIncomplete) then
 		cacheModel:computeIncompleteChartdiffs()
 	end
 
-	if imgui.button("compute incomplete cds pp", Text.computeIncompleteUsePreview) then
+	if imgui.button("compute incomplete cds pp", text.computeIncompleteUsePreview) then
 		cacheModel:computeIncompleteChartdiffs(true)
 	end
 
 	imgui.separator()
-	love.graphics.setFont(Font.textHeader)
-	gyatt.text(Text.chartmetas, w, "left")
+	love.graphics.setFont(font.textHeader)
+	gyatt.text(text.chartmetas, w, "left")
 
-	love.graphics.setFont(Font.windowText)
-	gyatt.text(Text.computed:format(cacheStatus.chartmetas), w, "left")
+	love.graphics.setFont(font.windowText)
+	gyatt.text(text.computed:format(cacheStatus.chartmetas), w, "left")
 	love.graphics.translate(0, 15)
 
-	if imgui.button("delete chartmetas", Text.delete) then
+	if imgui.button("delete chartmetas", text.delete) then
 		view.game.cacheModel.chartmetasRepo:deleteChartmetas()
 		cacheStatus:update()
 	end
@@ -213,16 +232,16 @@ end
 
 function ViewConfig:tabButtons()
 	local w, h = Layout:move("buttons")
-	love.graphics.setFont(Font.buttons)
+	love.graphics.setFont(font.buttons)
 	Theme:panel(w, h)
 
-	if imgui.TextOnlyButton("locationsTab", Text.locations, w, h / 2, "center", tab == Text.locations) then
-		tab = Text.locations
+	if imgui.TextOnlyButton("locationsTab", text.locations, w, h / 2, "center", tab == text.locations) then
+		tab = text.locations
 		Theme:playSound("tabButtonClick")
 	end
 
-	if imgui.TextOnlyButton("databaseTab", Text.database, w, h / 2, "center", tab == Text.database) then
-		tab = Text.database
+	if imgui.TextOnlyButton("databaseTab", text.database, w, h / 2, "center", tab == text.database) then
+		tab = text.database
 		Theme:playSound("tabButtonClick")
 	end
 
@@ -237,12 +256,12 @@ function ViewConfig:draw(view)
 
 	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.title)
-	gfx_util.printFrame(Text.mounts, 0, 0, w, h, "center", "center")
+	love.graphics.setFont(font.title)
+	gyatt.frame(text.mounts, 0, 0, w, h, "center", "center")
 
 	self:mounts(view)
 
-	if tab == Text.locations then
+	if tab == text.locations then
 		self:locations(view)
 	else
 		local cacheStatus = view.game.cacheModel.cacheStatus

@@ -1,4 +1,5 @@
 local just = require("just")
+local gyatt = require("thetan.gyatt")
 local oldtheme = require("imgui.theme")
 local autoload = require("autoload")
 local math_util = require("math_util")
@@ -65,7 +66,7 @@ end
 ---@param w number
 function imgui.url(id, text, url, isLabel, w)
 	local font = love.graphics.getFont()
-	local width = w or font:getWidth(text)
+	local width = w or font:getWidth(text) * gyatt.getTextScale()
 	local height = _h
 	if not isLabel then
 		height = font:getHeight() * font:getLineHeight()
@@ -81,7 +82,7 @@ function imgui.url(id, text, url, isLabel, w)
 		love.graphics.setColor(0, 0.8, 1)
 	end
 
-	gfx_util.printFrame(text, 0, 0, width, height, "left", "top")
+	gyatt.frame(text, 0, 0, width, height, "left", "top")
 	just.pop()
 
 	if changed then
@@ -94,7 +95,7 @@ end
 ---@param text string
 ---@return number?
 function imgui.button(id, text)
-	local width = love.graphics.getFont():getWidth(text)
+	local width = love.graphics.getFont():getWidth(text) * gyatt.getTextScale()
 	return imgui.TextButton(id, text, width + cfg.size, _h)
 end
 
