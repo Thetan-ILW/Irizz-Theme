@@ -1,18 +1,35 @@
-local gfx_util = require("gfx_util")
-local imgui = require("thetan.irizz.imgui")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
+
+local gyatt = require("thetan.gyatt")
 
 local Format = require("sphere.views.Format")
 
+local InputListView = require("thetan.irizz.views.modals.InputModal.InputListView")
+
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textInputs
-local Font = Theme:getFonts("inputsModal")
+
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
 local Layout = require("thetan.irizz.views.modals.InputModal.Layout")
 
-local ViewConfig = {}
+---@class irizz.InputModalViewConfig : IViewConfig
+---@operator call: irizz.InputModalViewConfig
+local ViewConfig = IViewConfig + {}
 
 local inputMode = ""
+
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(game, assets)
+	font = assets.localization.fontGroups.inputModal
+	text = assets.localization.textGroups.inputModal
+
+	self.inputListView = InputListView(game, assets)
+end
 
 function ViewConfig:inputs(view)
 	local w, h = Layout:move("inputs")
@@ -20,7 +37,7 @@ function ViewConfig:inputs(view)
 	Theme:border(w, h)
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.inputs)
+	love.graphics.setFont(font.inputs)
 
 	self.inputListView:draw(w, h, true)
 end
@@ -29,12 +46,12 @@ function ViewConfig:inputMode(view)
 	local w, h = Layout:move("inputMode")
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.inputMode)
+	love.graphics.setFont(font.inputMode)
 
 	inputMode = Format.inputMode(inputMode)
 	inputMode = inputMode == "2K" and "TAIKO" or inputMode
 
-	gfx_util.printFrame(inputMode, 0, 0, w, h, "center", "center")
+	gyatt.frame(inputMode, 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:draw(view)
@@ -42,8 +59,8 @@ function ViewConfig:draw(view)
 
 	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.title)
-	gfx_util.printFrame(Text.inputs, 0, 0, w, h, "center", "center")
+	love.graphics.setFont(font.title)
+	gyatt.frame(text.inputs, 0, 0, w, h, "center", "center")
 
 	inputMode = view.inputMode
 

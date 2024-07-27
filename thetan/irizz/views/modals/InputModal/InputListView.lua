@@ -1,5 +1,6 @@
 local just = require("just")
 local imgui = require("thetan.irizz.imgui")
+local gyatt = require("thetan.gyatt")
 
 local Format = require("sphere.views.Format")
 local ListView = require("thetan.irizz.views.ListView")
@@ -11,15 +12,17 @@ local InputListView = ListView + {}
 
 InputListView.rows = 11
 InputListView.centerItems = false
-InputListView.scrollSound = Theme.sounds.scrollSoundLargeList
-InputListView.text = Theme.textInputsList
 InputListView.device = ""
 InputListView.inputMode = ""
 
-function InputListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function InputListView:new(game, assets)
 	ListView:new(game)
+
 	self.game = game
-	self.font = Theme:getFonts("inputsModal")
+	self.font = assets.localization.fontGroups.inputModal
+	self.text = assets.localization.textGroups.inputModal
 end
 
 function InputListView:reloadItems()
@@ -53,16 +56,18 @@ function InputListView:reloadItems()
 	self.items = keys
 end
 
+local gfx = love.graphics
+
 function InputListView:drawItem(i, w, h)
 	local item = self.items[i]
 	self:drawItemBody(w, h, i, false)
 
-	love.graphics.setColor(Color.text)
+	gfx.setColor(Color.text)
 	imgui.setSize(w, h, w / 11, h * 0.7)
 
-	just.row(true)
-	love.graphics.translate(15, 10)
-	just.text(Format.inputMode(item.virtualKey), 70)
+	gyatt.row(true)
+	gfx.translate(15, 10)
+	gyatt.text(Format.inputMode(item.virtualKey), 70)
 
 	local inputIdPattern = "input hotkey %s %s"
 
@@ -82,7 +87,7 @@ function InputListView:drawItem(i, w, h)
 		end
 	end
 
-	just.row()
+	gyatt.row()
 end
 
 return InputListView

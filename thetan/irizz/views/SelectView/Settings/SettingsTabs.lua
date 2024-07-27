@@ -34,7 +34,7 @@ SettingsTab.container = Container("settingsContainer")
 function SettingsTab:new(game, assets)
 	text = assets.localization.textGroups.settings
 	start_sound_names = assets.startSoundNames
-	inputListView = InputListView(game)
+	inputListView = InputListView(game, assets)
 end
 
 function SettingsTab:updateItems(view)

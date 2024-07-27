@@ -255,7 +255,7 @@ l.textGroups = {
 		noteSkins = "Note skins",
 		noSettings = "No settings!",
 	},
-	inputsModal = {
+	inputModal = {
 		inputs = "Inputs",
 	},
 	mountsModal = {
@@ -561,9 +561,9 @@ l.fontGroups = {
 		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
-	inputsModal = {
+	inputModal = {
 		title = { "ZenMaruGothic-Black", 72 },
-		tabs = { "ZenMaruGothic-Medium", 28 },
+		--tabs = { "ZenMaruGothic-Medium", 28 },
 		noInputs = { "ZenMaruGothic-Medium", 36 },
 		inputs = { "ZenMaruGothic-Black", 24 },
 		inputMode = { "ZenMaruGothic-Black", 48 },

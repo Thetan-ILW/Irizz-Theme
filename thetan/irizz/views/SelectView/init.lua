@@ -274,7 +274,7 @@ function SelectView:songSelectInputs()
 end
 
 function SelectView:canUpdate()
-	local canUpdate = not self.modalActive
+	local canUpdate = not self.modal
 	canUpdate = canUpdate and (not self.mainMenuView:isActive())
 
 	return canUpdate

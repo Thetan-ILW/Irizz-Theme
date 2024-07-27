@@ -18,6 +18,7 @@ gyatt.next = just.next
 gyatt.sameline = just.sameline
 gyatt.focus = just.focus
 gyatt.textInput = just.textinput
+gyatt.row = just.row
 
 local text_transform = love.math.newTransform()
 local text_scale = 1
@@ -44,7 +45,7 @@ function gyatt.text(text, w, ax)
 	love.graphics.pop()
 
 	local font = love.graphics.getFont()
-	just.next(font:getWidth(text) * text_scale, font:getHeight() * text_scale)
+	just.next(w, font:getHeight() * text_scale)
 end
 
 function gyatt.frame(text, x, y, w, h, ax, ay)

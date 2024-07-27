@@ -1,5 +1,5 @@
 local just = require("just")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 local theme = require("imgui.theme")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -46,9 +46,9 @@ return function(id, text, w, h)
 	love.graphics.setColor(1, 1, 1, 1)
 
 	text = just.focused_id == id and "???" or text or ""
-	gfx_util.printFrame(text, h * theme.padding, 0, w, h, "left", "center")
+	gyatt.frame(text, h * theme.padding, 0, w, h, "left", "center")
 
-	just.next(w + h/10, h + cfg.nextItemOffset)
+	just.next(w + h / 10, h + cfg.nextItemOffset)
 
 	return changed, key, device, device_id
 end
