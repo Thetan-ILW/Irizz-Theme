@@ -565,7 +565,7 @@ local function bottomButtonImage(id, image, mouse_over_image)
 	local _, ih = image:getDimensions()
 
 	gfx.translate(0, -ih)
-	gfx.setColor({ 1, 1, 1, a })
+	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.draw(image)
 	gfx.translate(0, ih)
 
@@ -891,7 +891,6 @@ function ViewConfig:draw(view)
 
 	if selected_group == "charts" then
 		self:chartSetList()
-		self:search(view)
 	else
 		self:collectionList(view)
 	end
@@ -901,6 +900,11 @@ function ViewConfig:draw(view)
 	self:bottom(view)
 	self:chartInfo()
 	self:topUI(view)
+
+	if selected_group == "charts" then
+		self:search(view)
+	end
+
 	self:mods(view)
 end
 

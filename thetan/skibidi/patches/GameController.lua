@@ -40,6 +40,9 @@ modulePatcher:insert(module, "load", function(self)
 
 	if configModel.configs.irizz.osuSongSelect then
 		self.ui.selectView = OsuSelectView(self)
+		local irizz = SelectView(self) -- do not do this, kids
+		irizz.assetModel = self.assetModel
+		irizz:loadAssets()
 	else
 		self.ui.selectView = SelectView(self)
 	end
