@@ -1,20 +1,20 @@
 local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
-local gfx_util = require("gfx_util")
-local ModifierModel = require("sphere.models.ModifierModel")
 
-local Theme = require("thetan.irizz.views.Theme")
+local gyatt = require("thetan.gyatt")
+local ModifierModel = require("sphere.models.ModifierModel")
 
 local AvailableModifierListView = ListView + {}
 
 AvailableModifierListView.rows = 11
 AvailableModifierListView.centerItems = false
-AvailableModifierListView.scrollSound = Theme.sounds.scrollSoundLargeList
-AvailableModifierListView.text = Theme.textAvailableModifiersList
 
-function AvailableModifierListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function AvailableModifierListView:new(game, assets)
 	self.game = game
-	self.font = Theme:getFonts("modifiersModal")
+	self.font = assets.localization.fontGroups.modifiersModal
+	self.text = assets.localization.textGroups.modifiersModal
 end
 
 function AvailableModifierListView:reloadItems()
@@ -59,7 +59,7 @@ function AvailableModifierListView:drawItem(i, w, h)
 
 	just.row(true)
 	love.graphics.setFont(self.font.modifierName)
-	gfx_util.printFrame(mod.name, 15, 0, w - 44, h, "left", "center")
+	gyatt.frame(mod.name, 15, 0, w - 44, h, "left", "center")
 	if just.mouse_over(id, just.is_over(w, h), "mouse") then
 		self.game.gameView.tooltip = mod.description
 	end
@@ -71,7 +71,7 @@ function AvailableModifierListView:drawItem(i, w, h)
 			text = "Sequential modifiers"
 		end
 		love.graphics.setFont(self.font.numberOfUses)
-		gfx_util.printFrame(text, 0, 15, w - 22, h / 4, "right", "center")
+		gyatt.frame(text, 0, 15, w - 22, h / 4, "right", "center")
 	end
 	just.row()
 end

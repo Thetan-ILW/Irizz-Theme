@@ -1,16 +1,29 @@
-local just = require("just")
-local gfx_util = require("gfx_util")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
+local Layout = require("thetan.irizz.views.modals.ModifierModal.Layout")
+
+local gyatt = require("thetan.gyatt")
 
 local Format = require("sphere.views.Format")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textModifiers
-local Font = Theme:getFonts("modifiersModal")
 
-local Layout = require("thetan.irizz.views.modals.ModifierModal.Layout")
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
-local ViewConfig = {}
+---@class irizz.ModifierModalViewConfig : IViewConfig
+---@operator call: irizz.ModifierModalViewConfig
+local ViewConfig = IViewConfig + {}
+
+local gfx = love.graphics
+
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(assets)
+	font = assets.localization.fontGroups.modifiersModal
+	text = assets.localization.textGroups.modifiersModal
+end
 
 function ViewConfig:availableModifierList(view)
 	local w, h = Layout:move("availableMods")
@@ -32,13 +45,14 @@ end
 function ViewConfig:inputMode(view)
 	local w, h = Layout:move("inputMode")
 
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.inputMode)
-	local inputMode = view.game.selectController.state.inputMode
-	inputMode = Format.inputMode(tostring(inputMode))
-	inputMode = inputMode == "2K" and "TAIKO" or inputMode
+	local input_mode = view.game.selectController.state.inputMode
+	input_mode = Format.inputMode(tostring(input_mode))
+	input_mode = input_mode == "2K" and "TAIKO" or input_mode
 
-	gfx_util.printFrame(inputMode, 0, 0, w, h, "center", "center")
+	gfx.setColor(Color.text)
+	gfx.setFont(font.inputMode)
+
+	gyatt.frame(input_mode, 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:draw(view)
@@ -49,8 +63,8 @@ function ViewConfig:draw(view)
 
 	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.title)
-	gfx_util.printFrame(Text.modifiers, 0, 0, w, h, "center", "center")
+	love.graphics.setFont(font.title)
+	gyatt.frame(text.modifiers, 0, 0, w, h, "center", "center")
 
 	love.graphics.setLineStyle("rough")
 	love.graphics.setLineWidth(4)

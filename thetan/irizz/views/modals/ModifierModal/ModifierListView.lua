@@ -1,6 +1,7 @@
-local ListView = require("thetan.irizz..views.ListView")
+local ListView = require("thetan.irizz.views.ListView")
+local gyatt = require("thetan.gyatt")
 local just = require("just")
-local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
+
 local SliderView = require("sphere.views.SliderView")
 local StepperView = require("sphere.views.StepperView")
 local ModifierModel = require("sphere.models.ModifierModel")
@@ -12,13 +13,14 @@ local ModifierListView = ListView + {}
 
 ModifierListView.rows = 11
 ModifierListView.centerItems = true
-ModifierListView.scrollSound = Theme.sounds.scrollSoundLargeList
-ModifierListView.text = Theme.textModifiersList
 
-function ModifierListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function ModifierListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("modifiersModal")
+	self.font = assets.localization.fontGroups.modifiersModal
+	self.text = assets.localization.textGroups.modifiersModal
 end
 
 function ModifierListView:reloadItems()
@@ -34,6 +36,8 @@ end
 function ModifierListView:scroll(count)
 	self.game.modifierSelectModel:scrollModifier(count)
 end
+
+local gfx = love.graphics
 
 ---@param i number
 ---@param w number
@@ -53,24 +57,19 @@ function ModifierListView:drawItem(i, w, h)
 	love.graphics.setColor(Color.text)
 
 	just.row(true)
-	just.indent(44)
-	TextCellImView(
-		w2 - 44,
-		72,
-		"left",
-		"",
-		ModifierModel.Modifiers[item.id],
-		self.font.modifierName,
-		self.font.modifierName
-	)
+
+	gfx.setFont(self.font.modifierName)
+
+	gfx.translate(15, 0)
+	gyatt.frame(ModifierModel.Modifiers[item.id] or "NONE", 0, 0, math.huge, h, "left", "center")
 
 	local modifier = ModifierModel:getModifier(item.id)
 	if not modifier then
-		TextCellImView(w2 - 44, 72, "left", "", "Deleted modifier", self.font.modifierName, self.font.modifierName)
+		gyatt.frame("DELETED MODIFIER", 0, 0, math.huge, h, "left", "top")
 	elseif modifier.defaultValue == nil then
 	elseif type(modifier.defaultValue) == "number" then
-		just.indent(-w2)
-		TextCellImView(w2, 72, "right", "", item.value, self.font.modifierName, self.font.modifierName)
+		gyatt.frame(item.value, 0, 0, 265, h, "right", "center")
+		gfx.translate(265, 0)
 
 		local value = modifier:toNormValue(item.value)
 
@@ -88,8 +87,8 @@ function ModifierListView:drawItem(i, w, h)
 		end
 		SliderView:draw(w2, h, value)
 	elseif type(modifier.defaultValue) == "string" then
-		TextCellImView(w2, 72, "center", "", item.value, self.font.modifierName, self.font.modifierName)
-		just.indent(-w2)
+		gyatt.frame(item.value, 0, 0, 280, h, "right", "center")
+		gfx.translate(280, 0)
 
 		local value = modifier:toIndexValue(item.value)
 		local count = modifier:getCount()

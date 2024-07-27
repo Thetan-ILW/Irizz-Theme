@@ -248,17 +248,17 @@ l.textGroups = {
 	mountsList = {
 		noItems = "No mounts!",
 	},
-	modifiers = {
+	modifiersModal = {
 		modifiers = "Modifiers",
 	},
-	noteSkins = {
+	noteSkinsModal = {
 		noteSkins = "Note skins",
 		noSettings = "No settings!",
 	},
-	inputs = {
+	inputsModal = {
 		inputs = "Inputs",
 	},
-	mounts = {
+	mountsModal = {
 		mounts = "Mounts",
 		update = "Update",
 		deleteCache = "Delete cache",
@@ -275,7 +275,7 @@ l.textGroups = {
 		computed = "Computed: %i",
 		notSpecified = "Not specified",
 	},
-	online = {
+	onlineModal = {
 		notLoggedIn = "Connect to the server:",
 		loggedIn = "You are connected to the server.",
 		connect = "Sign in",
@@ -291,7 +291,7 @@ l.textGroups = {
 		noToken = "No access token.",
 		noId = "No beatmap ID",
 	},
-	filters = {
+	filtersModal = {
 		filters = "Filters",
 		moddedCharts = "Show modified charts",
 		chartCount = "%i charts in '%s'",
@@ -337,7 +337,7 @@ l.textGroups = {
 		mods = "Mods: %s",
 		guest = "Guest",
 	},
-	multiplayer = {
+	multiplayerModal = {
 		title = "Multiplayer and players",
 		noPlayers = "Nobody is online.",
 		players = "Players:",
@@ -358,7 +358,7 @@ l.textGroups = {
 		retry = "Retry",
 		quit = "Quit",
 	},
-	chartInfo = {
+	chartInfoModal = {
 		chartInfo = "Chart info",
 		artist = "Artist",
 		title = "Title",
@@ -399,7 +399,7 @@ l.textGroups = {
 		chartsFound = "Processed / Found",
 		chartsCached = "Charts cached",
 	},
-	keybinds = {
+	keybindsModal = {
 		keybinds = "Key binds",
 	},
 	notification = {
