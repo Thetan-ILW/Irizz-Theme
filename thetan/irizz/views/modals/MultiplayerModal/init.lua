@@ -4,11 +4,12 @@ local ViewConfig = require("thetan.irizz.views.modals.MultiplayerModal.ViewConfi
 local MultiplayerModal = Modal + {}
 
 MultiplayerModal.name = "MultiplayerModal"
-MultiplayerModal.viewConfig = nil
 
 function MultiplayerModal:new(game)
-    self.game = game
-    self.viewConfig = ViewConfig(game)
+	self.game = game
+
+	local assets = game.assetModel:get("irizz")
+	self.viewConfig = ViewConfig(game, assets)
 end
 
 function MultiplayerModal:update()

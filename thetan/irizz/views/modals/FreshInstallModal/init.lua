@@ -4,13 +4,15 @@ local ViewConfig = require("thetan.irizz.views.modals.FreshInstallModal.ViewConf
 local FreshInstallModal = Modal + {}
 
 FreshInstallModal.name = "FreshInstallModal"
-FreshInstallModal.viewConfig = ViewConfig()
 FreshInstallModal.newSongs = {}
 FreshInstallModal.mountAndCache = false
 
 function FreshInstallModal:new(game)
 	self.game = game
 	self.newSongs = self.game.cacheModel.newSongs
+
+	local assets = game.assetModel:get("irizz")
+	self.viewConfig = ViewConfig(assets)
 end
 
 function FreshInstallModal:onQuit()

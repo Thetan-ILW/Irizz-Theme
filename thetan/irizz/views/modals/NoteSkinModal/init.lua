@@ -1,11 +1,9 @@
 local Modal = require("thetan.irizz.views.modals.Modal")
 local ViewConfig = require("thetan.irizz.views.modals.NoteSkinModal.ViewConfig")
-local NoteSkinListView = require("thetan.irizz.views.modals.NoteSkinModal.NoteSkinListView")
 
 local NoteSkinModal = Modal + {}
 
 NoteSkinModal.name = "NoteSkins"
-NoteSkinModal.viewConfig = ViewConfig
 
 function NoteSkinModal:onQuit()
 	local note_skin = self.viewConfig.selectedNoteSkin
@@ -17,7 +15,9 @@ end
 
 function NoteSkinModal:new(game)
 	self.game = game
-	ViewConfig.noteSkinListView = NoteSkinListView(game)
+
+	local assets = game.assetModel:get("irizz")
+	self.viewConfig = ViewConfig(game, assets)
 end
 
 return NoteSkinModal

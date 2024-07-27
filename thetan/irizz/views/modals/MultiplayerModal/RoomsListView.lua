@@ -11,13 +11,15 @@ local RoomsListView = ListView + {}
 
 RoomsListView.rows = 9
 RoomsListView.centerItems = false
-RoomsListView.scrollSound = Theme.sounds.scrollSoundLargeList
-RoomsListView.text = Theme.textRoomsList
 
-function RoomsListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function RoomsListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("multiplayerModal")
+
+	self.text, self.font = assets.localization:get("roomsListView", "multiplayerModal")
+	assert(self.text and self.font)
 end
 
 function RoomsListView:reloadItems()

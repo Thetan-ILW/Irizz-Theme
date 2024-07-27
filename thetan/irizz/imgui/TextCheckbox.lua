@@ -1,5 +1,5 @@
 local just = require("just")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -20,26 +20,12 @@ return function(id, w, v, text)
 
 	if v then
 		love.graphics.setColor(Color.accent)
-		love.graphics.rectangle("fill",
-			size4,
-			size4,
-			w - size2,
-			size2,
-			cfg.rounding / 2,
-			cfg.rounding / 2
-		)
+		love.graphics.rectangle("fill", size4, size4, w - size2, size2, cfg.rounding / 2, cfg.rounding / 2)
 		love.graphics.setColor(Color.darkerAccent)
-		love.graphics.rectangle("line",
-			size4,
-			size4,
-			w - size2,
-			size2,
-			cfg.rounding / 2,
-			cfg.rounding / 2
-		)
+		love.graphics.rectangle("line", size4, size4, w - size2, size2, cfg.rounding / 2, cfg.rounding / 2)
 	end
 
-	gfx_util.printFrame(text, 0, 0, w, size, "center", "center")
+	gyatt.frame(text, 0, 0, w, size, "center", "center")
 	just.next(w + 10, size + cfg.nextItemOffset)
 	return changed
 end

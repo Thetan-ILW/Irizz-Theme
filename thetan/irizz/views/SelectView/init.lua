@@ -32,7 +32,7 @@ SelectView.scoreFilterLine = ""
 local songSelectOffset = 0
 
 ---@type audio.Source
-local start_sound = nil
+local start_sound
 
 local window_height = 1080
 
@@ -65,7 +65,7 @@ function SelectView:load()
 		local canAddSongs = #newSongs ~= 0
 
 		if canAddSongs then
-			self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
+			self:openModal("thetan.irizz.views.modals.FreshInstallModal")
 		end
 	end
 

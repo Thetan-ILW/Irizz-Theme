@@ -1,30 +1,38 @@
-local class = require("class")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
 
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
 local just = require("just")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textMultiplayer
-local Font = Theme:getFonts("multiplayerModal")
 local cfg = Theme.imgui
+
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
 local Layout = require("thetan.irizz.views.modals.MultiplayerModal.Layout")
 local Container = require("thetan.gyatt.Container")
 local RoomsListView = require("thetan.irizz.views.modals.MultiplayerModal.RoomsListView")
 local TextBox = require("thetan.irizz.imgui.TextBox")
 
-local ViewConfig = class()
+local ViewConfig = IViewConfig + {}
 
 local gfx = love.graphics
 local roomName = ""
 local roomPassword = ""
 local password = ""
 
-function ViewConfig:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(game, assets)
 	self.playersContainer = Container("playersContainer")
-	self.roomsListView = RoomsListView(game)
+	self.roomsListView = RoomsListView(game, assets)
+
+	text, font = assets.localization:get("multiplayerModal")
+	assert(text and font)
 end
 
 function ViewConfig:players(view)
@@ -39,16 +47,16 @@ function ViewConfig:players(view)
 	self.playersContainer:startDraw(w, h)
 
 	gfx.setColor(Color.text)
-	gfx.setFont(Font.listHeader)
+	gfx.setFont(font.listHeader)
 
-	just.text(Text.players)
+	gyatt.text(text.players)
 	just.next(0, 5)
 
-	gfx.setFont(Font.lists)
+	gfx.setFont(font.lists)
 
 	if users then
 		for _, user in ipairs(users) do
-			just.text(user.name)
+			gyatt.text(user.name)
 		end
 	end
 
@@ -74,24 +82,24 @@ function ViewConfig:buttons(view)
 	Theme:panel(w, h)
 
 	gfx.setColor(Color.text)
-	gfx.setFont(Font.buttons)
+	gfx.setFont(font.buttons)
 
 	w = w - 20
 	h = h - 20
 	gfx.translate(10, 5)
 
-	gfx_util.printFrame(Text.createRoom, 0, 0, w, h, "center", "top")
-	gfx.translate(0, Font.buttons:getHeight() + 15)
-	local changed, text = TextBox("roomName", { roomName, Text.name }, nil, w, h, false)
+	gyatt.frame(text.createRoom, 0, 0, w, h, "center", "top")
+	gfx.translate(0, font.buttons:getHeight() * gyatt.getTextScale() + 15)
+	local changed, input = TextBox("roomName", { roomName, text.name }, nil, w, h, false)
 
 	if changed == "text" then
-		roomName = text
+		roomName = input
 	end
 
-	changed, text = TextBox("roomPassword", { roomPassword, Text.password }, nil, w, h, true)
+	changed, input = TextBox("roomPassword", { roomPassword, text.password }, nil, w, h, true)
 
 	if changed == "text" then
-		roomPassword = text
+		roomPassword = input
 	end
 
 	local uiW = w / 2.5
@@ -99,10 +107,10 @@ function ViewConfig:buttons(view)
 
 	imgui.setSize(w, h, uiW, uiH)
 
-	local textW = Font.buttons:getWidth(Text.create)
+	local textW = font.buttons:getWidth(text.create) * gyatt.getTextScale()
 	gfx.translate((w / 2) - (textW + Theme.imgui.size) / 2, 10)
 
-	if imgui.button("createRoom", Text.create) then
+	if imgui.button("createRoom", text.create) then
 		view.game.multiplayerModel:createRoom(roomName, roomPassword)
 		roomName = ""
 		roomPassword = ""
@@ -114,29 +122,26 @@ function ViewConfig:joinGame(view, room)
 
 	local w, h = Layout:move("connectScreen")
 	gfx.setColor(Color.text)
-	gfx.setFont(Font.listHeader)
-	gfx_util.printFrame(Text.enterPassword:format(room.name), 0, 0, w, h, "center", "top")
-
-	local imguiSize = Theme.imgui.size
-	local nextItemOffset = Theme.imgui.nextItemOffset
+	gfx.setFont(font.listHeader)
+	gyatt.frame(text.enterPassword:format(room.name), 0, 0, w, h, "center", "top")
 
 	local gap = 20
-	local button1Size = gfx.getFont():getWidth(Text.back)
-	local button2Size = gfx.getFont():getWidth(Text.join)
+	local button1Size = gfx.getFont():getWidth(text.back)
+	local button2Size = gfx.getFont():getWidth(text.join)
 
 	gfx.setColor(Color.text)
 	gfx.setFont(Font.buttons)
 
 	gfx.translate(0, 80)
-	local changed, text = TextBox("password", { password, Text.password }, nil, w, h, true)
+	local changed, input = TextBox("password", { password, text.password }, nil, w, h, true)
 
 	if changed == "text" then
-		password = text
+		password = input
 	end
 
 	gfx.translate(w / 2 - (button1Size + button2Size), 50)
 
-	if imgui.button("backToRooms", Text.back) then
+	if imgui.button("backToRooms", text.back) then
 		multiModel.selectedRoom = nil
 		just.focus()
 	end
@@ -144,7 +149,7 @@ function ViewConfig:joinGame(view, room)
 	just.sameline()
 	gfx.translate(gap, 0)
 
-	if imgui.button("connectToRoom", Text.join) then
+	if imgui.button("connectToRoom", text.join) then
 		multiModel:joinRoom(password)
 	end
 end
@@ -165,14 +170,14 @@ function ViewConfig:draw(view)
 
 	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.title)
-	gfx_util.printFrame(Text.title, 0, 0, w, h, "center", "center")
+	love.graphics.setFont(font.title)
+	gyatt.frame(text.title, 0, 0, w, h, "center", "center")
 
 	local status = multiModel.status
 	if status ~= "connected" then
 		w, h = Layout:move("base")
-		gfx.setFont(Font.noItems)
-		gfx_util.printFrame(Text.notConnected:format(status), 0, 0, w, h, "center", "center")
+		gfx.setFont(font.noItems)
+		gyatt.frame(text.notConnected:format(status), 0, 0, w, h, "center", "center")
 		return
 	end
 

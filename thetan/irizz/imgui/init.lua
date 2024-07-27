@@ -210,7 +210,7 @@ function imgui.textcheckbox(id, v, text)
 		v = v == 1
 	end
 
-	local width = love.graphics.getFont():getWidth(text)
+	local width = love.graphics.getFont():getWidth(text) * gyatt.getTextScale()
 	if imgui.TextCheckbox(id, width, v, text) then
 		v = not v
 	end

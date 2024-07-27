@@ -4,7 +4,6 @@ local ViewConfig = require("thetan.irizz.views.modals.FiltersModal.ViewConfig")
 local FiltersModal = Modal + {}
 
 FiltersModal.name = "FiltersModal"
-FiltersModal.viewConfig = ViewConfig()
 
 function FiltersModal:onQuit()
 	if self.game.selectView:isInOsuDirect() then
@@ -22,6 +21,9 @@ end
 
 function FiltersModal:new(game)
 	self.game = game
+
+	local assets = game.assetModel:get("irizz")
+	self.viewConfig = ViewConfig(assets)
 end
 
 return FiltersModal

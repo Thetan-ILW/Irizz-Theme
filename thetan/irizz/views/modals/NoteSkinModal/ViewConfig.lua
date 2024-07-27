@@ -1,20 +1,33 @@
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
+local Layout = require("thetan.irizz.views.modals.NoteSkinModal.Layout")
+
+local gyatt = require("thetan.gyatt")
 local just = require("just")
-local imgui = require("imgui")
-local gfx_util = require("gfx_util")
 
 local Format = require("sphere.views.Format")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textNoteSkins
-local Font = Theme:getFonts("noteSkinModal")
+
+local NoteSkinListView = require("thetan.irizz.views.modals.NoteSkinModal.NoteSkinListView")
 local Container = require("thetan.gyatt.Container")
 
-local Layout = require("thetan.irizz.views.modals.NoteSkinModal.Layout")
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
-local ViewConfig = {}
+local ViewConfig = IViewConfig + {}
 
-ViewConfig.container = Container("settingsContainer")
+---@param game sphere.GameController
+---@param assets  irizz.IrizzAssets
+function ViewConfig:new(game, assets)
+	self.container = Container("settingsContainer")
+	self.noteSkinListView = NoteSkinListView(game, assets)
+
+	text, font = assets.localization:get("noteSkinsModal")
+	assert(text and font)
+end
 
 function ViewConfig:noteSkins(view)
 	local w, h = Layout:move("noteSkins")
@@ -37,13 +50,13 @@ function ViewConfig:noteSkinSettings(view)
 
 	local config = self.selectedNoteSkin.config
 	if not config or not config.draw then
-		love.graphics.setFont(Font.noSettings)
+		love.graphics.setFont(font.noSettings)
 		love.graphics.setColor(Color.text)
-		gfx_util.printFrame(Text.noSettings, 0, 0, w, h, "center", "center")
+		gyatt.frame(text.noSettings, 0, 0, w, h, "center", "center")
 		return
 	end
 
-	love.graphics.setFont(Font.noteSkinSettings)
+	love.graphics.setFont(font.noteSkinSettings)
 	local startHeight = just.height
 	self.container:startDraw(w, h)
 	love.graphics.setColor(Color.text)
@@ -64,11 +77,11 @@ function ViewConfig:noteSkinName(view)
 	inputMode = Format.inputMode(inputMode)
 	inputMode = inputMode == "2K" and "TAIKO" or inputMode
 
-	local text = string.format("[%s] %s", inputMode, skinName)
+	local label = string.format("[%s] %s", inputMode, skinName)
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.skinName)
-	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
+	love.graphics.setFont(font.skinName)
+	gyatt.frame(label, 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:draw(view)
@@ -78,8 +91,8 @@ function ViewConfig:draw(view)
 
 	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.title)
-	gfx_util.printFrame(Text.noteSkins, 0, 0, w, h, "center", "center")
+	love.graphics.setFont(font.title)
+	gyatt.frame(text.noteSkins, 0, 0, w, h, "center", "center")
 
 	self:noteSkins(view)
 	self:noteSkinSettings(view)

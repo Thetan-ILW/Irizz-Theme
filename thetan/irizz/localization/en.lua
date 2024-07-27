@@ -238,7 +238,7 @@ l.textGroups = {
 	noteSkinsList = {
 		noItems = "No note skins.",
 	},
-	roomsList = {
+	roomsListView = {
 		noItems = "No rooms.\nCreate one and invite your friends!",
 		playing = "Playing",
 		join = "Join",
@@ -552,7 +552,7 @@ l.fontGroups = {
 		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
-	noteSkinModal = {
+	noteSkinsModal = {
 		title = { "ZenMaruGothic-Black", 72 },
 		skinName = { "ZenMaruGothic-Black", 48 },
 		noteSkinName = { "ZenMaruGothic-Black", 24 },

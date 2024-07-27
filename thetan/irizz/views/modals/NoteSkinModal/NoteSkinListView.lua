@@ -1,5 +1,5 @@
 local just = require("just")
-local gfx_util = require("gfx_util")
+local gyatt = require("thetan.gyatt")
 
 local ListView = require("thetan.irizz.views.ListView")
 
@@ -10,15 +10,17 @@ local NoteSkinListView = ListView + {}
 
 NoteSkinListView.rows = 11
 NoteSkinListView.centerItems = false
-NoteSkinListView.scrollSound = Theme.sounds.scrollSoundLargeList
-NoteSkinListView.text = Theme.textNoteSkinsList
 NoteSkinListView.selectedNoteSkin = nil
 NoteSkinListView.inputMode = ""
 
-function NoteSkinListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function NoteSkinListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("noteSkinModal")
+
+	self.text, self.font = assets.localization:get("noteSkinsModal")
+	assert(self.font)
 end
 
 function NoteSkinListView:reloadItems()
@@ -51,7 +53,7 @@ function NoteSkinListView:drawItem(i, w, h)
 
 	love.graphics.setColor(Color.text)
 	love.graphics.setFont(self.font.noteSkinName)
-	gfx_util.printFrame(item.name, 15, 0, w - 44, h, "left", "center")
+	gyatt.frame(item.name, 15, 0, math.huge, h, "left", "center")
 end
 
 return NoteSkinListView
