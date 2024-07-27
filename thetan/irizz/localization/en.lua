@@ -217,13 +217,13 @@ l.textGroups = {
 	noteChartSetListView = {
 		noItems = "No chart sets!",
 	},
-	queueList = {
+	osuDirectQueueListView = {
 		noItems = "Queue is empty!",
 	},
-	osuDirectList = {
+	osuDirectListView = {
 		noItems = "Not in osu!direct mode!",
 	},
-	collectionsList = {
+	collectionListView = {
 		noItems = "No collections!",
 	},
 	modifiersList = {
@@ -513,7 +513,7 @@ l.fontGroups = {
 		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
-	collectionsListView = {
+	collectionListView = {
 		itemCount = { "ZenMaruGothic-Black", 18 },
 		name = { "ZenMaruGothic-Black", 24 },
 		noItems = { "ZenMaruGothic-Medium", 36 },

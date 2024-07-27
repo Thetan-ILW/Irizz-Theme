@@ -1,6 +1,4 @@
 local ListView = require("thetan.irizz.views.ListView")
-local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
-local just = require("just")
 local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -10,15 +8,17 @@ local OsuDirectChartsListView = ListView + {}
 
 OsuDirectChartsListView.rows = 7
 OsuDirectChartsListView.centerItems = true
-OsuDirectChartsListView.text = Theme.textOsuDirectList
 
 local action = {}
 
-function OsuDirectChartsListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function OsuDirectChartsListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("osuDirectChartsListView")
-	self.scrollSound = Theme.sounds.scrollSmallList
+	self.font = assets.localization.fontGroups.osuDirectChartsListView
+	self.text = assets.localization.textGroups.osuDirectListView
+	self.scrollSound = assets.sounds.scrollSmallList
 
 	self.actionModel = self.game.actionModel
 end
@@ -37,7 +37,7 @@ function OsuDirectChartsListView:reloadItems()
 end
 
 function OsuDirectChartsListView:input(w, h)
-	local delta = just.wheel_over(self, just.is_over(w, h))
+	local delta = gyatt.wheelOver(self, gyatt.isOver(w, h))
 	if delta then
 		self:scroll(-delta)
 	end
@@ -52,6 +52,8 @@ function OsuDirectChartsListView:input(w, h)
 	end
 end
 
+local gfx = love.graphics
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -59,18 +61,13 @@ function OsuDirectChartsListView:drawItem(i, w, h)
 	local item = self.items[i]
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
-	love.graphics.setColor(Color.text)
-	love.graphics.translate(0, 4)
-	just.indent(15)
-	TextCellImView(
-		math.huge,
-		h,
-		"left",
-		item.beatmapset.creator,
-		item.version,
-		self.font.creator,
-		self.font.difficultyName
-	)
+	gfx.translate(15, 0)
+
+	gfx.setColor(Color.text)
+	gfx.setFont(self.font.creator)
+	gyatt.frame(item.beatmapset.creator, 0, 0, math.huge, h, "left", "top")
+	gfx.setFont(self.font.difficultyName)
+	gyatt.frame(item.version, 0, -5, math.huge, h, "left", "bottom")
 end
 
 return OsuDirectChartsListView

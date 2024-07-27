@@ -52,7 +52,7 @@ function SelectView:load()
 	self.headerView = HeaderView(self.game, self.assets, "select")
 	self.settingsViewConfig = SettingsViewConfig(self.game, self.assets)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game, self.assets)
-	self.collectionsViewConfig = CollectionViewConfig(self.game)
+	self.collectionsViewConfig = CollectionViewConfig(self.game, self.assets)
 
 	self.inputMap = InputMap(self, self.actionModel)
 

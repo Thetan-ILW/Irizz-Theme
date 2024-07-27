@@ -4,8 +4,6 @@ local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 local math_util = require("math_util")
 
-local TextInput = require("thetan.irizz.imgui.TextInput")
-
 local Format = require("sphere.views.Format")
 local Layout = require("thetan.irizz.views.SelectView.SongSelect.SongSelectLayout")
 

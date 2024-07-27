@@ -2,15 +2,17 @@ local class = require("class")
 local just = require("just")
 local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
+local ui = require("thetan.irizz.ui")
 
 local Layout = require("thetan.irizz.views.SelectView.Collections.CollectionsLayout")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textCollections
-local Font
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
-local TextInput = require("thetan.irizz.imgui.TextInput")
 local CollectionListView = require("thetan.irizz.views.SelectView.Collections.CollectionListView")
 local OsuDirectListView = require("thetan.irizz.views.SelectView.Collections.OsuDirectListView")
 local OsuDirectChartsListView = require("thetan.irizz.views.SelectView.Collections.OsuDirectChartsListView")
@@ -23,15 +25,19 @@ local collectionsMode = "Collections"
 
 local actionModel
 
-function ViewConfig:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(game, assets)
 	actionModel = game.actionModel
-	self.collectionListView = CollectionListView(game)
-	self.osuDirectListView = OsuDirectListView(game)
-	self.osuDirectChartsListView = OsuDirectChartsListView(game)
-	self.osuDirectQueueListView = OsuDirectQueueListView(game)
-	self:updateLists()
 
-	Font = Theme:getFonts("collectionsViewConfig")
+	font = assets.localization.fontGroups.collections
+	text = assets.localization.textGroups.collections
+
+	self.collectionListView = CollectionListView(game, assets)
+	self.osuDirectListView = OsuDirectListView(game, assets)
+	self.osuDirectChartsListView = OsuDirectChartsListView(game, assets)
+	self.osuDirectQueueListView = OsuDirectQueueListView(game, assets)
+	self:updateLists()
 end
 
 local boxes = {
@@ -67,7 +73,7 @@ end
 
 function ViewConfig:osuDirectSearch(view)
 	local w, h = Layout:move("searchField")
-	love.graphics.setFont(Font.searchField)
+	love.graphics.setFont(font.searchField)
 
 	local vimMotions = actionModel.isVimMode()
 
@@ -76,13 +82,13 @@ function ViewConfig:osuDirectSearch(view)
 	end
 
 	local filterString = view.game.osudirectModel.searchString
-	local changed, text =
-		TextInput("osuDirectSearchField", { filterString, Text.osuDirectSearchPlaceholder }, nil, w, h)
+	--local changed, text =
+	--TextInput("osuDirectSearchField", { filterString, text.osuDirectSearchPlaceholder }, nil, w, h)
 
 	local delAll = actionModel.consumeAction("deleteLine")
 
 	if changed == "text" then
-		view.game.osudirectModel:setSearchString(text)
+		--view.game.osudirectModel:setSearchString(text)
 	end
 
 	if delAll then
@@ -113,7 +119,7 @@ function ViewConfig:collectionsButtons(view)
 	local w, h = Layout:move("buttons")
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.buttons)
+	love.graphics.setFont(font.buttons)
 
 	w, h = Layout:move("button1")
 
@@ -121,21 +127,21 @@ function ViewConfig:collectionsButtons(view)
 	local settings = configs.settings
 	local ss = settings.select
 
-	local text = ss.locations_in_collections and Text.locations or Text.directories
+	local label = ss.locations_in_collections and text.locations or text.directories
 
-	if imgui.TextOnlyButton("locations", text, w, h) then
+	if imgui.TextOnlyButton("locations", label, w, h) then
 		ss.locations_in_collections = not ss.locations_in_collections
 		view.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
 		Theme:playSound("tabButtonClick")
 	end
 
-	if imgui.TextOnlyButton("osuDirect", Text.osuDirect, w, h) then
+	if imgui.TextOnlyButton("osuDirect", text.osuDirect, w, h) then
 		self:setMode(view, "osu!direct")
 		Theme:playSound("tabButtonClick")
 	end
 
 	w, h = Layout:move("button3")
-	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
+	if imgui.TextOnlyButton("mounts", text.mounts, w, h) then
 		view:openModal("thetan.irizz.views.modals.MountsModal")
 		Theme:playSound("tabButtonClick")
 	end
@@ -147,26 +153,26 @@ function ViewConfig:osuDirectButtons(view)
 	local w, h = Layout:move("buttons")
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.buttons)
+	love.graphics.setFont(font.buttons)
 
 	w, h = Layout:move("button1")
 
 	local set = view.game.osudirectModel.beatmap
 	if set then
-		local buttonText = set.downloaded and Text.redownload or Text.download
+		local buttonText = set.downloaded and text.redownload or text.download
 
 		if imgui.TextOnlyButton("download", buttonText, w, h) then
 			view.game.osudirectModel:download(set)
 		end
 	else
-		imgui.TextOnlyButton("wait", Text.wait, w, h)
+		imgui.TextOnlyButton("wait", text.wait, w, h)
 	end
 
-	if imgui.TextOnlyButton("collections", Text.collections, w, h) then
+	if imgui.TextOnlyButton("collections", text.collections, w, h) then
 		self:setMode(view, "Collections")
 	end
 
-	if imgui.TextOnlyButton("mounts", Text.mounts, w, h) then
+	if imgui.TextOnlyButton("mounts", text.mounts, w, h) then
 		view:openModal("thetan.irizz.views.modals.MountsModal")
 	end
 
@@ -199,16 +205,16 @@ end
 
 function ViewConfig:footer(view)
 	local w, h = Layout:move("name")
-	love.graphics.setFont(Font.titleAndMode)
+	love.graphics.setFont(font.titleAndMode)
 	love.graphics.setColor(Color.text)
 
 	if collectionsMode == "Collections" and #self.collectionListView.items > 0 then
 		local name = self.collectionListView:getItem().name
-		Theme:textWithShadow(name, w, h, "left", "top")
+		ui:frameWithShadow(name, 0, 0, w, h, "left", "top")
 	end
 
 	w, h = Layout:move("mode")
-	Theme:textWithShadow(collectionsMode, w, h, "right", "top")
+	ui:frameWithShadow(collectionsMode, 0, 0, w, h, "right", "top")
 end
 
 function ViewConfig:getModeName()

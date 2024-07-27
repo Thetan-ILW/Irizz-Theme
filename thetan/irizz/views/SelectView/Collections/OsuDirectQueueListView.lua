@@ -1,6 +1,4 @@
 local ListView = require("thetan.irizz.views.ListView")
-local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
-local just = require("just")
 local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
@@ -10,12 +8,16 @@ local OsudirectProcessingListView = ListView + {}
 
 OsudirectProcessingListView.rows = 11
 OsudirectProcessingListView.centerItems = false
-OsudirectProcessingListView.text = Theme.textQueueList
 
-function OsudirectProcessingListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function OsudirectProcessingListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("osuDirectQueueListView")
+
+	self.font = assets.localization.fontGroups.osuDirectQueueListView
+	self.text = assets.localization.textGroups.osuDirectListView
+	self.scrollSound = assets.sounds.scrollSmallList
 end
 
 function OsudirectProcessingListView:reloadItems()
@@ -24,6 +26,8 @@ end
 
 function OsudirectProcessingListView:input() end
 
+local gfx = love.graphics
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -31,17 +35,20 @@ function OsudirectProcessingListView:drawItem(i, w, h)
 	local item = self.items[i]
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
-	love.graphics.translate(0, 4)
-	love.graphics.setColor(Color.text)
-	love.graphics.setFont(self.font.status)
-	just.indent(-15)
+
+	gfx.setColor(Color.text)
+	gfx.setFont(self.font.status)
 
 	if item.status then
-		gyatt.frame(item.status, 0, 0, w, h, "right", "top")
+		gyatt.frame(item.status, -15, 0, w, h, "right", "top")
 	end
 
-	just.indent(30)
-	TextCellImView(math.huge, h, "left", item.artist, item.title, self.font.artist, self.font.title)
+	gfx.translate(15, 0)
+
+	gfx.setFont(self.font.artist)
+	gyatt.frame(item.artist, 0, 0, math.huge, h, "left", "top")
+	gfx.setFont(self.font.title)
+	gyatt.frame(item.title, 0, -5, math.huge, h, "left", "bottom")
 end
 
 return OsudirectProcessingListView

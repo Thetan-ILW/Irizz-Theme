@@ -1,6 +1,5 @@
 local ListView = require("thetan.irizz.views.ListView")
-local just = require("just")
-local TextCellImView = require("thetan.irizz.imviews.TextCellImView")
+local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
@@ -9,13 +8,15 @@ local CollectionListView = ListView + {}
 
 CollectionListView.rows = 13
 CollectionListView.centerItems = true
-CollectionListView.text = Theme.textCollectionsList
 
-function CollectionListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function CollectionListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("collectionsListView")
-	self.scrollSound = require("audio.Source")()
+	self.font = assets.localization.fontGroups.collectionListView
+	self.text = assets.localization.textGroups.collectionListView
+	self.scrollSound = assets.sounds.scrollSmallList
 end
 
 function CollectionListView:reloadItems()
@@ -44,6 +45,8 @@ function CollectionListView:scroll(count)
 	self:playSound()
 end
 
+local gfx = love.graphics
+
 ---@param i number
 ---@param w number
 ---@param h number
@@ -60,18 +63,12 @@ function CollectionListView:drawItem(i, w, h)
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
-	love.graphics.setColor(Color.text)
-	love.graphics.translate(0, 4)
-	just.indent(15)
-	TextCellImView(
-		math.huge,
-		h,
-		"left",
-		item.count ~= 0 and item.count or "",
-		name,
-		self.font.itemCount,
-		self.font.name
-	)
+	gfx.translate(15, 0)
+	gfx.setColor(Color.text)
+	gfx.setFont(self.font.itemCount)
+	gyatt.frame(item.count ~= 0 and item.count or "", 0, 0, w, h, "left", "top")
+	gfx.setFont(self.font.name)
+	gyatt.frame(name, 0, -5, w, h, "left", "bottom")
 end
 
 return CollectionListView

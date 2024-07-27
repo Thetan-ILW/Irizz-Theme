@@ -113,15 +113,15 @@ function NoteChartListView:drawItem(i, w, h)
 	gfx.translate(15, 4)
 
 	gfx.setFont(self.font.firstRow)
-	gyatt.frame(item.inputMode, 0, 0, w, h, "left", "top")
+	gyatt.frame(item.inputMode, 0, 0, math.huge, h, "left", "top")
 	gfx.translate(60, 0)
-	gyatt.frame(item.creator, 0, 0, w, h, "left", "top")
+	gyatt.frame(item.creator, 0, 0, math.huge, h, "left", "top")
 
 	gfx.translate(-60, 0)
 	gfx.setFont(self.font.secondRow)
-	gyatt.frame(item.difficulty, 0, -5, w, h, "left", "bottom")
+	gyatt.frame(item.difficulty, 0, -5, math.huge, h, "left", "bottom")
 	gfx.translate(60, 0)
-	gyatt.frame(item.name, 0, -5, w, h, "left", "bottom")
+	gyatt.frame(item.name, 0, -5, math.huge, h, "left", "bottom")
 end
 
 return NoteChartListView
