@@ -25,8 +25,9 @@ local inputMode = ""
 ---@param game sphere.GameController
 ---@param assets irizz.IrizzAssets
 function ViewConfig:new(game, assets)
-	font = assets.localization.fontGroups.inputModal
-	text = assets.localization.textGroups.inputModal
+	text, font = assets.localization:get("inputModal")
+	assert(text)
+	assert(font)
 
 	self.inputListView = InputListView(game, assets)
 end

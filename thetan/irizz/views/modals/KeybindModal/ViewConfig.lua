@@ -1,18 +1,25 @@
-local class = require("class")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
+local Layout = require("thetan.irizz.views.modals.KeybindModal.Layout")
+
 local gyatt = require("thetan.gyatt")
 local just = require("just")
 local Container = require("thetan.gyatt.Container")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textKeybinds
-local Font = Theme:getFonts("keybindsModal")
-local Layout = require("thetan.irizz.views.modals.KeybindModal.Layout")
 
-local ViewConfig = class()
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
-function ViewConfig:new()
+local ViewConfig = IViewConfig + {}
+
+function ViewConfig:new(assets)
 	self.container = Container("keybindsContainer")
+
+	font = assets.localization.fontGroups.keybindsModal
+	text = assets.localization.textGroups.keybindsModal
 end
 
 function ViewConfig:reset()
@@ -25,23 +32,27 @@ function ViewConfig:keybinds(view)
 	local groups = view.keybinds.formattedGroups
 
 	local heightStart = just.height
-	gyatt.setSize(w, h)
 
 	Theme:panel(w, h)
 	self.container:startDraw(w, h)
 
 	love.graphics.setColor(Color.text)
-	for _, groupsKeyValue in ipairs(groups) do
+	for i, groupsKeyValue in ipairs(groups) do
 		local _ = groupsKeyValue[1] -- name
 		local group = groupsKeyValue[2]
-		gyatt.separator()
-		love.graphics.setFont(Font.keybinds)
+		love.graphics.setFont(font.keybinds)
 		for _, keyValue in ipairs(group) do
 			local description = keyValue[1]
 			local bind = keyValue[2]
 			gyatt.frame(description, -30, 0, w, h, "right", "top")
-			just.text(bind)
+			gyatt.text(bind)
 			just.next(0, 10)
+		end
+
+		if i ~= #groups then
+			just.next(0, 16)
+			love.graphics.rectangle("fill", 0, 0, w - 30, 4)
+			just.next(0, 20)
 		end
 	end
 
@@ -56,8 +67,8 @@ function ViewConfig:draw(view)
 
 	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.title)
-	gyatt.frame(Text.keybinds, 0, 0, w, h, "center", "center")
+	love.graphics.setFont(font.title)
+	gyatt.frame(text.keybinds, 0, 0, w, h, "center", "center")
 
 	self:keybinds(view)
 end

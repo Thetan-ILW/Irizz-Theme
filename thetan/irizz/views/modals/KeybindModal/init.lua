@@ -5,7 +5,6 @@ local Theme = require("thetan.irizz.views.Theme")
 local KeybindModal = Modal + {}
 
 KeybindModal.name = "KeybindModal"
-KeybindModal.viewConfig = ViewConfig()
 KeybindModal.keybinds = {
 	view = "none",
 	viewName = "",
@@ -13,11 +12,13 @@ KeybindModal.keybinds = {
 }
 
 local function getSelectKeybinds(self)
+	local text = self.assets.localization.textGroups
+
 	local groups = {
-		{ "global", Theme.keybindsGlobal },
-		{ "songSelect", Theme.keybindsSongSelect },
-		{ "largeList", Theme.keybindsLargeList },
-		{ "smallList", Theme.keybindsSmallList },
+		{ "global", text.keybindsGlobal },
+		{ "songSelect", text.keybindsSongSelect },
+		{ "largeList", text.keybindsLargeList },
+		{ "smallList", text.keybindsSmallList },
 	}
 
 	for _, keyValue in ipairs(groups) do
@@ -30,9 +31,11 @@ local function getSelectKeybinds(self)
 end
 
 local function getResultKeybinds(self)
+	local text = self.assets.localization.textGroups
+
 	local groups = {
-		{ "global", Theme.keybindsGlobal },
-		{ "resultScreen", Theme.keybindsResult },
+		{ "global", text.keybindsGlobal },
+		{ "resultScreen", text.keybindsResult },
 	}
 
 	for _, keyValue in ipairs(groups) do
@@ -62,6 +65,9 @@ end
 function KeybindModal:new(game)
 	self.game = game
 	self.actionModel = self.game.actionModel
+
+	self.assets = game.assetModel:get("irizz")
+	self.viewConfig = ViewConfig(self.assets)
 end
 
 return KeybindModal

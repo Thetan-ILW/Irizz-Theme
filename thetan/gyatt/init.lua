@@ -49,9 +49,10 @@ function gyatt.frame(text, x, y, w, h, ax, ay)
 	w = w or math.huge
 	h = h or math.huge
 	love.graphics.push()
+	love.graphics.translate(x, y)
 	love.graphics.applyTransform(text_transform)
 	love.graphics.scale(global_scale, global_scale)
-	gfx_util.printFrame(text, x, y, w / (text_scale * global_scale), h / (text_scale * global_scale), ax, ay)
+	gfx_util.printFrame(text, 0, 0, w / (text_scale * global_scale), h / (text_scale * global_scale), ax, ay)
 	love.graphics.pop()
 end
 

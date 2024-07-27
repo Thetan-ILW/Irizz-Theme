@@ -109,4 +109,13 @@ function Localization:setText()
 	end
 end
 
+---@param text_group string
+---@param font_group string?
+---@return table<string, string>?
+---@return table<string, love.Font>?
+function Localization:get(text_group, font_group)
+	font_group = font_group or text_group
+	return self.textGroups[text_group], self.fontGroups[font_group]
+end
+
 return Localization

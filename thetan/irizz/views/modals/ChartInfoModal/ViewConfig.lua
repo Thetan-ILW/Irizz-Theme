@@ -1,4 +1,5 @@
-local class = require("class")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
+
 local just = require("just")
 local gyatt = require("thetan.gyatt")
 
@@ -6,21 +7,31 @@ local Layout = require("thetan.irizz.views.modals.ChartInfoModal.Layout")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textChartInfo
-local Font = Theme:getFonts("chartInfoModal")
 
-local ViewConfig = class()
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
+
+local ViewConfig = IViewConfig + {}
+
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(assets)
+	text, font = assets.localization:get("chartInfoModal")
+	assert(text)
+	assert(font)
+end
 
 function ViewConfig:info(view)
 	Layout:move("info")
 
 	just.next(0, 15)
-	love.graphics.setFont(Font.info)
+	love.graphics.setFont(font.info)
 	love.graphics.setColor(Color.text)
 
 	for _, text in ipairs(view.infoCache) do
 		just.indent(15)
-		just.text(text)
+		gyatt.text(text)
 		just.next(0, 10)
 	end
 
@@ -33,9 +44,9 @@ function ViewConfig:draw(view)
 
 	local w, h = Layout:move("modalName")
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.title)
+	love.graphics.setFont(font.title)
 	just.indent(5)
-	gyatt.frame(Text.chartInfo, 0, 0, w, h, "left", "center")
+	gyatt.frame(text.chartInfo, 0, 0, w, h, "left", "center")
 
 	self:info(view)
 end
