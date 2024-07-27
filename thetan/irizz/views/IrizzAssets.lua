@@ -113,7 +113,7 @@ end
 ---@param filepath string
 function IrizzAssets:loadLocalization(filepath)
 	if not self.localization then
-		self.localization = Localization(filepath, love.graphics.getHeight() / 1080)
+		self.localization = Localization(filepath, 1080)
 		return
 	end
 

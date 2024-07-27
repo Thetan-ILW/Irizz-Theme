@@ -1,5 +1,7 @@
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 
+local gyatt = require("thetan.gyatt")
+
 local ViewConfig = require("thetan.osu.views.SelectView.ViewConfig")
 local MainMenuView = require("thetan.irizz.views.MainMenuView")
 local LayersView = require("thetan.irizz.views.LayersView")
@@ -13,6 +15,8 @@ local InputMap = require("thetan.osu.views.SelectView.InputMap")
 ---@class osu.OsuSelectView: skibidi.ScreenView
 ---@operator call: osu.OsuSelectView
 local OsuSelectView = ScreenView + {}
+
+local window_height = 768
 
 function OsuSelectView:load()
 	self.game.selectController:load(self)
@@ -49,6 +53,8 @@ function OsuSelectView:load()
 			self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
 		end
 	end
+
+	window_height = love.graphics.getHeight()
 end
 
 function OsuSelectView:setAssets()
@@ -241,7 +247,7 @@ function OsuSelectView:drawCursor()
 end
 
 function OsuSelectView:resolutionUpdated()
-	self.assets.localization:updateScale(gfx.getHeight() / 768)
+	window_height = self.assets.localization:updateScale()
 
 	self.viewConfig:resolutionUpdated()
 
@@ -251,6 +257,8 @@ function OsuSelectView:resolutionUpdated()
 end
 
 function OsuSelectView:draw()
+	gyatt.setTextScale(768 / window_height)
+
 	local function panelsStencil() end
 	local function UI()
 		self.viewConfig:draw(self)
@@ -263,6 +271,8 @@ function OsuSelectView:draw()
 	self:drawModal()
 	self.notificationView:draw()
 	self:drawCursor()
+
+	gyatt.setTextScale(1)
 end
 
 return OsuSelectView

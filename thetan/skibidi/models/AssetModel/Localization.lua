@@ -3,7 +3,8 @@ local table_util = require("table_util")
 
 ---@class skibidi.Localization
 ---@operator call: skibidi.Localization
----@field fontScale number
+---@field nativeViewHeight number
+---@field currentScreenHeight number
 ---@field fontGroups table<string, table<string, love.Font>>
 ---@field textGroups table<string, table<string, string>>
 ---@field currentFile table
@@ -16,8 +17,8 @@ Localization.fontGroups = {}
 Localization.textGroups = {}
 
 ---@param filepath string
-function Localization:new(filepath, font_scale)
-	self.fontScale = font_scale
+function Localization:new(filepath, native_view_height)
+	self.nativeViewHeight = native_view_height
 	self:loadFile(filepath)
 end
 
@@ -29,13 +30,9 @@ function Localization:loadFile(filepath)
 	self:setText()
 end
 
-function Localization:updateScale(font_scale)
-	if self.fontScale == font_scale then
-		return
-	end
-
-	self.fontScale = font_scale
+function Localization:updateScale()
 	self:setFonts()
+	return self.currentScreenHeight
 end
 
 Localization.fontInstances = {}
@@ -44,7 +41,8 @@ Localization.fontInstances = {}
 ---@param size number
 ---@return love.Font
 function Localization:loadFont(name, size)
-	local size_str = tostring(size * self.fontScale)
+	size = size * (self.currentScreenHeight / self.nativeViewHeight)
+	local size_str = tostring(size)
 
 	if self.fontInstances[name] and self.fontInstances[name][size_str] then
 		return self.fontInstances[name][size_str]
@@ -66,6 +64,12 @@ function Localization:setFonts()
 	---@type table<string, table>
 	local fontGroups = self.currentFile.fontGroups
 
+	self.currentScreenHeight = love.graphics.getHeight()
+
+	if self.currentScreenHeight <= self.nativeViewHeight then
+		self.currentScreenHeight = self.nativeViewHeight
+	end
+
 	for group_name, group in pairs(fontGroups) do
 		---@cast group table<string, table>
 
@@ -85,7 +89,7 @@ function Localization:setFonts()
 				filter = params[4].linearFilter and "linear" or filter
 			end
 
-			font:setFilter(filter or "nearest", filter or "nearest")
+			font:setFilter("linear", filter)
 
 			fonts[name] = font
 		end

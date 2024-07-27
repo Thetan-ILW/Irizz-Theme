@@ -114,7 +114,7 @@ end
 ---@param filepath string
 function OsuSelectAssets:loadLocalization(filepath)
 	if not self.localization then
-		self.localization = Localization(filepath, love.graphics.getHeight() / 768)
+		self.localization = Localization(filepath, 768)
 		return
 	end
 

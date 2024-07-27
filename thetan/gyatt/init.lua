@@ -7,7 +7,6 @@ local ScrollBar = require("thetan.irizz.imgui.ScrollBar")
 local gyatt = {}
 
 gyatt.inputMode = "keyboard"
-gyatt.baseline = gfx_util.printBaseline
 gyatt.getCanvas = gfx_util.getCanvas
 gyatt.separator = imgui.separator
 gyatt.setSize = imgui.setSize

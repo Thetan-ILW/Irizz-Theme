@@ -8,7 +8,10 @@ local Layout = require("thetan.irizz.views.HeaderLayout")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textHeader
+
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
 local font
 
 ---@class irizz.HeaderView
@@ -30,6 +33,9 @@ function ViewConfig:new(game, assets, screen)
 
 	self.gameIcon = assets.images.gameIcon
 	self.avatar = assets.images.avatar
+	font = assets.localization.fontGroups.header
+	text = assets.localization.textGroups.header
+
 	self.screen = screen
 	actionModel = game.actionModel
 
@@ -42,58 +48,49 @@ function ViewConfig:new(game, assets, screen)
 	end
 end
 
+---@param id string
 ---@param image love.Image
 ---@param r number
----@param x number
-local function circleImage(image, r, x)
+local function circleImage(id, image, r)
 	local imageW = (r * 2) / image:getPixelWidth()
 	local imageH = (r * 2) / image:getPixelHeight()
 
 	local function avatarStencil()
-		gfx.circle("fill", x - r, r, r)
+		gfx.circle("fill", r, r, r)
 	end
 
 	gfx.stencil(avatarStencil)
 	gfx.setStencilTest("greater", 0)
-	gfx.draw(image, x - (r * 2), 0, 0, imageW, imageH)
+	gfx.draw(image, 0, 0, 0, imageW, imageH)
 	gfx.setStencilTest()
-	gfx.circle("line", x - r, r, r)
+	gfx.circle("line", r, r, r)
 
-	local clicked = just.button("circleImage" .. x, just.is_over(r * 2, r * 2))
+	local clicked = just.button("circleImage" .. id, just.is_over(r * 2, r * 2))
 	return clicked
 end
 
-local buttonOffset = 0
-local function button(text, w, h, panelHeight, rightSide, active)
-	local textW = font.anyText:getWidth(text)
-	local ax = "left"
-	local w2 = buttonOffset
-	local x = w2
-	local indent = 30
+local function button(label, right_side, active)
+	local label_w = font.anyText:getWidth(label) * gyatt.getTextScale()
 
-	if rightSide then
-		ax = "right"
-		w2 = textW - buttonOffset
-		x = w - w2
-		indent = -30
+	if right_side then
+		gfx.translate(-label_w, 0)
 	end
 
-	just.indent(indent)
 	gfx.setColor(Color.panel)
-	gfx.rectangle("fill", x - 8, 10, textW + 16, panelHeight, 8, 8)
+	gfx.rectangle("fill", -8, 10, label_w + 16, 43, 8, 8)
 
 	gfx.setColor(active and Color.headerSelect or Color.text)
-	gyatt.baseline(text, buttonOffset, h - 8, w, 1, ax)
-	gfx.rectangle("fill", x, h + 2, textW, 4)
+	gyatt.frame(label, 0, 3, label_w, 43, "center", "center")
+	gfx.rectangle("fill", 0, 43, label_w, 4)
 
-	textW = rightSide and -textW or textW
-	buttonOffset = buttonOffset + textW
-
-	if just.is_over(textW, h + 10, x) then
+	if just.is_over(label_w, 43) then
 		if just.mousepressed(1) then
+			gfx.translate(right_side and -(30 + label_w) or (30 + label_w), 0)
 			return true
 		end
 	end
+
+	gfx.translate(right_side and -30 or (30 + label_w), 0)
 
 	return false
 end
@@ -106,25 +103,24 @@ function ViewConfig:songSelectButtons(view)
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
 
-	if circleImage(self.gameIcon, r, r * 2) then
+	if circleImage("gameIcon", self.gameIcon, r) then
 		view.mainMenuView:toggle()
 	end
 
-	buttonOffset = r * 2
-	local panelHeight = font.anyText:getHeight() + 8
+	gfx.translate(r * 2 + 30, 0)
 
 	local active = view.screenXTarget > 0
-	if button(Text.settings, w, h, panelHeight, false, active) then
+	if button(text.settings, false, active) then
 		view:moveScreen(-1, true)
 	end
 
 	active = view.screenXTarget == 0
-	if button(Text.songs, w, h, panelHeight, false, active) then
+	if button(text.songs, false, active) then
 		view:moveScreen(0, true)
 	end
 
 	active = view.screenXTarget < 0
-	if button(Text.collections, w, h, panelHeight, false, active) then
+	if button(text.collections, false, active) then
 		view:moveScreen(1, true)
 	end
 end
@@ -141,7 +137,7 @@ function ViewConfig:resultButtons(view)
 		view.gameView.mainMenuView:toggle()
 	end
 
-	local songsText = font.anyText:getWidth(Text.songs)
+	local songsText = font.anyText:getWidth(text.songs)
 
 	just.indent(30)
 	local x = r * 2
@@ -152,7 +148,7 @@ function ViewConfig:resultButtons(view)
 	gfx.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
 
 	gfx.setColor(Color.text)
-	gyatt.baseline(Text.songs, x, y, w, 1, "left")
+	gyatt.baseline(text.songs, x, y, w, 1, "left")
 	gfx.rectangle("fill", x, y + 10, songsText, 4)
 
 	if just.is_over(songsText, h + 10, x) then
@@ -174,14 +170,13 @@ function ViewConfig:multiplayerButtons(view)
 		view.gameView.mainMenuView:toggle()
 	end
 
-	buttonOffset = r * 2
 	local panelHeight = font.anyText:getHeight() + 8
 
-	if button(Text.songs, w, h, panelHeight, false, false) then
+	if button(text.songs, w, h, panelHeight, false, false) then
 		view.game.gameView:sendQuitSignal()
 	end
 
-	if button(Text.leaveRoom, w, h, panelHeight, false, false) then
+	if button(text.leaveRoom, w, h, panelHeight, false, false) then
 		view:leaveRoom()
 	end
 end
@@ -193,19 +188,18 @@ function ViewConfig:vimMode(view)
 
 	local w, h = Layout:move("vimMode")
 
-	local text = actionModel.getVimMode()
+	local vim_mode = actionModel.getVimMode()
 	local count = actionModel.getCount()
 
-	text = ("%s [%i]"):format(text, count)
+	vim_mode = ("%s [%i]"):format(vim_mode, count)
 
 	gfx.setColor(Color.panel)
-	local textW = font.anyText:getWidth(text)
-	local panelHeight = font.anyText:getHeight() + 8
-	gfx.rectangle("fill", w / 2 - textW / 2 - 8, 10, textW + 16, panelHeight, 8, 8)
+	local textW = font.anyText:getWidth(vim_mode) * gyatt.getTextScale()
+	gfx.rectangle("fill", w / 2 - textW / 2 - 8, 10, textW + 16, 43, 8, 8)
 
 	gfx.setColor(Color.text)
 	gfx.setFont(font.anyText)
-	gyatt.frame(text, 0, 0, w, h, "center", "center")
+	gyatt.frame(vim_mode, 0, 3, w, h, "center", "center")
 	gfx.rectangle("fill", w / 2 - textW / 2, h + 2, textW, 4)
 end
 
@@ -222,24 +216,26 @@ function ViewConfig:rightSide(view)
 	local drawOnlineCount = configs.irizz.showOnlineCount
 
 	gfx.setColor(Color.text)
-	local username = view.game.configModel.configs.online.user.name or Text.notLoggedIn
+	local username = view.game.configModel.configs.online.user.name or text.notLoggedIn
 	local time = time_util.format(loop.time - loop.startTime)
 	local onlineCount = #view.game.multiplayerModel.users
-	onlineCount = Text.online:format(onlineCount)
+	onlineCount = text.online:format(onlineCount)
 
 	local r = h / 1.4
-	local panelHeight = font.anyText:getHeight() + 8
 
-	circleImage(self.avatar, r, w)
+	gfx.translate(w - r * 2, 0)
 
-	buttonOffset = -r * 2
-	button(username, w, h, panelHeight, true)
+	circleImage("avatar", self.avatar, r)
+
+	gfx.translate(-r, 0)
+
+	button(username, true, false)
 
 	if drawOnlineCount then
-		button(onlineCount, w, h, panelHeight, true)
+		button(onlineCount, true, false)
 	end
 
-	button(time, w, h, panelHeight, true)
+	button(time, true, false)
 end
 
 function ViewConfig:draw(view)

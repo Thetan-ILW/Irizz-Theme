@@ -34,6 +34,8 @@ local songSelectOffset = 0
 ---@type audio.Source
 local start_sound = nil
 
+local window_height = 1080
+
 function SelectView:load()
 	self.game.selectController:load(self)
 
@@ -66,6 +68,8 @@ function SelectView:load()
 			self.gameView:openModal("thetan.irizz.views.modals.FreshInstallModal")
 		end
 	end
+
+	window_height = love.graphics.getHeight()
 end
 
 function SelectView:loadAssets()
@@ -297,11 +301,8 @@ function SelectView:quit()
 	end
 end
 
-local window_height = 1080
-
 function SelectView:resolutionUpdated()
-	window_height = love.graphics.getHeight()
-	self.assets.localization:updateScale(window_height / 1080)
+	window_height = self.assets.localization:updateScale()
 end
 
 function SelectView:draw()

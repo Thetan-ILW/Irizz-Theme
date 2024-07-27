@@ -211,7 +211,7 @@ l.textGroups = {
 	},
 	scoreListView = {
 		noItems = "No scores!",
-		noMods = "No mods.",
+		noMods = "No mods",
 		hasMods = "Has mods",
 	},
 	noteChartSetListView = {

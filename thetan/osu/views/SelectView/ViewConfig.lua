@@ -880,7 +880,6 @@ function ViewConfig:draw(view)
 	Layout:draw()
 
 	current_time = love.timer.getTime()
-	gyatt.setTextScale(768 / window_height)
 
 	local a = math_util.clamp((1 - gyatt.easeOutCubic(update_time, 1)) * 0.15, 0, 0.10)
 	brighten_shader:send("amount", a)
@@ -903,8 +902,6 @@ function ViewConfig:draw(view)
 	self:chartInfo()
 	self:topUI(view)
 	self:mods(view)
-
-	gyatt.setTextScale(1)
 end
 
 return ViewConfig
