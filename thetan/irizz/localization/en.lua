@@ -327,16 +327,6 @@ l.textGroups = {
 		maxError = "Max error: ",
 		noMods = "No mods.",
 	},
-	osuResult = {
-		chartBy = "Chart by %s",
-		chartFrom = "Chart from %s",
-		playedBy = "Played by %s on %s",
-		mean = "Mean: %s",
-		maxError = "Max error: %s",
-		scrollSpeed = "Scroll speed: %s",
-		mods = "Mods: %s",
-		guest = "Guest",
-	},
 	multiplayerModal = {
 		title = "Multiplayer and players",
 		noPlayers = "Nobody is online.",
@@ -617,15 +607,6 @@ l.fontGroups = {
 		scoreInfo = { "ZenMaruGothic-Regular", 24 },
 	},
 
-	osuResultView = {
-		title = { "ZenMaruGothic-Black", 36 },
-		creator = { "ZenMaruGothic-Regular", 24 },
-		playInfo = { "ZenMaruGothic-Regular", 24 },
-		accuracy = { "ZenMaruGothic-Regular", 20 },
-		graphInfo = { "ZenMaruGothic-Regular", 18 },
-		pp = { "ZenMaruGothic-Medium", 36 },
-	},
-
 	multiplayerView = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
 		roomInfo = { "ZenMaruGothic-Black", 36 },
@@ -677,5 +658,3 @@ l.fontGroups = {
 		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 }
-
-return l

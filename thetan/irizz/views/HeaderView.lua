@@ -208,7 +208,7 @@ function ViewConfig:rightSide(view)
 
 	if just.is_over(w, h) then
 		if just.mousepressed(1) then
-			view.game.gameView:openModal("thetan.irizz.views.modals.OnlineModal")
+			view:openModal("thetan.irizz.views.modals.OnlineModal")
 		end
 	end
 

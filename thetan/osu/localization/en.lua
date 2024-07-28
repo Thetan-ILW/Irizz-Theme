@@ -52,6 +52,16 @@ l.textGroups = {
 		fileManager = "5. Open in file manager",
 		cancel = "6. Cancel",
 	},
+	result = {
+		chartBy = "Chart by %s",
+		chartFrom = "Chart from %s",
+		playedBy = "Played by %s on %s",
+		mean = "Mean: %s",
+		maxError = "Max error: %s",
+		scrollSpeed = "Scroll speed: %s",
+		mods = "Mods: %s",
+		guest = "Guest",
+	},
 }
 
 l.fontFiles = {
@@ -82,24 +92,29 @@ l.fontGroups = {
 		search = { "Aller-Bold", 18, "ZenMaruGothic-Bold" },
 		searchMatches = { "Aller-Bold", 15 },
 	},
-
 	chartSetList = {
 		title = { "Aller", 22, "ZenMaruGothic-Medium" },
 		secondRow = { "Aller", 16, "ZenMaruGothic-Medium" },
 		thirdRow = { "Aller-Bold", 16, "ZenMaruGothic-Medium" },
 		noItems = { "Aller", 36 },
 	},
-
 	scoreList = {
 		username = { "Aller-Bold", 22, "ZenMaruGothic-Medium" },
 		score = { "Aller", 16 },
 		rightSide = { "Aller", 14 },
 		noItems = { "Aller", 36 },
 	},
-
 	chartOptionsModal = {
 		title = { "Aller-Light", 33 },
 		buttons = { "Aller", 42 },
+	},
+	resultView = {
+		title = { "ZenMaruGothic-Black", 36 },
+		creator = { "ZenMaruGothic-Regular", 24 },
+		playInfo = { "ZenMaruGothic-Regular", 24 },
+		accuracy = { "ZenMaruGothic-Regular", 20 },
+		graphInfo = { "ZenMaruGothic-Regular", 18 },
+		pp = { "ZenMaruGothic-Medium", 36 },
 	},
 }
 

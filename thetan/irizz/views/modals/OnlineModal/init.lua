@@ -4,10 +4,11 @@ local ViewConfig = require("thetan.irizz.views.modals.OnlineModal.ViewConfig")
 
 local OnlineModal = Modal + {}
 
-OnlineModal.viewConfig = ViewConfig
-
 function OnlineModal:new(game)
-    self.game = game
+	self.game = game
+
+	local assets = game.assetModel:get("irizz")
+	self.viewConfig = ViewConfig(assets)
 end
 
 return OnlineModal

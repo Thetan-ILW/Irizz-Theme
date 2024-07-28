@@ -1,4 +1,6 @@
-local gfx_util = require("gfx_util")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
+
+local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
 
 local Layout = require("thetan.irizz.views.modals.OnlineModal.Layout")
@@ -7,15 +9,24 @@ local TextBox = require("thetan.irizz.imgui.TextBox")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textOnline
-local Font = Theme:getFonts("onlineModal")
 local cfg = Theme.imgui
 
-local ViewConfig = {}
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
+
+local ViewConfig = IViewConfig + {}
 
 local active
 ViewConfig.email = ""
 ViewConfig.password = ""
+
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(assets)
+	text, font = assets.localization:get("onlineModal")
+	assert(text and font)
+end
 
 function ViewConfig:status(view)
 	local w, h = 0, 0
@@ -26,11 +37,11 @@ function ViewConfig:status(view)
 		w, h = Layout:move("status")
 	end
 
-	local text = active and Text.loggedIn or Text.notLoggedIn
+	local label = active and text.loggedIn or text.notLoggedIn
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.status)
-	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
+	love.graphics.setFont(font.status)
+	gyatt.frame(label, 0, 0, w, h, "center", "center")
 end
 
 function ViewConfig:fields(view)
@@ -41,17 +52,17 @@ function ViewConfig:fields(view)
 	local w, h = Layout:move("fields")
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.fields)
-	local changed, text = TextBox("email", { self.email, Text.emailPlaceholder }, nil, w, h, false)
+	love.graphics.setFont(font.fields)
+	local changed, input = TextBox("email", { self.email, text.emailPlaceholder }, nil, w, h, false)
 
 	if changed == "text" then
-		self.email = text
+		self.email = input
 	end
 
-	changed, text = TextBox("password", { self.password, Text.passwordPlaceholder }, nil, w, h, true)
+	changed, input = TextBox("password", { self.password, text.passwordPlaceholder }, nil, w, h, true)
 
 	if changed == "text" then
-		self.password = text
+		self.password = input
 	end
 end
 
@@ -60,11 +71,11 @@ function ViewConfig:logout(view)
 	imgui.setSize(w, h, w / 2.5, cfg.size)
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.buttons)
-	local width = love.graphics.getFont():getWidth(Text.logout)
+	love.graphics.setFont(font.buttons)
+	local width = love.graphics.getFont():getWidth(text.logout)
 	love.graphics.translate(w / 2 - width, 0)
 
-	if imgui.button("logout", Text.logout) then
+	if imgui.button("logout", text.logout) then
 		view.game.onlineModel.authManager:logout()
 	end
 end
@@ -77,20 +88,20 @@ function ViewConfig:login(view)
 	local nextItemOffset = Theme.imgui.nextItemOffset
 
 	love.graphics.setColor(Color.text)
-	love.graphics.setFont(Font.buttons)
-	local width1 = love.graphics.getFont():getWidth(Text.connect)
-	local width2 = love.graphics.getFont():getWidth(Text.quickConnect)
+	love.graphics.setFont(font.buttons)
+	local width1 = love.graphics.getFont():getWidth(text.connect) * gyatt.getTextScale()
+	local width2 = love.graphics.getFont():getWidth(text.quickConnect) * gyatt.getTextScale()
 
 	love.graphics.translate(w / 2 - (width1 + imguiSize) / 2, 0)
 
-	if imgui.button("login", Text.connect) then
+	if imgui.button("login", text.connect) then
 		view.game.onlineModel.authManager:login(self.email, self.password)
 	end
 
 	w, h = Layout:move("buttons")
 	love.graphics.translate(w / 2 - (width2 + imguiSize) / 2, imguiSize + nextItemOffset)
 
-	if imgui.button("loginBrowser", Text.quickConnect) then
+	if imgui.button("loginBrowser", text.quickConnect) then
 		view.game.onlineModel.authManager:quickLogin()
 	end
 end
