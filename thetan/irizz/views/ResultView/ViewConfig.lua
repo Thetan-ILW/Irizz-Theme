@@ -5,9 +5,14 @@ local math_util = require("math_util")
 local Format = require("sphere.views.Format")
 local erfunc = require("libchart.erfunc")
 
+local ui = require("thetan.irizz.ui")
+
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textResult
+
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
 local font
 
 local Layout = require("thetan.irizz.views.ResultView.Layout")
@@ -53,15 +58,13 @@ local function showLoadedScore(view)
 	return scoreItem.id == scoreEntry.id
 end
 
-function ViewConfig:new(game, custom_config)
-	self.scoreListView = ScoreListView(game, true)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function ViewConfig:new(game, assets)
+	self.scoreListView = ScoreListView(game, assets, true)
 	self.scoreListView.rows = 5
-	font = Theme:getFonts("resultView")
 
-	if custom_config then
-		customConfig = custom_config()
-		customConfig:load(game, self)
-	end
+	text, font = assets.localization:get("result")
 
 	HitGraph.showLoadedScore = showLoadedScore
 end
@@ -75,15 +78,15 @@ function ViewConfig:loadScore(view)
 
 	local diff_column = view.game.configModel.configs.settings.select.diff_column
 	local time_rate = view.game.playContext.rate
-	timeRateFormatted = Text.timeRate:format(time_rate)
+	timeRateFormatted = text.timeRate:format(time_rate)
 
 	difficulty = (chartview.difficulty or 0) * time_rate
-	patterns = chartview.level and "Lv." .. chartview.level or Text.noPatterns
+	patterns = chartview.level and "Lv." .. chartview.level or text.noPatterns
 
 	if diff_column == "msd_diff" and chartdiff.msd_diff_data then
 		local msd = Theme.getMsdFromData(chartdiff.msd_diff_data, time_rate)
 		difficulty = msd.overall
-		patterns = Theme.getMaxAndSecondFromMsd(msd):upper() or Text.noPatterns
+		patterns = Theme.getMaxAndSecondFromMsd(msd):upper() or text.noPatterns
 	end
 
 	difficultyColor = Theme:getDifficultyColor(difficulty, diff_column)
@@ -172,13 +175,13 @@ local function title(view)
 	)
 
 	local w, h = Layout:move("title")
-	Theme:textWithShadow(leftText, w, h, "center", "top")
+	ui:frameWithShadow(leftText, 0, 0, w, h, "center", "top")
 	w, h = Layout:move("chartName")
-	Theme:textWithShadow(rightText, w, h, "center", "bottom")
+	ui:frameWithShadow(rightText, 0, 0, w, h, "center", "bottom")
 end
 
 local function judgementCount(label, color, w, count, max)
-	local label_height = font.counterName:getHeight()
+	local label_height = font.counterName:getHeight() * gyatt.getTextScale()
 
 	local bar_x = 4
 	local bar_width = math_util.clamp(((count / max) * w) - (bar_x * 2), 0, w)
@@ -200,9 +203,9 @@ local function judgementCount(label, color, w, count, max)
 	gfx.push()
 	gfx.setColor(Color.text)
 	gfx.translate(10, 4)
-	Theme:textWithShadow(label, w, label_height, "left", "center")
+	ui:frameWithShadow(label, 0, 0, w, label_height, "left", "center")
 	gfx.translate(-20, 0)
-	Theme:textWithShadow(count, w, label_height, "right", "center")
+	ui:frameWithShadow(count, 0, 0, w, label_height, "right", "center")
 	gfx.pop()
 
 	gfx.translate(0, label_height + 8)
@@ -227,18 +230,22 @@ local function hitGraph(view)
 end
 
 local function GradeKV(label, v, w)
+	gfx.push()
 	just.indent(50)
 	gyatt.text(label, w, "left")
-	just.sameline()
-	just.indent(-100)
+	gfx.pop()
+
+	just.indent(-50)
 	gyatt.text(v, w, "right")
 end
 
 local function timingsKV(label, v, w)
+	gfx.push()
 	just.indent(15)
 	gyatt.text(v, w, "left")
-	just.sameline()
-	just.indent(-30)
+	gfx.pop()
+
+	just.indent(-15)
 	gyatt.text(label, w, "right")
 end
 
@@ -310,17 +317,18 @@ function ViewConfig:scoringStats(view)
 	gfx.setFont(font.grade)
 	gfx.setColor(Color.text)
 
-	GradeKV(Text.pauses, pauses, w)
+	GradeKV(text.pauses, pauses, w)
 
+	gfx.push()
 	just.indent(50)
-	gyatt.text(Text.grade, w, "left")
-	just.sameline()
-	just.indent(-100)
+	gyatt.text(text.grade, w, "left")
+	gfx.pop()
+	just.indent(-50)
 	gfx.setColor(gradeColor)
 	gyatt.text(grade, w, "right")
 
 	gfx.setColor(Color.text)
-	GradeKV(Text.scrollSpeed, scrollSpeed, w)
+	GradeKV(text.scrollSpeed, scrollSpeed, w)
 
 	w, h = Layout:move("grade")
 	gfx.setColor(Color.border)
@@ -332,10 +340,10 @@ function ViewConfig:scoringStats(view)
 	gfx.setFont(font.timings)
 	gfx.setColor(Color.text)
 
-	timingsKV(Text.hitWindow, ("%i | %i"):format(math.abs(hit[1]) * 1000, hit[2] * 1000), w)
-	timingsKV(Text.missWindow, ("%i | %i"):format(math.abs(miss[1]) * 1000, miss[2] * 1000), w)
-	timingsKV(Text.releaseMultiplier, ("%0.1fx"):format(release_multiplier), w)
-	timingsKV(Text.hitLogic, nearest and Text.nearest or Text.earliestNote, w)
+	timingsKV(text.hitWindow, ("%i | %i"):format(math.abs(hit[1]) * 1000, hit[2] * 1000), w)
+	timingsKV(text.missWindow, ("%i | %i"):format(math.abs(miss[1]) * 1000, miss[2] * 1000), w)
+	timingsKV(text.releaseMultiplier, ("%0.1fx"):format(release_multiplier), w)
+	timingsKV(text.hitLogic, nearest and text.nearest or text.earliestNote, w)
 
 	w, h = Layout:move("scoringStats")
 	Theme:border(w, h)
@@ -359,10 +367,10 @@ function ViewConfig:scoreInfo()
 	gfx.translate(0, 4)
 	gfx.setFont(font.scoreInfo)
 	gfx.setColor(Color.text)
-	GradeKV(Text.mode, inputMode, w)
-	GradeKV(Text.score, scoreFormatted, w)
-	GradeKV(Text.accuracy, accuracyFormatted, w)
-	GradeKV(Text.rating, ratingFormatted, w)
+	GradeKV(text.mode, inputMode, w)
+	GradeKV(text.score, scoreFormatted, w)
+	GradeKV(text.accuracy, accuracyFormatted, w)
+	GradeKV(text.rating, ratingFormatted, w)
 
 	gfx.translate(0, 10)
 	gfx.setColor(Color.separator)
@@ -371,8 +379,8 @@ function ViewConfig:scoreInfo()
 
 	gfx.setColor(Color.text)
 	gfx.translate(0, 4)
-	GradeKV(Text.mean, meanFormatted, w)
-	GradeKV(Text.maxError, maxErrorFormatted, w)
+	GradeKV(text.mean, meanFormatted, w)
+	GradeKV(text.maxError, maxErrorFormatted, w)
 
 	w, h = Layout:move("scoreInfo")
 	Theme:border(w, h)
@@ -437,10 +445,10 @@ function ViewConfig:modifiers(view)
 		modifiers = selectModel.scoreItem.modifiers
 	end
 
-	local text = Theme:getModifierString(modifiers)
+	local label = Theme:getModifierString(modifiers)
 	gfx.setFont(font.modifiers)
 	gfx.setColor(Color.text)
-	gyatt.frame(text, 0, 0, w, h, "center", "center")
+	gyatt.frame(label, 0, 0, w, h, "center", "center")
 	Theme:border(w, h)
 end
 

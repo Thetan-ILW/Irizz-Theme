@@ -3,6 +3,8 @@ local thread = require("thread")
 local math_util = require("math_util")
 local gyatt = require("thetan.gyatt")
 
+local get_assets = require("thetan.osu.views.assets_loader")
+
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.osu.views.ResultView.ViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
@@ -52,8 +54,7 @@ ResultView.load = thread.coro(function(self)
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
 	end
 
-	self.assets = self.game.assetModel:get("osu")
-	assert(self.assets, "osu! assets not loaded")
+	self.assets = get_assets(self.game)
 
 	self.viewConfig = ViewConfig(self.game, self.assets, is_after_gameplay)
 

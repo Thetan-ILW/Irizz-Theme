@@ -1,8 +1,9 @@
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 local thread = require("thread")
-local table_util = require("table_util")
 local math_util = require("math_util")
-local assets = require("thetan.skibidi.assets")
+local gyatt = require("thetan.gyatt")
+
+local get_assets = require("thetan.irizz.assets_loader")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Header = require("thetan.irizz.views.HeaderView")
@@ -19,6 +20,8 @@ local ResultView = ScreenView + {}
 
 ResultView.currentJudgeName = ""
 ResultView.currentJudge = 0
+
+local window_height = 0
 
 local loading = false
 local canDraw = false
@@ -59,8 +62,10 @@ ResultView.load = thread.coro(function(self)
 	local select = configs.select
 	local irizz = configs.irizz
 
-	self.viewConfig = ViewConfig(self.game, Theme.resultCustomConfig)
-	self.header = Header(self.game, "result")
+	self.assets = get_assets(self.game)
+
+	self.viewConfig = ViewConfig(self.game, self.assets)
+	self.header = Header(self.game, self.assets, "result")
 	self.viewConfig.scoreListView:reloadItems()
 
 	self.judgements = self.game.rhythmModel.scoreEngine.scoreSystem.judgements
@@ -77,6 +82,8 @@ ResultView.load = thread.coro(function(self)
 
 	canDraw = true
 	loading = false
+
+	window_height = love.graphics.getHeight()
 end)
 
 function ResultView:unload()
@@ -88,8 +95,14 @@ function ResultView:update()
 	self.game.previewModel:update()
 end
 
+function ResultView:resolutionUpdated()
+	window_height = self.assets.localization:updateScale()
+end
+
 function ResultView:draw()
 	Layout:draw()
+
+	gyatt.setTextScale(1080 / window_height)
 
 	if not canDraw then
 		return

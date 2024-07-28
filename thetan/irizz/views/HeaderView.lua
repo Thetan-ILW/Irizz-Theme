@@ -20,7 +20,7 @@ local font
 ---@field avatar love.Image
 local ViewConfig = class()
 
----@type irizz.ActionModel
+---@type skibidi.ActionModel
 local actionModel
 
 local gfx = love.graphics
@@ -29,8 +29,6 @@ local gfx = love.graphics
 ---@param assets irizz.IrizzAssets
 ---@param screen "select" | "result" | "multiplayer"
 function ViewConfig:new(game, assets, screen)
-	font = Theme:getFonts("header")
-
 	self.gameIcon = assets.images.gameIcon
 	self.avatar = assets.images.avatar
 	font = assets.localization.fontGroups.header
@@ -133,28 +131,14 @@ function ViewConfig:resultButtons(view)
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
 
-	if circleImage(self.gameIcon, r, r * 2) then
+	if circleImage("gameIcon", self.gameIcon, r) then
 		view.gameView.mainMenuView:toggle()
 	end
 
-	local songsText = font.anyText:getWidth(text.songs)
+	gfx.translate(r * 2 + 30, 0)
 
-	just.indent(30)
-	local x = r * 2
-	local y = h - 8
-	local panelHeight = font.anyText:getHeight() + 8
-
-	gfx.setColor(Color.panel)
-	gfx.rectangle("fill", x - 8, 10, songsText + 16, panelHeight, 8, 8)
-
-	gfx.setColor(Color.text)
-	gyatt.baseline(text.songs, x, y, w, 1, "left")
-	gfx.rectangle("fill", x, y + 10, songsText, 4)
-
-	if just.is_over(songsText, h + 10, x) then
-		if just.mousepressed(1) then
-			view.game.gameView:sendQuitSignal()
-		end
+	if button(text.songs, false, false) then
+		view:sendQuitSignal()
 	end
 end
 

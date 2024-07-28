@@ -13,7 +13,7 @@ local OsuResultView = require("thetan.osu.views.ResultView")
 local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
 local EditorView = require("sphere.views.EditorView")
 
-local IrizzAssets = require("thetan.irizz.views.IrizzAssets")
+local load_irizz_assets = require("thetan.irizz.assets_loader")
 
 local UserInterface = require("sphere.ui.UserInterface")
 
@@ -37,7 +37,6 @@ local base_load = UserInterface.load
 
 function UserInterface:load()
 	local irizz_config = self.persistence.configModel.configs.irizz
-	local osu_result = irizz_config.osuResultScreen
 
 	local osu_ss = OsuSelectView(self.game)
 	local irizz_ss = SelectView(self.game)
@@ -45,11 +44,10 @@ function UserInterface:load()
 	local osu_result = OsuResultView(self.game)
 	local irizz_result = ResultView(self.game)
 
-	irizz_ss.assetModel = self.game.assetModel
-	irizz_ss:loadAssets()
+	load_irizz_assets(self.game)
 
 	self.selectView = irizz_config.osuSongSelect and osu_ss or irizz_ss
-	self.resultView = osu_result and osu_result or irizz_result
+	self.resultView = irizz_config.osuResultScreen and osu_result or irizz_result
 
 	self.game.selectView = self.selectView
 	self.game.resultView = self.resultView

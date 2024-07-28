@@ -311,7 +311,7 @@ l.textGroups = {
 		timeRate = "Time rate: %0.02fx",
 		pauses = "Pauses:",
 		grade = "Grade:",
-		scrollSpeed = "Scroll speed:",
+		scrollSpeed = "Scroll:",
 		hitWindow = "Hit window",
 		missWindow = "Miss window",
 		releaseMultiplier = "Release multiplier",
@@ -553,7 +553,6 @@ l.fontGroups = {
 
 	inputModal = {
 		title = { "ZenMaruGothic-Black", 72 },
-		--tabs = { "ZenMaruGothic-Medium", 28 },
 		noInputs = { "ZenMaruGothic-Medium", 36 },
 		inputs = { "ZenMaruGothic-Black", 24 },
 		inputMode = { "ZenMaruGothic-Black", 48 },
@@ -593,7 +592,7 @@ l.fontGroups = {
 		noItems = { "ZenMaruGothic-Medium", 36 },
 	},
 
-	resultView = {
+	result = {
 		titleAndDifficulty = { "ZenMaruGothic-Black", 32 },
 		modifiers = { "ZenMaruGothic-Medium", 28 },
 		accuracy = { "ZenMaruGothic-Medium", 28 },

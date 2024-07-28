@@ -781,9 +781,26 @@ function SettingsTab:UI(view)
 	gyatt.text(text.osuResultScreen)
 	just.next(0, textSeparation)
 
-	irizz.osuResultScreen = imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, text.enable)
+	local change_result_screen = false
+
+	irizz.osuResultScreen, change_result_screen =
+		imgui.checkbox("irizz.osuResultScreen", irizz.osuResultScreen, text.enable)
 	irizz.hpGraph = imgui.checkbox("irizz.hpGraph", irizz.hpGraph, text.showHpGraph)
 	irizz.showPP = imgui.checkbox("irizz.showPP", irizz.showPP, text.showPP)
+
+	if change_result_screen then
+		---@type skibidi.ScreenView
+		local result_view
+
+		if irizz.osuResultScreen then
+			result_view = require("thetan.osu.views.ResultView")
+		else
+			result_view = require("thetan.irizz.views.ResultView")
+		end
+
+		view.game.ui.resultView = result_view(view.game)
+		view.game.resultView = view.game.ui.resultView
+	end
 
 	imgui.separator()
 

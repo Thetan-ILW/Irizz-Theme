@@ -5,7 +5,8 @@ local ScreenView = require("thetan.skibidi.views.ScreenView")
 
 local Theme = require("thetan.irizz.views.Theme")
 local HeaderView = require("thetan.irizz.views.HeaderView")
-local IrizzAssets = require("thetan.irizz.views.IrizzAssets")
+
+local get_assets = require("thetan.irizz.assets_loader")
 
 local LayersView = require("thetan.irizz.views.LayersView")
 local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
@@ -47,7 +48,7 @@ function SelectView:load()
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
 
-	self:loadAssets()
+	self.assets = get_assets(self.game)
 
 	self.headerView = HeaderView(self.game, self.assets, "select")
 	self.settingsViewConfig = SettingsViewConfig(self.game, self.assets)
@@ -70,27 +71,6 @@ function SelectView:load()
 	end
 
 	window_height = love.graphics.getHeight()
-end
-
-function SelectView:loadAssets()
-	local configs = self.game.configModel.configs
-	local irizz = configs.irizz
-
-	local language = irizz.language
-
-	local assets = self.assetModel:get("irizz")
-
-	local localization_filepath = self.assetModel:getLocalizationFileName("irizz", language)
-
-	if not assets then
-		assets = IrizzAssets(self.assetModel:getLocalizationFileName("irizz", "English"))
-		self.assetModel:store("irizz", assets)
-	end
-
-	---@cast assets irizz.IrizzAssets
-	self.assets = assets
-	self.assets:loadLocalization(localization_filepath)
-	self.assets:updateVolume(self.game.configModel)
 end
 
 function SelectView:beginUnload()
