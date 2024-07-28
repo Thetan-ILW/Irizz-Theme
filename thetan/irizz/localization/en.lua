@@ -392,7 +392,7 @@ l.textGroups = {
 	keybindsModal = {
 		keybinds = "Key binds",
 	},
-	notification = {
+	notifications = {
 		volume = "Volume: %i%%",
 		chartStarted = "%s - %s [%s]\nLength: %s",
 		exportToOsu = "Exported to .osu file",

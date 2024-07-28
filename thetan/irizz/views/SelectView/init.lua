@@ -158,7 +158,7 @@ function SelectView:play()
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
 
-	start_sound = self.assets.startSounds[irizz.startSound]
+	start_sound = self.assets.startSounds[irizz.startSound] or require("audio.Source") -- Remove later in several months
 	start_sound:play()
 
 	local multiplayerModel = self.game.multiplayerModel

@@ -99,6 +99,8 @@ function GameplayView:draw()
 		self.game.gameplayController:pause()
 		self.pauseScreen:show()
 	end
+
+	self.notificationView:draw()
 end
 
 ---@param dt number

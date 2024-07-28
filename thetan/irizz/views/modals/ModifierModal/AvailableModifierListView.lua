@@ -3,6 +3,7 @@ local just = require("just")
 
 local gyatt = require("thetan.gyatt")
 local ModifierModel = require("sphere.models.ModifierModel")
+local ModifierRegistry = require("sphere.models.ModifierModel.ModifierRegistry")
 
 local AvailableModifierListView = ListView + {}
 
@@ -18,7 +19,7 @@ function AvailableModifierListView:new(game, assets)
 end
 
 function AvailableModifierListView:reloadItems()
-	self.items = self.game.modifierSelectModel.modifiers
+	self.items = ModifierRegistry.list
 end
 
 ---@return number
@@ -43,7 +44,7 @@ function AvailableModifierListView:drawItem(i, w, h)
 	local id = "Available modifier" .. i
 	local changed, active, hovered = just.button(id, just.is_over(w, h))
 	if changed then
-		local modifier = modifierSelectModel.modifiers[i]
+		local modifier = self.items[i]
 		modifierSelectModel:add(modifier)
 	end
 

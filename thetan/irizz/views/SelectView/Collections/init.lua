@@ -14,6 +14,8 @@ local colors = require("thetan.irizz.ui.colors")
 local text
 ---@type table<string, love.Font>
 local font
+---@type table<string, audio.Source>
+local snd
 
 local CollectionListView = require("thetan.irizz.views.SelectView.Collections.CollectionListView")
 local OsuDirectListView = require("thetan.irizz.views.SelectView.Collections.OsuDirectListView")
@@ -34,6 +36,7 @@ function ViewConfig:new(game, assets)
 
 	font = assets.localization.fontGroups.collections
 	text = assets.localization.textGroups.collections
+	snd = assets.sounds
 
 	self.collectionListView = CollectionListView(game, assets)
 	self.osuDirectListView = OsuDirectListView(game, assets)
@@ -134,18 +137,18 @@ function ViewConfig:collectionsButtons(view)
 	if imgui.TextOnlyButton("locations", label, w, h) then
 		ss.locations_in_collections = not ss.locations_in_collections
 		view.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
-		Theme:playSound("tabButtonClick")
+		snd.tabButtonClick:play()
 	end
 
 	if imgui.TextOnlyButton("osuDirect", text.osuDirect, w, h) then
 		self:setMode(view, "osu!direct")
-		Theme:playSound("tabButtonClick")
+		snd.tabButtonClick:play()
 	end
 
 	w, h = Layout:move("button3")
 	if imgui.TextOnlyButton("mounts", text.mounts, w, h) then
 		view:openModal("thetan.irizz.views.modals.MountsModal")
-		Theme:playSound("tabButtonClick")
+		snd.tabButtonClick:play()
 	end
 
 	w, h = Layout:move("buttons")

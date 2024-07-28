@@ -115,7 +115,12 @@ function ViewConfig:draw(view)
 
 	---@type table
 	local chartview = view.game.selectModel.chartview
-	local chart_name = string.format("%s - %s [%s]", chartview.artist, chartview.title, chartview.name)
+	local chart_name = "No chart"
+
+	if chartview then
+		chart_name = string.format("%s - %s [%s]", chartview.artist, chartview.title, chartview.name)
+	end
+
 	gyatt.text(("%s\nWhat do you want to do with this chart?"):format(chart_name))
 
 	gfx.pop()

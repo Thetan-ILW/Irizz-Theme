@@ -1,6 +1,6 @@
 return {
 	uiVolume = 0.2,
-	startSound = "Herta.wav",
+	startSound = "Herta",
 	scoreSystem = "soundsphere",
 	judge = "",
 	health = "",

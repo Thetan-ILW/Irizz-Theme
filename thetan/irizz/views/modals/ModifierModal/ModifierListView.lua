@@ -5,8 +5,8 @@ local just = require("just")
 local SliderView = require("sphere.views.SliderView")
 local StepperView = require("sphere.views.StepperView")
 local ModifierModel = require("sphere.models.ModifierModel")
+local ModifierRegistry = require("sphere.models.ModifierModel.ModifierRegistry")
 
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
 
 local ModifierListView = ListView + {}
@@ -61,7 +61,7 @@ function ModifierListView:drawItem(i, w, h)
 	gfx.setFont(self.font.modifierName)
 
 	gfx.translate(15, 0)
-	gyatt.frame(ModifierModel.Modifiers[item.id] or "NONE", 0, 0, math.huge, h, "left", "center")
+	gyatt.frame(ModifierRegistry:getName(item.id) or "NONE", 0, 0, math.huge, h, "left", "center")
 
 	local modifier = ModifierModel:getModifier(item.id)
 	if not modifier then

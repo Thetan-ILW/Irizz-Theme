@@ -6,7 +6,8 @@ local TextTooltipImView = require("sphere.imviews.TextTooltipImView")
 local ContextMenuImView = require("sphere.imviews.ContextMenuImView")
 local NotificationView = require("thetan.irizz.views.NotificationView")
 local InputMap = require("thetan.irizz.views.GameViewInputMap")
-local Theme = require("thetan.irizz.views.Theme")
+
+local get_irizz_assets = require("thetan.irizz.assets_loader")
 
 ---@class sphere.GameView
 ---@operator call: sphere.GameView
@@ -30,7 +31,7 @@ function GameView:load()
 	self.frameTimeView:load()
 
 	self.actionModel = self.game.actionModel
-	self.notificationView = NotificationView()
+	self.notificationView = NotificationView(get_irizz_assets(self.game))
 	self:setView(self.game.selectView)
 
 	self.inputMap = InputMap(self, self.actionModel)

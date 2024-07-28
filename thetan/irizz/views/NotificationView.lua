@@ -1,9 +1,12 @@
 local class = require("class")
 local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Text = Theme.textNotification
-local Color = Theme.colors
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
+
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
 local font
 
 ---@class irizz.NotificationView
@@ -15,36 +18,40 @@ local animation_start_time = 0
 
 local message = ""
 local show_time = 0
+
+---@type love.Font
 local message_font
 
-local messages = {
-	exportToOsu = Text.exportToOsu,
-	volumeChanged = Text.volume,
-	chartStarted = Text.chartStarted,
-	cantChangeMods = Text.cantChangeMods,
-	scrollSpeedChanged = Text.scrollSpeedChanged,
-	offsetChanged = Text.offsetChanged,
-}
-
-function NotificationView:new()
-	font = Theme:getFonts("notifications")
+---@param assets irizz.IrizzAssets
+function NotificationView:new(assets)
+	text, font = assets.localization:get("notifications")
+	assert(text and font)
 end
 
 ---@param message_key string
 ---@param value any?
 ---@param params table?
 function NotificationView:show(message_key, value, params)
-	local text = messages[message_key] or message_key
+	local messages = {
+		exportToOsu = text.exportToOsu,
+		volumeChanged = text.volume,
+		chartStarted = text.chartStarted,
+		cantChangeMods = text.cantChangeMods,
+		scrollSpeedChanged = text.scrollSpeedChanged,
+		offsetChanged = text.offsetChanged,
+	}
+
+	local label = messages[message_key] or message_key
 
 	if value then
 		if type(value) == "table" then
-			text = text:format(unpack(value))
+			label = label:format(unpack(value))
 		else
-			text = text:format(value)
+			label = label:format(value)
 		end
 	end
 
-	message = text
+	message = label
 
 	local time = hide_time
 	message_font = font.message
@@ -82,10 +89,10 @@ function NotificationView:draw()
 	gfx.clear()
 
 	gfx.translate((ww / 2) - (w / 2), ((wh / 2) - (h / 2)))
-	Theme:panel(w, h)
+	ui:panel(w, h)
 
 	gfx.origin()
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(message_font)
 	gyatt.frame(message, 0, 0, ww, wh, "center", "center")
 
