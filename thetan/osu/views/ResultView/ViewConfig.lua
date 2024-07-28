@@ -56,6 +56,7 @@ local username = ""
 
 local gfx = love.graphics
 
+---@type love.Shader
 local buttonHoverShader
 
 ---@type love.Image[]

@@ -187,7 +187,7 @@ function ScoreListView:drawItem(i, w, h)
 	gfx.push()
 	gfx.setColor({ 1, 1, 1, 1 })
 
-	local grade = img.gradeD
+	local grade = img.smallGradeD
 
 	if item.score > 9800 then
 		grade = img.smallGradeX

@@ -58,7 +58,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 	gfx.translate(15, 0)
 
 	gfx.setFont(self.font.artist)
-	gyatt.frame(item.artist, 0, 0, math.huge, h, "left", "top")
+	gyatt.frame(item.artist or "", 0, 0, math.huge, h, "left", "top")
 	gfx.setFont(self.font.title)
 	gyatt.frame(item.title or "", 0, -5, math.huge, h, "left", "bottom")
 end

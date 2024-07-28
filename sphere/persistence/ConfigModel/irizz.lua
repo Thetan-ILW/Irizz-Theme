@@ -21,7 +21,6 @@ return {
 	alwaysShowOriginalMode = false,
 	transitionAnimation = "circle",
 	osuResultScreen = false,
-	osuResultSkin = "None",
 	osuSongSelect = false,
 	osuSongSelectSkin = "Default",
 	osuSongSelectPreviewIcon = false,

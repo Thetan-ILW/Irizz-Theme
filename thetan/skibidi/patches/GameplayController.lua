@@ -1,59 +1,57 @@
 local math_util = require("math_util")
 
-local modulePatcher = require("ModulePatcher")
+local GameplayController = require("sphere.controllers.GameplayController")
 
-local module = "sphere.controllers.GameplayController"
-
-modulePatcher:insert(module, "skip", function(_self)
-	local rhythmModel = _self.rhythmModel
+function GameplayController:skip()
+	local rhythmModel = self.rhythmModel
 	local timeEngine = rhythmModel.timeEngine
 
-	_self:update(0)
+	self:update(0)
 
-	if not _self:hasResult() then
-		rhythmModel.audioEngine:unload()
+	if not self:hasResult() then
+		rhythmModel.audioEngine:unload() -- <<<
 	end
 
 	timeEngine:play()
 	timeEngine.currentTime = math.huge
-	_self.replayModel:update()
+	self.replayModel:update()
 	rhythmModel.logicEngine:update()
 	rhythmModel.scoreEngine:update()
-end)
+end
 
-modulePatcher:insert(module, "unload", function(_self)
-	local rhythmModel = _self.rhythmModel
-	_self.loaded = false
+function GameplayController:unload()
+	local rhythmModel = self.rhythmModel
+	self.loaded = false
 	rhythmModel.audioEngine.loaded = false
 
-	_self.discordModel:setPresence({})
-	_self:skip()
+	self.discordModel:setPresence({})
+	self:skip()
 
-	if _self:hasResult() then
-		_self:saveScore()
+	if self:hasResult() then
+		self:saveScore()
 	end
 
 	rhythmModel:unloadAllEngines(true)
 	rhythmModel.inputManager:setMode("external")
-	_self.replayModel:setMode("record")
+	self.replayModel:setMode("record")
 	love.mouse.setVisible(true)
 
-	_self.windowModel:setVsyncOnSelect(true)
+	self.windowModel:setVsyncOnSelect(true)
 
-	_self.multiplayerModel:setIsPlaying(false)
-end)
+	self.multiplayerModel:setIsPlaying(false)
+end
 
-modulePatcher:insert(module, "increasePlaySpeed", function(self, delta)
+function GameplayController:increasePlaySpeed(delta)
 	local speedModel = self.speedModel
 	speedModel:increase(delta)
 
 	local gameplay = self.configModel.configs.settings.gameplay
 	self.rhythmModel.graphicEngine:setVisualTimeRate(gameplay.speed)
 
-	return speedModel.format[gameplay.speedType]:format(speedModel:get())
-end)
+	return speedModel.format[gameplay.speedType]:format(speedModel:get()) -- <<<
+end
 
-modulePatcher:insert(module, "increaseLocalOffset", function(self, delta)
+function GameplayController:increaseLocalOffset(delta)
 	local chartview = self.selectModel.chartview
 
 	chartview.offset = chartview.offset or self.offsetModel:getDefaultLocal()
@@ -67,4 +65,4 @@ modulePatcher:insert(module, "increaseLocalOffset", function(self, delta)
 	self:updateOffsets()
 
 	return chartview.offset
-end)
+end

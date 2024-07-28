@@ -1,25 +1,13 @@
-local modulePatcher = require("ModulePatcher")
+local SelectController = require("sphere.controllers.SelectController")
 
-local module = "sphere.controllers.SelectController"
+local base_load = SelectController.load
 
-modulePatcher:insert(module, "load", function(self, view)
-	local selectModel = self.selectModel
-	local previewModel = self.previewModel
-
+function SelectController:load(view)
+	base_load(self)
 	self.view = view
-	self.configModel:write()
-	self.playContext:load(self.configModel.configs.play)
-	self.modifierSelectModel:updateAdded()
+end
 
-	self.selectModel:setLock(false)
-
-	selectModel:load()
-	previewModel:load()
-
-	self:applyModifierMeta()
-end)
-
-modulePatcher:insert(module, "update", function(self)
+function SelectController:update()
 	self.previewModel:update()
 
 	self.windowModel:setVsyncOnSelect(true)
@@ -29,7 +17,7 @@ modulePatcher:insert(module, "update", function(self)
 		local cv = selectModel.chartview
 
 		if cv then
-			self.backgroundModel:setBackgroundPath(cv.location_dir, cv.background_path or "", cv.format)
+			self.backgroundModel:setBackgroundPath(cv.location_dir, cv.background_path or "", cv.format) -- <<<
 		else
 			self.backgroundModel:setBackgroundPath()
 		end
@@ -39,7 +27,7 @@ modulePatcher:insert(module, "update", function(self)
 			self.chartPreviewModel:setChartview(selectModel.chartview)
 		end)
 		self:applyModifierMeta()
-		self.view:notechartChanged()
+		self.view:notechartChanged() -- <<<
 	end
 
 	local osudirectModel = self.osudirectModel
@@ -58,4 +46,4 @@ modulePatcher:insert(module, "update", function(self)
 	if #self.configModel.configs.online.token == 0 then
 		return
 	end
-end)
+end

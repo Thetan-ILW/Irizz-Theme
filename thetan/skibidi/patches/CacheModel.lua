@@ -1,7 +1,4 @@
-local thread = require("thread")
-
-local modulePatcher = require("ModulePatcher")
-local module = "sphere.persistence.CacheModel"
+local CacheModel = require("sphere.persistence.CacheModel")
 
 local function exists(file)
 	local ok, err, code = os.rename(file, file)
@@ -48,18 +45,10 @@ local function searchSongs()
 	return songs
 end
 
-modulePatcher:insert(module, "load", function(self)
-	thread.shared.cache = {
-		state = 0,
-		chartfiles_count = 0,
-		chartfiles_current = 0,
-	}
-	self.shared = thread.shared.cache
+local base_load = CacheModel.load
 
-	self.gdb:load()
-	self.cacheStatus:update()
-
-	self.locationManager:load()
+function CacheModel:load()
+	base_load(self)
 
 	self.newSongs = {}
 
@@ -85,4 +74,4 @@ modulePatcher:insert(module, "load", function(self)
 			table.insert(self.newSongs, songs)
 		end
 	end
-end)
+end

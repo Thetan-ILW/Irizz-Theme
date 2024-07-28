@@ -1,10 +1,10 @@
-local modulePatcher = require("ModulePatcher")
+local RhythmModel = require("sphere.models.RhythmModel")
 
-modulePatcher:insert("sphere.models.RhythmModel", "unloadAllEngines", function(_self, stopAudioEngine)
-	if not stopAudioEngine then
-		_self.audioEngine:unload()
+function RhythmModel:unloadAllEngines(stop_audio_engine)
+	if not stop_audio_engine then
+		self.audioEngine:unload()
 	end
 
-	_self.logicEngine:unload()
-	_self.graphicEngine:unload()
-end)
+	self.logicEngine:unload()
+	self.graphicEngine:unload()
+end

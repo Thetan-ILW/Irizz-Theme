@@ -1,11 +1,11 @@
-local modulePatcher = require("ModulePatcher")
+local Persistence = require("sphere.persistence.Persistence")
 
 local dirs = require("sphere.persistence.dirs")
 
-modulePatcher:insert("sphere.persistence.Persistence", "load", function(_self)
+function Persistence:load()
 	dirs.create()
 
-	local configModel = _self.configModel
+	local configModel = self.configModel
 	configModel:open("settings", true)
 	configModel:open("select", true)
 	configModel:open("play", true)
@@ -21,5 +21,5 @@ modulePatcher:insert("sphere.persistence.Persistence", "load", function(_self)
 	configModel:open("osu_api", true)
 	configModel:read()
 
-	_self.cacheModel:load()
-end)
+	self.cacheModel:load()
+end
