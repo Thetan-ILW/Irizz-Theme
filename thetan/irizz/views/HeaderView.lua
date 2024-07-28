@@ -101,7 +101,7 @@ function ViewConfig:songSelectButtons(view)
 	local r = h / 1.4
 
 	if circleImage("gameIcon", self.gameIcon, r) then
-		view.mainMenuView:toggle()
+		--view.mainMenuView:toggle()
 	end
 
 	gfx.translate(r * 2 + 30, 0)

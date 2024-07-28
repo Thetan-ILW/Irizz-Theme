@@ -84,7 +84,7 @@ function ViewConfig:login(view)
 	imgui.setSize(w, h, w / 2.5, 50)
 
 	local imguiSize = 50
-	local nextItemOffset = Theme.imgui.nextItemOffset
+	local nextItemOffset = 15
 
 	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.buttons)

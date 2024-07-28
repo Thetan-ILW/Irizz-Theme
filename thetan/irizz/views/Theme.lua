@@ -79,11 +79,6 @@ function Theme:getModifierString(mods)
 	return modString
 end
 
-function Theme:setLines()
-	love.graphics.setLineStyle("smooth")
-	love.graphics.setLineWidth(4)
-end
-
 ---@param v string?
 ---@return string
 function Theme.formatDiffColumns(v)

@@ -635,7 +635,7 @@ l.fontGroups = {
 		smallText = { "ZenMaruGothic-Medium", 24 },
 	},
 
-	mainMenuView = {
+	mainMenu = {
 		title = { "ZenMaruGothic-Medium", 72 },
 		timeOfDay = { "ZenMaruGothic-Medium", 48 },
 		buttons = { "ZenMaruGothic-Medium", 24 },

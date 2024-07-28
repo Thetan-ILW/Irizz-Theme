@@ -59,7 +59,7 @@ function SelectView:load()
 
 	self:updateFilterLines()
 	self.mainMenuView = MainMenuView(self)
-	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
+	self.layersView = LayersView(self.game, self.assets, self.mainMenuView, "select", "preview")
 
 	if irizz.showFreshInstallModal then
 		local newSongs = self.game.cacheModel.newSongs

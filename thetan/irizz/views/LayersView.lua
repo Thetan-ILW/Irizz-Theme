@@ -2,9 +2,11 @@ local class = require("class")
 local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
-local Text = Theme.textLayersView
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
 local font
 
 local Layout = require("thetan.irizz.views.LayersLayout")
@@ -36,9 +38,12 @@ local uiLock = false
 
 local gfx = love.graphics
 
-function LayersView:new(game, mainMenuView, screenName, sourceName)
+function LayersView:new(game, assets, mainMenuView, screenName, sourceName)
 	self.game = game
 	self.mainMenuView = mainMenuView
+
+	text, font = assets.localization:get("layersView")
+	assert(text and font)
 
 	screen = screenName
 	audioSourceName = sourceName
@@ -53,8 +58,6 @@ function LayersView:new(game, mainMenuView, screenName, sourceName)
 			return
 		end
 	end
-
-	font = Theme:getFonts("layersView")
 end
 
 ---@param canvas love.Canvas
@@ -109,7 +112,7 @@ function LayersView:spectrum(canvas, w, h, invertColor)
 	end
 
 	if not invertColor then
-		gfx.setColor(Theme.colors.accent)
+		gfx.setColor(colors.ui.accent)
 		gyatt.spectrum(frequencies, 127, w, h)
 		return
 	end
@@ -185,15 +188,15 @@ function LayersView:drawPanelBlur(background, panelsStencil)
 	gfx.setCanvas(previousCanvas)
 end
 
----@param ui function
-function LayersView:drawUI(ui)
+---@param layer function
+function LayersView:drawUI(layer)
 	local previousCanvas = gfx.getCanvas()
 	local uiLayer = gfx_util.getCanvas("selectUi")
 	gfx.setCanvas({ uiLayer, stencil = true })
 	gfx.clear()
 	gfx.setBlendMode("alpha", "alphamultiply")
 
-	ui()
+	layer()
 
 	gfx.setCanvas({ previousCanvas, stencil = true })
 
@@ -218,22 +221,22 @@ function LayersView:uiLock()
 	gfx.rectangle("fill", 0, 0, w, h)
 
 	local w, h = Layout:move("uiLockTitle")
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.uiLockTitle)
-	gfx_util.printFrame(Text.processingCharts, 0, 0, w, h, "center", "center")
+	gfx_util.printFrame(text.processingCharts, 0, 0, w, h, "center", "center")
 
 	w, h = Layout:move("background")
 	gfx.setFont(font.uiLockStatus)
-	local text = ("%s: %s\n%s: %s/%s\n%s: %0.02f%%"):format(
-		Text.path,
+	local label = ("%s: %s\n%s: %s/%s\n%s: %0.02f%%"):format(
+		text.path,
 		path,
-		Text.chartsFound,
+		text.chartsFound,
 		current,
 		count,
-		Text.chartsCached,
+		text.chartsCached,
 		current / count * 100
 	)
-	gfx_util.printFrame(text, 0, 0, w, h, "center", "center")
+	gyatt.frame(label, 0, 0, w, h, "center", "center")
 end
 
 function LayersView:update()
@@ -281,9 +284,9 @@ function LayersView:update()
 	uiLock = self.game.cacheModel.isProcessing
 end
 
-function LayersView:draw(panelsStencil, ui)
+function LayersView:draw(panelsStencil, ui_layer)
 	Layout:draw()
-	Theme:setLines()
+	ui:setLines()
 
 	local background = self:drawBackground()
 
@@ -297,7 +300,7 @@ function LayersView:draw(panelsStencil, ui)
 	end
 
 	self:drawPanelBlur(background, panelsStencil)
-	self:drawUI(ui)
+	self:drawUI(ui_layer)
 end
 
 return LayersView

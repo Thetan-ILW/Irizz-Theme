@@ -17,17 +17,22 @@ function ui:frameWithShadow(text, x, y, w, h, ax, ay)
 end
 
 function ui:panel(w, h)
-	love.graphics.setColor(colors.ui.panel)
-	love.graphics.rectangle("fill", 0, 0, w, h, 8, 8)
+	gfx.setColor(colors.ui.panel)
+	gfx.rectangle("fill", 0, 0, w, h, 8, 8)
 end
 
 local line_width = 4
 local half = line_width / 2
 function ui:border(w, h)
-	love.graphics.setLineStyle("smooth")
-	love.graphics.setLineWidth(line_width)
-	love.graphics.setColor(colors.ui.border)
-	love.graphics.rectangle("line", -half, -half, w + line_width, h + line_width, 8, 8)
+	gfx.setLineStyle("smooth")
+	gfx.setLineWidth(line_width)
+	gfx.setColor(colors.ui.border)
+	gfx.rectangle("line", -half, -half, w + line_width, h + line_width, 8, 8)
+end
+
+function ui:setLines()
+	gfx.setLineStyle("smooth")
+	gfx.setLineWidth(4)
 end
 
 return ui
