@@ -3,7 +3,6 @@ local Spoiler = require("thetan.irizz.imgui.Spoiler")
 local TextOnlyButton = require("thetan.irizz.imgui.TextOnlyButton")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
 local cfg = Theme.imgui
 
 return function(id, w, h, list, preview, to_string)

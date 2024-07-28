@@ -456,7 +456,7 @@ function SettingsTab:Audio(view)
 	end
 
 	if v.master ~= oldMaster or irizz.uiVolume ~= oldUi then
-		Theme:updateVolume(view.game)
+		view.assets:updateVolume(view.game.configModel)
 	end
 
 	local mode = a.mode
@@ -602,6 +602,17 @@ local diff_columns = {
 	"user_diff",
 }
 
+local diff_columns_names = {
+	enps_diff = "ENPS",
+	osu_diff = "OSU",
+	msd_diff = "MSD",
+	user_diff = "USER",
+}
+
+local function formatDiffColumnName(v)
+	return diff_columns_names[v] or ""
+end
+
 ---@param v number?
 ---@return string
 local function formatRateType(v)
@@ -641,8 +652,9 @@ function SettingsTab:UI(view)
 	irizz.alwaysShowOriginalMode =
 		imgui.checkbox("irizz.originalMode", irizz.alwaysShowOriginalMode, text.alwaysShowOriginalMode)
 
-	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, Theme.formatDiffColumns, text.difficulty)
+	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, formatDiffColumnName, text.difficulty)
 
+	--[[
 	local currentLanguage = irizz.language
 	local newLanguage =
 		imgui.combo("irizz.language", irizz.language, Theme.localizations, formatLocalization, text.language)
@@ -652,6 +664,7 @@ function SettingsTab:UI(view)
 		assets:loadLocalization(newLanguage.fileName, Theme)
 		view.game.selectView:changeScreen("selectView")
 	end
+	]]
 
 	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, text.rateType)
 	if rateType ~= gp.rate_type then
@@ -679,10 +692,10 @@ function SettingsTab:UI(view)
 		100,
 		1,
 		text.ch_ab
-	) * 0.001
+	) / 1000
 
 	irizz.distortion = imgui.slider1("irizz.distortion", irizz.distortion * 1000, "%i%%", 0, 100, 1, text.distortion)
-		* 0.001
+		/ 1000
 
 	irizz.spectrum =
 		imgui.combo("irizz.spectrum", irizz.spectrum, { "solid", "inverted" }, formatColorType, text.spectrum)

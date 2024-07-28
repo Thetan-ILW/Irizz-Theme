@@ -1,8 +1,7 @@
 local ListView = require("thetan.irizz.views.ListView")
 local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local CollectionListView = ListView + {}
 
@@ -64,7 +63,7 @@ function CollectionListView:drawItem(i, w, h)
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
 	gfx.translate(15, 0)
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(self.font.itemCount)
 	gyatt.frame(item.count ~= 0 and item.count or "", 0, 0, w, h, "left", "top")
 	gfx.setFont(self.font.name)

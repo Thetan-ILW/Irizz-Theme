@@ -1,8 +1,7 @@
 local just = require("just")
 local gfx_util = require("gfx_util")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 ---@param text any
 ---@param x number
@@ -37,17 +36,17 @@ local function print_values(w, h, ratio, name, value, right)
 
 	love.graphics.translate(x, 0)
 	if fw > w then
-		love.graphics.setColor(Color.darkText)
+		love.graphics.setColor(colors.ui.darkText)
 		_print(name, b * nw, 0, nw, h)
-		love.graphics.settColor(Color.text)
+		love.graphics.settColor(colors.ui.text)
 		_print(value, a * nw + b * vw, 0, vw, h)
 	elseif fw > w * (1 - ratio) or nw <= w * ratio then
-		love.graphics.setColor(Color.darkText)
+		love.graphics.setColor(colors.ui.darkText)
 		_print(name, b * nw, 0, nw, h)
-		love.graphics.setColor(Color.darkText)
+		love.graphics.setColor(colors.ui.darkText)
 		_print(value, a * math.max(nw, w * ratio - offset) + b * vw, 0, vw, h)
 	else
-		love.graphics.setColor(Color.text)
+		love.graphics.setColor(colors.ui.text)
 		_print(name, a * w * ratio + b * nw, 0, nw, h)
 		_print(value, a * (nw + w * ratio) + b * vw, 0, vw, h)
 	end
@@ -56,9 +55,9 @@ end
 
 local shadow = 2
 return function(w, h, ratio, name, value, right)
-	love.graphics.setColor(Color.uiPanel)
+	love.graphics.setColor(colors.ui.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h)
-	love.graphics.setColor(Color.accent)
+	love.graphics.setColor(colors.ui.accent)
 	love.graphics.rectangle("fill", right and w * (1 - ratio) or 0, 0, w * ratio, h)
 
 	print_values(w, h, ratio, name, value, right)

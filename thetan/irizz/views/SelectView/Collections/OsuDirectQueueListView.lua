@@ -1,8 +1,7 @@
 local ListView = require("thetan.irizz.views.ListView")
 local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local OsudirectProcessingListView = ListView + {}
 
@@ -36,7 +35,7 @@ function OsudirectProcessingListView:drawItem(i, w, h)
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(self.font.status)
 
 	if item.status then

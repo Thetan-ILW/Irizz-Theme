@@ -1,9 +1,9 @@
 local ListView = require("thetan.irizz.views.ListView")
 local gyatt = require("thetan.gyatt")
 local Format = require("sphere.views.Format")
+local msd_util = require("thetan.skibidi.msd_util")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 ---@class irizz.NoteChartListView : irizz.ListView
 ---@operator call: irizz.NoteChartSetListView
@@ -37,7 +37,7 @@ function NoteChartListView:reloadItems()
 		local diff = item.difficulty or 0
 
 		if diffColumn == "msd_diff" and item.msd_diff_data then
-			local msd = Theme.getMsdFromData(item.msd_diff_data, timeRate)
+			local msd = msd_util.getMsdFromData(item.msd_diff_data, timeRate)
 			diff = msd and msd.overall or 0
 		else
 			diff = diff * timeRate
@@ -109,7 +109,7 @@ function NoteChartListView:drawItem(i, w, h)
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.translate(15, 4)
 
 	gfx.setFont(self.font.firstRow)

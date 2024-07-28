@@ -1,8 +1,7 @@
 local ListView = require("thetan.irizz.views.ListView")
 local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local OsudirectListView = ListView + {}
 
@@ -42,7 +41,7 @@ local gfx = love.graphics
 ---@param h number
 function OsudirectListView:drawItem(i, w, h)
 	local item = self.items[i]
-	local color = item.downloaded and Color.itemDownloaded or Color.text
+	local color = item.downloaded and colors.ui.itemDownloaded or colors.ui.text
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 

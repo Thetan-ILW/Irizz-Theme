@@ -6,8 +6,7 @@ local loop = require("loop")
 
 local Layout = require("thetan.irizz.views.HeaderLayout")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
@@ -74,10 +73,10 @@ local function button(label, right_side, active)
 		gfx.translate(-label_w, 0)
 	end
 
-	gfx.setColor(Color.panel)
+	gfx.setColor(colors.ui.panel)
 	gfx.rectangle("fill", -8, 10, label_w + 16, 43, 8, 8)
 
-	gfx.setColor(active and Color.headerSelect or Color.text)
+	gfx.setColor(active and colors.ui.headerSelect or colors.ui.text)
 	gyatt.frame(label, 0, 3, label_w, 43, "center", "center")
 	gfx.rectangle("fill", 0, 43, label_w, 4)
 
@@ -177,11 +176,11 @@ function ViewConfig:vimMode(view)
 
 	vim_mode = ("%s [%i]"):format(vim_mode, count)
 
-	gfx.setColor(Color.panel)
+	gfx.setColor(colors.ui.panel)
 	local textW = font.anyText:getWidth(vim_mode) * gyatt.getTextScale()
 	gfx.rectangle("fill", w / 2 - textW / 2 - 8, 10, textW + 16, 43, 8, 8)
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.anyText)
 	gyatt.frame(vim_mode, 0, 3, w, h, "center", "center")
 	gfx.rectangle("fill", w / 2 - textW / 2, h + 2, textW, 4)
@@ -199,7 +198,7 @@ function ViewConfig:rightSide(view)
 	local configs = view.game.configModel.configs
 	local drawOnlineCount = configs.irizz.showOnlineCount
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	local username = view.game.configModel.configs.online.user.name or text.notLoggedIn
 	local time = time_util.format(loop.time - loop.startTime)
 	local onlineCount = #view.game.multiplayerModel.users

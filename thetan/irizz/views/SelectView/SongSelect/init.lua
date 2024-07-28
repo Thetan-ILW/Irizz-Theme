@@ -3,7 +3,9 @@ local just = require("just")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 local math_util = require("math_util")
+local msd_util = require("thetan.skibidi.msd_util")
 
+local Theme = require("thetan.irizz.views.Theme")
 local Format = require("sphere.views.Format")
 local Layout = require("thetan.irizz.views.SelectView.SongSelect.SongSelectLayout")
 
@@ -13,9 +15,7 @@ local text
 local font
 
 local ui = require("thetan.irizz.ui")
-
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local NoteChartSetListView = require("thetan.irizz.views.SelectView.SongSelect.NoteChartSetListView")
 local NoteChartListView = require("thetan.irizz.views.SelectView.SongSelect.NoteChartListView")
@@ -50,15 +50,21 @@ function ViewConfig:new(game, assets)
 
 	font = assets.localization.fontGroups.songSelect
 	text = assets.localization.textGroups.songSelect
-	ui:setColors(Theme.colors)
 end
 
 local diffColumn = ""
 local difficultyValue = 0
 local patterns = ""
 local calculator = ""
-local difficultyColor = Color.text
+local difficultyColor = colors.ui.text
 local longNoteRatio = 0
+
+local diff_columns_names = {
+	enps_diff = "ENPS",
+	osu_diff = "OSU",
+	msd_diff = "MSD",
+	user_diff = "USER",
+}
 
 function ViewConfig:updateInfo(view)
 	local chartview = view.game.selectModel.chartview
@@ -74,16 +80,16 @@ function ViewConfig:updateInfo(view)
 	patterns = chartview.level and "Lv." .. chartview.level or text.noPatterns
 
 	if diffColumn == "msd_diff" and chartview.msd_diff_data then
-		local msd = Theme.getMsdFromData(chartview.msd_diff_data, timeRate)
+		local msd = msd_util.getMsdFromData(chartview.msd_diff_data, timeRate)
 
 		if msd then
 			difficultyValue = msd.overall
-			patterns = Theme.getMaxAndSecondFromMsd(msd) or text.noPatterns
+			patterns = msd_util.getMaxAndSecondFromMsd(msd) or text.noPatterns
 		end
 	end
 
-	difficultyColor = Theme:getDifficultyColor(difficultyValue, diffColumn)
-	calculator = Theme.formatDiffColumns(diffColumn)
+	difficultyColor = colors:getDifficultyColor(difficultyValue, diffColumn)
+	calculator = diff_columns_names[diffColumn]
 
 	if chartview.notes_count and chartview.notes_count ~= 0 then
 		longNoteRatio = ((chartview.long_notes_count or 0) / chartview.notes_count) * 100
@@ -97,7 +103,7 @@ end
 function ViewConfig.panels()
 	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
-		Theme:panel(w, h)
+		ui:panel(w, h)
 	end
 end
 
@@ -107,7 +113,7 @@ local function borders()
 
 	for i, name in pairs(boxes) do
 		local w, h = Layout:move(name)
-		Theme:border(w, h)
+		ui:border(w, h)
 	end
 end
 
@@ -137,7 +143,7 @@ local function searchField(view)
 		gfx.setColor(1, 1, 1, 0.5)
 		gyatt.frame(text.searchPlaceholder, 0, 0, w, h - 40, "center", "center")
 	else
-		gfx.setColor(Color.text)
+		gfx.setColor(colors.ui.text)
 		gyatt.frame(search_text, 0, 0, w, h - 40, "center", "center")
 
 		local font_w = font.searchField:getWidth(search_text)
@@ -158,7 +164,7 @@ local function searchField(view)
 
 	w, h = Layout:move("search")
 	gfx.setFont(font.filterLine)
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	ui:frameWithShadow(view.chartFilterLine, 0, 0, w, h, "center", "bottom")
 
 	if just.button("filterLineButton", just.is_over(w, h)) then
@@ -186,8 +192,8 @@ end
 function ViewConfig:scores(view)
 	local w, h = Layout:move("scoreFilters")
 	love.graphics.setFont(font.filterLine)
-	love.graphics.setColor(Color.text)
-	Theme:textWithShadow(view.scoreFilterLine, w, h, "center", "bottom")
+	love.graphics.setColor(colors.ui.text)
+	ui:frameWithShadow(view.scoreFilterLine, 0, 0, w, h, "center", "bottom")
 
 	w, h = Layout:move("scores")
 
@@ -216,7 +222,7 @@ local function difficulty(view, chartview)
 	gfx.setFont(font.calculator)
 	gyatt.frame(calculator, 0, -3, w, h, "center", "bottom")
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.patterns)
 	w, h = Layout:move("patterns")
 	gyatt.frame(patterns:upper(), 0, 0, w, h, "center", "center")
@@ -225,13 +231,13 @@ end
 local function info(view)
 	local w, h = Layout:move("difficulty")
 
-	gfx.setColor(Color.innerPanel)
+	gfx.setColor(colors.ui.innerPanel)
 	gfx.rectangle("fill", 0, 0, w, h)
 
 	local chartview = view.game.selectModel.chartview
 
 	w, h = Layout:move("difficultyAndInfoLine")
-	gfx.setColor(Color.separator)
+	gfx.setColor(colors.ui.separator)
 	gfx.rectangle("fill", 0, 0, w, h)
 	gfx.setFont(font.info)
 
@@ -245,7 +251,7 @@ local function info(view)
 	mode = mode == "2K" and "TAIKO" or mode
 
 	gfx.setFont(font.info)
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 
 	w, h = Layout:move("info1row1")
 	gyatt.text(text.length:format(length), w, "center")
@@ -256,7 +262,7 @@ local function info(view)
 	w, h = Layout:move("info1row3")
 	gyatt.text(mode, w, "center")
 
-	gfx.setColor(Color.separator)
+	gfx.setColor(colors.ui.separator)
 
 	w, h = Layout:move("info1row1")
 	gfx.rectangle("fill", w / 2 - w / 4, h - 5, w / 2, 4)
@@ -277,7 +283,7 @@ local function moreInfo(view)
 	local note_count = chartview.notes_count or 0
 	local format = string.upper(chartview.format or "NONE")
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.info)
 
 	local w, h = Layout:move("info2row1")
@@ -289,7 +295,7 @@ local function moreInfo(view)
 	w, h = Layout:move("info2row3")
 	gyatt.text(format, w, "center")
 
-	gfx.setColor(Color.separator)
+	gfx.setColor(colors.ui.separator)
 	w, h = Layout:move("info2row1")
 	gfx.rectangle("fill", w / 2 - w / 4, h - 5, w / 2, 4)
 	w, h = Layout:move("info2row2")
@@ -299,7 +305,7 @@ end
 local function mods(view)
 	local w, h = Layout:move("timeRate")
 
-	gfx.setColor(Color.innerPanel)
+	gfx.setColor(colors.ui.innerPanel)
 	gfx.rectangle("fill", 0, 0, w, h)
 
 	local delta = just.wheel_over("timeRate", just.is_over(w, h))
@@ -308,7 +314,7 @@ local function mods(view)
 		view:changeTimeRate(delta)
 	end
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.timeRate)
 
 	---@type "linear" | "exp"
@@ -323,7 +329,7 @@ local function mods(view)
 	end
 
 	w, h = Layout:move("modsAndInfoLine")
-	gfx.setColor(Color.separator)
+	gfx.setColor(colors.ui.separator)
 	gfx.rectangle("fill", 0, 0, w, h)
 
 	w, h = Layout:move("mods")
@@ -335,7 +341,7 @@ local function mods(view)
 	end
 
 	gfx.setFont(font.mods)
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	local modifiers = view.game.playContext.modifiers
 	local modString = Theme:getModifierString(modifiers)
 

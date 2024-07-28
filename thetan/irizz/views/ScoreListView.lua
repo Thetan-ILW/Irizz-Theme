@@ -4,7 +4,7 @@ local Format = require("sphere.views.Format")
 local time_util = require("time_util")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 ---@class irizz.ScoreListView : irizz.ListView
 ---@operator call: irizz.ScoreListView
@@ -157,7 +157,7 @@ function ScoreListView:drawItem(i, w, h)
 
 	self:drawItemBody(w, h, i, i == self.selectedScoreIndex)
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 
 	gfx.setFont(self.font.line1)
 	gfx.translate(10, 0)

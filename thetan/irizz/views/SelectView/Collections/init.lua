@@ -1,4 +1,5 @@
-local class = require("class")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
+
 local just = require("just")
 local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
@@ -7,7 +8,8 @@ local ui = require("thetan.irizz.ui")
 local Layout = require("thetan.irizz.views.SelectView.Collections.CollectionsLayout")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+
+local colors = require("thetan.irizz.ui.colors")
 ---@type table<string, string>
 local text
 ---@type table<string, love.Font>
@@ -18,7 +20,7 @@ local OsuDirectListView = require("thetan.irizz.views.SelectView.Collections.Osu
 local OsuDirectChartsListView = require("thetan.irizz.views.SelectView.Collections.OsuDirectChartsListView")
 local OsuDirectQueueListView = require("thetan.irizz.views.SelectView.Collections.OsuDirectQueueListView")
 
-local ViewConfig = class()
+local ViewConfig = IViewConfig + {}
 
 local canUpdate = false
 local collectionsMode = "Collections"
@@ -50,14 +52,14 @@ local boxes = {
 function ViewConfig.panels()
 	for _, name in ipairs(boxes) do
 		local w, h = Layout:move(name)
-		Theme:panel(w, h)
+		ui:panel(w, h)
 	end
 end
 
 local function borders()
 	for _, name in ipairs(boxes) do
 		local w, h = Layout:move(name)
-		Theme:border(w, h)
+		ui:border(w, h)
 	end
 end
 
@@ -118,7 +120,7 @@ end
 function ViewConfig:collectionsButtons(view)
 	local w, h = Layout:move("buttons")
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.buttons)
 
 	w, h = Layout:move("button1")
@@ -152,7 +154,7 @@ end
 function ViewConfig:osuDirectButtons(view)
 	local w, h = Layout:move("buttons")
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.buttons)
 
 	w, h = Layout:move("button1")
@@ -206,7 +208,7 @@ end
 function ViewConfig:footer(view)
 	local w, h = Layout:move("name")
 	love.graphics.setFont(font.titleAndMode)
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 
 	if collectionsMode == "Collections" and #self.collectionListView.items > 0 then
 		local name = self.collectionListView:getItem().name

@@ -1,9 +1,7 @@
 local ListView = require("thetan.irizz.views.ListView")
 local gyatt = require("thetan.gyatt")
-local time_util = require("time_util")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 ---@class irizz.NoteChartSetListView : irizz.ListView
 ---@operator call: irizz.NoteChartSetListView
@@ -54,7 +52,7 @@ function NoteChartSetListView:drawItem(i, w, h)
 
 	self:drawItemBody(w, h, i, i == self:getItemIndex())
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.translate(15, 0)
 
 	gfx.setFont(self.font.artist)

@@ -1,4 +1,5 @@
 local IrizzAssets = require("thetan.irizz.views.IrizzAssets")
+local colors = require("thetan.irizz.ui.colors")
 
 ---@param game sphere.GameController
 return function(game)
@@ -22,6 +23,7 @@ return function(game)
 	assets = assets
 	assets:loadLocalization(localization_filepath)
 	assets:updateVolume(game.configModel)
+	assets:loadColorTheme(irizz.colorTheme)
 
 	return assets
 end

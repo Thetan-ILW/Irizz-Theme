@@ -1,9 +1,11 @@
-local class = require("class")
+local IViewConfig = require("thetan.skibidi.views.IViewConfig")
 local just = require("just")
 local imgui = require("thetan.irizz.imgui")
 
 local Layout = require("thetan.irizz.views.SelectView.Settings.SettingsLayout")
 local SettingsTab = require("thetan.irizz.views.SelectView.Settings.SettingsTabs")
+
+local ui = require("thetan.irizz.ui")
 
 local Theme = require("thetan.irizz.views.Theme")
 ---@type table<string, string>
@@ -11,7 +13,7 @@ local text
 ---@type table<string, love.Font>
 local font
 
-local ViewConfig = class()
+local ViewConfig = IViewConfig + {}
 
 local tabs = {
 	{ "gameplayTab", "Gameplay" },
@@ -30,6 +32,7 @@ local currentTab = tabs[1][2]
 ---@param assets irizz.IrizzAssets
 function ViewConfig:new(game, assets)
 	self.game = game
+	self.assets = assets
 
 	font = assets.localization.fontGroups.settings
 	text = assets.localization.textGroups.settings
@@ -49,14 +52,14 @@ local boxes = {
 function ViewConfig.panels()
 	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
-		Theme:panel(w, h)
+		ui:panel(w, h)
 	end
 end
 
 local function borders(view)
 	for _, name in pairs(boxes) do
 		local w, h = Layout:move(name)
-		Theme:border(w, h)
+		ui:border(w, h)
 	end
 end
 
@@ -74,7 +77,7 @@ function ViewConfig:tabs(view)
 		if imgui.TextOnlyButton(label, label, w, h, "center", methodName == currentTab) then
 			currentTab = methodName
 			SettingsTab:reset()
-			Theme:playSound("tabButtonClick")
+			self.assets.sounds.tabButtonClick:play()
 		end
 	end
 end

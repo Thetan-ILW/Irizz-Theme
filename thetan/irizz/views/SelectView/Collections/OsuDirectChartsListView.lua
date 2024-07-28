@@ -1,8 +1,7 @@
 local ListView = require("thetan.irizz.views.ListView")
 local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local OsuDirectChartsListView = ListView + {}
 
@@ -63,7 +62,7 @@ function OsuDirectChartsListView:drawItem(i, w, h)
 
 	gfx.translate(15, 0)
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(self.font.creator)
 	gyatt.frame(item.beatmapset.creator, 0, 0, math.huge, h, "left", "top")
 	gfx.setFont(self.font.difficultyName)

@@ -3,11 +3,10 @@ local gyatt = require("thetan.gyatt")
 local oldtheme = require("imgui.theme")
 local autoload = require("autoload")
 local math_util = require("math_util")
-local gfx_util = require("gfx_util")
 local decibel = require("decibel")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 local cfg = Theme.imgui
 
 local imgui = autoload("thetan.irizz.imgui")
@@ -22,7 +21,7 @@ end
 function imgui.separator()
 	just.emptyline(8)
 	local r, g, b, a = love.graphics.getColor()
-	love.graphics.setColor(Color.separator)
+	love.graphics.setColor(colors.ui.separator)
 	love.graphics.line(0, 0, w - 30, 0)
 	love.graphics.setColor({ r, g, b, a })
 	just.emptyline(8)
@@ -132,16 +131,12 @@ function imgui.slider1(id, v, format, a, b, c, label)
 	_v = math_util.map(_v, a, b, 0, 1)
 	_v = imgui.Slider(id, _v, _w, _h, format:format(v)) or _v
 	just.sameline()
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	imgui.label(id .. "label", label)
 	just.next(0, cfg.nextItemOffset)
 
 	local newV = math_util.map(_v, 0, 1, a, b)
 	newV = math_util.round(newV, c)
-
-	if newV ~= v then
-		Theme:playSound("sliderMoved")
-	end
 
 	return newV
 end
@@ -191,7 +186,7 @@ function imgui.checkbox(id, v, label)
 		changed = true
 	end
 	just.sameline()
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	imgui.label(id, label)
 	just.next(0, cfg.nextItemOffset)
 	if isNumber then

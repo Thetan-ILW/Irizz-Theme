@@ -2,7 +2,7 @@ local just = require("just")
 local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 local cfg = Theme.imgui
 
 return function(id, text, index, w, h, password)
@@ -26,12 +26,12 @@ return function(id, text, index, w, h, password)
 	just.row(true)
 
 	h = cfg.size
-	love.graphics.setColor(Color.uiPanel)
+	love.graphics.setColor(colors.ui.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h, cfg.rounding, cfg.rounding)
 
-	love.graphics.setColor(Color.uiFrames)
+	love.graphics.setColor(colors.ui.uiFrames)
 	if just.focused_id == id then
-		love.graphics.setColor(Color.accent)
+		love.graphics.setColor(colors.ui.accent)
 	end
 
 	love.graphics.rectangle("line", 0, 0, w, h, cfg.rounding, cfg.rounding)
@@ -48,7 +48,7 @@ return function(id, text, index, w, h, password)
 			just.focus()
 		end
 		changed, text, index, left, right = just.textinput(text, index)
-		love.graphics.setColor(Color.text)
+		love.graphics.setColor(colors.ui.text)
 
 		local drawableText = text
 

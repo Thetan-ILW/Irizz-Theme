@@ -3,7 +3,7 @@ local gyatt = require("thetan.gyatt")
 local map = require("math_util").map
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 local cfg = Theme.imgui
 
 ---@param w number
@@ -25,27 +25,27 @@ return function(id, value, w, h, displayValue)
 	local size4 = size / 4
 	local size2 = size / 2
 
-	love.graphics.setColor(Color.uiPanel)
+	love.graphics.setColor(colors.ui.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, size, cfg.rounding, cfg.rounding)
-	love.graphics.setColor(Color.uiFrames)
+	love.graphics.setColor(colors.ui.uiFrames)
 	love.graphics.rectangle("line", 0, 0, w, size, cfg.rounding, cfg.rounding)
 
 	local x = map(math.min(math.max(value, 0), 1), 0, 1, size2, w - size2)
-	love.graphics.setColor(Color.accent)
+	love.graphics.setColor(colors.ui.accent)
 	love.graphics.rectangle("fill", size4, size4, x, size2, cfg.rounding / 2, cfg.rounding / 2)
-	love.graphics.setColor(Color.darkerAccent)
+	love.graphics.setColor(colors.ui.darkerAccent)
 	love.graphics.rectangle("line", size4, size4, x, size2, cfg.rounding / 2, cfg.rounding / 2)
-	love.graphics.setColor(Color.uiFrames)
+	love.graphics.setColor(colors.ui.uiFrames)
 	love.graphics.rectangle("line", x - size4, size4, size2, size2, cfg.rounding / 2, cfg.rounding / 2)
 
 	if displayValue then
 		local width = love.graphics.getFont():getWidth(displayValue) * gyatt.getTextScale()
 		local tx = (w - width) / 2
 		if x >= w / 2 then
-			love.graphics.setColor(Color.darkText)
+			love.graphics.setColor(colors.ui.darkText)
 			tx = math.min(tx, x - size / 2 - width)
 		else
-			love.graphics.setColor(Color.text)
+			love.graphics.setColor(colors.ui.text)
 			tx = math.max(tx, x + size / 2)
 		end
 		gyatt.frame(displayValue, tx, -3, w, size, "left", "center")

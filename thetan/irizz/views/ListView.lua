@@ -4,7 +4,7 @@ local class = require("class")
 
 local gyatt = require("thetan.gyatt")
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 ---@class irizz.ListView
 ---@operator call: irizz.ListView
@@ -71,12 +71,12 @@ function ListView:getItemIndex()
 end
 
 function ListView:drawItemBody(w, h, i, selected)
-	local itemColor = (i % 2) == 1 and Color.listItemEven or Color.listItemOdd
+	local itemColor = (i % 2) == 1 and colors.ui.listItemEven or colors.ui.listItemOdd
 
 	if selected and not self.staticCursor then
-		itemColor = Color.select
+		itemColor = colors.ui.select
 	elseif selected and not self.centerItems then
-		itemColor = Color.select
+		itemColor = colors.ui.select
 	end
 
 	love.graphics.setColor(itemColor)
@@ -203,7 +203,7 @@ function ListView:draw(w, h, update)
 	just.clip()
 
 	if #self.items == 0 then
-		love.graphics.setColor(Color.text)
+		love.graphics.setColor(colors.ui.text)
 		love.graphics.setFont(self.font.noItems)
 		local text = ""
 
@@ -216,7 +216,7 @@ function ListView:draw(w, h, update)
 	end
 
 	if self.staticCursor and self.centerItems then
-		love.graphics.setColor(Color.select)
+		love.graphics.setColor(colors.ui.select)
 		love.graphics.rectangle("fill", 0, (_h * self.rows / 2) - _h / 2, w, _h)
 	end
 end

@@ -106,7 +106,7 @@ function SelectView:moveScreen(where, exact)
 		self:switchToSettings()
 	end
 
-	Theme:playSound("songSelectScreenChanged")
+	self.assets.sounds.songSelectScreenChanged:play()
 end
 
 ---@param dt number

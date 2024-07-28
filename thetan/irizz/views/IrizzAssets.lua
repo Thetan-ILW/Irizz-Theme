@@ -1,6 +1,8 @@
 local Assets = require("thetan.skibidi.models.AssetModel.Assets")
 local Localization = require("thetan.skibidi.models.AssetModel.Localization")
 
+local colors = require("thetan.irizz.ui.colors")
+
 local table_util = require("table_util")
 
 ---@class (exact) irizz.IrizzAssets : skibidi.Assets
@@ -11,6 +13,7 @@ local table_util = require("table_util")
 ---@field startSounds table<string, audio.Source>
 ---@field startSoundNames string[]
 ---@field localization skibidi.Localization
+---@field colorThemes table<string, string>
 ---@field errors string[]
 local IrizzAssets = Assets + {}
 
@@ -85,6 +88,8 @@ function IrizzAssets:new()
 		self.startSounds[name] = IrizzAssets:loadAudioOrDefault("", start_sounds .. name)
 	end
 
+	self.colorThemes = getItems("color_themes/", true)
+
 	for _, v in ipairs(self.errors) do
 		print(v)
 	end
@@ -119,6 +124,22 @@ function IrizzAssets:loadLocalization(filepath)
 
 	if self.localization.currentFilePath ~= filepath then
 		self.localization:loadFile(filepath)
+	end
+end
+
+---@param name string
+function IrizzAssets:loadColorTheme(name)
+	local custom = love.filesystem.load("userdata/color_themes/" .. name .. ".lua")
+	local internal = love.filesystem.load("irizz/color_themes/" .. name .. ".lua")
+
+	local file = custom or internal
+	assert(file)
+
+	---@type table
+	local color_theme = file()
+
+	for k, v in pairs(color_theme) do
+		table_util.copy(v, colors[k])
 	end
 end
 

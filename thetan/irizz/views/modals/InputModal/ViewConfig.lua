@@ -7,7 +7,7 @@ local Format = require("sphere.views.Format")
 local InputListView = require("thetan.irizz.views.modals.InputModal.InputListView")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
@@ -37,7 +37,7 @@ function ViewConfig:inputs(view)
 	Theme:panel(w, h)
 	Theme:border(w, h)
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.inputs)
 
 	self.inputListView:draw(w, h, true)
@@ -46,7 +46,7 @@ end
 function ViewConfig:inputMode(view)
 	local w, h = Layout:move("inputMode")
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.inputMode)
 
 	inputMode = Format.inputMode(inputMode)
@@ -59,7 +59,7 @@ function ViewConfig:draw(view)
 	Layout:draw()
 
 	local w, h = Layout:move("modalName")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.title)
 	gyatt.frame(text.inputs, 0, 0, w, h, "center", "center")
 

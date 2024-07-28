@@ -26,8 +26,6 @@ function GameView:new(game)
 end
 
 function GameView:load()
-	Theme:init(self.game)
-
 	self.frameTimeView.game = self.game
 	self.frameTimeView:load()
 

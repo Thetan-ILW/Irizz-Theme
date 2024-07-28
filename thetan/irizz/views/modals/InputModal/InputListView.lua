@@ -6,7 +6,7 @@ local Format = require("sphere.views.Format")
 local ListView = require("thetan.irizz.views.ListView")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local InputListView = ListView + {}
 
@@ -63,7 +63,7 @@ function InputListView:drawItem(i, w, h)
 	local item = self.items[i]
 	self:drawItemBody(w, h, i, false)
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	imgui.setSize(w, h, w / 11, h * 0.7)
 
 	gyatt.row(true)

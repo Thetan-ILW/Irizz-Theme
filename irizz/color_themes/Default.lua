@@ -12,7 +12,7 @@ end
 -- You can use either tables of 4 values (R, G, B, A), or use the Hex funttion
 -- Good luck with creating a color theme, even I don't understand what the hell is happening here and in the internal code
 
-ColorTheme.colors = {
+ColorTheme.ui = {
 	-- COLORS
 	accent = Hex("#fc72e3"),
 	darkerAccent = Hex("#bf58ca"),

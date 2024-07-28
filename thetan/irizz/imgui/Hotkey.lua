@@ -3,7 +3,7 @@ local gyatt = require("thetan.gyatt")
 local theme = require("imgui.theme")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 local cfg = Theme.imgui
 
 return function(id, text, w, h)
@@ -38,9 +38,9 @@ return function(id, text, w, h)
 		just.focus()
 	end
 
-	love.graphics.setColor(just.focused_id == id and Color.uiActive or Color.uiPanel)
+	love.graphics.setColor(just.focused_id == id and colors.ui.uiActive or colors.ui.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h, cfg.rounding)
-	love.graphics.setColor(Color.uiFrames)
+	love.graphics.setColor(colors.ui.uiFrames)
 	love.graphics.rectangle("line", 0, 0, w, h, cfg.rounding)
 
 	love.graphics.setColor(1, 1, 1, 1)

@@ -2,7 +2,7 @@ local just = require("just")
 local gyatt = require("thetan.gyatt")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 local cfg = Theme.imgui
 
 return function(id, w, v, text)
@@ -13,15 +13,15 @@ return function(id, w, v, text)
 
 	local changed, active, hovered = just.button(id, just.is_over(w, size))
 
-	love.graphics.setColor(Color.uiPanel)
+	love.graphics.setColor(colors.ui.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, size, cfg.rounding, cfg.rounding)
-	love.graphics.setColor(Color.uiFrames)
+	love.graphics.setColor(colors.ui.uiFrames)
 	love.graphics.rectangle("line", 0, 0, w, size, cfg.rounding, cfg.rounding)
 
 	if v then
-		love.graphics.setColor(Color.accent)
+		love.graphics.setColor(colors.ui.accent)
 		love.graphics.rectangle("fill", size4, size4, w - size2, size2, cfg.rounding / 2, cfg.rounding / 2)
-		love.graphics.setColor(Color.darkerAccent)
+		love.graphics.setColor(colors.ui.darkerAccent)
 		love.graphics.rectangle("line", size4, size4, w - size2, size2, cfg.rounding / 2, cfg.rounding / 2)
 	end
 
