@@ -6,7 +6,7 @@ local ViewConfig = require("thetan.osu.views.SelectView.ViewConfig")
 local MainMenuView = require("thetan.irizz.views.MainMenuView")
 local LayersView = require("thetan.irizz.views.LayersView")
 
-local OsuSelectAssets = require("thetan.osu.views.SelectView.OsuSelectAssets")
+local OsuAssets = require("thetan.osu.views.SelectView.OsuAssets")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
@@ -68,16 +68,16 @@ function OsuSelectView:setAssets()
 	local skin_path = ("userdata/skins/%s/"):format(irizz.osuSongSelectSkin)
 
 	---@type skibidi.Assets?
-	local assets = self.assetModel:get("osuSelect")
+	local assets = self.assetModel:get("osu")
 	local localization_filepath = self.assetModel:getLocalizationFileName("osu", language)
 
 	if not assets or (assets and assets.skinPath ~= skin_path) then
 		local default_localization = self.assetModel:getLocalizationFileName("osu", "English")
-		assets = OsuSelectAssets(skin_path, default_localization)
-		self.assetModel:store("osuSelect", assets)
+		assets = OsuAssets(skin_path, default_localization)
+		self.assetModel:store("osu", assets)
 	end
 
-	---@cast assets osu.OsuSelectAssets
+	---@cast assets osu.OsuAssets
 	self.assets = assets
 	self.assets:loadLocalization(localization_filepath)
 	self.assets:updateVolume(self.game.configModel)

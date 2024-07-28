@@ -1,6 +1,5 @@
 local ListView = require("thetan.irizz.views.ListView")
 local gyatt = require("thetan.gyatt")
-local gfx_util = require("gfx_util")
 local Format = require("sphere.views.Format")
 local time_util = require("time_util")
 

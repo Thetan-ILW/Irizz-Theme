@@ -1,15 +1,11 @@
 local ListView = require("thetan.irizz.views.ListView")
 local gyatt = require("thetan.gyatt")
 local math_util = require("math_util")
-local Format = require("sphere.views.Format")
-
-local Theme = require("thetan.irizz.views.Theme")
 
 local CollectionListView = ListView + {}
 
 CollectionListView.rows = 7
 CollectionListView.centerItems = true
-CollectionListView.text = Theme.textChartSetsList
 CollectionListView.staticCursor = false
 CollectionListView.focus = false
 CollectionListView.mouseScrollEase = { "quartout", 0.45 }
@@ -21,7 +17,7 @@ CollectionListView.inactiveTextColor = { 1, 1, 1, 1 }
 CollectionListView.animations = {}
 
 ---@param game sphere.GameController
----@param assets osu.OsuSelectAssets
+---@param assets osu.OsuAssets
 function CollectionListView:new(game, assets)
 	ListView:new(game)
 	self.game = game

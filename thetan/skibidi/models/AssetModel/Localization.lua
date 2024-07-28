@@ -26,6 +26,8 @@ end
 function Localization:loadFile(filepath)
 	self.currentFilePath = filepath
 	self.currentFile = love.filesystem.load(filepath)()
+	assert(self.currentFile, "Add the return statement in the end of " .. filepath)
+
 	self:setFonts()
 	self:setText()
 end

@@ -1,10 +1,10 @@
 local InputMap = require("thetan.gyatt.InputMap")
 
 ---@class irizz.OsuSelectInputMap
----@operator call: irizz.OsuSelectView
+---@operator call: osu.OsuSelectView
 local SelectInputMap = InputMap + {}
 
----@param sv irizz.OsuSelectView
+---@param sv osu.OsuSelectView
 function SelectInputMap:createBindings(sv)
 	self.selectModals = {
 		["showMods"] = function()

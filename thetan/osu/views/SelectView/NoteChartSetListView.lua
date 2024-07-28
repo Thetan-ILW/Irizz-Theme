@@ -22,7 +22,7 @@ NoteChartSetListView.previewIcon = false
 NoteChartSetListView.animations = {}
 
 ---@param game sphere.GameController
----@param assets osu.OsuSelectAssets
+---@param assets osu.OsuAssets
 function NoteChartSetListView:new(game, assets)
 	ListView:new(game)
 	self.game = game

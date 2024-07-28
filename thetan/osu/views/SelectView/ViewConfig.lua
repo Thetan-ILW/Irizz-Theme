@@ -23,7 +23,7 @@ local text
 ---@type table<string, love.Font>
 local font
 
----@type osu.OsuSelectAssets
+---@type osu.OsuAssets
 local assets
 ---@type table<string, love.Image>
 local img

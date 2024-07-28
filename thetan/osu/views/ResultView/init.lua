@@ -2,18 +2,15 @@ local ScreenView = require("thetan.skibidi.views.ScreenView")
 local thread = require("thread")
 local math_util = require("math_util")
 
-local Theme = require("thetan.irizz.views.Theme")
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.osu.views.ResultView.ViewConfig")
 local LayersView = require("thetan.irizz.views.LayersView")
-
-local OsuResultAssets = require("thetan.osu.views.ResultView.Assets")
 
 local InputMap = require("thetan.osu.views.ResultView.InputMap")
 
 ---@class irizz.ResultView: skibidi.ScreenView
 ---@operator call: irizz.ResultView
----@field assets osu.OsuResultAssets
+---@field assets osu.OsuAssets
 local ResultView = ScreenView + {}
 
 ResultView.currentJudgeName = ""
@@ -52,7 +49,9 @@ ResultView.load = thread.coro(function(self)
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
 	end
 
-	self:setAssets()
+	self.assets = self.game.assetModel:get("osu")
+	assert(self.assets, "osu! assets not loaded")
+
 	self.viewConfig = ViewConfig(self.game, self.assets, is_after_gameplay)
 
 	local configs = self.game.configModel.configs
@@ -74,27 +73,6 @@ ResultView.load = thread.coro(function(self)
 	canDraw = true
 	loading = false
 end)
-
-function ResultView:setAssets()
-	local configs = self.game.configModel.configs
-	local irizz = configs.irizz
-
-	---@type string
-	local selected_osu_skin = irizz.osuResultSkin
-	local skin_path = ("userdata/skins/%s/"):format(selected_osu_skin)
-
-	---@type skibidi.Assets?
-	local assets = self.assetModel:get("osuResult")
-
-	if not assets or (assets and assets.skinPath ~= skin_path) then
-		assets = OsuResultAssets(skin_path)
-		self.assetModel:store("osuResult", assets)
-	end
-
-	---@cast assets osu.OsuResultAssets
-	self.assets = assets
-	self.assets:updateVolume(self.game.configModel)
-end
 
 function ResultView:unload()
 	self.viewConfig:unload()

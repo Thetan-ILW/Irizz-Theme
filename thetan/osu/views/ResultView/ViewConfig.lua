@@ -14,7 +14,7 @@ local font
 
 local OsuViewConfig = class()
 
----@type osu.OsuResultAssets
+---@type osu.Osu
 local assets
 ---@type table<string, love.Image>
 local img

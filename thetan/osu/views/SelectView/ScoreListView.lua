@@ -19,12 +19,13 @@ ScoreListView.focus = false
 ScoreListView.animations = {}
 
 ---@param game sphere.GameController
----@param assets osu.OsuSelectAssets
+---@param assets osu.OsuAssets
 function ScoreListView:new(game, assets)
 	self.game = game
 	self.assets = assets
-	self.font = assets.localization.fontGroups.scoreList
-	text = assets.localization.textGroups.scoreList
+
+	text, self.font = assets.localization:get("scoreList")
+	assert(text and self.font)
 end
 
 local modOrder = {
@@ -189,15 +190,15 @@ function ScoreListView:drawItem(i, w, h)
 	local grade = img.gradeD
 
 	if item.score > 9800 then
-		grade = img.gradeX
+		grade = img.smallGradeX
 	elseif item.score > 8000 then
-		grade = img.gradeS
+		grade = img.smallGradeS
 	elseif item.score > 7000 then
-		grade = img.gradeA
+		grade = img.smallGradeA
 	elseif item.score > 6000 then
-		grade = img.gradeB
+		grade = img.smallGradeB
 	elseif item.score > 5000 then
-		grade = img.gradeC
+		grade = img.smallGradeC
 	end
 
 	gfx.push()
