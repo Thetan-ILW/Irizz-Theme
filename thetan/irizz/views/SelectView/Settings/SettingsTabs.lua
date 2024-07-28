@@ -8,6 +8,7 @@ local Container = require("thetan.gyatt.Container")
 local audio = require("audio")
 local version = require("version")
 
+local ui = require("thetan.irizz.ui")
 local Theme = require("thetan.irizz.views.Theme")
 
 ---@type table<string, string>
@@ -62,7 +63,7 @@ function SettingsTab:draw(view, w, h, tab)
 	local startHeight = just.height
 	self.container:startDraw(w, h)
 
-	Theme:setLines()
+	ui:setLines()
 	self[tab](self, view)
 
 	self.container.scrollLimit = just.height - startHeight - h
