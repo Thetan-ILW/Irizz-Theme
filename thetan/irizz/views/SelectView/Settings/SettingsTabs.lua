@@ -20,9 +20,10 @@ local SettingsTab = class()
 
 ---@type string[]
 local start_sound_names
-
 ---@type string[]
 local osu_skins
+---@type string[]
+local color_themes
 
 local textSeparation = 15
 local panelW = 0
@@ -37,6 +38,9 @@ function SettingsTab:new(game, assets)
 	text = assets.localization.textGroups.settings
 	start_sound_names = assets.startSoundNames
 	osu_skins = game.assetModel:getOsuSkins()
+	color_themes = assets.colorThemes
+
+	self.assets = assets
 
 	inputListView = InputListView(game, assets)
 end
@@ -749,11 +753,11 @@ function SettingsTab:UI(view)
 	)
 
 	local colorTheme = irizz.colorTheme
-	local newColorTheme = imgui.combo("irizz.colorTheme", colorTheme, Theme.colorThemes, nil, text.colorTheme)
+	local newColorTheme = imgui.combo("irizz.colorTheme", colorTheme, color_themes, nil, text.colorTheme)
 
 	if colorTheme ~= newColorTheme then
 		irizz.colorTheme = newColorTheme
-		assets:updateColorTheme(newColorTheme, Theme)
+		self.assets:loadColorTheme(newColorTheme)
 	end
 
 	g.cursor = imgui.combo("g.cursor", g.cursor, { "circle", "arrow", "system" }, formatCursor, text.cursor)

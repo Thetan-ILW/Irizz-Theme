@@ -13,7 +13,7 @@ local table_util = require("table_util")
 ---@field startSounds table<string, audio.Source>
 ---@field startSoundNames string[]
 ---@field localization skibidi.Localization
----@field colorThemes table<string, string>
+---@field colorThemes string[]
 ---@field errors string[]
 local IrizzAssets = Assets + {}
 
