@@ -1,6 +1,7 @@
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 local thread = require("thread")
 local math_util = require("math_util")
+local gyatt = require("thetan.gyatt")
 
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local ViewConfig = require("thetan.osu.views.ResultView.ViewConfig")
@@ -15,6 +16,8 @@ local ResultView = ScreenView + {}
 
 ResultView.currentJudgeName = ""
 ResultView.currentJudge = 0
+
+local window_height = 0
 
 local loading = false
 local canDraw = false
@@ -72,6 +75,8 @@ ResultView.load = thread.coro(function(self)
 
 	canDraw = true
 	loading = false
+
+	window_height = love.graphics.getHeight()
 end)
 
 function ResultView:unload()
@@ -88,8 +93,14 @@ function ResultView:update()
 	self.game.previewModel:update()
 end
 
+function ResultView:resolutionUpdated()
+	window_height = self.assets.localization:updateScale()
+end
+
 function ResultView:draw()
 	Layout:draw()
+
+	gyatt.setTextScale(768 / window_height)
 
 	if not canDraw then
 		return
@@ -107,6 +118,8 @@ function ResultView:draw()
 	end
 
 	self.layersView:draw(panels, UI)
+
+	gyatt.setTextScale(1)
 end
 
 function ResultView:receive(event)

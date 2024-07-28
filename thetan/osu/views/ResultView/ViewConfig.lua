@@ -9,8 +9,6 @@ local HitGraph = require("thetan.irizz.views.ResultView.HitGraph")
 
 local Theme = require("thetan.irizz.views.Theme")
 local Color = Theme.colors
-local Text = Theme.textOsuResult
-local font
 
 local OsuViewConfig = class()
 
@@ -19,8 +17,10 @@ local assets
 ---@type table<string, love.Image>
 local img
 
----@type table
-local customConfig
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
 local judge
 local judgeName
@@ -62,17 +62,18 @@ local buttonHoverShader
 local modifierIconImages = {}
 
 ---@param game sphere.GameController
----@param _assets osu.OsuResultAssets
+---@param _assets osu.OsuAssets
 ---@param after_gameplay boolean
 function OsuViewConfig:new(game, _assets, after_gameplay)
-	assets = _assets
-	img = assets.images
-
-	if not assets then
+	if not _assets then
 		error("\n\nSelect valid osu! skin in the `Settings > UI > osu! result screen` \n\n")
 	end
 
-	font = Theme:getFonts("osuResultView")
+	assets = _assets
+	img = assets.images
+	text, font = assets.localization:get("result")
+	assert(text and font)
+
 	local overlap = -assets.params.scoreOverlap
 
 	local score_font = assets.imageFonts.scoreFont
@@ -203,11 +204,6 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 			assets.sounds.applause:play()
 		end
 	end
-
-	if assets.customConfig then
-		customConfig = assets.customConfig()
-		customConfig:load(game)
-	end
 end
 
 function OsuViewConfig:unload()
@@ -337,7 +333,7 @@ function OsuViewConfig:loadScore(view)
 	end
 
 	modsFormatted = Theme:getModifierString(modifiers)
-	username = view.game.configModel.configs.online.user.name or Text.guest
+	username = view.game.configModel.configs.online.user.name or text.guest
 
 	modifierIconImages = {}
 
@@ -401,25 +397,23 @@ function OsuViewConfig:title(view)
 
 	title = title .. " " .. difficultyFormatted
 
-	local second_row = Text.chartFrom:format(setDirectory)
+	local second_row = text.chartFrom:format(setDirectory)
 
 	if chartview.format ~= "sm" then
-		second_row = Text.chartBy:format(creator)
+		second_row = text.chartBy:format(creator)
 	end
 
-	local playInfo = Text.playedBy:format(username, timeFormatted)
+	local playInfo = text.playedBy:format(username, timeFormatted)
 
-	gfx.scale(768 / 1080)
 	gfx.setColor(Color.text)
 	gfx.setFont(font.title)
 	gyatt.frame(title, 9, 0, math.huge, h, "left", "top")
 
 	gfx.setFont(font.creator)
-	gyatt.frame(second_row, 9, 65, math.huge, h, "left", "top")
+	gyatt.frame(second_row, 9, 30, math.huge, h, "left", "top")
 
 	gfx.setFont(font.playInfo)
-	gyatt.frame(playInfo, 9, 95, math.huge, h, "left", "top")
-	gfx.scale(1)
+	gyatt.frame(playInfo, 9, 50, math.huge, h, "left", "top")
 end
 
 local function centerFrame(value, box)
@@ -479,20 +473,6 @@ function OsuViewConfig:panel()
 	gfx.draw(img.maxCombo)
 	Layout:move("accuracyText")
 	gfx.draw(img.accuracy)
-
-	w, h = Layout:move("accuracy")
-	gfx.scale(768 / 1080)
-	gfx.setFont(font.accuracy)
-	gyatt.frame(
-		judgeName,
-		0 + assets.params.accuracyNameX,
-		-20 + assets.params.accuracyNameY,
-		w + 40,
-		h,
-		"center",
-		"top"
-	)
-	gfx.scale(1)
 end
 
 function OsuViewConfig:grade()
@@ -536,10 +516,10 @@ local function graphInfo()
 	gfx.setFont(font.graphInfo)
 
 	gfx.translate(5, 5)
-	just.text(Text.mean:format(meanFormatted))
-	just.text(Text.maxError:format(maxErrorFormatted))
-	just.text(Text.scrollSpeed:format(scrollSpeed))
-	just.text(Text.mods:format(modsFormatted))
+	just.text(text.mean:format(meanFormatted))
+	just.text(text.maxError:format(maxErrorFormatted))
+	just.text(text.scrollSpeed:format(scrollSpeed))
+	just.text(text.mods:format(modsFormatted))
 end
 
 ---@param view table
@@ -639,12 +619,7 @@ function OsuViewConfig:draw(view)
 
 	gfx.setColor({ 1, 1, 1, 1 })
 	gfx.setFont(font.pp)
-	gfx.scale(1)
 	gyatt.frame(ppFormatted, -10, 0, w, h, "right", "bottom")
-
-	if customConfig then
-		customConfig:draw()
-	end
 end
 
 return OsuViewConfig

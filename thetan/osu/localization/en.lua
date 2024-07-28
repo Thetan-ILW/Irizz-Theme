@@ -108,11 +108,10 @@ l.fontGroups = {
 		title = { "Aller-Light", 33 },
 		buttons = { "Aller", 42 },
 	},
-	resultView = {
-		title = { "ZenMaruGothic-Black", 36 },
-		creator = { "ZenMaruGothic-Regular", 24 },
-		playInfo = { "ZenMaruGothic-Regular", 24 },
-		accuracy = { "ZenMaruGothic-Regular", 20 },
+	result = {
+		title = { "Aller", 25 },
+		creator = { "Aller", 16 },
+		playInfo = { "Aller", 16 },
 		graphInfo = { "ZenMaruGothic-Regular", 18 },
 		pp = { "ZenMaruGothic-Medium", 36 },
 	},
