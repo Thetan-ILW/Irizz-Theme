@@ -11,7 +11,7 @@ function ChartOptionsModal:new(game)
 	self.game = game
 
 	---@type osu.OsuSelectAssets?
-	local assets = game.assetModel:get("osuSelect")
+	local assets = game.assetModel:get("osu")
 	assert(assets, "osu! UI not loaded")
 	---@cast assets osu.OsuSelectAssets
 

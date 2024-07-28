@@ -813,7 +813,9 @@ function ViewConfig:search(view)
 	gfx.translate(15, 5)
 	gfx.setColor({ 0.68, 1, 0.18, 1 })
 	gfx.setFont(font.search)
-	gyatt.text(insert_mode and text.searchInsert or text.search, w)
+
+	local label = insert_mode and text.searchInsert or text.search
+	gyatt.text(label, font.search:getWidth(label) * gyatt.getTextScale())
 	gfx.translate(5, 0)
 
 	gfx.setColor(white)
@@ -828,18 +830,18 @@ function ViewConfig:search(view)
 	local config = view.game.configModel.configs.select
 
 	gfx.push()
-	local changed, _text = TextInput("SearchField", { config.filterString, "" }, nil, w, h) -- PLEASE, REWRITE THIS THING
+	local changed, input = TextInput("SearchField", { config.filterString, "" }, nil, w, h) -- PLEASE, REWRITE THIS THING
 	gfx.pop()
 
-	if _text == "" then
+	if input == "" then
 		gyatt.text(text.typeToSearch)
 	else
-		gyatt.text(_text)
+		gyatt.text(input)
 	end
 
 	if action_model.isEnabled() then
 		if changed == "text" then
-			view:updateSearch(_text)
+			view:updateSearch(input)
 		end
 
 		local delete_all = action_model.consumeAction("deleteLine")
@@ -899,12 +901,12 @@ function ViewConfig:draw(view)
 	self:top()
 	self:bottom(view)
 	self:chartInfo()
-	self:topUI(view)
 
 	if selected_group == "charts" then
 		self:search(view)
 	end
 
+	self:topUI(view)
 	self:mods(view)
 end
 
