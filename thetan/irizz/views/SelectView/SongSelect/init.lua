@@ -56,7 +56,7 @@ local diffColumn = ""
 local difficultyValue = 0
 local patterns = ""
 local calculator = ""
-local difficultyColor = colors.ui.text
+local difficultyColor = { 1, 1, 1, 1 }
 local longNoteRatio = 0
 
 local diff_columns_names = {

@@ -83,7 +83,7 @@ ResultView.load = thread.coro(function(self)
 	canDraw = true
 	loading = false
 
-	window_height = love.graphics.getHeight()
+	self:resolutionUpdated()
 end)
 
 function ResultView:unload()

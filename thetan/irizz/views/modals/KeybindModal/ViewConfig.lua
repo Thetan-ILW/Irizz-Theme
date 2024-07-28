@@ -5,8 +5,8 @@ local gyatt = require("thetan.gyatt")
 local just = require("just")
 local Container = require("thetan.gyatt.Container")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
@@ -33,10 +33,10 @@ function ViewConfig:keybinds(view)
 
 	local heightStart = just.height
 
-	Theme:panel(w, h)
+	ui:panel(w, h)
 	self.container:startDraw(w, h)
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	for i, groupsKeyValue in ipairs(groups) do
 		local _ = groupsKeyValue[1] -- name
 		local group = groupsKeyValue[2]
@@ -59,14 +59,14 @@ function ViewConfig:keybinds(view)
 	self.container.scrollLimit = just.height - heightStart - h
 	self.container:stopDraw()
 
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:draw(view)
 	Layout:draw()
 
 	local w, h = Layout:move("modalName")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.title)
 	gyatt.frame(text.keybinds, 0, 0, w, h, "center", "center")
 

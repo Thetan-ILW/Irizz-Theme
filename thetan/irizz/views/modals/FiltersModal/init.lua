@@ -6,17 +6,22 @@ local FiltersModal = Modal + {}
 FiltersModal.name = "FiltersModal"
 
 function FiltersModal:onQuit()
-	if self.game.selectView:isInOsuDirect() then
+	if self.mainView.isInOsuDirect and self.mainView:isInOsuDirect() then
 		return
 	end
 
 	self.game.selectModel:noDebouncePullNoteChartSet()
 	self.game.selectModel:pullScore()
-	self.game.selectView:updateFilterLines()
+
+	if self.mainView.updateFilterLines then
+		self.game.selectView:updateFilterLines()
+	end
 end
 
 function FiltersModal:onShow()
-	self.viewConfig.osuDirect = self.mainView:isInOsuDirect()
+	if self.mainView.isInOsuDirect then
+		self.viewConfig.osuDirect = self.mainView:isInOsuDirect()
+	end
 end
 
 function FiltersModal:new(game)

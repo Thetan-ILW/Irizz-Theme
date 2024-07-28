@@ -59,6 +59,14 @@ function ChartPreviewView:draw()
 		return
 	end
 
+	local configs = self.game.configModel.configs
+	local settings = configs.settings
+	local ss = settings.select
+
+	if not ss.chart_preview then
+		return
+	end
+
 	local w = 0
 
 	local noteSkin = self.game.chartPreviewModel.noteSkin

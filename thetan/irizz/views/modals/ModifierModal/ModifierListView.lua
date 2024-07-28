@@ -7,7 +7,7 @@ local StepperView = require("sphere.views.StepperView")
 local ModifierModel = require("sphere.models.ModifierModel")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local ModifierListView = ListView + {}
 
@@ -54,7 +54,7 @@ function ModifierListView:drawItem(i, w, h)
 	end
 
 	self:drawItemBody(w, h, i, hovered)
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 
 	just.row(true)
 

@@ -5,8 +5,8 @@ local gyatt = require("thetan.gyatt")
 
 local Format = require("sphere.views.Format")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
@@ -27,19 +27,19 @@ end
 
 function ViewConfig:availableModifierList(view)
 	local w, h = Layout:move("availableMods")
-	Theme:panel(w, h)
+	ui:panel(w, h)
 
 	self.availableModifierListView:draw(w, h, true)
 	w, h = Layout:move("availableMods")
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 ---@param self table
 function ViewConfig:modifierList(view)
 	local w, h = Layout:move("activeMods")
-	Theme:panel(w, h)
+	ui:panel(w, h)
 	self.modifierListView:draw(w, h, true)
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:inputMode(view)
@@ -49,7 +49,7 @@ function ViewConfig:inputMode(view)
 	input_mode = Format.inputMode(tostring(input_mode))
 	input_mode = input_mode == "2K" and "TAIKO" or input_mode
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.inputMode)
 
 	gyatt.frame(input_mode, 0, 0, w, h, "center", "center")
@@ -62,7 +62,7 @@ function ViewConfig:draw(view)
 	self.modifierListView:reloadItems()
 
 	local w, h = Layout:move("modalName")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.title)
 	gyatt.frame(text.modifiers, 0, 0, w, h, "center", "center")
 

@@ -70,7 +70,7 @@ function SelectView:load()
 		end
 	end
 
-	window_height = love.graphics.getHeight()
+	self:resolutionUpdated()
 end
 
 function SelectView:beginUnload()

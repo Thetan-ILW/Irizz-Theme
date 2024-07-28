@@ -2,7 +2,7 @@ local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local MountsListView = ListView + {}
 
@@ -58,7 +58,7 @@ function MountsListView:drawItem(i, w, h)
 
 	self:drawItemBody(w, h, i, self.selectedItemIndex == i)
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(self.font.mountPaths)
 	love.graphics.translate(15, 10)
 	just.text(item.name, math.huge)

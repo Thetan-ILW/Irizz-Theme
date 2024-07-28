@@ -56,4 +56,22 @@ function AssetModel:getLocalizationFileName(theme, name)
 	return self.localizations[theme][1].filepath
 end
 
+function AssetModel:getOsuSkins()
+	---@type string[]
+	local skins = love.filesystem.getDirectoryItems("userdata/skins/")
+
+	---@type string[]
+	local osu_skin_names = {}
+
+	for _, name in ipairs(skins) do
+		---@type string
+		local path = "userdata/skins/" .. name
+		if love.filesystem.getInfo(path .. "/skin.ini") then
+			table.insert(osu_skin_names, name)
+		end
+	end
+
+	return osu_skin_names
+end
+
 return AssetModel

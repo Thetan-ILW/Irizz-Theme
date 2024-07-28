@@ -7,9 +7,8 @@ local Layout = require("thetan.irizz.views.modals.OnlineModal.Layout")
 
 local TextBox = require("thetan.irizz.imgui.TextBox")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
-local cfg = Theme.imgui
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
@@ -39,7 +38,7 @@ function ViewConfig:status(view)
 
 	local label = active and text.loggedIn or text.notLoggedIn
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.status)
 	gyatt.frame(label, 0, 0, w, h, "center", "center")
 end
@@ -51,7 +50,7 @@ function ViewConfig:fields(view)
 
 	local w, h = Layout:move("fields")
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.fields)
 	local changed, input = TextBox("email", { self.email, text.emailPlaceholder }, nil, w, h, false)
 
@@ -68,9 +67,9 @@ end
 
 function ViewConfig:logout(view)
 	local w, h = Layout:move("buttonsOnline")
-	imgui.setSize(w, h, w / 2.5, cfg.size)
+	imgui.setSize(w, h, w / 2.5, 50)
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.buttons)
 	local width = love.graphics.getFont():getWidth(text.logout)
 	love.graphics.translate(w / 2 - width, 0)
@@ -82,12 +81,12 @@ end
 
 function ViewConfig:login(view)
 	local w, h = Layout:move("buttons")
-	imgui.setSize(w, h, w / 2.5, cfg.size)
+	imgui.setSize(w, h, w / 2.5, 50)
 
-	local imguiSize = Theme.imgui.size
+	local imguiSize = 50
 	local nextItemOffset = Theme.imgui.nextItemOffset
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.buttons)
 	local width1 = love.graphics.getFont():getWidth(text.connect) * gyatt.getTextScale()
 	local width2 = love.graphics.getFont():getWidth(text.quickConnect) * gyatt.getTextScale()

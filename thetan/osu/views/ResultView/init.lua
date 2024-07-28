@@ -99,6 +99,10 @@ function ResultView:resolutionUpdated()
 end
 
 function ResultView:draw()
+	if not self.viewConfig then
+		return
+	end
+
 	Layout:draw()
 
 	gyatt.setTextScale(768 / window_height)

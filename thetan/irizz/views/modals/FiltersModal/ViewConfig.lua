@@ -5,7 +5,8 @@ local imgui = require("thetan.irizz.imgui")
 local just = require("just")
 
 local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
 local cfg = Theme.imgui
 
 local Layout = require("thetan.irizz.views.modals.FiltersModal.Layout")
@@ -40,7 +41,7 @@ function ViewConfig:filters(view)
 
 	local w, h = Layout:move("filters")
 
-	Theme:panel(w, h)
+	ui:panel(w, h)
 
 	local heightStart = just.height
 	local uiW = w / 2.5
@@ -50,7 +51,7 @@ function ViewConfig:filters(view)
 	imgui.setSize(w, h, uiW, uiH)
 
 	love.graphics.setFont(font.headerText)
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 
 	imgui.separator()
 	gyatt.text(text.scores)
@@ -93,7 +94,7 @@ function ViewConfig:filters(view)
 		end
 
 		love.graphics.setFont(font.headerText)
-		love.graphics.setColor(Color.text)
+		love.graphics.setColor(colors.ui.text)
 
 		just.row(true)
 		local name = Theme.formatFilter(group.name)
@@ -117,13 +118,13 @@ function ViewConfig:filters(view)
 	self.container.scrollLimit = just.height - heightStart - h
 	self.container:stopDraw()
 	w, h = Layout:move("filters")
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:osuDirectFilters(view)
 	local w, h = Layout:move("filters")
 
-	Theme:panel(w, h)
+	ui:panel(w, h)
 
 	local heightStart = just.height
 	local uiW = w / 2.5
@@ -133,7 +134,7 @@ function ViewConfig:osuDirectFilters(view)
 	imgui.setSize(w, h, uiW, uiH)
 
 	love.graphics.setFont(font.headerText)
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	imgui.separator()
 	gyatt.text(text.osuDirect)
 	just.next(0, 15)
@@ -154,7 +155,7 @@ function ViewConfig:osuDirectFilters(view)
 	self.container.scrollLimit = just.height - heightStart - h
 	self.container:stopDraw()
 	w, h = Layout:move("filters")
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:chartsLine(view)
@@ -164,7 +165,7 @@ function ViewConfig:chartsLine(view)
 	local tree = view.game.selectModel.collectionLibrary.tree
 	local path = tree.items[tree.selected].name
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.filtersLine)
 
 	gyatt.frame(text.chartCount:format(count, path), 0, 0, w, h, "center", "center")
@@ -175,7 +176,7 @@ function ViewConfig:draw(view)
 	love.graphics.setLineWidth(4)
 
 	local w, h = Layout:move("modalName")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.title)
 	gyatt.frame(text.filters, 0, 0, w, h, "center", "center")
 

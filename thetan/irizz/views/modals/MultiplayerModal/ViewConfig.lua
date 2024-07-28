@@ -4,9 +4,8 @@ local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
 local just = require("just")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
-local cfg = Theme.imgui
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
@@ -42,11 +41,11 @@ function ViewConfig:players(view)
 
 	local heightStart = just.height
 
-	Theme:panel(w, h)
+	ui:panel(w, h)
 
 	self.playersContainer:startDraw(w, h)
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.listHeader)
 
 	gyatt.text(text.players)
@@ -64,24 +63,24 @@ function ViewConfig:players(view)
 	self.playersContainer.stopDraw()
 
 	w, h = Layout:move("players")
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:rooms(view)
 	local w, h = Layout:move("rooms")
 
-	Theme:panel(w, h)
+	ui:panel(w, h)
 	self.roomsListView:draw(w, h, true)
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:buttons(view)
 	local w, h = Layout:move("buttons")
 
-	Theme:border(w, h)
-	Theme:panel(w, h)
+	ui:border(w, h)
+	ui:panel(w, h)
 
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.buttons)
 
 	w = w - 20
@@ -103,12 +102,12 @@ function ViewConfig:buttons(view)
 	end
 
 	local uiW = w / 2.5
-	local uiH = cfg.size
+	local uiH = 50
 
 	imgui.setSize(w, h, uiW, uiH)
 
 	local textW = font.buttons:getWidth(text.create) * gyatt.getTextScale()
-	gfx.translate((w / 2) - (textW + Theme.imgui.size) / 2, 10)
+	gfx.translate((w / 2) - (textW + 50) / 2, 10)
 
 	if imgui.button("createRoom", text.create) then
 		view.game.multiplayerModel:createRoom(roomName, roomPassword)
@@ -121,7 +120,7 @@ function ViewConfig:joinGame(view, room)
 	local multiModel = view.game.multiplayerModel
 
 	local w, h = Layout:move("connectScreen")
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.listHeader)
 	gyatt.frame(text.enterPassword:format(room.name), 0, 0, w, h, "center", "top")
 
@@ -129,8 +128,8 @@ function ViewConfig:joinGame(view, room)
 	local button1Size = gfx.getFont():getWidth(text.back)
 	local button2Size = gfx.getFont():getWidth(text.join)
 
-	gfx.setColor(Color.text)
-	gfx.setFont(Font.buttons)
+	gfx.setColor(colors.ui.text)
+	gfx.setFont(font.buttons)
 
 	gfx.translate(0, 80)
 	local changed, input = TextBox("password", { password, text.password }, nil, w, h, true)
@@ -169,7 +168,7 @@ function ViewConfig:draw(view)
 	end
 
 	local w, h = Layout:move("modalName")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.title)
 	gyatt.frame(text.title, 0, 0, w, h, "center", "center")
 

@@ -6,7 +6,7 @@ local Format = require("sphere.views.Format")
 
 local InputListView = require("thetan.irizz.views.modals.InputModal.InputListView")
 
-local Theme = require("thetan.irizz.views.Theme")
+local ui = require("thetan.irizz.ui")
 local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
@@ -34,8 +34,8 @@ end
 
 function ViewConfig:inputs(view)
 	local w, h = Layout:move("inputs")
-	Theme:panel(w, h)
-	Theme:border(w, h)
+	ui:panel(w, h)
+	ui:border(w, h)
 
 	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.inputs)

@@ -8,7 +8,6 @@ local Container = require("thetan.gyatt.Container")
 local audio = require("audio")
 local version = require("version")
 
-local assets = require("thetan.skibidi.assets")
 local Theme = require("thetan.irizz.views.Theme")
 
 ---@type table<string, string>
@@ -22,6 +21,9 @@ local SettingsTab = class()
 ---@type string[]
 local start_sound_names
 
+---@type string[]
+local osu_skins
+
 local textSeparation = 15
 local panelW = 0
 local panelH = 0
@@ -34,6 +36,8 @@ SettingsTab.container = Container("settingsContainer")
 function SettingsTab:new(game, assets)
 	text = assets.localization.textGroups.settings
 	start_sound_names = assets.startSoundNames
+	osu_skins = game.assetModel:getOsuSkins()
+
 	inputListView = InputListView(game, assets)
 end
 
@@ -766,7 +770,7 @@ function SettingsTab:UI(view)
 	irizz.osuSongSelectPreviewIcon =
 		imgui.checkbox("irizz.osuSongSelectPreviewIcon", irizz.osuSongSelectPreviewIcon, text.previewIcon)
 	irizz.osuSongSelectSkin, load_new_skin =
-		imgui.combo("irizz.osuSongSelectSkin", irizz.osuSongSelectSkin, Theme.osuSkinNames, nil, text.skin)
+		imgui.combo("irizz.osuSongSelectSkin", irizz.osuSongSelectSkin, osu_skins, nil, text.skin)
 
 	if load_new_ui then
 		---@type skibidi.ScreenView

@@ -1,14 +1,14 @@
 local class = require("class")
 local gyatt = require("thetan.gyatt")
 local just = require("just")
+local msd_util = require("thetan.skibidi.msd_util")
+
+local Theme = require("thetan.irizz.views.Theme")
 
 local Layout = require("thetan.osu.views.ResultView.Layout")
 local ImageValueView = require("thetan.irizz.views.ResultView.ImageValueView")
 local Scoring = require("thetan.irizz.views.ResultView.Scoring")
 local HitGraph = require("thetan.irizz.views.ResultView.HitGraph")
-
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
 
 local OsuViewConfig = class()
 
@@ -271,14 +271,14 @@ function OsuViewConfig:loadScore(view)
 	difficultyFormatted = ("[%0.02f*]"):format(difficulty)
 
 	if diff_column == "msd_diff" and chartdiff.msd_diff_data then
-		local msd = Theme.getMsdFromData(chartdiff.msd_diff_data, time_rate)
+		local msd = msd_util.getMsdFromData(chartdiff.msd_diff_data, time_rate)
 
 		if msd then
 			difficulty = msd.overall
-			patterns = Theme.getFirstFromMsd(msd)
+			patterns = msd_util.getFirstFromMsd(msd)
 		end
 
-		patterns = Theme.simplifySsr(patterns)
+		patterns = msd_util.simplifySsr(patterns)
 		difficultyFormatted = ("[%0.02f %s]"):format(difficulty, patterns)
 	end
 
@@ -406,7 +406,7 @@ function OsuViewConfig:title(view)
 
 	local playInfo = text.playedBy:format(username, timeFormatted)
 
-	gfx.setColor(Color.text)
+	gfx.setColor(1, 1, 1, 1)
 	gfx.setFont(font.title)
 	gyatt.frame(title, 9, 0, math.huge, h, "left", "top")
 

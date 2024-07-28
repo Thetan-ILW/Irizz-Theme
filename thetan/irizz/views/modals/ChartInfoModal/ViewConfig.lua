@@ -5,8 +5,7 @@ local gyatt = require("thetan.gyatt")
 
 local Layout = require("thetan.irizz.views.modals.ChartInfoModal.Layout")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
@@ -27,7 +26,7 @@ function ViewConfig:info(view)
 
 	just.next(0, 15)
 	love.graphics.setFont(font.info)
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 
 	for _, text in ipairs(view.infoCache) do
 		just.indent(15)
@@ -43,7 +42,7 @@ function ViewConfig:draw(view)
 	Layout:draw()
 
 	local w, h = Layout:move("modalName")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.title)
 	just.indent(5)
 	gyatt.frame(text.chartInfo, 0, 0, w, h, "left", "center")

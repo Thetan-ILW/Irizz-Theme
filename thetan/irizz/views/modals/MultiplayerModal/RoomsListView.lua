@@ -4,8 +4,7 @@ local gyatt = require("thetan.gyatt")
 
 local ListView = require("thetan.irizz.views.ListView")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local colors = require("thetan.irizz.ui.colors")
 
 local RoomsListView = ListView + {}
 
@@ -31,7 +30,7 @@ function RoomsListView:drawItem(i, w, h)
 	local item = self.items[i]
 	self:drawItemBody(w, h, i, false)
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(self.font.lists)
 	local name = self.text.room:format(item.name)
 
@@ -56,7 +55,7 @@ function RoomsListView:drawItem(i, w, h)
 	end
 
 	local uiW = w / 2.5
-	local uiH = Theme.imgui.size
+	local uiH = 50
 
 	just.offset(w - 108)
 	love.graphics.translate(0, 10)

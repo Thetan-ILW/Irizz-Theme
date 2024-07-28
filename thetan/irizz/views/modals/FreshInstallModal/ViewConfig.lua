@@ -6,8 +6,8 @@ local imgui = require("thetan.irizz.imgui")
 
 local Layout = require("thetan.irizz.views.modals.FreshInstallModal.Layout")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type irizz.IrizzAssets
 local assets
@@ -30,21 +30,21 @@ function ViewConfig:new(_assets)
 	assert(text and font)
 end
 
-local function button(text, on_click)
-	local changed, active, hovered = gyatt.button(text .. "import", gyatt.isOver(button_width, button_height))
+local function button(label, on_click)
+	local changed, active, hovered = gyatt.button(label .. "import", gyatt.isOver(button_width, button_height))
 
-	gfx.setColor(Color.uiFrames)
+	gfx.setColor(colors.ui.uiFrames)
 
 	if hovered then
-		gfx.setColor(Color.accent)
+		gfx.setColor(colors.ui.accent)
 	end
 
 	local button_gradient = assets.images.buttonGradient
 	gfx.draw(button_gradient, 0, 0, 0, 1, 5)
-	gyatt.frame(text, 0, 0, button_width, button_height, "center", "center")
+	gyatt.frame(label, 0, 0, button_width, button_height, "center", "center")
 	gfx.draw(button_gradient, 0, button_height, 0, 1, 5)
 
-	gfx.setColor(Color.uiFrames)
+	gfx.setColor(colors.ui.uiFrames)
 
 	if changed then
 		on_click()
@@ -55,7 +55,7 @@ function ViewConfig:draw(view)
 	Layout:draw()
 
 	local w, h = Layout:move("modalName")
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 	gfx.setFont(font.title)
 	just.indent(5)
 	gyatt.frame(text.importCharts, 0, 0, w, h, "center", "center")
@@ -70,10 +70,10 @@ function ViewConfig:draw(view)
 	end
 
 	gfx.translate((w / 2) - (tw / 2) - 80, 0)
-	Theme:panel(tw + 160, h)
+	ui:panel(tw + 160, h)
 
 	w, h = Layout:move("list")
-	gfx.setColor(Color.text)
+	gfx.setColor(colors.ui.text)
 
 	gfx.translate(0, 10)
 

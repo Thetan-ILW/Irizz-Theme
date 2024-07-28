@@ -10,8 +10,8 @@ local TextBox = require("thetan.irizz.imgui.TextBox")
 
 local Layout = require("thetan.irizz.views.modals.MountsModal.Layout")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
+local ui = require("thetan.irizz.ui")
+local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
@@ -42,16 +42,16 @@ function ViewConfig:mounts(view)
 
 	local w, h = Layout:move("listPanel")
 
-	Theme:panel(w, h)
+	ui:panel(w, h)
 	w, h = Layout:move("list")
 	self.mountsListView:draw(w, h, true)
 
 	w, h = Layout:move("listLine")
-	love.graphics.setColor(Color.separator)
+	love.graphics.setColor(colors.ui.separator)
 	love.graphics.rectangle("fill", 0, 0, w, h)
 
 	w, h = Layout:move("listButton")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.buttons)
 
 	w = w / 2
@@ -59,9 +59,9 @@ function ViewConfig:mounts(view)
 	local overCreate = just.is_over(w, h)
 
 	if overCreate then
-		love.graphics.setColor(Color.uiHover)
+		love.graphics.setColor(colors.ui.uiHover)
 		love.graphics.rectangle("fill", 0, 0, w, h)
-		love.graphics.setColor(Color.text)
+		love.graphics.setColor(colors.ui.text)
 	end
 
 	gyatt.frame(text.create, 0, -3, w, h, "center", "center")
@@ -80,9 +80,9 @@ function ViewConfig:mounts(view)
 	local overDelete = just.is_over(w, h)
 
 	if overDelete then
-		love.graphics.setColor(Color.uiHover)
+		love.graphics.setColor(colors.ui.uiHover)
 		love.graphics.rectangle("fill", 0, 0, w, h)
-		love.graphics.setColor(Color.text)
+		love.graphics.setColor(colors.ui.text)
 	end
 
 	gyatt.frame(text.delete, 0, -3, w, h, "center", "center")
@@ -99,7 +99,7 @@ function ViewConfig:mounts(view)
 	just.indent(-w)
 
 	w, h = Layout:move("listPanel")
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:locations(view)
@@ -108,15 +108,15 @@ function ViewConfig:locations(view)
 	local selected_loc = locationManager.selected_loc
 
 	local w, h = Layout:move("window")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.windowText)
 
 	local uiW = w / 2.5
-	local uiH = Theme.imgui.size
+	local uiH = 50
 	imgui.setSize(w, h, uiW, uiH)
 
-	Theme:panel(w, h)
-	Theme:border(w, h)
+	ui:panel(w, h)
+	ui:border(w, h)
 
 	if not selected_loc then
 		return
@@ -140,7 +140,7 @@ function ViewConfig:locations(view)
 		end
 
 		love.graphics.setFont(font.windowText)
-		love.graphics.setColor(Color.text)
+		love.graphics.setColor(colors.ui.text)
 	end
 
 	if imgui.button("cache_button", text.update) then
@@ -175,12 +175,12 @@ function ViewConfig:database(view)
 	local cacheModel = view.game.cacheModel
 	local cacheStatus = view.game.cacheModel.cacheStatus
 
-	Theme:panel(w, h)
+	ui:panel(w, h)
 
 	love.graphics.translate(15, 15)
 	imgui.separator()
 
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.textHeader)
 	gyatt.text(text.chartdiffs, w, "left")
 
@@ -227,26 +227,26 @@ function ViewConfig:database(view)
 	end
 
 	Layout:move("window")
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:tabButtons()
 	local w, h = Layout:move("buttons")
 	love.graphics.setFont(font.buttons)
-	Theme:panel(w, h)
+	ui:panel(w, h)
 
 	if imgui.TextOnlyButton("locationsTab", text.locations, w, h / 2, "center", tab == text.locations) then
 		tab = text.locations
-		Theme:playSound("tabButtonClick")
+		--Theme:playSound("tabButtonClick")
 	end
 
 	if imgui.TextOnlyButton("databaseTab", text.database, w, h / 2, "center", tab == text.database) then
 		tab = text.database
-		Theme:playSound("tabButtonClick")
+		--Theme:playSound("tabButtonClick")
 	end
 
 	Layout:move("buttons")
-	Theme:border(w, h)
+	ui:border(w, h)
 end
 
 function ViewConfig:draw(view)
@@ -255,7 +255,7 @@ function ViewConfig:draw(view)
 	self.mountsListView:reloadItems()
 
 	local w, h = Layout:move("modalName")
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 	love.graphics.setFont(font.title)
 	gyatt.frame(text.mounts, 0, 0, w, h, "center", "center")
 

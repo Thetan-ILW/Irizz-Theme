@@ -60,7 +60,7 @@ return function(id, text, index, w, h, password)
 		local offset = just.text(right)
 		just.indent(-offset)
 	else
-		love.graphics.setColor(Color.unfocusedText)
+		love.graphics.setColor(colors.ui.unfocusedText)
 
 		local drawableText = text
 
