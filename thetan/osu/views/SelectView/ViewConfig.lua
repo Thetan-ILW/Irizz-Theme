@@ -242,7 +242,7 @@ function ViewConfig:updateInfo(view)
 
 	local speed_model = view.game.speedModel
 	local gameplay = view.game.configModel.configs.settings.gameplay
-	scroll_speed_str = ("%i (fixed)"):format(speed_model.format[gameplay.speedType]:format(speed_model:get()))
+	scroll_speed_str = ("%g (fixed)"):format(speed_model.format[gameplay.speedType]:format(speed_model:get()))
 
 	self.noteChartSetListView:reloadItems()
 	self.collectionListView:reloadItems()

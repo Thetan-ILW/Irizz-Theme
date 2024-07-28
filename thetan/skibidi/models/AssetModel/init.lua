@@ -2,11 +2,14 @@ local class = require("class")
 
 ---@class skibidi.AssetModel
 ---@operator call: skibidi.AssetModel
+---@field configModel sphere.ConfigModel
 ---@field fields table<string, skibidi.Assets>
 ---@field localizations table<string,{name: string, filepath: string}[]>
 local AssetModel = class()
 
-function AssetModel:new()
+function AssetModel:new(config_model)
+	self.configModel = config_model
+
 	self.fields = {}
 	self.localizations = {}
 	self:loadLocalizationLists()
@@ -72,6 +75,12 @@ function AssetModel:getOsuSkins()
 	end
 
 	return osu_skin_names
+end
+
+function AssetModel:updateVolume()
+	for _, v in pairs(self.fields) do
+		v:updateVolume(self.configModel)
+	end
 end
 
 return AssetModel

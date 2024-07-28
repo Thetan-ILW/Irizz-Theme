@@ -11,7 +11,7 @@ function GameController:new()
 	base_new(self)
 
 	self.actionModel = ActionModel(self.persistence.configModel)
-	self.assetModel = AssetModel()
+	self.assetModel = AssetModel(self.persistence.configModel)
 	self.osuApi = OsuApiModel(self)
 end
 
