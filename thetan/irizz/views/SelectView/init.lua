@@ -296,11 +296,7 @@ function SelectView:receive(event)
 	end
 end
 
-function SelectView:quit()
-	if self.mainMenuView:isActive() then
-		self.mainMenuView:toggle()
-	end
-end
+function SelectView:quit() end
 
 function SelectView:resolutionUpdated()
 	window_height = self.assets.localization:updateScale()
