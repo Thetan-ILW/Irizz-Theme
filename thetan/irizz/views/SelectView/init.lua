@@ -184,9 +184,20 @@ function SelectView:result()
 end
 
 function SelectView:updateFilterLines()
-	if true then
-		return
+	local filterAliasses = {
+		["(not) played"] = "played",
+		["actual input mode"] = "actualInputMode",
+		["original input mode"] = "inputMode",
+		format = "format",
+		scratch = "scratch",
+	}
+
+	---@param v string
+	---@return string
+	local function formatFilter(v)
+		return self.assets.localization.textGroups.filtersModal[filterAliasses[v]] or v
 	end
+
 	local filters = self.game.configModel.configs.filters.notechart
 	local filterModel = self.game.selectModel.filterModel
 	local select = self.game.configModel.configs.select

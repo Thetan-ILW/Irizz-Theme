@@ -21,6 +21,8 @@ end
 
 function OsudirectListView:reloadItems()
 	self.items = self.game.osudirectModel.items
+	self.staticCursor = self.game.configModel.configs.irizz.staticCursor
+
 	if self.itemIndex > #self.items then
 		self.targetItemIndex = 1
 		self.stateCounter = (self.stateCounter or 0) + 1

@@ -29,6 +29,8 @@ end
 
 function OsuDirectChartsListView:reloadItems()
 	self.items = self.game.osudirectModel:getDifficulties()
+	self.staticCursor = self.game.configModel.configs.irizz.staticCursor
+
 	if self.itemIndex > #self.items then
 		self.targetItemIndex = 1
 		self.stateCounter = (self.stateCounter or 0) + 1

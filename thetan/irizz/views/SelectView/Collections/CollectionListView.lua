@@ -11,7 +11,6 @@ CollectionListView.centerItems = true
 ---@param game sphere.GameController
 ---@param assets irizz.IrizzAssets
 function CollectionListView:new(game, assets)
-	ListView:new(game)
 	self.game = game
 	self.font = assets.localization.fontGroups.collectionListView
 	self.text = assets.localization.textGroups.collectionListView
@@ -21,6 +20,7 @@ end
 function CollectionListView:reloadItems()
 	self.stateCounter = 0
 	self.items = self.game.selectModel.collectionLibrary.tree.items
+	self.staticCursor = self.game.configModel.configs.irizz.staticCursor
 end
 
 ---@return number
@@ -65,9 +65,9 @@ function CollectionListView:drawItem(i, w, h)
 	gfx.translate(15, 0)
 	gfx.setColor(colors.ui.text)
 	gfx.setFont(self.font.itemCount)
-	gyatt.frame(item.count ~= 0 and item.count or "", 0, 0, w, h, "left", "top")
+	gyatt.frame(item.count ~= 0 and item.count or "", 0, 0, math.huge, h, "left", "top")
 	gfx.setFont(self.font.name)
-	gyatt.frame(name, 0, -5, w, h, "left", "bottom")
+	gyatt.frame(name, 0, -5, math.huge, h, "left", "bottom")
 end
 
 return CollectionListView

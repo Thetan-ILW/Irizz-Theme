@@ -28,6 +28,7 @@ end
 function NoteChartListView:reloadItems()
 	self.stateCounter = self.game.selectModel.noteChartStateCounter
 	self.items = self.game.selectModel.noteChartLibrary.items
+	self.staticCursor = self.game.configModel.configs.irizz.staticCursor
 	self.chartInfo = {}
 
 	local timeRate = self.game.playContext.rate
