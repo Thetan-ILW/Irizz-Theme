@@ -3,7 +3,6 @@ local flux = require("flux")
 local class = require("class")
 
 local gyatt = require("thetan.gyatt")
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
 
 ---@class irizz.ListView

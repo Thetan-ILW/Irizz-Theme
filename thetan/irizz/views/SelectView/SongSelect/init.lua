@@ -5,7 +5,8 @@ local time_util = require("time_util")
 local math_util = require("math_util")
 local msd_util = require("thetan.skibidi.msd_util")
 
-local Theme = require("thetan.irizz.views.Theme")
+local getModifierString = require("thetan.skibidi.modifier_string")
+
 local Format = require("sphere.views.Format")
 local Layout = require("thetan.irizz.views.SelectView.SongSelect.SongSelectLayout")
 
@@ -20,7 +21,6 @@ local colors = require("thetan.irizz.ui.colors")
 local NoteChartSetListView = require("thetan.irizz.views.SelectView.SongSelect.NoteChartSetListView")
 local NoteChartListView = require("thetan.irizz.views.SelectView.SongSelect.NoteChartListView")
 local ScoreListView = require("thetan.irizz.views.ScoreListView")
-local OsuScoreListView = require("thetan.irizz.views.OsuScoreList")
 
 local boxes = {
 	"scores",
@@ -46,7 +46,6 @@ function ViewConfig:new(game, assets)
 	self.noteChartSetListView = NoteChartSetListView(game, assets)
 	self.noteChartListView = NoteChartListView(game, assets)
 	self.scoreListView = ScoreListView(game, assets)
-	self.osuScoreListView = OsuScoreListView(game)
 
 	font = assets.localization.fontGroups.songSelect
 	text = assets.localization.textGroups.songSelect
@@ -197,13 +196,7 @@ function ViewConfig:scores(view)
 
 	w, h = Layout:move("scores")
 
-	local source = view.game.configModel.configs.select.scoreSourceName
-
-	if source == "osu" then
-		self.osuScoreListView:reloadItems()
-	end
-
-	local list = source == "osu" and self.osuScoreListView or self.scoreListView
+	local list = self.scoreListView
 	list:draw(w, h, canUpdate)
 
 	if list.openResult then
@@ -343,7 +336,7 @@ local function mods(view)
 	gfx.setFont(font.mods)
 	gfx.setColor(colors.ui.text)
 	local modifiers = view.game.playContext.modifiers
-	local modString = Theme:getModifierString(modifiers)
+	local modString = getModifierString(modifiers)
 
 	if modString == "" then
 		love.graphics.setFont(font.noMods)

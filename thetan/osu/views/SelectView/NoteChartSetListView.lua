@@ -3,13 +3,10 @@ local gyatt = require("thetan.gyatt")
 local math_util = require("math_util")
 local Format = require("sphere.views.Format")
 
-local Theme = require("thetan.irizz.views.Theme")
-
 local NoteChartSetListView = ListView + {}
 
 NoteChartSetListView.rows = 7
 NoteChartSetListView.centerItems = true
-NoteChartSetListView.text = Theme.textChartSetsList
 NoteChartSetListView.staticCursor = false
 NoteChartSetListView.focus = false
 NoteChartSetListView.mouseScrollEase = { "quartout", 0.45 }

@@ -2,9 +2,12 @@ local just = require("just")
 local gyatt = require("thetan.gyatt")
 local map = require("math_util").map
 
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
-local cfg = Theme.imgui
+
+local rounding = 8
+local size = 50
+local size4 = size / 4
+local size2 = size / 2
 
 ---@param w number
 ---@param h number
@@ -21,22 +24,18 @@ return function(id, value, w, h, displayValue)
 
 	local new_value, active, hovered = just.slider(id, over, pos, value)
 
-	local size = cfg.size
-	local size4 = size / 4
-	local size2 = size / 2
-
 	love.graphics.setColor(colors.ui.uiPanel)
-	love.graphics.rectangle("fill", 0, 0, w, size, cfg.rounding, cfg.rounding)
+	love.graphics.rectangle("fill", 0, 0, w, size, rounding, rounding)
 	love.graphics.setColor(colors.ui.uiFrames)
-	love.graphics.rectangle("line", 0, 0, w, size, cfg.rounding, cfg.rounding)
+	love.graphics.rectangle("line", 0, 0, w, size, rounding, rounding)
 
 	local x = map(math.min(math.max(value, 0), 1), 0, 1, size2, w - size2)
 	love.graphics.setColor(colors.ui.accent)
-	love.graphics.rectangle("fill", size4, size4, x, size2, cfg.rounding / 2, cfg.rounding / 2)
+	love.graphics.rectangle("fill", size4, size4, x, size2, rounding / 2, rounding / 2)
 	love.graphics.setColor(colors.ui.darkerAccent)
-	love.graphics.rectangle("line", size4, size4, x, size2, cfg.rounding / 2, cfg.rounding / 2)
+	love.graphics.rectangle("line", size4, size4, x, size2, rounding / 2, rounding / 2)
 	love.graphics.setColor(colors.ui.uiFrames)
-	love.graphics.rectangle("line", x - size4, size4, size2, size2, cfg.rounding / 2, cfg.rounding / 2)
+	love.graphics.rectangle("line", x - size4, size4, size2, size2, rounding / 2, rounding / 2)
 
 	if displayValue then
 		local width = love.graphics.getFont():getWidth(displayValue) * gyatt.getTextScale()

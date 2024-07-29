@@ -3,12 +3,9 @@ local class = require("class")
 local flux = require("flux")
 local gyatt = require("thetan.gyatt")
 
-local Layout = require("sphere.views.GameplayView.Layout")
+local colors = require("thetan.irizz.ui.colors")
 
-local Theme = require("thetan.irizz.views.Theme")
-local Color = Theme.colors
-local Text = Theme.textPauseSubscreen
-local font
+local Layout = require("sphere.views.GameplayView.Layout")
 
 ---@class irizz.PauseScreen
 ---@operator call: irizz.IrizzAssets
@@ -17,6 +14,11 @@ local PauseScreen = class()
 ---@type table?
 PauseScreen.tween = nil
 PauseScreen.alpha = 0
+
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
 
 ---@type table<string, love.Image[]>
 local img
@@ -31,9 +33,9 @@ function PauseScreen:new(assets)
 	img = assets.images
 	shader = shaders.waves
 	ambient = assets.sounds.pauseAmbient
-
-	font = Theme:getFonts("pauseSubscreen")
 	ambient:stop()
+
+	text, font = assets.localization:get("pauseSubscreen")
 end
 
 function PauseScreen:show()
@@ -76,17 +78,17 @@ end
 function PauseScreen:pauseText()
 	local screen_w, screen_h = Layout:move("base")
 
-	local text = Text.paused
+	local letters = text.paused
 	local paused_font = font.paused
 	local width = paused_font:getWidth("P")
 	local height = paused_font:getHeight()
 
-	local total_h = #text * height
+	local total_h = #letters * height
 
 	local y = (screen_h / 2) - (total_h / 2)
 
 	love.graphics.setFont(paused_font)
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 
 	love.graphics.translate(40, y)
 
@@ -107,21 +109,21 @@ local button_spacing = 30
 
 ---@param text string
 ---@param on_click function
-local function button(text, on_click)
-	local changed, active, hovered = gyatt.button(text .. "pause", gyatt.isOver(button_width, button_height))
+local function button(label, on_click)
+	local changed, active, hovered = gyatt.button(label .. "pause", gyatt.isOver(button_width, button_height))
 
-	love.graphics.setColor(Color.uiFrames)
+	love.graphics.setColor(colors.ui.uiFrames)
 
 	if hovered then
-		love.graphics.setColor(Color.accent)
+		love.graphics.setColor(colors.ui.accent)
 	end
 
 	local button_gradient = img.buttonGradient
 	love.graphics.draw(button_gradient, 0, 0, 0, 1, 5)
-	gyatt.frame(text, 0, 0, button_width, button_height, "center", "center")
+	gyatt.frame(label, 0, 0, button_width, button_height, "center", "center")
 	love.graphics.draw(button_gradient, 0, button_height, 0, 1, 5)
 
-	love.graphics.setColor(Color.uiFrames)
+	love.graphics.setColor(colors.ui.uiFrames)
 
 	if changed then
 		on_click()
@@ -131,7 +133,7 @@ end
 function PauseScreen:buttons(view)
 	local w, h = Layout:move("base")
 	love.graphics.setFont(font.buttons)
-	love.graphics.setColor(Color.text)
+	love.graphics.setColor(colors.ui.text)
 
 	local total_h = (button_height * 3) + (button_spacing * 2)
 
@@ -141,19 +143,19 @@ function PauseScreen:buttons(view)
 	love.graphics.translate(x - 100, y)
 
 	local gameplayController = view.game.gameplayController
-	button(Text.resume, function()
+	button(text.resume, function()
 		gameplayController:changePlayState("play")
 		self:hide()
 	end)
 
 	love.graphics.translate(100, button_height + button_spacing)
-	button(Text.retry, function()
+	button(text.retry, function()
 		gameplayController:changePlayState("retry")
 		self:hide()
 	end)
 
 	love.graphics.translate(100, button_height + button_spacing)
-	button(Text.quit, function()
+	button(text.quit, function()
 		view:quit()
 	end)
 end

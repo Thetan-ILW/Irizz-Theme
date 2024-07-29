@@ -4,12 +4,11 @@ local Layout = require("sphere.views.Layout")
 
 local _Layout = Layout()
 
-local Theme = require("thetan.irizz.views.Theme")
-local outerPanelsSize = Theme.layout.outerPanelsSize
-local innerPanelSize = Theme.layout.innerPanelSize
+local outerPanelsSize = 350
+local innerPanelSize = 400
 local gap = 20
-local verticalPanelGap = Theme.layout.verticalPanelGap
-local horizontalPanelGap = Theme.layout.horizontalPanelGap
+local verticalPanelGap = 30
+local horizontalPanelGap = 30
 
 function _Layout:_footer(x, y, w, h)
 	local x1, w1 = gfx_util.layout(x, w, { -0.65, -0.35 })

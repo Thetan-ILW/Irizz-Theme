@@ -7,7 +7,6 @@ local SettingsTab = require("thetan.irizz.views.SelectView.Settings.SettingsTabs
 
 local ui = require("thetan.irizz.ui")
 
-local Theme = require("thetan.irizz.views.Theme")
 ---@type table<string, string>
 local text
 ---@type table<string, love.Font>

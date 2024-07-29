@@ -8,13 +8,14 @@ local erfunc = require("libchart.erfunc")
 
 local ui = require("thetan.irizz.ui")
 
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
 
 ---@type table<string, string>
 local text
 ---@type table<string, love.Font>
 local font
+
+local getModifierString = require("thetan.skibidi.modifier_string")
 
 local Layout = require("thetan.irizz.views.ResultView.Layout")
 local HitGraph = require("thetan.irizz.views.ResultView.HitGraph")
@@ -453,7 +454,11 @@ function ViewConfig:modifiers(view)
 		modifiers = selectModel.scoreItem.modifiers
 	end
 
-	local label = Theme:getModifierString(modifiers)
+	local label = getModifierString(modifiers)
+
+	if label == "" then
+		label = text.noMods
+	end
 	gfx.setFont(font.modifiers)
 	gfx.setColor(colors.ui.text)
 	gyatt.frame(label, 0, 0, w, h, "center", "center")

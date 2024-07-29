@@ -9,16 +9,13 @@ local audio = require("audio")
 local version = require("version")
 
 local ui = require("thetan.irizz.ui")
-local Theme = require("thetan.irizz.views.Theme")
-
----@type table<string, string>
-local text
-local cfg = Theme.imgui
 
 local InputListView = require("thetan.irizz.views.modals.InputModal.InputListView")
 
 local SettingsTab = class()
 
+---@type table<string, string>
+local text
 ---@type string[]
 local start_sound_names
 ---@type string[]
@@ -56,7 +53,7 @@ function SettingsTab:reset()
 end
 
 function SettingsTab:draw(view, w, h, tab)
-	imgui.setSize(w, h, w / 2.5, cfg.size)
+	imgui.setSize(w, h, w / 2.5, 50)
 	panelW = w
 	panelH = h
 

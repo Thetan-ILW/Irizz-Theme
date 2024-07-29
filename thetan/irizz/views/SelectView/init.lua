@@ -3,7 +3,6 @@ local math_util = require("math_util")
 local gyatt = require("thetan.gyatt")
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 
-local Theme = require("thetan.irizz.views.Theme")
 local HeaderView = require("thetan.irizz.views.HeaderView")
 
 local get_assets = require("thetan.irizz.assets_loader")
@@ -185,6 +184,9 @@ function SelectView:result()
 end
 
 function SelectView:updateFilterLines()
+	if true then
+		return
+	end
 	local filters = self.game.configModel.configs.filters.notechart
 	local filterModel = self.game.selectModel.filterModel
 	local select = self.game.configModel.configs.select
@@ -200,7 +202,7 @@ function SelectView:updateFilterLines()
 		end
 
 		if #activeValues ~= 0 then
-			local groupValues = Theme.formatFilter(group.name) .. ": " .. table.concat(activeValues, ", ")
+			local groupValues = formatFilter(group.name) .. ": " .. table.concat(activeValues, ", ")
 			table.insert(output, groupValues)
 		end
 	end

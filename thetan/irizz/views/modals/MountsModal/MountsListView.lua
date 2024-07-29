@@ -1,21 +1,21 @@
 local ListView = require("thetan.irizz.views.ListView")
 local just = require("just")
 
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
 
 local MountsListView = ListView + {}
 
 MountsListView.rows = 11
 MountsListView.centerItems = false
-MountsListView.scrollSound = Theme.sounds.scrollSoundLargeList
-MountsListView.text = Theme.textMountsList
 MountsListView.selectedItemIndex = 1
 
-function MountsListView:new(game)
+---@param game sphere.GameController
+---@param assets irizz.IrizzAssets
+function MountsListView:new(game, assets)
 	ListView:new(game)
 	self.game = game
-	self.font = Theme:getFonts("mountsModal")
+	self.text, self.font = assets.localization:get("mountsList")
+	assert(self.text, self.font)
 end
 
 function MountsListView:reloadItems()

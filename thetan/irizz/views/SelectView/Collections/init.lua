@@ -7,8 +7,6 @@ local ui = require("thetan.irizz.ui")
 
 local Layout = require("thetan.irizz.views.SelectView.Collections.CollectionsLayout")
 
-local Theme = require("thetan.irizz.views.Theme")
-
 local colors = require("thetan.irizz.ui.colors")
 ---@type table<string, string>
 local text

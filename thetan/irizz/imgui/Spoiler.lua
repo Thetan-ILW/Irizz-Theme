@@ -7,13 +7,13 @@ local base_height = 0
 local width = 0
 local open_frame_id
 
-local Theme = require("thetan.irizz.views.Theme")
+local rounding = 8
+local size = 50
+local next_item_offset = 15
+
 local colors = require("thetan.irizz.ui.colors")
-local cfg = Theme.imgui
 
 return function(id, w, h, preview)
-	local size = cfg.size
-
 	if id then
 		base_height = h
 		width = w
@@ -25,9 +25,9 @@ return function(id, w, h, preview)
 		end
 		if just.focused_id ~= id or open_frame_id == id then
 			love.graphics.setColor(colors.ui.uiPanel)
-			love.graphics.rectangle("fill", 0, 0, w, size, cfg.rounding, cfg.rounding)
+			love.graphics.rectangle("fill", 0, 0, w, size, rounding, rounding)
 			love.graphics.setColor(colors.ui.uiFrames)
-			love.graphics.rectangle("line", 0, 0, w, size, cfg.rounding, cfg.rounding)
+			love.graphics.rectangle("line", 0, 0, w, size, rounding, rounding)
 			love.graphics.polygon("line", w - 20, h / 4, w - 30, h / 1.6, w - 40, h / 4)
 
 			love.graphics.setColor(colors.ui.text)
@@ -37,7 +37,7 @@ return function(id, w, h, preview)
 				just.clip(love.graphics.rectangle, "fill", 0, 0, 0, 0)
 				return true
 			end
-			just.next(w + size / 10, h + cfg.nextItemOffset)
+			just.next(w + size / 10, h + next_item_offset)
 			return
 		end
 
@@ -45,7 +45,7 @@ return function(id, w, h, preview)
 
 		love.graphics.setColor(1, 1, 1, 1)
 
-		just.clip(love.graphics.rectangle, "fill", 0, 0, w, height, cfg.rounding)
+		just.clip(love.graphics.rectangle, "fill", 0, 0, w, height, rounding)
 
 		local over = just.is_over(width, height)
 		just.container(id, over)
@@ -60,13 +60,13 @@ return function(id, w, h, preview)
 
 	h = base_height
 	if open_frame_id then
-		just.next(width + size / 10, h + cfg.nextItemOffset)
+		just.next(width + size / 10, h + next_item_offset)
 		open_frame_id = nil
 		return
 	end
 
 	love.graphics.setColor(colors.ui.accent)
-	love.graphics.rectangle("line", 0, 0, w, height, cfg.rounding)
+	love.graphics.rectangle("line", 0, 0, w, height, rounding)
 
-	just.next(width + size / 10, height + cfg.nextItemOffset)
+	just.next(width + size / 10, height + next_item_offset)
 end

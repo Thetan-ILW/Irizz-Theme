@@ -10,7 +10,7 @@ local OsuSelectView = require("thetan.osu.views.SelectView")
 local GameplayView = require("thetan.irizz.views.GameplayView")
 local ResultView = require("thetan.irizz.views.ResultView")
 local OsuResultView = require("thetan.osu.views.ResultView")
-local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
+--local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
 local EditorView = require("sphere.views.EditorView")
 
 local load_irizz_assets = require("thetan.irizz.assets_loader")
@@ -26,7 +26,7 @@ function UserInterface:new(persistence, game)
 
 	self.gameView = GameView(game)
 	self.gameplayView = GameplayView(game)
-	self.multiplayerView = MultiplayerView(game)
+	--self.multiplayerView = MultiplayerView(game)
 	self.editorView = EditorView(game)
 
 	self.persistence = persistence

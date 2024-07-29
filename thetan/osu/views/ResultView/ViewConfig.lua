@@ -3,7 +3,8 @@ local gyatt = require("thetan.gyatt")
 local just = require("just")
 local msd_util = require("thetan.skibidi.msd_util")
 
-local Theme = require("thetan.irizz.views.Theme")
+local getPP = require("thetan.skibidi.osu_pp")
+local getModifierString = require("thetan.skibidi.modifier_string")
 
 local Layout = require("thetan.osu.views.ResultView.Layout")
 local ImageValueView = require("thetan.irizz.views.ResultView.ImageValueView")
@@ -197,16 +198,12 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 	]])
 
 	if after_gameplay then
-		if assets.sounds.applause then
-			assets.sounds.applause:play()
-		end
+		assets.sounds.applause:play()
 	end
 end
 
 function OsuViewConfig:unload()
-	if assets.sounds.applause then
-		assets.sounds.applause:stop()
-	end
+	assets.sounds.applause:stop()
 end
 
 function OsuViewConfig.panels() end
@@ -288,7 +285,7 @@ function OsuViewConfig:loadScore(view)
 		od = 9
 	end
 
-	ppFormatted = ("%i PP"):format(Theme.getPP(judge.notes, chartview.osu_diff * timeRate, od, score))
+	ppFormatted = ("%i PP"):format(getPP(judge.notes, chartview.osu_diff * timeRate, od, score))
 
 	local playContext = view.game.playContext
 	local timings = playContext.timings
@@ -329,7 +326,7 @@ function OsuViewConfig:loadScore(view)
 		modifiers = selectModel.scoreItem.modifiers
 	end
 
-	modsFormatted = Theme:getModifierString(modifiers)
+	modsFormatted = getModifierString(modifiers)
 	username = view.game.configModel.configs.online.user.name or text.guest
 
 	modifierIconImages = {}

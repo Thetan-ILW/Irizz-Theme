@@ -325,7 +325,7 @@ l.textGroups = {
 		rating = "Rating: ",
 		mean = "Mean: ",
 		maxError = "Max error: ",
-		noMods = "No mods.",
+		noMods = "No mods",
 	},
 	multiplayerModal = {
 		title = "Multiplayer and players",
@@ -564,11 +564,14 @@ l.fontGroups = {
 		tabs = { "ZenMaruGothic-Medium", 28 },
 		noItems = { "ZenMaruGothic-Medium", 36 },
 		textHeader = { "ZenMaruGothic-Medium", 28 },
-		mountPaths = { "ZenMaruGothic-Black", 24 },
 		windowText = { "ZenMaruGothic-Medium", 24 },
 		fields = { "ZenMaruGothic-Medium", 28 },
 		path = { "ZenMaruGothic-Black", 48 },
 		buttons = { "ZenMaruGothic-Medium", 28 },
+	},
+
+	mountsList = {
+		mountPaths = { "ZenMaruGothic-Black", 24 },
 	},
 
 	onlineModal = {

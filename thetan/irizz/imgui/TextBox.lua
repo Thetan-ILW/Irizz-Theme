@@ -1,9 +1,10 @@
 local just = require("just")
 local gyatt = require("thetan.gyatt")
 
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
-local cfg = Theme.imgui
+
+local rounding = 8
+local next_item_offset = 15
 
 return function(id, text, index, w, h, password)
 	local placeholder = ""
@@ -25,16 +26,16 @@ return function(id, text, index, w, h, password)
 	just.origin()
 	just.row(true)
 
-	h = cfg.size
+	h = 50
 	love.graphics.setColor(colors.ui.uiPanel)
-	love.graphics.rectangle("fill", 0, 0, w, h, cfg.rounding, cfg.rounding)
+	love.graphics.rectangle("fill", 0, 0, w, h, rounding, rounding)
 
 	love.graphics.setColor(colors.ui.uiFrames)
 	if just.focused_id == id then
 		love.graphics.setColor(colors.ui.accent)
 	end
 
-	love.graphics.rectangle("line", 0, 0, w, h, cfg.rounding, cfg.rounding)
+	love.graphics.rectangle("line", 0, 0, w, h, rounding, rounding)
 
 	local clipw = w - 10
 	just.clip(love.graphics.rectangle, "fill", 0, 0, clipw, lh)
@@ -78,7 +79,7 @@ return function(id, text, index, w, h, password)
 
 	just.clip()
 	just.pop()
-	just.next(w, h + cfg.nextItemOffset)
+	just.next(w, h + next_item_offset)
 
 	return changed, text, index
 end

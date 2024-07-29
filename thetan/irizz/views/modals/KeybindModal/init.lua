@@ -1,6 +1,5 @@
 local Modal = require("thetan.irizz.views.modals.Modal")
 local ViewConfig = require("thetan.irizz.views.modals.KeybindModal.ViewConfig")
-local Theme = require("thetan.irizz.views.Theme")
 
 local KeybindModal = Modal + {}
 

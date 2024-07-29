@@ -197,9 +197,9 @@ function OsuAssets:new(skin_path, localization_file)
 		hoverAboveCharts = self:loadAudioOrDefault(skin_path, "menuclick"),
 		hoverMenuBack = self:loadAudioOrDefault(skin_path, "menu-back-hover"),
 
-		applause = self.loadAudio(skin_path .. "applause"),
-		menuBack = self.loadAudio(skin_path .. "menuback"),
-		switchScreen = self.loadAudio(skin_path .. "menuhit"),
+		applause = self:loadAudioOrDefault(skin_path, "applause"),
+		menuBack = self:loadAudioOrDefault(skin_path, "menuback"),
+		switchScreen = self:loadAudioOrDefault(skin_path, "menuhit"),
 	}
 
 	self.images.panelTop:setWrap("clamp")

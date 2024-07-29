@@ -3,7 +3,6 @@ local gyatt = require("thetan.gyatt")
 local Format = require("sphere.views.Format")
 local time_util = require("time_util")
 
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
 
 ---@class irizz.ScoreListView : irizz.ListView

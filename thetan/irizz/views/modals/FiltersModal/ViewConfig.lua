@@ -4,10 +4,8 @@ local gyatt = require("thetan.gyatt")
 local imgui = require("thetan.irizz.imgui")
 local just = require("just")
 
-local Theme = require("thetan.irizz.views.Theme")
 local ui = require("thetan.irizz.ui")
 local colors = require("thetan.irizz.ui.colors")
-local cfg = Theme.imgui
 
 local Layout = require("thetan.irizz.views.modals.FiltersModal.Layout")
 local Container = require("thetan.gyatt.Container")
@@ -32,6 +30,20 @@ local function filter_to_string(f)
 	return f.name
 end
 
+local filterAliasses = {
+	["(not) played"] = "played",
+	["actual input mode"] = "actualInputMode",
+	["original input mode"] = "inputMode",
+	format = "format",
+	scratch = "scratch",
+}
+
+---@param v string
+---@return string
+local function formatFilter(v)
+	return text[filterAliasses[v]] or v
+end
+
 function ViewConfig:filters(view)
 	local filterModel = view.game.selectModel.filterModel
 	local filters = view.game.configModel.configs.filters.notechart
@@ -45,7 +57,7 @@ function ViewConfig:filters(view)
 
 	local heightStart = just.height
 	local uiW = w / 2.5
-	local uiH = cfg.size
+	local uiH = 50
 
 	self.container:startDraw(w, h)
 	imgui.setSize(w, h, uiW, uiH)
@@ -97,7 +109,7 @@ function ViewConfig:filters(view)
 		love.graphics.setColor(colors.ui.text)
 
 		just.row(true)
-		local name = Theme.formatFilter(group.name)
+		local name = formatFilter(group.name)
 		gyatt.text(name, 170)
 
 		love.graphics.setFont(font.checkboxes)

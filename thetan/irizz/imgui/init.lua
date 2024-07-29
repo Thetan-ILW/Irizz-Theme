@@ -5,11 +5,12 @@ local autoload = require("autoload")
 local math_util = require("math_util")
 local decibel = require("decibel")
 
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
-local cfg = Theme.imgui
 
 local imgui = autoload("thetan.irizz.imgui")
+
+local next_item_offset = 15
+local element_size = 50
 
 local w, h, _w, _h
 
@@ -95,7 +96,7 @@ end
 ---@return number?
 function imgui.button(id, text)
 	local width = love.graphics.getFont():getWidth(text) * gyatt.getTextScale()
-	return imgui.TextButton(id, text, width + cfg.size, _h)
+	return imgui.TextButton(id, text, width + element_size, _h)
 end
 
 ---@param id any
@@ -133,7 +134,7 @@ function imgui.slider1(id, v, format, a, b, c, label)
 	just.sameline()
 	love.graphics.setColor(colors.ui.text)
 	imgui.label(id .. "label", label)
-	just.next(0, cfg.nextItemOffset)
+	just.next(0, next_item_offset)
 
 	local newV = math_util.map(_v, 0, 1, a, b)
 	newV = math_util.round(newV, c)
@@ -188,7 +189,7 @@ function imgui.checkbox(id, v, label)
 	just.sameline()
 	love.graphics.setColor(colors.ui.text)
 	imgui.label(id, label)
-	just.next(0, cfg.nextItemOffset)
+	just.next(0, next_item_offset)
 	if isNumber then
 		v = v and 1 or 0
 	end
@@ -213,7 +214,7 @@ function imgui.textcheckbox(id, v, text)
 		v = v and 1 or 0
 	end
 
-	just.next(0, cfg.nextItemOffset)
+	just.next(0, next_item_offset)
 	return v
 end
 
@@ -285,7 +286,7 @@ function imgui.intButtons(id, v, s, label)
 			v = v + (button == 1 and 1 or -1) * d
 		end
 	end
-	just.next(Theme.imgui.size / 10)
+	just.next(element_size / 10)
 	imgui.label(id .. "label", label)
 	just.row()
 	return math.floor(v)

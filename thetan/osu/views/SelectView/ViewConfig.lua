@@ -13,11 +13,12 @@ local Format = require("sphere.views.Format")
 
 local TextInput = require("thetan.irizz.imgui.TextInput")
 
+local getModifierString = require("thetan.skibidi.modifier_string")
+
 local NoteChartSetListView = require("thetan.osu.views.SelectView.NoteChartSetListView")
 local CollectionListView = require("thetan.osu.views.SelectView.CollectionListView")
 local ScoreListView = require("thetan.osu.views.SelectView.ScoreListView")
 
-local Theme = require("thetan.irizz.views.Theme")
 ---@type table<string, string>
 local text
 ---@type table<string, love.Font>
@@ -773,7 +774,7 @@ end
 
 function ViewConfig:updateOtherInfo(view)
 	local modifiers = view.game.playContext.modifiers
-	mods_str = Theme:getModifierString(modifiers)
+	mods_str = getModifierString(modifiers)
 
 	local rate = view.game.playContext.rate
 	local rate_type = view.game.configModel.configs.settings.gameplay.rate_type

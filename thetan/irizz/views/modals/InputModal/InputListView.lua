@@ -5,7 +5,6 @@ local gyatt = require("thetan.gyatt")
 local Format = require("sphere.views.Format")
 local ListView = require("thetan.irizz.views.ListView")
 
-local Theme = require("thetan.irizz.views.Theme")
 local colors = require("thetan.irizz.ui.colors")
 
 local InputListView = ListView + {}
