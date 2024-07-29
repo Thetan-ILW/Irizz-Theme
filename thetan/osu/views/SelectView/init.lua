@@ -210,11 +210,7 @@ function OsuSelectView:receive(event)
 	end
 end
 
-function OsuSelectView:quit()
-	if self.mainMenuView:isActive() then
-		self.mainMenuView:toggle()
-	end
-end
+function OsuSelectView:quit() end
 
 local gfx = love.graphics
 

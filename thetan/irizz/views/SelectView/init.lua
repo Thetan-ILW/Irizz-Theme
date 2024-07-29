@@ -12,7 +12,6 @@ local LayersView = require("thetan.irizz.views.LayersView")
 local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.irizz.views.SelectView.SongSelect")
 local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections")
-local MainMenuView = require("thetan.irizz.views.MainMenuView")
 local UiLockViewConfig = require("thetan.irizz.views.UiLockView")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
@@ -61,8 +60,7 @@ function SelectView:load()
 	self.inputMap = InputMap(self, self.actionModel)
 
 	self:updateFilterLines()
-	self.mainMenuView = MainMenuView(self)
-	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
+	self.layersView = LayersView(self.game, "select", "preview")
 
 	if irizz.showFreshInstallModal then
 		local newSongs = self.game.cacheModel.newSongs
@@ -78,8 +76,6 @@ end
 
 function SelectView:canUpdate()
 	local canUpdate = not self.modal
-	canUpdate = canUpdate and (not self.mainMenuView:isActive())
-
 	return canUpdate
 end
 
@@ -331,7 +327,6 @@ function SelectView:draw()
 	end
 
 	self.layersView:draw(panelsStencil, UI)
-	self.mainMenuView:draw("select", self)
 	self:drawModal()
 	self.uiLockViewConfig:draw()
 	self.notificationView:draw()

@@ -33,9 +33,8 @@ local modalActive = false
 
 local gfx = love.graphics
 
-function LayersView:new(game, mainMenuView, screenName, sourceName)
+function LayersView:new(game, screenName, sourceName)
 	self.game = game
-	self.mainMenuView = mainMenuView
 
 	screen = screenName
 	audioSourceName = sourceName
@@ -230,15 +229,11 @@ function LayersView:update()
 		frequencies = audio:getData()
 	end
 
-	modalActive = self.game.gameView.modal ~= nil
+	modalActive = self.game.gameView.view.modal ~= nil
 	uiAlpha = 1
 
-	if self.mainMenuView then
-		uiAlpha = uiAlpha - self.mainMenuView:getAlpha()
-	end
-
 	if modalActive then
-		uiAlpha = uiAlpha - self.game.gameView.modal.alpha
+		uiAlpha = uiAlpha - self.game.gameView.view.modal.alpha
 	end
 end
 
