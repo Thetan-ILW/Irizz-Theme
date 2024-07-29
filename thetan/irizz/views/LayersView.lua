@@ -2,16 +2,10 @@ local class = require("class")
 local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 
-local get_assets = require("thetan.irizz.assets_loader")
-
 local ui = require("thetan.irizz.ui")
 local colors = require("thetan.irizz.ui.colors")
----@type table<string, string>
-local text
----@type table<string, love.Font>
-local font
 
-local Layout = require("thetan.irizz.views.LayersLayout")
+local Layout = require("thetan.irizz.views.IrizzLayout")
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
 local BackgroundView = require("sphere.views.BackgroundView")
 
@@ -36,17 +30,12 @@ local panelBlur = 0
 local showSpectrum = false
 local applyShaders = false
 local modalActive = false
-local uiLock = false
 
 local gfx = love.graphics
 
 function LayersView:new(game, mainMenuView, screenName, sourceName)
 	self.game = game
 	self.mainMenuView = mainMenuView
-
-	local assets = get_assets(self.game)
-	text, font = assets.localization:get("layersView")
-	assert(text and font)
 
 	screen = screenName
 	audioSourceName = sourceName
@@ -210,38 +199,6 @@ function LayersView:drawUI(layer)
 	gfx.setBlendMode("alpha")
 end
 
-function LayersView:uiLock()
-	local cacheModel = self.game.cacheModel
-	local locationManager = self.game.cacheModel.locationManager
-	local selected_loc = locationManager.selected_loc
-	local path = selected_loc.path
-
-	local count = cacheModel.shared.chartfiles_count
-	local current = cacheModel.shared.chartfiles_current
-
-	local w, h = Layout:move("background")
-	gfx.setColor(0, 0, 0, 0.75)
-	gfx.rectangle("fill", 0, 0, w, h)
-
-	local w, h = Layout:move("uiLockTitle")
-	gfx.setColor(colors.ui.text)
-	gfx.setFont(font.uiLockTitle)
-	gfx_util.printFrame(text.processingCharts, 0, 0, w, h, "center", "center")
-
-	w, h = Layout:move("background")
-	gfx.setFont(font.uiLockStatus)
-	local label = ("%s: %s\n%s: %s/%s\n%s: %0.02f%%"):format(
-		text.path,
-		path,
-		text.chartsFound,
-		current,
-		count,
-		text.chartsCached,
-		current / count * 100
-	)
-	gyatt.frame(label, 0, 0, w, h, "center", "center")
-end
-
 function LayersView:update()
 	local configs = self.game.configModel.configs
 	local graphics = configs.settings.graphics
@@ -283,8 +240,6 @@ function LayersView:update()
 	if modalActive then
 		uiAlpha = uiAlpha - self.game.gameView.modal.alpha
 	end
-
-	uiLock = self.game.cacheModel.isProcessing
 end
 
 function LayersView:draw(panelsStencil, ui_layer)
@@ -292,11 +247,6 @@ function LayersView:draw(panelsStencil, ui_layer)
 	ui:setLines()
 
 	local background = self:drawBackground()
-
-	if uiLock then
-		self:uiLock()
-		return
-	end
 
 	if uiAlpha == 0 then
 		return

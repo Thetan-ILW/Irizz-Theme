@@ -383,7 +383,7 @@ l.textGroups = {
 		welcomeToNoesis = "Welcome to Noesis!",
 		welcomeToSoundsphere = "Welcome to soundsphere!",
 	},
-	layersView = {
+	uiLock = {
 		processingCharts = "Processing charts...",
 		path = "Path",
 		chartsFound = "Processed / Found",
@@ -646,9 +646,9 @@ l.fontGroups = {
 		buttons = { "ZenMaruGothic-Medium", 48 },
 	},
 
-	layersView = {
-		uiLockTitle = { "ZenMaruGothic-Black", 72 },
-		uiLockStatus = { "ZenMaruGothic-Medium", 36 },
+	uiLock = {
+		title = { "ZenMaruGothic-Black", 72 },
+		status = { "ZenMaruGothic-Medium", 36 },
 	},
 
 	freshInstallModal = {

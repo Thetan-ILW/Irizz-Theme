@@ -13,6 +13,7 @@ local SettingsViewConfig = require("thetan.irizz.views.SelectView.Settings")
 local SongSelectViewConfig = require("thetan.irizz.views.SelectView.SongSelect")
 local CollectionViewConfig = require("thetan.irizz.views.SelectView.Collections")
 local MainMenuView = require("thetan.irizz.views.MainMenuView")
+local UiLockViewConfig = require("thetan.irizz.views.UiLockView")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
@@ -36,6 +37,7 @@ local songSelectOffset = 0
 local start_sound
 
 local window_height = 1080
+local ui_lock = false
 
 function SelectView:load()
 	self.game.selectController:load(self)
@@ -54,6 +56,7 @@ function SelectView:load()
 	self.settingsViewConfig = SettingsViewConfig(self.game, self.assets)
 	self.songSelectViewConfig = SongSelectViewConfig(self.game, self.assets)
 	self.collectionsViewConfig = CollectionViewConfig(self.game, self.assets)
+	self.uiLockViewConfig = UiLockViewConfig(self.game, self.assets)
 
 	self.inputMap = InputMap(self, self.actionModel)
 
@@ -73,6 +76,13 @@ function SelectView:load()
 	self:resolutionUpdated()
 end
 
+function SelectView:canUpdate()
+	local canUpdate = not self.modal
+	canUpdate = canUpdate and (not self.mainMenuView:isActive())
+
+	return canUpdate
+end
+
 function SelectView:beginUnload()
 	self.game.selectController:beginUnload()
 end
@@ -86,7 +96,7 @@ end
 ---@param where number
 ---@param exact? boolean
 function SelectView:moveScreen(where, exact)
-	if self.modalActive then
+	if not self:canUpdate() then
 		return
 	end
 
@@ -124,16 +134,17 @@ end
 function SelectView:update(dt)
 	ScreenView.update(self, dt)
 
+	self.game.selectController:update()
+
+	ui_lock = self.game.cacheModel.isProcessing
 	self.assets:updateVolume(self.game.configModel)
 
-	self.game.selectController:update()
+	self.layersView:update()
+	self.chartPreviewView:update(dt)
 
 	if self.screenX == 1 then
 		self:updateSettings(dt)
 	end
-
-	self.layersView:update()
-	self.chartPreviewView:update(dt)
 
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
@@ -253,18 +264,19 @@ function SelectView:songSelectInputs()
 	self.inputMap:call("select")
 end
 
-function SelectView:canUpdate()
-	local canUpdate = not self.modal
-	canUpdate = canUpdate and (not self.mainMenuView:isActive())
-
-	return canUpdate
-end
-
 function SelectView:receive(event)
 	self.game.selectController:receive(event)
 	self.chartPreviewView:receive(event)
 
 	if event.name == "keypressed" then
+		if self.inputMap:call("music") then
+			return
+		end
+
+		if ui_lock then
+			return
+		end
+
 		if self.inputMap:call("view") then
 			return
 		end
@@ -321,6 +333,7 @@ function SelectView:draw()
 	self.layersView:draw(panelsStencil, UI)
 	self.mainMenuView:draw("select", self)
 	self:drawModal()
+	self.uiLockViewConfig:draw()
 	self.notificationView:draw()
 
 	gyatt.setTextScale(1)

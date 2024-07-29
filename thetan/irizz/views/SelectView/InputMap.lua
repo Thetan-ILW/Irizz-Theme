@@ -87,14 +87,17 @@ function SelectInputMap:createBindings(sv)
 		["moveScreenRight"] = function()
 			sv:moveScreen(1)
 		end,
-		["pauseMusic"] = function()
-			sv.game.previewModel:stop()
-		end,
 		["showFilters"] = function()
 			sv:openModal("thetan.irizz.views.modals.FiltersModal")
 		end,
 		["quit"] = function()
 			sv:sendQuitSignal()
+		end,
+	}
+
+	self.music = {
+		["pauseMusic"] = function()
+			sv.game.previewModel:stop()
 		end,
 		["increaseVolume"] = function()
 			increaseVolume(sv, 1)

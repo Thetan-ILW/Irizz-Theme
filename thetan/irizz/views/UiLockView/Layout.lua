@@ -20,7 +20,7 @@ function _Layout:draw()
 	self:pack("background", _x, _y, _w, _h)
 
 	local y1, h1 = gfx_util.layout(gy[2], gh[2], { 200, -1, 200 })
-	self:pack("uiLockTitle", gx[2], y1[1], gw[2], h1[1])
+	self:pack("title", gx[2], y1[1], gw[2], h1[1])
 end
 
 return _Layout
