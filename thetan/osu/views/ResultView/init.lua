@@ -5,9 +5,10 @@ local gyatt = require("thetan.gyatt")
 
 local get_assets = require("thetan.osu.views.assets_loader")
 
-local Layout = require("thetan.irizz.views.ResultView.Layout")
+local OsuLayout = require("thetan.osu.views.OsuLayout")
 local ViewConfig = require("thetan.osu.views.ResultView.ViewConfig")
-local LayersView = require("thetan.irizz.views.LayersView")
+local GaussianBlurView = require("sphere.views.GaussianBlurView")
+local BackgroundView = require("sphere.views.BackgroundView")
 
 local InputMap = require("thetan.osu.views.ResultView.InputMap")
 
@@ -20,6 +21,8 @@ ResultView.currentJudgeName = ""
 ResultView.currentJudge = 0
 
 local window_height = 0
+local dim = 0
+local background_blur = 0
 
 local loading = false
 local canDraw = false
@@ -34,12 +37,9 @@ ResultView.load = thread.coro(function(self)
 
 	self.inputMap = InputMap(self, self.actionModel)
 
-	local audio_source = "preview"
-
 	local is_after_gameplay = self.game.gameView:getViewName(self.prevView) == "gameplay"
 
 	if is_after_gameplay then
-		audio_source = "gameplay"
 		local audio_engine = self.game.rhythmModel.audioEngine
 		local music_volume = (audio_engine.volume.master * audio_engine.volume.music) * 0.3
 		local effects_volume = (audio_engine.volume.master * audio_engine.volume.effects) * 0.3
@@ -47,8 +47,6 @@ ResultView.load = thread.coro(function(self)
 		audio_engine.backgroundContainer:setVolume(music_volume)
 		audio_engine.foregroundContainer:setVolume(effects_volume)
 	end
-
-	self.layersView = LayersView(self.game, nil, "result", audio_source)
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)
@@ -89,8 +87,14 @@ function ResultView:update()
 		return
 	end
 
+	local configs = self.game.configModel.configs
+	local graphics = configs.settings.graphics
+	local irizz = configs.irizz
+
+	dim = graphics.dim.result
+	background_blur = graphics.blur.result
+
 	self.assets:updateVolume(self.game.configModel)
-	self.layersView:update()
 	self.game.previewModel:update()
 end
 
@@ -103,26 +107,20 @@ function ResultView:draw()
 		return
 	end
 
-	Layout:draw()
-
-	gyatt.setTextScale(768 / window_height)
-
 	if not canDraw then
 		return
 	end
 
-	local function panels()
-		self.viewConfig.panels()
-	end
+	OsuLayout:draw()
+	local w, h = OsuLayout:move("base")
 
-	local function UI()
-		if self.header then
-			self.header:draw(self)
-		end
-		self.viewConfig:draw(self)
-	end
+	gyatt.setTextScale(768 / window_height)
 
-	self.layersView:draw(panels, UI)
+	GaussianBlurView:draw(background_blur)
+	BackgroundView:draw(w, h, dim, 0.01)
+	GaussianBlurView:draw(background_blur)
+
+	self.viewConfig:draw(self)
 
 	gyatt.setTextScale(1)
 end

@@ -52,7 +52,7 @@ ResultView.load = thread.coro(function(self)
 	end
 
 	self.mainMenuView = MainMenuView(self)
-	self.layersView = LayersView(self.game, self.assets, self.mainMenuView, "result", audio_source)
+	self.layersView = LayersView(self.game, self.mainMenuView, "result", audio_source)
 
 	if self.prevView == self.game.selectView then
 		self.game.resultController:replayNoteChartAsync("result", self.game.selectModel.scoreItem)

@@ -2,6 +2,8 @@ local class = require("class")
 local gyatt = require("thetan.gyatt")
 local gfx_util = require("gfx_util")
 
+local get_assets = require("thetan.irizz.assets_loader")
+
 local ui = require("thetan.irizz.ui")
 local colors = require("thetan.irizz.ui.colors")
 ---@type table<string, string>
@@ -38,10 +40,11 @@ local uiLock = false
 
 local gfx = love.graphics
 
-function LayersView:new(game, assets, mainMenuView, screenName, sourceName)
+function LayersView:new(game, mainMenuView, screenName, sourceName)
 	self.game = game
 	self.mainMenuView = mainMenuView
 
+	local assets = get_assets(self.game)
 	text, font = assets.localization:get("layersView")
 	assert(text and font)
 

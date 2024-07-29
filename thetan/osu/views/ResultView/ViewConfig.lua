@@ -66,10 +66,6 @@ local modifierIconImages = {}
 ---@param _assets osu.OsuAssets
 ---@param after_gameplay boolean
 function OsuViewConfig:new(game, _assets, after_gameplay)
-	if not _assets then
-		error("\n\nSelect valid osu! skin in the `Settings > UI > osu! result screen` \n\n")
-	end
-
 	assets = _assets
 	img = assets.images
 	text, font = assets.localization:get("result")
@@ -478,6 +474,10 @@ end
 
 function OsuViewConfig:grade()
 	local image = img["grade" .. grade]
+
+	if not image then
+		return
+	end
 
 	Layout:move("grade")
 	local iw, ih = image:getDimensions()

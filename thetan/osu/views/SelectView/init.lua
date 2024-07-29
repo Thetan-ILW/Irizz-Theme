@@ -4,9 +4,10 @@ local gyatt = require("thetan.gyatt")
 
 local get_assets = require("thetan.osu.views.assets_loader")
 
+local OsuLayout = require("thetan.osu.views.OsuLayout")
 local ViewConfig = require("thetan.osu.views.SelectView.ViewConfig")
-local MainMenuView = require("thetan.irizz.views.MainMenuView")
-local LayersView = require("thetan.irizz.views.LayersView")
+local GaussianBlurView = require("sphere.views.GaussianBlurView")
+local BackgroundView = require("sphere.views.BackgroundView")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
@@ -17,6 +18,8 @@ local InputMap = require("thetan.osu.views.SelectView.InputMap")
 local OsuSelectView = ScreenView + {}
 
 local window_height = 768
+local dim = 0
+local background_blur = 0
 
 function OsuSelectView:load()
 	self.game.selectController:load(self)
@@ -37,8 +40,7 @@ function OsuSelectView:load()
 		self.viewConfig = ViewConfig(self.game, self.assets)
 	end
 
-	self.mainMenuView = MainMenuView(self)
-	self.layersView = LayersView(self.game, self.mainMenuView, "select", "preview")
+	BackgroundView.game = self.game
 
 	self.game.selectModel.collectionLibrary:load(true)
 
@@ -70,13 +72,19 @@ end
 function OsuSelectView:update(dt)
 	ScreenView.update(self, dt)
 
+	local configs = self.game.configModel.configs
+	local graphics = configs.settings.graphics
+	local irizz = configs.irizz
+
+	dim = graphics.dim.select
+	background_blur = graphics.blur.select
+
 	self.assets:updateVolume(self.game.configModel)
 
 	self.viewConfig:setFocus(self.modal == nil)
 
 	self.game.selectController:update()
 
-	self.layersView:update()
 	self.chartPreviewView:update(dt)
 end
 
@@ -231,16 +239,16 @@ function OsuSelectView:resolutionUpdated()
 end
 
 function OsuSelectView:draw()
+	OsuLayout:draw()
+	local w, h = OsuLayout:move("base")
+
 	gyatt.setTextScale(768 / window_height)
 
-	local function panelsStencil() end
-	local function UI()
-		self.viewConfig:draw(self)
-	end
+	GaussianBlurView:draw(background_blur)
+	BackgroundView:draw(w, h, dim, 0.01)
+	GaussianBlurView:draw(background_blur)
 
-	self.layersView:draw(panelsStencil, UI)
-
-	self.mainMenuView:draw("select", self)
+	self.viewConfig:draw(self)
 
 	self:drawModal()
 	self.notificationView:draw()

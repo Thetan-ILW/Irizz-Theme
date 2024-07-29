@@ -161,7 +161,7 @@ function OsuAssets:new(skin_path, localization_file)
 		judgeBad = self:loadImageOrDefault(skin_path, "mania-hit50"),
 		judgeMiss = self:loadImageOrDefault(skin_path, "mania-hit0"),
 
-		gradeX = self:loadImageOrDefault(skin_path, "ranking-X"),
+		gradeSS = self:loadImageOrDefault(skin_path, "ranking-X"),
 		gradeS = self:loadImageOrDefault(skin_path, "ranking-S"),
 		gradeA = self:loadImageOrDefault(skin_path, "ranking-A"),
 		gradeB = self:loadImageOrDefault(skin_path, "ranking-B"),
