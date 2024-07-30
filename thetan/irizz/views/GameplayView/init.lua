@@ -44,7 +44,7 @@ function GameplayView:load()
 	local chartview = self.game.selectModel.chartview
 	local length = time_util.format((chartview.duration or 0) / self.game.playContext.rate)
 	local values = { chartview.artist, chartview.title, chartview.name, length }
-	self.game.gameView.showMessage("chartStarted", values, { show_time = 2, small_text = true })
+	self.notificationView:show("chartStarted", values, { show_time = 2, small_text = true })
 end
 
 function GameplayView:unload()
@@ -169,18 +169,18 @@ function GameplayView:keypressed()
 		gameplayController:skipIntro()
 	elseif kp(input.offset.decrease) then
 		local new_offset = gameplayController:increaseLocalOffset(-0.001)
-		self.game.gameView.showMessage("offsetChanged", new_offset * 1000)
+		self.notificationView:show("offsetChanged", new_offset * 1000)
 	elseif kp(input.offset.increase) then
 		local new_offset = gameplayController:increaseLocalOffset(0.001)
-		self.game.gameView.showMessage("offsetChanged", new_offset * 1000)
+		self.notificationView:show("offsetChanged", new_offset * 1000)
 	elseif kp(input.offset.reset) then
 		gameplayController:resetLocalOffset()
 	elseif kp(input.playSpeed.decrease) then
 		local new_speed = gameplayController:increasePlaySpeed(-1)
-		self.game.gameView.showMessage("scrollSpeedChanged", new_speed)
+		self.notificationView:show("scrollSpeedChanged", new_speed)
 	elseif kp(input.playSpeed.increase) then
 		local new_speed = gameplayController:increasePlaySpeed(1)
-		self.game.gameView.showMessage("scrollSpeedChanged", new_speed)
+		self.notificationView:show("scrollSpeedChanged", new_speed)
 	end
 
 	local shift = love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")

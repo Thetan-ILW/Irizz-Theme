@@ -9,10 +9,10 @@ local InputMap = require("thetan.irizz.views.GameViewInputMap")
 
 local get_irizz_assets = require("thetan.irizz.assets_loader")
 
----@class sphere.GameView
----@operator call: sphere.GameView
----@field view irizz.ScreenView?
----@field actionModel irizz.ActionModel
+---@class skidibi.GameView
+---@operator call: skidibi.GameView
+---@field view skibidi.ScreenView?
+---@field actionModel skibidi.ActionModel
 ---@field notificationView irizz.NotificationView
 ---@field inputMap gyatt.InputMap
 local GameView = class()
@@ -44,7 +44,7 @@ function GameView:getViewName()
 	return self.viewName
 end
 
----@param view irizz.ScreenView
+---@param view skibidi.ScreenView
 function GameView:_setView(view)
 	if self.view then
 		self.view:unload()
@@ -68,7 +68,7 @@ function GameView:_setView(view)
 	self.viewName = viewNames[view]
 end
 
----@param view irizz.ScreenView
+---@param view skibidi.ScreenView
 function GameView:setView(view)
 	---@type table
 	local config = self.game.configModel.configs.irizz
@@ -176,10 +176,6 @@ end
 function GameView:setContextMenu(f, width)
 	self.contextMenu = f
 	self.contextMenuWidth = width
-end
-
-function GameView.showMessage(...)
-	NotificationView:show(...)
 end
 
 return GameView

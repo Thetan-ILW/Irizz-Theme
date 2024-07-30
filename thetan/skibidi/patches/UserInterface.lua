@@ -4,7 +4,7 @@ local BackgroundModel = require("sphere.ui.BackgroundModel")
 local PreviewModel = require("sphere.ui.PreviewModel")
 local ChartPreviewModel = require("sphere.ui.ChartPreviewModel")
 
-local GameView = require("thetan.irizz.views.GameView")
+local GameView = require("thetan.skibidi.views.GameView")
 local SelectView = require("thetan.irizz.views.SelectView")
 local OsuSelectView = require("thetan.osu.views.SelectView")
 local GameplayView = require("thetan.irizz.views.GameplayView")
