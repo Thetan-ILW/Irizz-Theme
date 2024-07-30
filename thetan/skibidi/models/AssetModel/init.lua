@@ -74,6 +74,8 @@ function AssetModel:getOsuSkins()
 		end
 	end
 
+	table.insert(osu_skin_names, "No skin")
+
 	return osu_skin_names
 end
 

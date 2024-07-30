@@ -61,7 +61,7 @@ function msd_util.simplifySsr(pattern)
 	elseif pattern == "handstream" then
 		return "HS"
 	elseif pattern == "stamina" then
-		return "STAM"
+		return "STMN"
 	elseif pattern == "jackspeed" then
 		return "JACK"
 	elseif pattern == "chordjack" then
