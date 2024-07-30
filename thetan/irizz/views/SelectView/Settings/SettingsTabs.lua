@@ -715,21 +715,10 @@ function SettingsTab:UI(view)
 	)
 
 	imgui.separator()
-	gyatt.text(text.collections)
-	just.next(0, textSeparation)
-	local changed = false
-	ss.locations_in_collections, changed =
-		imgui.checkbox("s.locations_in_collections", ss.locations_in_collections, text.showLocations)
-
-	if changed then
-		view.game.selectModel.collectionLibrary:load(ss.locations_in_collections)
-	end
-
-	imgui.separator()
 	gyatt.text(text.uiTab)
 	just.next(0, textSeparation)
 
-	changed = false
+	local changed = false
 	irizz.vimMotions, changed = imgui.checkbox("irizz.vimMotions", irizz.vimMotions, text.vimMotions)
 
 	if changed then
