@@ -462,7 +462,7 @@ function SettingsTab:Audio(view)
 	end
 
 	if v.master ~= oldMaster or irizz.uiVolume ~= oldUi then
-		view.assets:updateVolume(view.game.configModel)
+		self.assets:updateVolume(view.game.configModel)
 	end
 
 	local mode = a.mode
