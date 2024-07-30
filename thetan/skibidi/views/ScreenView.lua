@@ -1,4 +1,5 @@
 local class = require("class")
+local gyatt = require("thetan.gyatt")
 
 local delay = require("delay")
 
@@ -34,6 +35,9 @@ function ScreenView:setModal(modal)
 		self.modal = modal
 		self.modal.mainView = self
 		self.modal.alpha = 0
+
+		gyatt.focus()
+
 		self.modal:show()
 		return
 	end

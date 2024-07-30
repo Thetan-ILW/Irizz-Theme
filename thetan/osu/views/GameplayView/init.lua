@@ -21,6 +21,8 @@ function GameplayView:new(game)
 end
 
 function GameplayView:load()
+	self.actionModel.disable()
+
 	self.game.rhythmModel.observable:add(self.sequenceView)
 	self.game.gameplayController:load()
 

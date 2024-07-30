@@ -824,7 +824,7 @@ function ViewConfig:search(view)
 
 	local vim_motions = action_model.isVimMode()
 
-	if not vim_motions or insert_mode then
+	if (not vim_motions or insert_mode) and has_focus then
 		gyatt.focus("SearchField")
 	end
 

@@ -38,6 +38,7 @@ local window_height = 1080
 local ui_lock = false
 
 function SelectView:load()
+	self.actionModel.enable()
 	self.game.selectController:load(self)
 
 	self.chartPreviewView = ChartPreviewView(self.game)

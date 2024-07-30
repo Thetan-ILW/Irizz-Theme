@@ -19,6 +19,7 @@ return function(id, w, h, preview)
 		width = w
 
 		local changed, active, hovered = just.button(id, just.is_over(w, h))
+
 		if just.focused_id ~= id and changed then
 			just.focus(id)
 			open_frame_id = id
