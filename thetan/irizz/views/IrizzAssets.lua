@@ -48,6 +48,23 @@ local function loadImageOrEmpty(path)
 	return Assets.loadImage(path) or Assets.emptyImage()
 end
 
+function loadCustomAudioOrDefault(filepath)
+	local sound = Assets.loadAudio("userdata/" .. filepath)
+
+	if sound then
+		return sound
+	end
+
+	sound = Assets.loadAudio("irizz/" .. filepath, true)
+
+	if sound then
+		return sound
+	end
+
+	table.insert(Assets.errors, ("Audio not found %s"):format(filepath))
+	return self.emptyAudio()
+end
+
 ---@param localization_filepath string
 function IrizzAssets:new(localization_filepath)
 	local userdata = "userdata/"
@@ -74,21 +91,21 @@ function IrizzAssets:new(localization_filepath)
 	}
 
 	self.sounds = {
-		scrollLargeList = IrizzAssets:loadAudioOrDefault("", "ui_sounds/scroll_large_list"),
-		scrollSmallList = IrizzAssets:loadAudioOrDefault("", "ui_sounds/scroll_small_list"),
-		checkboxClick = IrizzAssets:loadAudioOrDefault("", "ui_sounds/checkbox_click"),
-		buttonClick = IrizzAssets:loadAudioOrDefault("", "ui_sounds/button_click"),
-		sliderMoved = IrizzAssets:loadAudioOrDefault("", "ui_sounds/slider_moved"),
-		tabButtonClick = IrizzAssets:loadAudioOrDefault("", "ui_sounds/tab_button_click"),
-		songSelectScreenChanged = IrizzAssets:loadAudioOrDefault("", "ui_sounds/song_select_screen_changed"),
-		pauseAmbient = IrizzAssets:loadAudioOrDefault("", "ui_sounds/pause"),
+		scrollLargeList = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/scroll_large_list"),
+		scrollSmallList = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/scroll_small_list"),
+		checkboxClick = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/checkbox_click"),
+		buttonClick = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/button_click"),
+		sliderMoved = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/slider_moved"),
+		tabButtonClick = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/tab_button_click"),
+		songSelectScreenChanged = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/song_select_screen_changed"),
+		pauseAmbient = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/pause"),
 	}
 
 	local sounds = getItems(start_sounds, true)
 
 	for _, name in ipairs(sounds) do
 		table.insert(self.startSoundNames, name)
-		self.startSounds[name] = IrizzAssets:loadAudioOrDefault("", start_sounds .. name)
+		self.startSounds[name] = IrizzAssets:loadAudioOrDefault(userdata, start_sounds .. name)
 	end
 
 	self.colorThemes = getItems("color_themes/", true)
