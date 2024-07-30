@@ -17,13 +17,16 @@ local get_irizz_assets = require("thetan.irizz.assets_loader")
 ---@field inputMap gyatt.InputMap
 local GameView = class()
 
-local last_resize_time = math.huge
+local last_height_check = -math.huge
+local prev_window_res = 0
 
 ---@param game sphere.GameController
 function GameView:new(game)
 	self.game = game
 	self.screenTransition = ScreenTransition()
 	self.frameTimeView = FrameTimeView()
+
+	prev_window_res = love.graphics.getWidth() * love.graphics.getHeight()
 end
 
 function GameView:load()
@@ -95,9 +98,16 @@ function GameView:update(dt)
 		return
 	end
 
-	if love.timer.getTime() > last_resize_time + 0.15 then
-		self.view:resolutionUpdated()
-		last_resize_time = math.huge
+	local time = love.timer.getTime()
+	local resolution = love.graphics.getWidth() * love.graphics.getHeight()
+
+	if time > last_height_check + 0.5 then
+		if prev_window_res ~= resolution then
+			self.view:resolutionUpdated()
+			prev_window_res = resolution
+		end
+
+		last_height_check = time
 	end
 
 	self.view:update(dt)
@@ -156,10 +166,6 @@ function GameView:receive(event)
 
 	if event.name == "focus" then
 		self.actionModel.resetInputs()
-	end
-
-	if event.name == "resize" then
-		last_resize_time = love.timer.getTime()
 	end
 
 	self.view:receive(event)
