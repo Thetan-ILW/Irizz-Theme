@@ -543,6 +543,7 @@ function SettingsTab:Video(view)
 	local settings = configs.settings
 	local g = settings.graphics
 	local gp = settings.gameplay
+	local m = settings.miscellaneous
 
 	gyatt.text(text.videoTab)
 	just.next(0, textSeparation)
@@ -564,6 +565,14 @@ function SettingsTab:Video(view)
 	flags.msaa = imgui.combo("flags.msaa", flags.msaa, { 0, 1, 2, 4, 8, 16 }, nil, "MSAA")
 	flags.fullscreen = imgui.checkbox("flags.fullscreen", flags.fullscreen, text.fullscreen)
 	g.vsyncOnSelect = imgui.checkbox("vsyncOnSelect", g.vsyncOnSelect, text.vsyncOnSelect)
+
+	local profiler = view.game.gameView.frameTimeView
+	local show_profiler = profiler.visible and profiler.profiler
+	m.showFPS = imgui.checkbox("showFPS", m.showFPS, text.showFps)
+	show_profiler = imgui.checkbox("showProfiler", show_profiler, text.showProfiler)
+	profiler.visible = show_profiler
+	profiler.profiler = show_profiler
+
 	g.dwmflush = imgui.checkbox("dwmflush", g.dwmflush, text.dwmFlush)
 
 	imgui.separator()
