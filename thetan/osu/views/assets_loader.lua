@@ -15,7 +15,6 @@ return function(game)
 
 	---@type skibidi.Assets?
 	local assets = asset_model:get("osu")
-	local localization_filepath = asset_model:getLocalizationFileName("osu", language)
 
 	if not assets or (assets and assets.skinPath ~= skin_path) then
 		local default_localization = asset_model:getLocalizationFileName("osu", "English")
@@ -25,7 +24,6 @@ return function(game)
 
 	---@cast assets osu.OsuAssets
 	assets = assets
-	assets:loadLocalization(localization_filepath)
 	assets:updateVolume(game.configModel)
 
 	return assets

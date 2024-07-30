@@ -48,10 +48,13 @@ local function loadImageOrEmpty(path)
 	return Assets.loadImage(path) or Assets.emptyImage()
 end
 
-function IrizzAssets:new()
+---@param localization_filepath string
+function IrizzAssets:new(localization_filepath)
 	local userdata = "userdata/"
 	local icons = "irizz/icons/"
 	local start_sounds = "ui_sounds/start/"
+
+	self:loadLocalization(localization_filepath)
 
 	self.images = {
 		gameIcon = IrizzAssets:loadImageOrDefault(userdata, "game_icon"),

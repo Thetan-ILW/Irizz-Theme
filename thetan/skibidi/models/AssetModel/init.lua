@@ -47,6 +47,11 @@ function AssetModel:loadLocalizationLists()
 end
 
 ---@param theme string
+function AssetModel:getLocalizationNames(theme)
+	return self.localizations[theme]
+end
+
+---@param theme string
 ---@param name string
 ---@return string
 function AssetModel:getLocalizationFileName(theme, name)

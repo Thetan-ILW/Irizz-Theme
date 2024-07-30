@@ -20,6 +20,8 @@ local text
 local start_sound_names
 ---@type string[]
 local osu_skins
+---@type { name: string, filepath: string }[]
+local localizations
 ---@type string[]
 local color_themes
 
@@ -36,6 +38,7 @@ function SettingsTab:new(game, assets)
 	text = assets.localization.textGroups.settings
 	start_sound_names = assets.startSoundNames
 	osu_skins = game.assetModel:getOsuSkins()
+	localizations = game.assetModel:getLocalizationNames("irizz")
 	color_themes = assets.colorThemes
 
 	self.assets = assets
@@ -669,17 +672,14 @@ function SettingsTab:UI(view)
 
 	ss.diff_column = imgui.combo("diff_column", ss.diff_column, diff_columns, formatDiffColumnName, text.difficulty)
 
-	--[[
 	local currentLanguage = irizz.language
-	local newLanguage =
-		imgui.combo("irizz.language", irizz.language, Theme.localizations, formatLocalization, text.language)
+	local newLanguage = imgui.combo("irizz.language", irizz.language, localizations, formatLocalization, text.language)
 
 	if currentLanguage ~= newLanguage then
 		irizz.language = newLanguage.name
-		assets:loadLocalization(newLanguage.fileName, Theme)
+		self.assets:loadLocalization(newLanguage.filepath)
 		view.game.selectView:changeScreen("selectView")
 	end
-	]]
 
 	local rateType = imgui.combo("rate_type", gp.rate_type, timeRateModel.types, formatRateType, text.rateType)
 	if rateType ~= gp.rate_type then
