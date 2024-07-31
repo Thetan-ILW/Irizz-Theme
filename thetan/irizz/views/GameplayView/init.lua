@@ -4,6 +4,11 @@ local Foreground = require("sphere.views.GameplayView.Foreground")
 local PauseScreen = require("thetan.irizz.views.GameplayView.PauseScreen")
 local ScreenView = require("thetan.skibidi.views.ScreenView")
 local SequenceView = require("sphere.views.SequenceView")
+
+local getIrizzAssets = require("thetan.irizz.assets_loader")
+local OsuPauseScreen = require("thetan.irizz.views.GameplayView.OsuPauseScreen")
+local OsuPauseAssets = require("thetan.osu.OsuPauseAssets")
+
 local just = require("just")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
@@ -34,12 +39,14 @@ function GameplayView:load()
 	sequence_view:setSequenceConfig(note_skin.playField)
 	sequence_view:load()
 
-	local assets = self.assetModel:get("irizz")
-	assert(assets, "Irizz assets not loaded")
-	---@cast assets irizz.IrizzAssets
-
-	self.assets = assets
-	self.pauseScreen = PauseScreen(assets)
+	if note_skin.osu or note_skin.pauseScreen then
+		local root = note_skin.path:match("(.+/)") or ""
+		self.assets = OsuPauseAssets(root)
+		self.pauseScreen = OsuPauseScreen(self.assets)
+	else
+		self.assets = getIrizzAssets(self.game)
+		self.pauseScreen = PauseScreen(self.assets)
+	end
 
 	local chartview = self.game.selectModel.chartview
 	local length = time_util.format((chartview.duration or 0) / self.game.playContext.rate)

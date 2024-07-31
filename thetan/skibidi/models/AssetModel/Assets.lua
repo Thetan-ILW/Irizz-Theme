@@ -170,7 +170,7 @@ function Assets:loadImageOrDefault(directory, name)
 		return image
 	end
 
-	table.insert(Assets.errors, ("Image not found %s"):format(name))
+	table.insert(self.errors, ("Image not found %s"):format(name))
 	return self.emptyImage()
 end
 
@@ -190,7 +190,7 @@ function Assets:loadAudioOrDefault(directory, name)
 		return sound
 	end
 
-	table.insert(Assets.errors, ("Audio not found %s"):format(name))
+	table.insert(self.errors, ("Audio not found %s"):format(name))
 	return self.emptyAudio()
 end
 

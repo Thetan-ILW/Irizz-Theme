@@ -7,6 +7,7 @@ local table_util = require("table_util")
 local Container = require("thetan.gyatt.Container")
 local audio = require("audio")
 local version = require("version")
+local utf8validate = require("utf8validate")
 
 local ui = require("thetan.irizz.ui")
 
@@ -97,17 +98,20 @@ local function formatTempoFactor(v)
 end
 
 local function formatNoteSkin(v)
-	if not v.name then
+	---@type string
+	local name = v.name
+
+	if not name then
 		return "??"
 	end
 
-	local len = v.name:len()
+	local len = name:len()
 
 	if len > 20 then
-		return v.name:sub(1, 20) .. "..."
+		return utf8validate(name:sub(1, 20), ".") .. ".."
 	end
 
-	return v.name
+	return name
 end
 
 function SettingsTab:Gameplay(view)
