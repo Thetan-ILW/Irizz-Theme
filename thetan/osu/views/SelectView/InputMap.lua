@@ -1,10 +1,26 @@
 local InputMap = require("thetan.gyatt.InputMap")
 
----@class irizz.OsuSelectInputMap
----@operator call: osu.OsuSelectView
+local math_util = require("math_util")
+
+---@class osu.SelectInputMap
+---@operator call: osu.SelectInputMap
 local SelectInputMap = InputMap + {}
 
----@param sv osu.OsuSelectView
+---@param sv osu.SelectView
+---@param delta number
+local function increaseVolume(sv, direction)
+	local configs = sv.game.configModel.configs
+	local settings = configs.settings
+	local a = settings.audio
+	local v = a.volume
+
+	v.master = math_util.clamp(v.master + (direction * 0.05), 0, 1)
+
+	sv.assetModel:updateVolume()
+	sv.notificationView:show("volumeChanged", v.master * 100)
+end
+
+---@param sv osu.SelectView
 function SelectInputMap:createBindings(sv)
 	self.selectModals = {
 		["showMods"] = function()
@@ -77,6 +93,18 @@ function SelectInputMap:createBindings(sv)
 		end,
 		["quit"] = function()
 			sv:sendQuitSignal()
+		end,
+	}
+
+	self.music = {
+		["pauseMusic"] = function()
+			sv.game.previewModel:stop()
+		end,
+		["increaseVolume"] = function()
+			increaseVolume(sv, 1)
+		end,
+		["decreaseVolume"] = function()
+			increaseVolume(sv, -1)
 		end,
 	}
 end

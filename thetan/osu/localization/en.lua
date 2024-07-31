@@ -62,6 +62,12 @@ l.textGroups = {
 		mods = "Mods: %s",
 		guest = "Guest",
 	},
+	uiLock = {
+		processingCharts = "Processing charts...",
+		path = "Path",
+		chartsFound = "Processed / Found",
+		chartsCached = "Charts cached",
+	},
 }
 
 l.fontFiles = {
@@ -114,6 +120,10 @@ l.fontGroups = {
 		playInfo = { "Aller", 16 },
 		graphInfo = { "ZenMaruGothic-Regular", 18 },
 		pp = { "ZenMaruGothic-Medium", 36 },
+	},
+	uiLock = {
+		title = { "Aller-Bold", 48 },
+		status = { "Aller", 36 },
 	},
 }
 

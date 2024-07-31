@@ -8,18 +8,21 @@ local OsuLayout = require("thetan.osu.views.OsuLayout")
 local ViewConfig = require("thetan.osu.views.SelectView.ViewConfig")
 local GaussianBlurView = require("sphere.views.GaussianBlurView")
 local BackgroundView = require("sphere.views.BackgroundView")
+local UiLockView = require("thetan.osu.views.UiLockView")
 
 local ChartPreviewView = require("sphere.views.SelectView.ChartPreviewView")
 
 local InputMap = require("thetan.osu.views.SelectView.InputMap")
 
----@class osu.OsuSelectView: skibidi.ScreenView
----@operator call: osu.OsuSelectView
+---@class osu.SelectView: skibidi.ScreenView
+---@operator call: osu.SelectView
 local OsuSelectView = ScreenView + {}
 
 local window_height = 768
 local dim = 0
 local background_blur = 0
+
+local ui_lock = false
 
 function OsuSelectView:load()
 	self.game.selectController:load(self)
@@ -39,6 +42,8 @@ function OsuSelectView:load()
 	else
 		self.viewConfig = ViewConfig(self.game, self.assets)
 	end
+
+	self.uiLockViewConfig = UiLockView(self.game, self.assets)
 
 	BackgroundView.game = self.game
 
@@ -71,6 +76,8 @@ end
 ---@param dt number
 function OsuSelectView:update(dt)
 	ScreenView.update(self, dt)
+
+	ui_lock = self.game.cacheModel.isProcessing
 
 	local configs = self.game.configModel.configs
 	local graphics = configs.settings.graphics
@@ -194,6 +201,14 @@ function OsuSelectView:receive(event)
 	self.chartPreviewView:receive(event)
 
 	if event.name == "keypressed" then
+		if self.inputMap:call("music") then
+			return
+		end
+
+		if ui_lock then
+			return
+		end
+
 		if self.inputMap:call("view") then
 			return
 		end
@@ -243,6 +258,11 @@ function OsuSelectView:draw()
 	GaussianBlurView:draw(background_blur)
 	BackgroundView:draw(w, h, dim, 0.01)
 	GaussianBlurView:draw(background_blur)
+
+	if ui_lock then
+		self.uiLockViewConfig:draw()
+		return
+	end
 
 	self.viewConfig:draw(self)
 

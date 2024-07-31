@@ -145,6 +145,8 @@ function OsuAssets:new(skin_path, localization_file)
 		cursor = self:loadImageOrDefault(skin_path, "cursor"),
 		cursorTrail = self:loadImageOrDefault(skin_path, "cursortrail"),
 
+		uiLock = self:loadImageOrDefault(skin_path, "ui-lock"),
+
 		-- RESULT
 
 		title = self:loadImageOrDefault(skin_path, "ranking-title"),
