@@ -1,5 +1,5 @@
 local ListView = require("thetan.irizz.views.ListView")
-local just = require("just")
+local gyatt = require("thetan.gyatt")
 local ui = require("thetan.osu.ui")
 local math_util = require("math_util")
 
@@ -17,6 +17,7 @@ ScoreListView.modLines = {}
 ScoreListView.focus = false
 ---@type number[]
 ScoreListView.animations = {}
+ScoreListView.scoreUpdateTime = -math.huge
 
 ---@param game sphere.GameController
 ---@param assets osu.OsuAssets
@@ -117,8 +118,8 @@ function ScoreListView:mouseClick(w, h, i)
 		return
 	end
 
-	if just.is_over(w, h, 0, 0) then
-		if just.mousepressed(1) then
+	if gyatt.isOver(w, h, 0, 0) then
+		if gyatt.mousePressed(1) then
 			if self.selectedScoreIndex == i then
 				self.openResult = true
 				return
@@ -137,7 +138,7 @@ function ScoreListView:mouseClick(w, h, i)
 end
 
 function ScoreListView:input(w, h)
-	local delta = just.wheel_over(self, just.is_over(w, h))
+	local delta = gyatt.wheelOver(self, gyatt.isOver(w, h))
 	if delta then
 		self:scroll(-delta)
 		return
@@ -168,24 +169,34 @@ function ScoreListView:drawItem(i, w, h)
 	local source = self.game.configModel.configs.select.scoreSourceName
 	local mods = self.modLines[i]
 	local username = "You"
+	local avatar = img.avatar
 
 	if source == "online" then
 		username = item.user.name
+		avatar = nil
 	end
 
 	local a = self.animations[i] or 0
 
-	if just.is_over(w, h) and self.focus then
+	if gyatt.isOver(w, h) and self.focus then
 		self.animations[i] = math_util.clamp(a + 0.05, 0, 0.5)
 	end
 
 	local background_color = { 0 + a * 0.5, 0 + a * 0.5, 0 + a * 0.5, 0.3 + a * 0.2 }
 
+	gfx.translate((1 - gyatt.easeOutCubic(self.scoreUpdateTime, 0.3 + (i / 16))) * -w, 0)
+
 	gfx.setColor(background_color)
 	gfx.rectangle("fill", 0, 0, w, 50)
 
-	gfx.push()
 	gfx.setColor({ 1, 1, 1, 1 })
+	if avatar then
+		local ih = avatar:getHeight()
+		local s = (h - 6) / ih
+		gfx.draw(avatar, 2, 2, 0, s, s)
+	end
+
+	gfx.push()
 
 	local grade = img.smallGradeD
 
