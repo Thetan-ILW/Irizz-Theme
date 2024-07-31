@@ -782,8 +782,10 @@ function SettingsTab:UI(view)
 
 		if irizz.osuSongSelect then
 			select_view = require("thetan.osu.views.SelectView")
+			ss.collapse = false
 		else
 			select_view = require("thetan.irizz.views.SelectView")
+			ss.collapse = true
 		end
 
 		local current_view = view.game.selectView

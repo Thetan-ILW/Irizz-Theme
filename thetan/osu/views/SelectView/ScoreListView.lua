@@ -172,6 +172,10 @@ function ScoreListView:drawItem(i, w, h)
 	local avatar = img.avatar
 
 	if source == "online" then
+		if not item.user then
+			return
+		end
+
 		username = item.user.name
 		avatar = nil
 	end

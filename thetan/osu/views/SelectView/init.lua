@@ -47,8 +47,6 @@ function OsuSelectView:load()
 
 	BackgroundView.game = self.game
 
-	self.game.selectModel.collectionLibrary:load(true)
-
 	local configs = self.game.configModel.configs
 	local irizz = configs.irizz
 
