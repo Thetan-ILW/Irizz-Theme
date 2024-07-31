@@ -1,4 +1,4 @@
-local IrizzAssets = require("thetan.irizz.views.IrizzAssets")
+local IrizzAssets = require("thetan.irizz.IrizzAssets")
 
 ---@param game sphere.GameController
 return function(game)

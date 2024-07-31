@@ -1,4 +1,4 @@
-local OsuAssets = require("thetan.osu.views.SelectView.OsuAssets")
+local OsuAssets = require("thetan.osu.OsuAssets")
 
 ---@param game sphere.GameController
 return function(game)
