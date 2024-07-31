@@ -234,12 +234,6 @@ l.textGroups = {
 	availableModifiersList = {
 		noItems = "Your game is broken if you see this.",
 	},
-	inputsList = {
-		noItems = "No chart selected.\nCannot determine input mode.",
-	},
-	noteSkinsList = {
-		noItems = "No note skins.",
-	},
 	roomsListView = {
 		noItems = "No rooms.\nCreate one and invite your friends!",
 		playing = "Playing",
@@ -256,9 +250,11 @@ l.textGroups = {
 	noteSkinsModal = {
 		noteSkins = "Note skins",
 		noSettings = "No settings!",
+		noItems = "No note skins.",
 	},
 	inputModal = {
 		inputs = "Inputs",
+		noItems = "No chart selected.\nCannot determine input mode.",
 	},
 	mountsModal = {
 		mounts = "Mounts",

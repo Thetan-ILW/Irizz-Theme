@@ -21,8 +21,7 @@ function InputListView:new(game, assets)
 
 	self.game = game
 	self.text, self.font = assets.localization:get("inputModal")
-	assert(self.text)
-	assert(self.font)
+	assert(self.text and self.font)
 end
 
 function InputListView:reloadItems()
