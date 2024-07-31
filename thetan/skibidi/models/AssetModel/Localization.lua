@@ -12,13 +12,12 @@ local table_util = require("table_util")
 ---@field fontInstances table<string, table<string, love.Font>>
 local Localization = class()
 
-Localization.fontScale = 1
-Localization.fontGroups = {}
-Localization.textGroups = {}
-
 ---@param filepath string
 function Localization:new(filepath, native_view_height)
 	self.nativeViewHeight = native_view_height
+	self.fontScale = 1
+	self.fontGroups = {}
+	self.textGroups = {}
 	self:loadFile(filepath)
 end
 
