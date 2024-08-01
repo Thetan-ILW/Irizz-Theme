@@ -334,10 +334,12 @@ end
 
 function ActionModel.enable()
 	disabled = false
+	love.keyboard.setKeyRepeat(true)
 end
 
 function ActionModel.disable()
 	disabled = true
+	love.keyboard.setKeyRepeat(false)
 	ActionModel.resetInputs()
 end
 
