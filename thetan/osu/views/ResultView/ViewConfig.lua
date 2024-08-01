@@ -72,7 +72,7 @@ function OsuViewConfig:new(game, _assets, after_gameplay)
 	text, font = assets.localization:get("result")
 	assert(text and font)
 
-	local overlap = -assets.params.scoreOverlap
+	local overlap = assets.params.scoreOverlap
 
 	local score_font = assets.imageFonts.scoreFont
 
