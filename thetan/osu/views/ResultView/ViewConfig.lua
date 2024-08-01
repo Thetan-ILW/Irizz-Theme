@@ -404,10 +404,10 @@ function OsuViewConfig:title(view)
 	gyatt.frame(title, 9, 0, math.huge, h, "left", "top")
 
 	gfx.setFont(font.creator)
-	gyatt.frame(second_row, 9, 30, math.huge, h, "left", "top")
+	gyatt.frame(second_row, 9, 37, math.huge, h, "left", "top")
 
 	gfx.setFont(font.playInfo)
-	gyatt.frame(playInfo, 9, 50, math.huge, h, "left", "top")
+	gyatt.frame(playInfo, 9, 59, math.huge, h, "left", "top")
 end
 
 local function centerFrame(value, box)

@@ -82,8 +82,8 @@ l.fontFiles = {
 
 l.fontGroups = {
 	songSelect = {
-		chartName = { "Aller", 25, "ZenMaruGothic-Medium" },
-		chartedBy = { "Aller", 16, "ZenMaruGothic-Medium" },
+		chartName = { "Aller", 25, "ZenMaruGothic-Regular" },
+		chartedBy = { "Aller", 16, "ZenMaruGothic-Regular" },
 		infoTop = { "Aller-Bold", 16 },
 		infoCenter = { "Aller", 16 },
 		infoBottom = { "Aller", 12 },
@@ -115,9 +115,9 @@ l.fontGroups = {
 		buttons = { "Aller", 42 },
 	},
 	result = {
-		title = { "Aller", 25 },
-		creator = { "Aller", 16 },
-		playInfo = { "Aller", 16 },
+		title = { "Aller-Light", 30, "ZenMaruGothic-Regular" },
+		creator = { "Aller", 22 },
+		playInfo = { "Aller", 22 },
 		graphInfo = { "ZenMaruGothic-Regular", 18 },
 		pp = { "ZenMaruGothic-Medium", 36 },
 	},

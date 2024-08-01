@@ -54,7 +54,11 @@ ResultView.load = thread.coro(function(self)
 
 	self.assets = get_assets(self.game)
 
-	self.viewConfig = ViewConfig(self.game, self.assets, is_after_gameplay)
+	if self.assets.resultViewConfig then
+		self.viewConfig = self.assert.resultViewConfig(self.game, self.assets, is_after_gameplay)
+	else
+		self.viewConfig = ViewConfig(self.game, self.assets, is_after_gameplay)
+	end
 
 	local configs = self.game.configModel.configs
 	local select = configs.select
