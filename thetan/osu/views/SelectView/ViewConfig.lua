@@ -253,12 +253,11 @@ function ViewConfig:updateInfo(view)
 
 	if prev_chart_id ~= chartview.id then
 		update_time = current_time
+		self.scoreListView.scoreUpdateTime = love.timer.getTime()
 	end
 
 	---@type number
 	prev_chart_id = chartview.id
-
-	self.scoreListView.scoreUpdateTime = love.timer.getTime()
 end
 
 ---@param time number
