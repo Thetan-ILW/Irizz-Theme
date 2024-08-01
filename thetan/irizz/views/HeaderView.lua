@@ -131,7 +131,6 @@ function ViewConfig:resultButtons(view)
 	local r = h / 1.4
 
 	if circleImage("gameIcon", self.gameIcon, r) then
-		view.gameView.mainMenuView:toggle()
 	end
 
 	gfx.translate(r * 2 + 30, 0)
@@ -149,8 +148,7 @@ function ViewConfig:multiplayerButtons(view)
 	local w, h = Layout:move("buttons")
 	local r = h / 1.4
 
-	if circleImage(self.gameIcon, r, r * 2) then
-		view.gameView.mainMenuView:toggle()
+	if circleImage("gameIcon", self.gameIcon, r) then
 	end
 
 	local panelHeight = font.anyText:getHeight() + 8
