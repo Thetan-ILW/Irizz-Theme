@@ -75,6 +75,7 @@ ResultView.load = thread.coro(function(self)
 		self.currentJudgeName = k
 	end
 
+	self.actionModel.enable()
 	self.viewConfig:loadScore(self)
 
 	canDraw = true
@@ -117,6 +118,9 @@ function ResultView:draw()
 	end
 
 	self.layersView:draw(panels, UI)
+	self:drawModal()
+	self.notificationView:draw()
+	gyatt.setTextScale(1)
 end
 
 function ResultView:receive(event)

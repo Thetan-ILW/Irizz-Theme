@@ -74,6 +74,7 @@ ResultView.load = thread.coro(function(self)
 		self.currentJudgeName = k
 	end
 
+	self.actionModel.enable()
 	self.viewConfig:loadScore(self)
 
 	canDraw = true

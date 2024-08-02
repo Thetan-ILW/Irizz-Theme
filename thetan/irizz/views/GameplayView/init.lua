@@ -52,6 +52,7 @@ function GameplayView:load()
 	local length = time_util.format((chartview.duration or 0) / self.game.playContext.rate)
 	local values = { chartview.artist, chartview.title, chartview.name, length }
 	self.notificationView:show("chartStarted", values, { show_time = 2, small_text = true })
+	self.actionModel.disable()
 end
 
 function GameplayView:unload()
