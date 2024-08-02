@@ -201,6 +201,12 @@ function ViewConfig:scores(view)
 
 	if list.openResult then
 		list.openResult = false
+
+		local source = view.game.configModel.configs.select.scoreSourceName
+		if source == "online" then
+			return
+		end
+
 		view:result()
 	end
 end

@@ -25,6 +25,8 @@ local ScoreListView = require("thetan.irizz.views.ScoreListView")
 
 local ViewConfig = class()
 
+local isOnlineScore = false
+
 local difficulty = 0
 local patterns = ""
 local calculator = ""
@@ -81,6 +83,12 @@ local diff_columns_names = {
 }
 
 function ViewConfig:loadScore(view)
+	isOnlineScore = view.game.configModel.configs.select.scoreSourceName == "online"
+
+	if isOnlineScore then
+		return
+	end
+
 	local chartview = view.game.selectModel.chartview
 	local chartdiff = view.game.playContext.chartdiff
 	local scoreItem = view.game.selectModel.scoreItem
@@ -466,6 +474,10 @@ function ViewConfig:modifiers(view)
 end
 
 function ViewConfig:draw(view)
+	if isOnlineScore then
+		return
+	end
+
 	just.origin()
 
 	if customConfig then
@@ -473,6 +485,7 @@ function ViewConfig:draw(view)
 	end
 
 	title(view)
+
 	self:modifiers(view)
 	self:scoringStats(view)
 	hitGraph(view)

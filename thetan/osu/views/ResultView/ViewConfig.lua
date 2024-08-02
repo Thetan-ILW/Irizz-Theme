@@ -23,6 +23,8 @@ local text
 ---@type table<string, love.Font>
 local font
 
+local isOnlineScore = false
+
 local judge
 local judgeName
 local counterNames
@@ -220,6 +222,12 @@ local function showLoadedScore(view)
 end
 
 function OsuViewConfig:loadScore(view)
+	isOnlineScore = view.game.configModel.configs.select.scoreSourceName == "online"
+
+	if isOnlineScore then
+		return
+	end
+
 	local chartview = view.game.selectModel.chartview
 	local configs = view.game.configModel.configs
 	local irizz = configs.irizz
@@ -594,6 +602,10 @@ local function mods()
 end
 
 function OsuViewConfig:draw(view)
+	if isOnlineScore then
+		return
+	end
+
 	Layout:draw()
 
 	self:panel()
