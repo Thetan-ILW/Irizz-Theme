@@ -66,6 +66,10 @@ local update_time = 0
 local chart_list_update_time = 0
 local has_scores = false
 
+local pp = 0
+local accuracy = 0
+local dan = 0
+
 local selected_group = "charts"
 
 local white = { 1, 1, 1, 1 }
@@ -155,6 +159,17 @@ local buttons = {
 	},
 }
 
+local dan_chars = {
+	Alpha = "α",
+	Beta = "β",
+	Gamma = "γ",
+	Delta = "δ",
+	Epsilon = "ε",
+	Zeta = "ζ",
+	Eta = "η",
+	Theta = "θ",
+}
+
 ---@param game sphere.GameController
 ---@param _assets osu.OsuSelectAssets
 function ViewConfig:new(game, _assets)
@@ -238,7 +253,7 @@ function ViewConfig:updateInfo(view)
 		difficulty_str = ("%0.02f"):format(chartview.user_diff or 0)
 	end
 
-	username = view.game.configModel.configs.online.user.name or "xXx_FortnitePro_xXx"
+	username = view.game.configModel.configs.online.user.name or "Guest"
 	is_logged_in = view.game.configModel.configs.online.user.name == nil
 
 	local speed_model = view.game.speedModel
@@ -258,6 +273,23 @@ function ViewConfig:updateInfo(view)
 
 	---@type number
 	prev_chart_id = chartview.id
+
+	local profile = view.game.playerProfileModel
+
+	pp = profile.pp
+	accuracy = profile.accuracy
+
+	local dan_clears = profile.danClears[chartview.chartdiff_inputmode]
+
+	if dan_clears then
+		local regular_dans = dan_clears.regular
+		local ln_dans = dan_clears.ln
+
+		local max_regular = regular_dans[#regular_dans] or "-"
+		local max_ln = ln_dans[#ln_dans] or "-"
+
+		username = ("%s [%s/%s]"):format(username, dan_chars[max_regular] or max_regular, max_ln)
+	end
 end
 
 ---@param time number
@@ -613,7 +645,7 @@ function ViewConfig:bottom(view)
 	gyatt.text(username)
 	gfx.setFont(font.belowUsername)
 
-	gyatt.text("Performance: 1337pp\nAccuracy: 200.00%\nLv3")
+	gyatt.text(("Performance: %ipp\nAccuracy: %0.02f%%\nLv10"):format(pp, accuracy * 100))
 
 	gfx.translate(40, 22)
 
