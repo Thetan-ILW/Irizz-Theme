@@ -96,7 +96,6 @@ function ViewConfig:updateInfo(view)
 
 	self.noteChartListView:reloadItems()
 	self.noteChartSetListView:reloadItems()
-	self.scoreListView:reloadItems()
 end
 
 function ViewConfig.panels()
@@ -197,6 +196,7 @@ function ViewConfig:scores(view)
 	w, h = Layout:move("scores")
 
 	local list = self.scoreListView
+	list:reloadItems() -- reload every frame to load online scores
 	list:draw(w, h, canUpdate)
 
 	if list.openResult then

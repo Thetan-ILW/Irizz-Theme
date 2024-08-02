@@ -85,8 +85,12 @@ function ScoreListView:reloadItems()
 	self.items = self.game.selectModel.scoreLibrary.items
 	self.modLines = {}
 
-	for i, item in ipairs(self.items) do
-		self.modLines[i] = self:getModifiers(item.modifiers)
+	local source = self.game.configModel.configs.select.scoreSourceName
+
+	if source ~= "online" then
+		for i, item in ipairs(self.items) do
+			self.modLines[i] = self:getModifiers(item.modifiers)
+		end
 	end
 
 	local i = self.game.selectModel.scoreItemIndex
@@ -148,7 +152,7 @@ function ScoreListView:drawItem(i, w, h)
 	local item = self.items[i]
 
 	local source = self.game.configModel.configs.select.scoreSourceName
-	local username = self.modLines[i]
+	local username = self.modLines[i] or ""
 
 	if source == "online" then
 		username = item.user.name
