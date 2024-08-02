@@ -9,7 +9,7 @@ local delay = require("delay")
 ---@field prevView skibidi.ScreenView
 ---@field modal irizz.Modal?
 ---@field notificationView irizz.NotificationView
----@field actionModel irizz.ActionModel
+---@field actionModel skibidi.ActionModel
 ---@field assetModel skibidi.AssetModel
 local ScreenView = class()
 
@@ -51,8 +51,6 @@ function ScreenView:closeModal()
 	if self.modal then
 		self.modal.shouldClose = true
 	end
-
-	self.modalActive = false
 end
 
 function ScreenView:openModal(modalName)

@@ -22,7 +22,6 @@ local InputMap = require("thetan.irizz.views.SelectView.InputMap")
 ---@field assets irizz.IrizzAssets
 local SelectView = ScreenView + {}
 
-SelectView.modalActive = false
 SelectView.screenX = 0
 SelectView.screenXTarget = 0
 
@@ -236,7 +235,7 @@ function SelectView:isInOsuDirect()
 end
 
 function SelectView:changeTimeRate(delta)
-	if self.modalActive then
+	if self.modal then
 		return
 	end
 
@@ -267,8 +266,8 @@ function SelectView:songSelectInputs()
 		return
 	end
 
-	if self.modalActive then
-		return false
+	if self.modal then
+		return
 	end
 
 	self.inputMap:call("select")

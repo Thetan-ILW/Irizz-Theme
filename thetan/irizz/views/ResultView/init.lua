@@ -88,7 +88,8 @@ function ResultView:unload()
 	self.viewConfig:unload()
 end
 
-function ResultView:update()
+function ResultView:update(dt)
+	ScreenView.update(self, dt)
 	self.layersView:update()
 	self.game.previewModel:update()
 end
