@@ -24,6 +24,8 @@ local actionModel
 
 local gfx = love.graphics
 
+local profile_label = ""
+
 ---@param game sphere.GameController
 ---@param assets irizz.IrizzAssets
 ---@param screen "select" | "result" | "multiplayer"
@@ -43,6 +45,18 @@ function ViewConfig:new(game, assets, screen)
 	else
 		self.buttons = self.multiplayerButtons
 	end
+
+	self:updateInfo(game)
+end
+
+---@param game sphere.GameController
+function ViewConfig:updateInfo(game)
+	---@type skibidi.PlayerProfileModel
+	local profile = game.playerProfileModel
+
+	local chartview = game.selectModel.chartview
+	local regular, ln = profile:getDanClears(chartview.chartdiff_inputmode)
+	profile_label = ("%ipp [%s/%s]"):format(profile.pp, regular, ln)
 end
 
 ---@param id string
@@ -202,6 +216,8 @@ function ViewConfig:rightSide(view)
 	local onlineCount = #view.game.multiplayerModel.users
 	onlineCount = text.online:format(onlineCount)
 
+	local profile = self.playerProfileModel
+
 	local r = h / 1.4
 
 	gfx.translate(w - r * 2, 0)
@@ -215,6 +231,8 @@ function ViewConfig:rightSide(view)
 	if drawOnlineCount then
 		button(onlineCount, true, false)
 	end
+
+	button(profile_label, true, false)
 
 	button(time, true, false)
 end

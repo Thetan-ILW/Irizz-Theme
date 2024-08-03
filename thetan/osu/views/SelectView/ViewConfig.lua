@@ -58,7 +58,6 @@ local note_count_str = ""
 local columns_str = ""
 local difficulty_str = ""
 local username = ""
-local is_logged_in = false
 local scroll_speed_str = ""
 local mods_str = ""
 local current_time = 0
@@ -68,7 +67,6 @@ local has_scores = false
 
 local pp = 0
 local accuracy = 0
-local dan = 0
 
 local selected_group = "charts"
 
@@ -159,17 +157,6 @@ local buttons = {
 	},
 }
 
-local dan_chars = {
-	Alpha = "α",
-	Beta = "β",
-	Gamma = "γ",
-	Delta = "δ",
-	Epsilon = "ε",
-	Zeta = "ζ",
-	Eta = "η",
-	Theta = "θ",
-}
-
 ---@param game sphere.GameController
 ---@param _assets osu.OsuSelectAssets
 function ViewConfig:new(game, _assets)
@@ -254,7 +241,6 @@ function ViewConfig:updateInfo(view)
 	end
 
 	username = view.game.configModel.configs.online.user.name or "Guest"
-	is_logged_in = view.game.configModel.configs.online.user.name == nil
 
 	local speed_model = view.game.speedModel
 	local gameplay = view.game.configModel.configs.settings.gameplay
@@ -274,22 +260,14 @@ function ViewConfig:updateInfo(view)
 	---@type number
 	prev_chart_id = chartview.id
 
+	---@type skibidi.PlayerProfileModel
 	local profile = view.game.playerProfileModel
 
 	pp = profile.pp
 	accuracy = profile.accuracy
 
-	local dan_clears = profile.danClears[chartview.chartdiff_inputmode]
-
-	if dan_clears then
-		local regular_dans = dan_clears.regular
-		local ln_dans = dan_clears.ln
-
-		local max_regular = regular_dans[#regular_dans] or "-"
-		local max_ln = ln_dans[#ln_dans] or "-"
-
-		username = ("%s [%s/%s]"):format(username, dan_chars[max_regular] or max_regular, max_ln)
-	end
+	local regular, ln = profile:getDanClears(chartview.chartdiff_inputmode)
+	username = ("%s [%s/%s]"):format(username, regular, ln)
 end
 
 ---@param time number

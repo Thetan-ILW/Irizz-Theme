@@ -1,26 +1,54 @@
 local class = require("class")
 
 local json = require("json")
-
 local dans = require("thetan.skibidi.models.PlayerProfileModel.dans")
 
----@class thetan.PlayerProfileModel
----@operator call: thetan.PlayerProfileModel
----@field scores table<string, thetan.ProfileScore>
+local getPP = require("thetan.skibidi.osu_pp")
+
+local DiffcalcContext = require("sphere.models.DifficultyModel.DiffcalcContext")
+local has_minacalc, etterna_msd = pcall(require, "libchart.etterna_msd")
+local _, minacalc = pcall(require, "libchart.minacalc")
+
+---@class skibidi.PlayerProfileModel
+---@operator call: skibidi.PlayerProfileModel
+---@field scores table<string, skibidi.ProfileScore>
 ---@field pp number
 ---@field accuracy number
 ---@field ssr table<string, number>
 ---@field liveSsr table<string, number>
----@field danClears table<string, table<string, string[]>>
+---@field danClears table<string, table<string, string>>
+---@field danInfos { name: string, hash: string, ss: string?, accuracy: number? }[]
 local PlayerProfileModel = class()
 
----@class thetan.ProfileScore
+---@class skibidi.ProfileScore
 ---@field mode string
 ---@field time number
+---@field rate number
+---@field danClear boolean?
 ---@field osuAccuracy number
+---@field osuScore number
 ---@field osuPP number
+---@field overall number?
+---@field stream number?
+---@field jumpstream number?
+---@field handstream number?
+---@field stamina number?
+---@field jackspeed number?
+---@field chordjack number?
+---@field technical number?
 
 local db_path = "userdata/player_profile"
+
+PlayerProfileModel.danChars = {
+	Alpha = "α",
+	Beta = "β",
+	Gamma = "γ",
+	Delta = "δ",
+	Epsilon = "ε",
+	Zeta = "ζ",
+	Eta = "η",
+	Theta = "θ",
+}
 
 function PlayerProfileModel:new()
 	self.scores = {}
@@ -50,16 +78,14 @@ function PlayerProfileModel:new()
 		technical = 0,
 	}
 
+	self.danInfos = {}
 	self.danClears = {}
 
 	for input_mode_name, input_mode in pairs(dans) do
 		self.danClears[input_mode_name] = {}
-
 		for category_name, category in pairs(input_mode) do
-			self.danClears[input_mode_name][category_name] = {}
-
 			for i, item in ipairs(category) do
-				item.hash = ("%s_%s"):format(item.hash, input_mode_name)
+				self.danInfos[item.hash] = item
 			end
 		end
 	end
@@ -68,24 +94,105 @@ function PlayerProfileModel:new()
 	self:findDanClears()
 end
 
----@param key string
----@param score thetan.ProfileScore
-function PlayerProfileModel:addScore(key, score)
-	if score.osuAccuracy < 0.85 then
-		print("This score is too bad, go back to friday night funkin")
-		return
+---@param chartdiff table
+---@param chart ncdk2.Chart
+---@param accuracy number
+---@return table<string, number>
+function PlayerProfileModel:getMsd(chartdiff, chart, accuracy)
+	if not has_minacalc or chartdiff.inputmode ~= "4key" then
+		return {}
 	end
 
-	local old_score = self.scores[key]
+	local rate = chartdiff.rate
+	local diff_context = DiffcalcContext(chartdiff, chart, rate)
 
-	if old_score then
-		if score.osuPP <= old_score.osuPP then
-			print("Previous score was better")
-			return
+	local notes = diff_context:getSimplifiedNotes()
+	local rows, row_count = etterna_msd.getRows(notes)
+	local status, result = pcall(minacalc.getSsr, rows, row_count, rate, accuracy)
+
+	return result
+end
+
+---@param key string
+---@param chart ncdk2.Chart
+---@param chartdiff table
+---@param score_system sphere.ScoreSystemContainer
+function PlayerProfileModel:addScore(key, chart, chartdiff, score_system)
+	local old_score = self.scores[key]
+	local dan_info = self.danInfos[key]
+
+	---@type sphere.Judge
+	local osu_v1 = score_system.judgements["osu!legacy OD9"]
+
+	---@type number
+	local osu_score = osu_v1.score
+	---@type number
+	local j4_accuracy = score_system.judgements["Etterna J4"].accuracy
+
+	local pp = getPP(chartdiff.notes_count, chartdiff.osu_diff, 9, osu_score)
+	local msds = self:getMsd(chartdiff, chart, j4_accuracy)
+
+	---@type number
+	local rate = chartdiff.rate
+
+	---@type boolean?
+	local dan_clear = nil
+
+	if dan_info then
+		local score_system_name = dan_info.ss or "osu!legacy OD9"
+		local clear_accuracy = dan_info.accuracy or 0.96
+
+		---@type number
+		local accuracy = score_system.judgements[score_system_name].accuracy
+
+		dan_clear = accuracy >= clear_accuracy
+
+		if rate < 1 then
+			dan_clear = false
 		end
 	end
 
-	self.scores[key] = score
+	local should_count = true
+
+	if old_score then
+		if dan_info then
+			if old_score.danClear and not dan_clear then
+				should_count = false
+			end
+		end
+
+		if pp <= old_score.osuPP then
+			should_count = false
+		end
+
+		if dan_info then
+			if not old_score.danClear and dan_clear then
+				should_count = true
+			end
+		end
+	end
+
+	if not should_count then
+		return
+	end
+
+	self.scores[key] = {
+		time = os.time(),
+		mode = chartdiff.inputmode,
+		rate = chartdiff.rate,
+		danClear = dan_clear,
+		osuAccuracy = osu_v1.accuracy,
+		osuPP = pp,
+		osuScore = osu_score,
+		overall = msds.overall,
+		stream = msds.stream,
+		jumpstream = msds.jumpstream,
+		handstream = msds.handstream,
+		stamina = msds.stamina,
+		jackspeed = msds.jackspeed,
+		chordjack = msds.chordjack,
+		technical = msds.technical,
+	}
 
 	self:writeScores()
 
@@ -124,8 +231,9 @@ function PlayerProfileModel:findDanClears()
 		for category_name, category in pairs(input_mode) do
 			for i, item in ipairs(category) do
 				local score = self.scores[item.hash]
-				if score and score.osuAccuracy >= 0.96 then
-					table.insert(self.danClears[input_mode_name][category_name], item.name)
+
+				if score and score.danClear then
+					self.danClears[input_mode_name][category_name] = item.name
 				end
 			end
 		end
@@ -239,8 +347,25 @@ function PlayerProfileModel:calculateMsdStats()
 	self.liveSsr = ssrAverage(live_ssr_sorted)
 end
 
+---@param inputmode string
+---@return string, string
+function PlayerProfileModel:getDanClears(inputmode)
+	local dan_clears = self.danClears[inputmode]
+
+	if dan_clears then
+		local regular = dan_clears.regular or "-"
+		local ln = dan_clears.ln or "-"
+
+		return self.danChars[regular] or regular, ln
+	end
+	return "-", "-"
+end
+
 ---@param text string
 local function cipher(text)
+	if true then
+		return text
+	end
 	local key = "go away"
 	local result = {}
 	for i = 1, #text do
@@ -257,10 +382,7 @@ function PlayerProfileModel:loadScores()
 	end
 
 	if not love.filesystem.getInfo(db_path) then
-		local file = love.filesystem.newFile(db_path, "w")
-		file:open("w")
-		file:write(cipher("{}"))
-		file:close()
+		self:writeScores()
 		return
 	end
 
@@ -271,8 +393,10 @@ function PlayerProfileModel:loadScores()
 		error("Can't load scores " .. (err or ""))
 	end
 
-	---@type thetan.ProfileScore[]
-	self.scores = json.decode(cipher(file:read()))
+	---@type { scores: skibidi.ProfileScore }
+	local t = json.decode(cipher(file:read()))
+
+	self.scores = t.scores
 
 	file:close()
 
@@ -292,7 +416,11 @@ function PlayerProfileModel:writeScores()
 		error("Can't write scores. " .. (err or ""))
 	end
 
-	local encoded = json.encode(self.scores)
+	local t = {
+		scores = self.scores,
+	}
+
+	local encoded = json.encode(t)
 	file:write(cipher(encoded))
 	file:close()
 end

@@ -150,6 +150,7 @@ end
 
 function SelectView:notechartChanged()
 	self.songSelectViewConfig:updateInfo(self)
+	self.headerView:updateInfo(self.game)
 end
 
 function SelectView:play()
