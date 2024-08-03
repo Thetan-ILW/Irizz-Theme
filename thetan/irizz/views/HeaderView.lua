@@ -100,16 +100,17 @@ local function button(label, right_side, active)
 	gyatt.frame(label, 0, 3, label_w, 43, "center", "center")
 	gfx.rectangle("fill", 0, 43, label_w, 4)
 
+	local clicked = false
+
 	if just.is_over(label_w, 43) then
 		if just.mousepressed(1) then
-			gfx.translate(right_side and -(30 + label_w) or (30 + label_w), 0)
-			return true
+			clicked = true
 		end
 	end
 
 	gfx.translate(right_side and -30 or (30 + label_w), 0)
 
-	return false
+	return clicked
 end
 
 function ViewConfig:songSelectButtons(view)
@@ -207,12 +208,6 @@ end
 function ViewConfig:rightSide(view)
 	local w, h = Layout:move("user")
 
-	if just.is_over(w, h) then
-		if just.mousepressed(1) then
-			view:openModal("thetan.irizz.views.modals.OnlineModal")
-		end
-	end
-
 	local configs = view.game.configModel.configs
 	local drawOnlineCount = configs.irizz.showOnlineCount
 
@@ -222,17 +217,19 @@ function ViewConfig:rightSide(view)
 	local onlineCount = #view.game.multiplayerModel.users
 	onlineCount = text.online:format(onlineCount)
 
-	local profile = self.playerProfileModel
-
 	local r = h / 1.4
 
 	gfx.translate(w - r * 2, 0)
 
-	circleImage("avatar", self.avatar, r)
+	if circleImage("avatar", self.avatar, r) then
+		view:openModal("thetan.irizz.views.modals.OnlineModal")
+	end
 
 	gfx.translate(-r, 0)
 
-	button(username, true, false)
+	if button(username, true, false) then
+		view:openModal("thetan.irizz.views.modals.OnlineModal")
+	end
 
 	if drawOnlineCount then
 		button(onlineCount, true, false)

@@ -89,7 +89,7 @@ local function setFormat()
 		artist = text.byArtist,
 		difficulty = text.byDifficulty,
 		level = text.byLevel,
-		length = text.byLength,
+		duration = text.byDuration,
 		bpm = text.byBpm,
 		modtime = text.byModTime,
 		["set modtime"] = text.bySetModTime,
