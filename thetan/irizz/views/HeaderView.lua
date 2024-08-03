@@ -55,7 +55,13 @@ function ViewConfig:updateInfo(game)
 	local profile = game.playerProfileModel
 
 	local chartview = game.selectModel.chartview
-	local regular, ln = profile:getDanClears(chartview.chartdiff_inputmode)
+
+	local regular, ln = "-", "-"
+
+	if chartview then
+		regular, ln = profile:getDanClears(chartview.chartdiff_inputmode)
+	end
+
 	profile_label = ("%ipp [%s/%s]"):format(profile.pp, regular, ln)
 end
 
