@@ -107,6 +107,7 @@ function OsuAssets:new(skin_path, localization_file)
 
 		panelBottom = self:loadImageOrDefault(skin_path, "songselect-bottom"),
 		rankedIcon = self:loadImageOrDefault(skin_path, "selection-ranked"),
+		danIcon = self:loadImageOrDefault(skin_path, "selection-dan"),
 		dropdownArrow = self:loadImageOrDefault(skin_path, "dropdown-arrow"),
 
 		menuBack = self:loadImageOrDefault(skin_path, "menu-back"),

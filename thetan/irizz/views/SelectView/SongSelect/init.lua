@@ -58,6 +58,9 @@ local calculator = ""
 local difficultyColor = { 1, 1, 1, 1 }
 local longNoteRatio = 0
 
+local chart_is_dan = false
+local this_dan_cleared = false
+
 local diff_columns_names = {
 	enps_diff = "ENPS",
 	osu_diff = "OSU",
@@ -93,6 +96,13 @@ function ViewConfig:updateInfo(view)
 	if chartview.notes_count and chartview.notes_count ~= 0 then
 		longNoteRatio = ((chartview.long_notes_count or 0) / chartview.notes_count) * 100
 	end
+
+	---@type skibidi.PlayerProfileModel
+	local profile = view.game.playerProfileModel
+
+	---@type string
+	local input_mode = view.game.selectController.state.inputMode
+	chart_is_dan, this_dan_cleared = profile:isDanIsCleared(chartview.hash, tostring(input_mode))
 
 	self.noteChartListView:reloadItems()
 	self.noteChartSetListView:reloadItems()
@@ -249,6 +259,8 @@ local function info(view)
 	local mode = Format.inputMode(chartview.chartdiff_inputmode)
 	mode = mode == "2K" and "TAIKO" or mode
 
+	mode = chart_is_dan and ("%s DAN COURSE"):format(mode) or mode
+
 	gfx.setFont(font.info)
 	gfx.setColor(colors.ui.text)
 
@@ -352,6 +364,13 @@ local function mods(view)
 	gyatt.frame(modString, 0, -5, w, h, "center", "center")
 end
 
+local function rainbow(x, a)
+	local r = math.abs(math.sin(x * 2 * math.pi))
+	local g = math.abs(math.sin((x + 1 / 3) * 2 * math.pi))
+	local b = math.abs(math.sin((x + 2 / 3) * 2 * math.pi))
+	return { r, g, b, a }
+end
+
 local function footer(view)
 	local chartview = view.game.selectModel.chartview
 
@@ -360,6 +379,11 @@ local function footer(view)
 	end
 
 	gfx.setFont(font.titleAndDifficulty)
+	gfx.setColor(colors.ui.text)
+
+	if this_dan_cleared then
+		gfx.setColor(rainbow(love.timer.getTime() * 0.35, 1))
+	end
 
 	local left_text = ("%s - %s"):format(chartview.artist, chartview.title)
 	local right_text ---@type string

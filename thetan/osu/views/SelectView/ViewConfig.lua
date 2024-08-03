@@ -50,6 +50,8 @@ local has_focus = true
 local prev_chart_id = 0
 local chart_name = ""
 local charter_row = ""
+local chart_is_dan = false
+local this_dan_cleared = false
 local length_str = ""
 local bpm_str = ""
 local objects_str = ""
@@ -268,6 +270,10 @@ function ViewConfig:updateInfo(view)
 
 	local regular, ln = profile:getDanClears(chartview.chartdiff_inputmode)
 	username = ("%s [%s/%s]"):format(username, regular, ln)
+
+	---@type string
+	local input_mode = view.game.selectController.state.inputMode
+	chart_is_dan, this_dan_cleared = profile:isDanIsCleared(chartview.hash, tostring(input_mode))
 end
 
 ---@param time number
@@ -411,15 +417,27 @@ local function tab(label)
 	gyatt.frame(label, 0, 2, 137, 21, "center", "center")
 end
 
+local function rainbow(x, a)
+	local r = math.abs(math.sin(x * 2 * math.pi))
+	local g = math.abs(math.sin((x + 1 / 3) * 2 * math.pi))
+	local b = math.abs(math.sin((x + 2 / 3) * 2 * math.pi))
+	return { r, g, b, a }
+end
+
 function ViewConfig:chartInfo()
 	local w, h = Layout:move("base")
 
 	local a = animate(update_time, 0.2)
+
 	gfx.setColor({ 1, 1, 1, a })
 
 	gfx.translate(5, 5)
-	gfx.draw(img.rankedIcon)
+	gfx.draw(chart_is_dan and img.danIcon or img.rankedIcon)
 	gfx.translate(-5, -5)
+
+	if this_dan_cleared then
+		gfx.setColor(rainbow(love.timer.getTime() * 0.35, a))
+	end
 
 	gfx.setFont(font.chartName)
 	gfx.translate(39, -5)

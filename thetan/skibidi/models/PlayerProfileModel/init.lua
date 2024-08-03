@@ -17,7 +17,7 @@ local _, minacalc = pcall(require, "libchart.minacalc")
 ---@field ssr table<string, number>
 ---@field liveSsr table<string, number>
 ---@field danClears table<string, table<string, string>>
----@field danInfos { name: string, hash: string, ss: string?, accuracy: number? }[]
+---@field danInfos { name: string, hash: string, category: string, ss: string?, accuracy: number? }[]
 local PlayerProfileModel = class()
 
 ---@class skibidi.ProfileScore
@@ -85,6 +85,7 @@ function PlayerProfileModel:new()
 		self.danClears[input_mode_name] = {}
 		for category_name, category in pairs(input_mode) do
 			for i, item in ipairs(category) do
+				item.category = category_name
 				self.danInfos[item.hash] = item
 			end
 		end
@@ -238,6 +239,25 @@ function PlayerProfileModel:findDanClears()
 			end
 		end
 	end
+end
+
+---@param key string
+---@return boolean
+---@return boolean
+function PlayerProfileModel:isDanIsCleared(hash, inputmode)
+	local key = ("%s_%s"):format(hash, inputmode)
+	local info = self.danInfos[key]
+
+	if not info then
+		return false, false
+	end
+
+	local category = info.category
+	local dan_name = info.name
+
+	local cleared_dan = self.danClears[inputmode][category] or "not cleared"
+
+	return true, cleared_dan == dan_name
 end
 
 ---@param score_time number
