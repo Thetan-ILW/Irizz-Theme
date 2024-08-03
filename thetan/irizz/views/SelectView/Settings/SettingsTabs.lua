@@ -199,7 +199,7 @@ function SettingsTab:Gameplay(view)
 		local pressed = imgui.button("skinSettings", "Settings")
 
 		if pressed then
-			view.game.gameView:openModal("thetan.irizz.views.modals.NoteSkinModal")
+			view:openModal("thetan.irizz.views.modals.NoteSkinModal")
 		end
 	end
 end
