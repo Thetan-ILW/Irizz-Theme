@@ -383,9 +383,6 @@ end
 
 ---@param text string
 local function cipher(text)
-	if true then
-		return text
-	end
 	local key = "go away"
 	local result = {}
 	for i = 1, #text do
