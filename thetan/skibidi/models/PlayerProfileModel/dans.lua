@@ -20,6 +20,8 @@ local t = {
 			{ name = "Gamma", hash = "e0bbf500b763e48ddc5a6f3fafacf58e" },
 			{ name = "Delta", hash = "6432f864b074264c230604cfe142edb0" },
 			{ name = "Epsilon", hash = "c290f7c54064a7ff3e15bc64ddfc8692" },
+			{ name = "Zeta", hash = "7fab4c2623aac25d74f9300bfc4394c1" },
+			{ name = "Eta", hash = "8f175c7b6f529a877871eb2044ce516b" },
 		},
 		ln = {
 			{ name = "1", hash = "9d85e749d23867de0de4c386f1bcd9c4", ss = v2_8, accuracy = 0.97 },
@@ -72,6 +74,23 @@ local t = {
 			{ name = "Gamma", hash = "7bf64c587c2966db05e4bf44e8c78d72" },
 			{ name = "Azimuth", hash = "21a9c6b63a722f5903375497306c1c6f" },
 			{ name = "Zenith", hash = "4ad36f558655a1f17781038517455215" },
+		},
+	},
+	["10key"] = {
+		regular = {
+			{ name = "0", hash = "d7328e981f43d7f8ba11b4ad90b8c005" },
+			{ name = "1", hash = "3663897f04a1bd32d15a475d635e8467" },
+			{ name = "2", hash = "7e7e67d8385771007d099942c18ba7ff" },
+			{ name = "3", hash = "64a84abcf073a90ae8b2080dbd252539" },
+			{ name = "4", hash = "fe913e5a9f720884e50d4b7fae7b9fae" },
+			{ name = "5", hash = "cb1c073652b14f5a346d383565acba91" },
+			{ name = "6", hash = "149e17f2d7e9c31b3a2999ab2c09ed46" },
+			{ name = "7", hash = "ee45bd9848b1ec5256058d572078046d" },
+			{ name = "8", hash = "837b12e08cb309e4509650291b3d5276" },
+			{ name = "9", hash = "77ce1c182238d516595e19830d8c867c" },
+			{ name = "10", hash = "849fa8a3264604fd9412d60e5fa46981" },
+			{ name = "V", hash = "ad25c18e6e4a0f92805c3e9c7399f1ad" },
+			{ name = "XI", hash = "24369e1034d8614323ecbafa7672ffe6" },
 		},
 	},
 }
