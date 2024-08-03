@@ -49,6 +49,9 @@ function ViewConfig:new(game, assets, screen)
 	self:updateInfo(game)
 end
 
+---@type "pp" | "msd" | "lmsd"
+local performance_type = "pp"
+
 ---@param game sphere.GameController
 function ViewConfig:updateInfo(game)
 	---@type skibidi.PlayerProfileModel
@@ -62,7 +65,13 @@ function ViewConfig:updateInfo(game)
 		regular, ln = profile:getDanClears(chartview.chartdiff_inputmode)
 	end
 
-	profile_label = ("%ipp [%s/%s]"):format(profile.pp, regular, ln)
+	if performance_type == "pp" then
+		profile_label = ("%ipp [%s/%s]"):format(profile.pp, regular, ln)
+	elseif performance_type == "msd" then
+		profile_label = ("%0.02f MSD [%s/%s]"):format(profile.ssr.overall, regular, ln)
+	elseif performance_type == "lmsd" then
+		profile_label = ("%0.02f Live MSD [%s/%s]"):format(profile.liveSsr.overall, regular, ln)
+	end
 end
 
 ---@param id string
@@ -235,7 +244,17 @@ function ViewConfig:rightSide(view)
 		button(onlineCount, true, false)
 	end
 
-	button(profile_label, true, false)
+	if button(profile_label, true, false) then
+		if performance_type == "pp" then
+			performance_type = "msd"
+		elseif performance_type == "msd" then
+			performance_type = "lmsd"
+		elseif performance_type == "lmsd" then
+			performance_type = "pp"
+		end
+
+		self:updateInfo(view.game)
+	end
 
 	button(time, true, false)
 end
