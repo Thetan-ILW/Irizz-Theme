@@ -36,7 +36,7 @@ end
 function MainMenuView:update(dt)
 	self.game.selectController:update()
 
-	local fade_out = 1 - gyatt.easeOutCubic(self.mouseMoveTime + 2, 1)
+	local fade_out = 1 - gyatt.easeOutCubic(self.mouseMoveTime + 7, 1)
 	self.afkPercent = fade_out
 end
 

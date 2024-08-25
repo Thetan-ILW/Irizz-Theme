@@ -30,6 +30,8 @@ local chart_count = 0
 local beat = 0
 local now_playing = ""
 
+local update_time = 0
+
 ---@param game sphere.GameController
 ---@param assets osu.OsuAssets
 function ViewConfig:new(game, assets)
@@ -45,12 +47,15 @@ function ViewConfig:new(game, assets)
 	username = game.configModel.configs.online.user.name or "Guest"
 
 	chart_count = #game.selectModel.noteChartSetLibrary.items
+	update_time = math.huge
 end
 
 function ViewConfig:updateInfo(view)
 	local chartview = view.game.selectModel.chartview
 
 	now_playing = ("%s - %s"):format(chartview.artist, chartview.title)
+
+	update_time = love.timer.getTime()
 end
 
 local gfx = love.graphics
@@ -128,8 +133,11 @@ local function header(view)
 	w, h = Layout:move("base")
 
 	gfx.push()
-	local tw = font.info:getWidth(now_playing) * gyatt.getTextScale()
+
+	local a = gyatt.easeOutCubic(update_time, 1)
+	local tw = (font.info:getWidth(now_playing) * gyatt.getTextScale()) * a
 	gfx.translate(w - math_util.clamp(math.abs(-tw - 10 - 100), 0, 682), 0)
+	gfx.setColor(1, 1, 1, a)
 	gfx.draw(img.nowPlaying, 0, 0)
 	gfx.translate(100, 4)
 	gyatt.text(now_playing)
@@ -164,6 +172,7 @@ local function header(view)
 	if button(img.musicBackwards) then
 		view.game.selectModel:scrollNoteChartSet(-1)
 	end
+	gfx.setColor(1, 1, 1)
 
 	gfx.pop()
 
@@ -181,7 +190,7 @@ local function header(view)
 		percent = audio:getPosition() / audio:getDuration()
 	end
 
-	gfx.setColor(1, 1, 1, 0.7)
+	gfx.setColor(1, 1, 1, 0.7 * a)
 	gfx.rectangle("fill", 0, 0, 200 * percent, 5)
 end
 
