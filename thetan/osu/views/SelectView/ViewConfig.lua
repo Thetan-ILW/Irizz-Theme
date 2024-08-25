@@ -193,6 +193,9 @@ function ViewConfig:new(game, _assets)
 	Layout:draw()
 
 	chart_list_update_time = love.timer.getTime() + 0.4
+	update_time = current_time
+	self.scoreListView.scoreUpdateTime = love.timer.getTime()
+
 	self:resolutionUpdated()
 end
 

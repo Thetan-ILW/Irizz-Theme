@@ -1,6 +1,7 @@
 local IViewConfig = require("thetan.skibidi.views.IViewConfig")
 local Layout = require("thetan.osu.views.OsuLayout")
 
+local ui = require("thetan.osu.ui")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 local loop = require("loop")
@@ -97,9 +98,9 @@ local function header()
 
 	local time = time_util.format(loop.time - loop.startTime)
 
-	gyatt.text(text.chartCount:format(chart_count))
-	gyatt.text(text.sessionTime:format(time))
-	gyatt.text(text.time:format(os.date("%H:%M")))
+	ui.textWithShadow(text.chartCount:format(chart_count))
+	ui.textWithShadow(text.sessionTime:format(time))
+	ui.textWithShadow(text.time:format(os.date("%H:%M")))
 end
 
 local function footer()

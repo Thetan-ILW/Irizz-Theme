@@ -11,13 +11,11 @@ local MainMenuView = ScreenView + {}
 
 local window_height = 0
 
----@param game sphere.GameController
-function MainMenuView:new(game)
-	self.game = game
+function MainMenuView:load()
 	self.game.selectController:load(self)
 
-	self.assets = get_assets(game)
-	self.viewConfig = ViewConfig(game, self.assets)
+	self.assets = get_assets(self.game)
+	self.viewConfig = ViewConfig(self.game, self.assets)
 
 	window_height = love.graphics.getHeight()
 	love.mouse.setVisible(false)
