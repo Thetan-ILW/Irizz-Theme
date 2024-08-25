@@ -107,13 +107,24 @@ function OsuPauseScreen:buttons(view)
 	end
 end
 
+local next_audio_update_time = -math.huge
+
 function OsuPauseScreen:updateAudio(view)
+	if self.alpha == 1 then
+		return
+	end
+
+	if love.timer.getTime() < next_audio_update_time then
+		return
+	end
+
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
 	local a = settings.audio
 	local volume = a.volume.master * a.volume.music
 
 	snd.loop:setVolume(volume * self.alpha)
+	next_audio_update_time = love.timer.getTime() + 0.036
 end
 
 ---@param view irizz.GameplayView
