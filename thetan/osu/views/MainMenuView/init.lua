@@ -19,6 +19,9 @@ function MainMenuView:load()
 
 	window_height = love.graphics.getHeight()
 	love.mouse.setVisible(false)
+
+	self.mouseMoveTime = love.timer.getTime()
+	self.afkPercent = 0
 end
 
 function MainMenuView:beginUnload()
@@ -32,6 +35,9 @@ end
 ---@param dt number
 function MainMenuView:update(dt)
 	self.game.selectController:update()
+
+	local fade_out = 1 - gyatt.easeOutCubic(self.mouseMoveTime + 2, 1)
+	self.afkPercent = fade_out
 end
 
 function MainMenuView:notechartChanged()
@@ -45,6 +51,12 @@ function MainMenuView:resolutionUpdated()
 
 	if self.modal then
 		self.modal.viewConfig:resolutionUpdated()
+	end
+end
+
+function MainMenuView:receive(event)
+	if event.name == "mousemoved" then
+		self.mouseMoveTime = love.timer.getTime()
 	end
 end
 

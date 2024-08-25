@@ -261,9 +261,25 @@ function ViewConfig:draw(view)
 	updateBeat(view)
 
 	background()
+
+	local prev_canvas = gfx.getCanvas()
+	local canvas = gyatt.getCanvas("osuMainMenu")
+
+	gfx.setCanvas(canvas)
+
+	gfx.clear()
 	header(view)
 	footer()
 	osuDirect(view)
+
+	gfx.setCanvas({ prev_canvas, stencil = true })
+
+	gfx.origin()
+	local a = view.afkPercent
+	gfx.setColor(a, a, a, a)
+	gfx.draw(canvas)
+	gfx.setColor(1, 1, 1)
+
 	osuLogo(view)
 end
 
