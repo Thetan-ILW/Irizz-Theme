@@ -34,7 +34,9 @@ function MainMenuView:update(dt)
 	self.game.selectController:update()
 end
 
-function MainMenuView:notechartChanged() end
+function MainMenuView:notechartChanged()
+	self.viewConfig:updateInfo(self)
+end
 
 function MainMenuView:resolutionUpdated()
 	window_height = self.assets.localization:updateScale()

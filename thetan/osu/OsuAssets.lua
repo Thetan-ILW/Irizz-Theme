@@ -152,6 +152,16 @@ function OsuAssets:new(skin_path, localization_file)
 
 		background = self:loadImageOrDefault(skin_path, "menu-background"),
 		copyright = self:loadImageOrDefault(skin_path, "menu-copyright"),
+		nowPlaying = self:loadImageOrDefault(skin_path, "menu-np"),
+		musicPause = self:loadImageOrDefault(skin_path, "menu-pause-music"),
+		musicToStart = self:loadImageOrDefault(skin_path, "menu-to-music-start"),
+		musicPlay = self:loadImageOrDefault(skin_path, "menu-play-music"),
+		musicBackwards = self:loadImageOrDefault(skin_path, "menu-music-backwards"),
+		musicForwards = self:loadImageOrDefault(skin_path, "menu-music-forwards"),
+		musicInfo = self:loadImageOrDefault(skin_path, "menu-music-info"),
+		musicList = self:loadImageOrDefault(skin_path, "menu-music-list"),
+		directButton = self:loadImageOrDefault(skin_path, "menu-osudirect"),
+		directButtonOver = self:loadImageOrDefault(skin_path, "menu-osudirect-over"),
 
 		-- RESULT
 

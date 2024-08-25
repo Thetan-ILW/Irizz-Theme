@@ -3,7 +3,7 @@ local l = {}
 l.textGroups = {
 	mainMenu = {
 		chartCount = "You have %i charts available!",
-		sessionTime = "The game has been running for %s",
+		sessionTime = "Game has been running for %s",
 		time = "It is currently %s",
 	},
 	songSelect = {
