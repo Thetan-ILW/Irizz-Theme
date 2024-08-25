@@ -89,13 +89,13 @@ function ViewConfig:buttons(view)
 
 	gyatt.frame(text.createRoom, 0, 0, w, h, "center", "top")
 	gfx.translate(0, font.buttons:getHeight() * gyatt.getTextScale() + 15)
-	local changed, input = TextBox("roomName", { roomName, text.name }, nil, w, h, false)
+	local changed, input = TextBox("roomName", { roomName, text.name }, nil, w, 50, false)
 
 	if changed == "text" then
 		roomName = input
 	end
 
-	changed, input = TextBox("roomPassword", { roomPassword, text.password }, nil, w, h, true)
+	changed, input = TextBox("roomPassword", { roomPassword, text.password }, nil, w, 50, true)
 
 	if changed == "text" then
 		roomPassword = input

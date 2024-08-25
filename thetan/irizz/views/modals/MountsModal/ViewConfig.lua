@@ -129,7 +129,7 @@ function ViewConfig:locations(view)
 	if not selected_loc.is_internal then
 		love.graphics.setFont(font.fields)
 
-		local changed, input = TextBox("loc name", { selected_loc.name, "Name" }, nil, w, h, false)
+		local changed, input = TextBox("loc name", { selected_loc.name, "Name" }, nil, w, 50, false)
 		if changed then
 			locationsRepo:updateLocation({
 				id = selected_loc.id,

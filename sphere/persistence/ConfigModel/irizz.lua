@@ -1,4 +1,5 @@
-return {
+---@class irizz.IrizzConfig
+local config = {
 	uiVolume = 0.2,
 	startSound = "Herta",
 	scoreSystem = "soundsphere",
@@ -29,3 +30,5 @@ return {
 	songSelectOffset = 0,
 	showFreshInstallModal = true,
 }
+
+return config

@@ -26,7 +26,6 @@ return function(id, text, index, w, h, password)
 	just.origin()
 	just.row(true)
 
-	h = 50
 	love.graphics.setColor(colors.ui.uiPanel)
 	love.graphics.rectangle("fill", 0, 0, w, h, rounding, rounding)
 

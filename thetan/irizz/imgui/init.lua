@@ -17,6 +17,7 @@ local w, h, _w, _h
 ---@param ... number
 function imgui.setSize(...)
 	w, h, _w, _h = ...
+	element_size = _h
 end
 
 function imgui.separator()
