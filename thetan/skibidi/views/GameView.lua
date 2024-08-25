@@ -35,7 +35,7 @@ function GameView:load()
 
 	self.actionModel = self.game.actionModel
 	self.notificationView = NotificationView(get_irizz_assets(self.game))
-	self:setView(self.game.selectView)
+	self:setView(self.game.ui.osuMainMenuView)
 
 	self.inputMap = InputMap(self, self.actionModel)
 end

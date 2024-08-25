@@ -25,7 +25,7 @@ function ScreenView:changeScreen(screenName)
 	end
 
 	self:beginUnload()
-	self.gameView:setView(self.game[screenName])
+	self.gameView:setView(self.game.ui[screenName])
 end
 
 ---@param modal irizz.Modal

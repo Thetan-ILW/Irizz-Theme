@@ -664,6 +664,7 @@ function ViewConfig:bottom(view)
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
 	if bottomButtonImage("back", img.menuBack, img.menuBack) then
+		view:changeScreen("osuMainMenuView")
 	end
 
 	w, h = Layout:move("bottomButtons")

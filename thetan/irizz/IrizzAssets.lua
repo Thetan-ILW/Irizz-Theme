@@ -48,23 +48,6 @@ local function loadImageOrEmpty(path)
 	return Assets.loadImage(path) or Assets.emptyImage()
 end
 
-function loadCustomAudioOrDefault(filepath)
-	local sound = Assets.loadAudio("userdata/" .. filepath)
-
-	if sound then
-		return sound
-	end
-
-	sound = Assets.loadAudio("irizz/" .. filepath, true)
-
-	if sound then
-		return sound
-	end
-
-	table.insert(Assets.errors, ("Audio not found %s"):format(filepath))
-	return self.emptyAudio()
-end
-
 ---@param localization_filepath string
 function IrizzAssets:new(localization_filepath)
 	local userdata = "userdata/"

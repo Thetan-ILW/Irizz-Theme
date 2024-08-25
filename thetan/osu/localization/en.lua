@@ -1,6 +1,11 @@
 local l = {}
 
 l.textGroups = {
+	mainMenu = {
+		chartCount = "You have %i charts available!",
+		sessionTime = "The game has been running for %s",
+		time = "It is currently %s",
+	},
 	songSelect = {
 		mappedBy = "Mapped by %s",
 		from = "From %s",
@@ -81,6 +86,11 @@ l.fontFiles = {
 }
 
 l.fontGroups = {
+	mainMenu = {
+		username = { "Aller", 20, "ZenMaruGothic-Medium" },
+		belowUsername = { "Aller", 14 },
+		info = { "Aller", 18, "ZenMaruGothic-Medium" },
+	},
 	songSelect = {
 		chartName = { "Aller", 25, "ZenMaruGothic-Regular" },
 		chartedBy = { "Aller", 16, "ZenMaruGothic-Regular" },

@@ -10,6 +10,7 @@ local OsuSelectView = require("thetan.osu.views.SelectView")
 local GameplayView = require("thetan.irizz.views.GameplayView")
 local ResultView = require("thetan.irizz.views.ResultView")
 local OsuResultView = require("thetan.osu.views.ResultView")
+local OsuMainMenu = require("thetan.osu.views.MainMenuView")
 --local MultiplayerView = require("thetan.irizz.views.MultiplayerView")
 local EditorView = require("sphere.views.EditorView")
 
@@ -46,6 +47,7 @@ function UserInterface:load()
 
 	load_irizz_assets(self.game)
 
+	self.osuMainMenuView = OsuMainMenu(self.game)
 	self.selectView = irizz_config.osuSongSelect and osu_ss or irizz_ss
 	self.resultView = irizz_config.osuResultScreen and osu_result or irizz_result
 

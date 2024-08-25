@@ -148,6 +148,11 @@ function OsuAssets:new(skin_path, localization_file)
 
 		uiLock = self:loadImageOrDefault(skin_path, "ui-lock"),
 
+		-- MAIN MENU
+
+		background = self:loadImageOrDefault(skin_path, "menu-background"),
+		copyright = self:loadImageOrDefault(skin_path, "menu-copyright"),
+
 		-- RESULT
 
 		title = self:loadImageOrDefault(skin_path, "ranking-title"),
