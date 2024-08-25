@@ -6,6 +6,7 @@ local time_util = require("time_util")
 local loop = require("loop")
 local gfx_util = require("gfx_util")
 local map = require("math_util").map
+local getBeatValue = require("thetan.osu.views.beat_value")
 
 ---@class osu.MainMenuViewConfig : IViewConfig
 ---@operator call: osu.MainMenuViewConfig
@@ -24,6 +25,7 @@ local pp = 0
 local accuracy = 0
 local username = ""
 local chart_count = 0
+local beat = 0
 
 ---@param game sphere.GameController
 ---@param assets osu.OsuAssets
@@ -119,17 +121,28 @@ local function osuLogo(view)
 	local mx, my = love.mouse.getPosition()
 	local ax, ay = -mx * 0.005, -my * 0.005
 
-	gfx.translate(w / 2 - iw / 2 + ax / 2, h / 2 - ih / 2 + ay / 2)
-	gfx.draw(img.osuLogo)
+	gfx.translate(w / 2 - iw / 2 + ax / 2 - (iw / 2 * beat), h / 2 - ih / 2 + ay / 2 - (ih / 2 * beat))
+	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat, 1 + beat)
 
 	if gyatt.mousePressed(1) and gyatt.isOver(iw, ih) then
 		view:changeScreen("selectView")
 	end
 end
 
+local function updateBeat(view)
+	---@type audio.bass.BassSource
+	local audio = view.game.previewModel.audio
+
+	if audio and audio.getData then
+		beat = getBeatValue(audio:getData())
+	end
+end
+
 ---@param view osu.MainMenuView
 function ViewConfig:draw(view)
 	Layout:draw()
+
+	updateBeat(view)
 
 	background()
 	header()

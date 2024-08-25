@@ -13,6 +13,7 @@ local Format = require("sphere.views.Format")
 
 local TextInput = require("thetan.irizz.imgui.TextInput")
 
+local getBeatValue = require("thetan.osu.views.beat_value")
 local getModifierString = require("thetan.skibidi.modifier_string")
 
 local NoteChartSetListView = require("thetan.osu.views.SelectView.NoteChartSetListView")
@@ -66,6 +67,7 @@ local current_time = 0
 local update_time = 0
 local chart_list_update_time = 0
 local has_scores = false
+local beat = 0
 
 local pp = 0
 local accuracy = 0
@@ -654,12 +656,11 @@ function ViewConfig:bottom(view)
 
 	w, h = Layout:move("base")
 	iw, ih = img.osuLogo:getDimensions()
+	iw, ih = iw * 0.45, ih * 0.45
 
 	gfx.setColor(white)
-	gfx.translate(w - (iw * 0.45) + 60, h - (ih * 0.45) + 60)
-	gfx.scale(0.45)
-	gfx.draw(img.osuLogo)
-	gfx.scale(1)
+	gfx.translate(w - iw - (iw / 2 * (1 + beat * 1.2)) + 180, h - ih - (ih / 2 * (1 + beat * 1.2)) + 180)
+	gfx.draw(img.osuLogo, 0, 0, 0, 0.45 * (1 + beat))
 
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
@@ -909,8 +910,19 @@ function ViewConfig:setFocus(value)
 	has_focus = value
 end
 
+local function updateBeat(view)
+	---@type audio.bass.BassSource
+	local audio = view.game.previewModel.audio
+
+	if audio and audio.getData then
+		beat = getBeatValue(audio:getData())
+	end
+end
+
 function ViewConfig:draw(view)
 	Layout:draw()
+
+	updateBeat(view)
 
 	current_time = love.timer.getTime()
 
