@@ -60,6 +60,7 @@ function OsuSelectView:load()
 	end
 
 	window_height = love.graphics.getHeight()
+	love.mouse.setVisible(false)
 end
 
 function OsuSelectView:beginUnload()
@@ -229,6 +230,7 @@ local gfx = love.graphics
 
 function OsuSelectView:drawCursor()
 	gfx.origin()
+	gfx.setColor(1, 1, 1)
 
 	local x, y = love.mouse.getPosition()
 

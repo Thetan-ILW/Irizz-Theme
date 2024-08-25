@@ -81,6 +81,7 @@ ResultView.load = thread.coro(function(self)
 	loading = false
 
 	window_height = love.graphics.getHeight()
+	love.mouse.setVisible(false)
 end)
 
 function ResultView:unload()
@@ -107,6 +108,19 @@ function ResultView:resolutionUpdated()
 	window_height = self.assets.localization:updateScale()
 end
 
+local gfx = love.graphics
+
+function ResultView:drawCursor()
+	gfx.origin()
+	gfx.setColor(1, 1, 1)
+
+	local x, y = love.mouse.getPosition()
+
+	local cursor = self.assets.images.cursor
+	local iw, ih = cursor:getDimensions()
+	gfx.draw(cursor, x - iw / 2, y - ih / 2)
+end
+
 function ResultView:draw()
 	if not self.viewConfig then
 		return
@@ -126,6 +140,7 @@ function ResultView:draw()
 	GaussianBlurView:draw(background_blur)
 
 	self.viewConfig:draw(self)
+	self:drawCursor()
 
 	gyatt.setTextScale(1)
 end

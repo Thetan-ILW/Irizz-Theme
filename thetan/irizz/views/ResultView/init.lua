@@ -82,6 +82,7 @@ ResultView.load = thread.coro(function(self)
 	loading = false
 
 	self:resolutionUpdated()
+	love.mouse.setVisible(true)
 end)
 
 function ResultView:unload()

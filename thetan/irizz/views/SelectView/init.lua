@@ -71,6 +71,7 @@ function SelectView:load()
 	end
 
 	self:resolutionUpdated()
+	love.mouse.setVisible(true)
 end
 
 function SelectView:canUpdate()
