@@ -2,6 +2,7 @@ local ScreenView = require("thetan.skibidi.views.ScreenView")
 
 local gyatt = require("thetan.gyatt")
 local ViewConfig = require("thetan.osu.views.MainMenuView.ViewConfig")
+local InputMap = require("thetan.osu.views.MainMenuView.InputMap")
 
 local get_assets = require("thetan.osu.views.assets_loader")
 
@@ -16,6 +17,8 @@ function MainMenuView:load()
 
 	self.assets = get_assets(self.game)
 	self.viewConfig = ViewConfig(self.game, self.assets)
+	self.inputMap = InputMap(self, self.actionModel)
+	self.actionModel.enable()
 
 	window_height = love.graphics.getHeight()
 	love.mouse.setVisible(false)
@@ -34,10 +37,20 @@ end
 
 ---@param dt number
 function MainMenuView:update(dt)
+	ScreenView.update(self, dt)
 	self.game.selectController:update()
 
 	local fade_out = 1 - gyatt.easeOutCubic(self.mouseMoveTime + 7, 1)
 	self.afkPercent = fade_out
+	self.viewConfig.hasFocus = self.modal == nil
+end
+
+function MainMenuView:edit()
+	if not self.game.selectModel:notechartExists() then
+		return
+	end
+
+	self:changeScreen("editorView")
 end
 
 function MainMenuView:notechartChanged()
@@ -58,6 +71,12 @@ function MainMenuView:receive(event)
 	if event.name == "mousemoved" then
 		self.mouseMoveTime = love.timer.getTime()
 	end
+
+	if event.name == "keypressed" then
+		if self.inputMap:call("view") then
+			return
+		end
+	end
 end
 
 local gfx = love.graphics
@@ -76,6 +95,8 @@ end
 function MainMenuView:draw()
 	gyatt.setTextScale(768 / window_height)
 	self.viewConfig:draw(self)
+	self:drawModal()
+	self.notificationView:draw()
 	self:drawCursor()
 	gyatt.setTextScale(1)
 end

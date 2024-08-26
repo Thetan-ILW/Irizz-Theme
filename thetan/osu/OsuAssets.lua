@@ -162,6 +162,20 @@ function OsuAssets:new(skin_path, localization_file)
 		musicList = self:loadImageOrDefault(skin_path, "menu-music-list"),
 		directButton = self:loadImageOrDefault(skin_path, "menu-osudirect"),
 		directButtonOver = self:loadImageOrDefault(skin_path, "menu-osudirect-over"),
+		menuPlayButton = self:loadImageOrDefault(skin_path, "menu-button-play"),
+		menuPlayButtonHover = self:loadImageOrDefault(skin_path, "menu-button-play-over"),
+		menuEditButton = self:loadImageOrDefault(skin_path, "menu-button-edit"),
+		menuEditButtonHover = self:loadImageOrDefault(skin_path, "menu-button-edit-over"),
+		menuOptionsButton = self:loadImageOrDefault(skin_path, "menu-button-options"),
+		menuOptionsButtonHover = self:loadImageOrDefault(skin_path, "menu-button-options-over"),
+		menuExitButton = self:loadImageOrDefault(skin_path, "menu-button-exit"),
+		menuExitButtonHover = self:loadImageOrDefault(skin_path, "menu-button-exit-over"),
+		menuSoloButton = self:loadImageOrDefault(skin_path, "menu-button-freeplay"),
+		menuSoloButtonHover = self:loadImageOrDefault(skin_path, "menu-button-freeplay-over"),
+		menuMultiButton = self:loadImageOrDefault(skin_path, "menu-button-multiplayer"),
+		menuMultiButtonHover = self:loadImageOrDefault(skin_path, "menu-button-multiplayer-over"),
+		menuBackButton = self:loadImageOrDefault(skin_path, "menu-button-back"),
+		menuBackButtonHover = self:loadImageOrDefault(skin_path, "menu-button-back-over"),
 
 		-- RESULT
 

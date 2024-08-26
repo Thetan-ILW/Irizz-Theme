@@ -31,6 +31,15 @@ local beat = 0
 local now_playing = ""
 
 local update_time = 0
+local menu_open_time = 0
+local menu_button_update_time = 0
+---@type "hidden" | "main" | "play"
+local menu_state = "hidden"
+
+---@type table<string, {image: love.Image, hoverImage: love.Image, y: number, animation: number}>
+local buttons = {}
+
+local gfx = love.graphics
 
 ---@param game sphere.GameController
 ---@param assets osu.OsuAssets
@@ -48,6 +57,60 @@ function ViewConfig:new(game, assets)
 
 	chart_count = #game.selectModel.noteChartSetLibrary.items
 	update_time = math.huge
+	menu_state = "hidden"
+
+	self:createUiElements()
+end
+
+function ViewConfig:createUiElements()
+	buttons.play = {
+		image = img.menuPlayButton,
+		hoverImage = img.menuPlayButtonHover,
+		y = -200,
+		animation = 0,
+	}
+	buttons.edit = {
+		image = img.menuEditButton,
+		hoverImage = img.menuEditButtonHover,
+		y = -100,
+		animation = 0,
+	}
+	buttons.options = {
+		image = img.menuOptionsButton,
+		hoverImage = img.menuOptionsButtonHover,
+		y = 0,
+		animation = 0,
+	}
+	buttons.exit = {
+		image = img.menuExitButton,
+		hoverImage = img.menuExitButtonHover,
+		y = 100,
+		animation = 0,
+	}
+	buttons.solo = {
+		image = img.menuSoloButton,
+		hoverImage = img.menuSoloButtonHover,
+		y = -145,
+		animation = 0,
+	}
+	buttons.multi = {
+		image = img.menuMultiButton,
+		hoverImage = img.menuMultiButtonHover,
+		y = -42,
+		animation = 0,
+	}
+	buttons.back = {
+		image = img.menuBackButton,
+		hoverImage = img.menuBackButtonHover,
+		y = 60,
+		animation = 0,
+	}
+end
+
+local function getMousePosition()
+	local w, h = love.mouse.getPosition()
+	local scale = 768 / gfx.getHeight()
+	return w * scale, h * scale
 end
 
 function ViewConfig:updateInfo(view)
@@ -58,13 +121,12 @@ function ViewConfig:updateInfo(view)
 	update_time = love.timer.getTime()
 end
 
-local gfx = love.graphics
 local parallax = 0.01
 
 local function background()
 	local w, h = Layout:move("base")
 	local mx, my = love.mouse.getPosition()
-	gfx.setColor(1, 1, 1)
+	gfx.setColor(0.9, 0.9, 0.9)
 	gfx_util.drawFrame(
 		img.background,
 		-map(mx, 0, w, parallax, 0) * w,
@@ -77,20 +139,20 @@ end
 
 ---@param image love.Image
 ---@return boolean
-local function button(image)
+function ViewConfig:button(image)
 	gfx.draw(image)
 
 	local mouse_over = gyatt.isOver(20, 20)
 	gfx.translate(-32, 0)
 
 	if gyatt.mousePressed(1) and mouse_over then
-		return true
+		return self.hasFocus
 	end
 
 	return false
 end
 
-local function header(view)
+function ViewConfig:header(view)
 	local w, h = Layout:move("base")
 
 	gfx.setColor(0, 0, 0, 0.4)
@@ -150,26 +212,26 @@ local function header(view)
 
 	gfx.translate(w - 32, 36)
 
-	button(img.musicList)
-	button(img.musicInfo)
+	self:button(img.musicList)
+	self:button(img.musicInfo)
 
-	if button(img.musicForwards) then
+	if self:button(img.musicForwards) then
 		view.game.selectModel:scrollNoteChartSet(1)
 	end
 
-	if button(img.musicToStart) then
+	if self:button(img.musicToStart) then
 		audio:setPosition(0)
 	end
 
-	if button(img.musicPause) then
+	if self:button(img.musicPause) then
 		audio:pause()
 	end
 
-	if button(img.musicPlay) then
+	if self:button(img.musicPlay) then
 		audio:play()
 	end
 
-	if button(img.musicBackwards) then
+	if self:button(img.musicBackwards) then
 		view.game.selectModel:scrollNoteChartSet(-1)
 	end
 	gfx.setColor(1, 1, 1)
@@ -205,20 +267,135 @@ local function footer()
 	gfx.draw(img.copyright, 4, h - ih - 4)
 end
 
+local logo = {
+	x = 0,
+	y = 0,
+	focused = false,
+}
+
 ---@param view osu.MainMenuView
-local function osuLogo(view)
+function ViewConfig:osuLogo(view)
 	local w, h = Layout:move("base")
 
 	local iw, ih = img.osuLogo:getDimensions()
-	local mx, my = love.mouse.getPosition()
+	local mx, my = getMousePosition()
 	local ax, ay = -mx * 0.005, -my * 0.005
 
-	gfx.translate(w / 2 - iw / 2 + ax / 2 - (iw / 2 * beat), h / 2 - ih / 2 + ay / 2 - (ih / 2 * beat))
+	local sx = 0
+	local open_a = (gyatt.easeOutCubic(menu_open_time, 0.4)) * view.afkPercent
+
+	if menu_state ~= "hidden" then
+		sx = 150 * open_a
+	end
+
+	logo.x = w / 2 - iw / 2 + ax / 2 - (iw / 2 * beat) - sx
+	logo.y = h / 2 - ih / 2 + ay / 2 - (ih / 2 * beat)
+
+	local dx = (w / 2 - sx) - mx
+	local dy = (h / 2) - my
+	local distance = math.sqrt(math.pow(dx, 2) + math.pow(dy, 2))
+
+	logo.focused = distance < 255
+
+	if view.afkPercent == 0 then
+		menu_state = "hidden"
+	end
+
+	gfx.translate(logo.x, logo.y)
+	gfx.setColor(1, 1, 1)
 	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat, 1 + beat)
 
-	if gyatt.mousePressed(1) and gyatt.isOver(iw, ih) then
-		view:changeScreen("selectView")
+	if gyatt.mousePressed(1) and logo.focused and self.hasFocus then
+		if menu_state == "hidden" then
+			menu_open_time = love.timer.getTime()
+			menu_button_update_time = love.timer.getTime()
+			menu_state = "main"
+		elseif menu_state == "main" then
+			menu_state = "play"
+			menu_button_update_time = love.timer.getTime()
+		elseif menu_state == "play" then
+			view:changeScreen("selectView")
+		end
 	end
+end
+
+---@param id string
+---@param x number
+function ViewConfig:logoButton(id, x)
+	local btn = buttons[id]
+
+	local pressed = false
+	local hover = gyatt.isOver(400, 85, 0, btn.y) and not logo.focused and self.hasFocus
+
+	local dt = love.timer.getDelta()
+
+	if hover then
+		btn.animation = btn.animation + dt * 8
+
+		if gyatt.mousePressed(1) then
+			pressed = true
+		end
+	else
+		btn.animation = btn.animation - dt * 8
+	end
+
+	btn.animation = math_util.clamp(btn.animation, 0, 1)
+
+	gfx.draw(btn.image, x + (btn.animation * 20), btn.y)
+
+	gfx.setColor(1, 1, 1, btn.animation)
+
+	gfx.draw(btn.hoverImage, x + (btn.animation * 20), btn.y)
+	gfx.setColor(1, 1, 1)
+
+	return pressed
+end
+
+---@param view osu.MainMenuView
+function ViewConfig:logoButtons(view)
+	local w, h = Layout:move("base")
+	local buttons_a = (gyatt.easeOutCubic(menu_button_update_time, 0.4)) * view.afkPercent
+	local bx = 0
+
+	if menu_state ~= "hidden" then
+		bx = 150 * buttons_a
+	end
+
+	gfx.setScissor(gfx.getWidth() / 2, 0, gfx.getWidth() / 2, gfx.getHeight())
+	gfx.translate(w / 2, h / 2)
+	gfx.setColor(1, 1, 1, buttons_a)
+
+	if menu_state == "main" then
+		if self:logoButton("play", -300 + bx) then
+			menu_state = "play"
+			menu_button_update_time = love.timer.getTime()
+		end
+
+		if self:logoButton("edit", -300 + bx) then
+			view:edit()
+		end
+
+		if self:logoButton("options", -300 + bx) then
+			view:openModal("thetan.irizz.views.modals.SettingsModal")
+		end
+
+		if self:logoButton("exit", -300 + bx) then
+			love.event.quit()
+		end
+	elseif menu_state == "play" then
+		if self:logoButton("solo", -300 + bx) then
+			view:changeScreen("selectView")
+		end
+
+		self:logoButton("multi", -300 + bx)
+
+		if self:logoButton("back", -300 + bx) then
+			menu_state = "main"
+			menu_button_update_time = love.timer.getTime()
+		end
+	end
+
+	gfx.setScissor()
 end
 
 local direct_button = {
@@ -277,7 +454,8 @@ function ViewConfig:draw(view)
 	gfx.setCanvas(canvas)
 
 	gfx.clear()
-	header(view)
+	gfx.setBlendMode("alpha", "alphamultiply")
+	self:header(view)
 	footer()
 	osuDirect(view)
 
@@ -286,10 +464,13 @@ function ViewConfig:draw(view)
 	gfx.origin()
 	local a = view.afkPercent
 	gfx.setColor(a, a, a, a)
+	gfx.setBlendMode("alpha", "premultiplied")
 	gfx.draw(canvas)
+	gfx.setBlendMode("alpha")
 	gfx.setColor(1, 1, 1)
 
-	osuLogo(view)
+	self:logoButtons(view)
+	self:osuLogo(view)
 end
 
 return ViewConfig
