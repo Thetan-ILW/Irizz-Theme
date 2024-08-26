@@ -42,6 +42,10 @@ local buttons = {}
 
 local gfx = love.graphics
 
+---@type number[]
+local smoothed_fft = {}
+local smoothing_factor = 0.2
+
 ---@param game sphere.GameController
 ---@param assets osu.OsuAssets
 function ViewConfig:new(game, assets)
@@ -61,6 +65,10 @@ function ViewConfig:new(game, assets)
 	menu_state = "hidden"
 
 	self:createUiElements()
+
+	for i = 1, 64 do
+		smoothed_fft[i] = 0
+	end
 end
 
 function ViewConfig:createUiElements()
@@ -355,6 +363,41 @@ function ViewConfig:logoButtons(view)
 	gfx.setScissor()
 end
 
+local num_rectangles = 256
+local radius = 255
+local rect_width = 5
+local rect_height = 500
+local current_rotation = 0
+
+function ViewConfig:spectrum()
+	local centerX, centerY = 0, 0
+	love.graphics.setColor(1, 1, 1, 0.65)
+
+	for i = 1, num_rectangles do
+		local angle = (i - 1) * (2 * math.pi / num_rectangles)
+
+		local audio_value = smoothed_fft[1 + i % 64] * rect_height
+
+		local base_x = centerX + radius * math.cos(angle)
+		local base_y = centerY + radius * math.sin(angle)
+
+		local tip_x = centerX + (radius + audio_value) * math.cos(angle)
+		local tip_y = centerY + (radius + audio_value) * math.sin(angle)
+
+		love.graphics.polygon(
+			"fill",
+			base_x - rect_width / 2 * math.sin(angle),
+			base_y + rect_width / 2 * math.cos(angle),
+			base_x + rect_width / 2 * math.sin(angle),
+			base_y - rect_width / 2 * math.cos(angle),
+			tip_x + rect_width / 2 * math.sin(angle),
+			tip_y - rect_width / 2 * math.cos(angle),
+			tip_x - rect_width / 2 * math.sin(angle),
+			tip_y + rect_width / 2 * math.cos(angle)
+		)
+	end
+end
+
 ---@param view osu.MainMenuView
 function ViewConfig:osuLogo(view)
 	self:logoButtons(view)
@@ -387,8 +430,14 @@ function ViewConfig:osuLogo(view)
 		menu_state = "hidden"
 	end
 
-	gfx.translate(logo.x, logo.y)
+	gfx.push()
+	gfx.translate(w / 2 - sx, h / 2)
+	self:spectrum()
+	gfx.pop()
+
 	gfx.setColor(1, 1, 1)
+
+	gfx.translate(logo.x, logo.y)
 	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat - outro_scale, 1 + beat - outro_scale)
 
 	if gyatt.mousePressed(1) and logo.focused and self.hasFocus then
@@ -438,12 +487,27 @@ local function osuDirect(view)
 	gfx.setColor(1, 1, 1)
 end
 
-local function updateBeat(view)
+local next_fft_time = -math.huge
+
+local function updateFft(view)
+	if love.timer.getTime() < next_fft_time then
+		return
+	end
+
+	next_fft_time = love.timer.getTime() + 0.008
+
 	---@type audio.bass.BassSource
 	local audio = view.game.previewModel.audio
 
 	if audio and audio.getData then
-		beat = getBeatValue(audio:getData())
+		local currentFft = audio:getData()
+		beat = getBeatValue(currentFft)
+
+		current_rotation = current_rotation + (beat * 100) * love.timer.getDelta()
+		for i = 1, 64 do
+			smoothed_fft[i] = smoothed_fft[i] * (1 - smoothing_factor)
+				+ currentFft[(i - math.floor(current_rotation * 70)) % 64] * smoothing_factor
+		end
 	end
 end
 
@@ -484,7 +548,7 @@ end
 function ViewConfig:draw(view)
 	Layout:draw()
 
-	updateBeat(view)
+	updateFft(view)
 
 	if view.state == "intro" then
 		self:drawIntro(view)
