@@ -12,6 +12,7 @@ local getBeatValue = require("thetan.osu.views.beat_value")
 
 ---@class osu.MainMenuViewConfig : IViewConfig
 ---@operator call: osu.MainMenuViewConfig
+---@field hasFocus boolean
 local ViewConfig = IViewConfig + {}
 
 ---@type table<string, string>
@@ -288,8 +289,10 @@ function ViewConfig:osuLogo(view)
 		sx = 150 * open_a
 	end
 
-	logo.x = w / 2 - iw / 2 + ax / 2 - (iw / 2 * beat) - sx
-	logo.y = h / 2 - ih / 2 + ay / 2 - (ih / 2 * beat)
+	local outro_scale = view.outroPercent * 0.3
+
+	logo.x = w / 2 - iw / 2 + ax / 2 - (iw / 2 * (beat - outro_scale)) - sx
+	logo.y = h / 2 - ih / 2 + ay / 2 - (ih / 2 * (beat - outro_scale))
 
 	local dx = (w / 2 - sx) - mx
 	local dy = (h / 2) - my
@@ -303,7 +306,7 @@ function ViewConfig:osuLogo(view)
 
 	gfx.translate(logo.x, logo.y)
 	gfx.setColor(1, 1, 1)
-	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat, 1 + beat)
+	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat - outro_scale, 1 + beat - outro_scale)
 
 	if gyatt.mousePressed(1) and logo.focused and self.hasFocus then
 		if menu_state == "hidden" then
@@ -321,7 +324,8 @@ end
 
 ---@param id string
 ---@param x number
-function ViewConfig:logoButton(id, x)
+---@param alpha number
+function ViewConfig:logoButton(id, x, alpha)
 	local btn = buttons[id]
 
 	local pressed = false
@@ -341,9 +345,10 @@ function ViewConfig:logoButton(id, x)
 
 	btn.animation = math_util.clamp(btn.animation, 0, 1)
 
+	gfx.setColor(1, 1, 1, alpha)
 	gfx.draw(btn.image, x + (btn.animation * 20), btn.y)
 
-	gfx.setColor(1, 1, 1, btn.animation)
+	gfx.setColor(1, 1, 1, btn.animation * alpha)
 
 	gfx.draw(btn.hoverImage, x + (btn.animation * 20), btn.y)
 	gfx.setColor(1, 1, 1)
@@ -363,33 +368,32 @@ function ViewConfig:logoButtons(view)
 
 	gfx.setScissor(gfx.getWidth() / 2, 0, gfx.getWidth() / 2, gfx.getHeight())
 	gfx.translate(w / 2, h / 2)
-	gfx.setColor(1, 1, 1, buttons_a)
 
 	if menu_state == "main" then
-		if self:logoButton("play", -300 + bx) then
+		if self:logoButton("play", -300 + bx, buttons_a) then
 			menu_state = "play"
 			menu_button_update_time = love.timer.getTime()
 		end
 
-		if self:logoButton("edit", -300 + bx) then
+		if self:logoButton("edit", -300 + bx, buttons_a) then
 			view:edit()
 		end
 
-		if self:logoButton("options", -300 + bx) then
+		if self:logoButton("options", -300 + bx, buttons_a) then
 			view:openModal("thetan.irizz.views.modals.SettingsModal")
 		end
 
-		if self:logoButton("exit", -300 + bx) then
-			love.event.quit()
+		if self:logoButton("exit", -300 + bx, buttons_a) then
+			view:closeGame()
 		end
 	elseif menu_state == "play" then
-		if self:logoButton("solo", -300 + bx) then
+		if self:logoButton("solo", -300 + bx, buttons_a) then
 			view:changeScreen("selectView")
 		end
 
-		self:logoButton("multi", -300 + bx)
+		self:logoButton("multi", -300 + bx, buttons_a)
 
-		if self:logoButton("back", -300 + bx) then
+		if self:logoButton("back", -300 + bx, buttons_a) then
 			menu_state = "main"
 			menu_button_update_time = love.timer.getTime()
 		end
