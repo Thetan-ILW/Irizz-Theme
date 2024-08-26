@@ -150,6 +150,7 @@ function OsuAssets:new(skin_path, localization_file)
 
 		-- MAIN MENU
 
+		welcomeText = self:loadImageOrDefault(skin_path, "welcome_text"),
 		background = self:loadImageOrDefault(skin_path, "menu-background"),
 		copyright = self:loadImageOrDefault(skin_path, "menu-copyright"),
 		nowPlaying = self:loadImageOrDefault(skin_path, "menu-np"),
@@ -222,6 +223,9 @@ function OsuAssets:new(skin_path, localization_file)
 	}
 
 	self.sounds = {
+		welcome = self:loadAudioOrDefault(skin_path, "welcome"),
+		welcomePiano = self:loadAudioOrDefault(skin_path, "welcome_piano"),
+		goodbye = self:loadAudioOrDefault(skin_path, "seeya"),
 		selectChart = self:loadAudioOrDefault(skin_path, "select-difficulty"),
 		selectGroup = self:loadAudioOrDefault(skin_path, "select-expand"),
 		backButtonClick = self:loadAudioOrDefault(skin_path, "back-button-click"),

@@ -11,14 +11,15 @@ local get_assets = require("thetan.osu.views.assets_loader")
 ---@operator call: osu.MainMenuView
 ---@field state "intro" | "normal" | "fade_out" | "fade_in" | "afk" | "outro"
 ---@field tween table?
+---@field introTween table?
 ---@field outroTween table?
 local MainMenuView = ScreenView + {}
 
 local window_height = 0
+local game_launch = true
 
 function MainMenuView:load()
 	self.game.selectController:load(self)
-
 	self.assets = get_assets(self.game)
 	self.viewConfig = ViewConfig(self.game, self.assets)
 	self.inputMap = InputMap(self, self.actionModel)
@@ -30,7 +31,18 @@ function MainMenuView:load()
 	self.mouseMoveTime = love.timer.getTime()
 	self.afkPercent = 1
 	self.outroPercent = 0
-	self.state = "normal"
+	self.introPercent = 0
+	self.state = game_launch and "intro" or "normal"
+
+	if game_launch then
+		local snd = self.assets.sounds
+		snd.welcome:play()
+		snd.welcomePiano:play()
+	end
+
+	game_launch = false
+
+	self.introTween = flux.to(self, 2, { introPercent = 1 }):ease("linear")
 end
 
 function MainMenuView:beginUnload()
@@ -41,12 +53,27 @@ function MainMenuView:unload()
 	self.game.selectController:unload()
 end
 
+function MainMenuView:setMasterVolume(volume)
+	local audio = self.game.previewModel.audio
+
+	if not audio then
+		return
+	end
+
+	local configs = self.game.configModel.configs
+	local settings = configs.settings
+	local a = settings.audio
+	local v = a.volume
+
+	audio:setVolume(v.master * v.music * (1 - volume))
+end
+
 ---@param event string?
 function MainMenuView:processState(event)
 	local state = self.state
 
 	if state == "normal" then
-		if love.timer.getTime() > self.mouseMoveTime + 2 then
+		if love.timer.getTime() > self.mouseMoveTime + 8 then
 			self.state = "fade_out"
 			if self.tween then
 				self.tween:stop()
@@ -69,31 +96,30 @@ function MainMenuView:processState(event)
 			self.state = "normal"
 		end
 	elseif state == "intro" then
+		if self.introPercent == 1 then
+			self.state = "normal"
+		end
+
+		local animation = math.pow(self.introPercent, 16)
+		self.afkPercent = animation
 		self.viewConfig.hasFocus = false
 	elseif state == "outro" then
 		if self.outroPercent == 1 then
 			love.event.quit()
 		end
 
-		local audio = self.game.previewModel.audio
-
-		if audio then
-			local configs = self.game.configModel.configs
-			local settings = configs.settings
-			local a = settings.audio
-			local v = a.volume
-
-			audio:setVolume(v.master * v.music * (1 - self.outroPercent))
-		end
-
 		self.viewConfig.hasFocus = false
+		self:setMasterVolume(self.outroPercent)
 	end
 end
 
 ---@param dt number
 function MainMenuView:update(dt)
 	ScreenView.update(self, dt)
-	self.game.selectController:update()
+
+	if self.state ~= "intro" then
+		self.game.selectController:update()
+	end
 
 	self.viewConfig.hasFocus = self.modal == nil
 	self:processState()
@@ -115,6 +141,7 @@ function MainMenuView:closeGame()
 	self.state = "outro"
 	self.outroTween = flux.to(self, 1.2, { outroPercent = 1 }):ease("quadout")
 	self.tween = flux.to(self, 0.4, { afkPercent = 0 }):ease("quadout")
+	self.assets.sounds.goodbye:play()
 end
 
 function MainMenuView:notechartChanged()

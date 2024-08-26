@@ -796,7 +796,7 @@ function SettingsTab:UI(view)
 	end
 
 	if load_new_skin and irizz.osuSongSelect then
-		local current_view = view.game.selectView
+		local current_view = view.game.gameView.view
 		current_view:changeScreen("selectView")
 	end
 

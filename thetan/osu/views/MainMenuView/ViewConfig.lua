@@ -124,10 +124,11 @@ end
 
 local parallax = 0.01
 
-local function background()
+---@param view osu.MainMenuView
+local function background(view)
 	local w, h = Layout:move("base")
 	local mx, my = love.mouse.getPosition()
-	gfx.setColor(0.9, 0.9, 0.9)
+	gfx.setColor(0.9, 0.9, 0.9, 1)
 	gfx_util.drawFrame(
 		img.background,
 		-map(mx, 0, w, parallax, 0) * w,
@@ -274,54 +275,6 @@ local logo = {
 	focused = false,
 }
 
----@param view osu.MainMenuView
-function ViewConfig:osuLogo(view)
-	local w, h = Layout:move("base")
-
-	local iw, ih = img.osuLogo:getDimensions()
-	local mx, my = getMousePosition()
-	local ax, ay = -mx * 0.005, -my * 0.005
-
-	local sx = 0
-	local open_a = (gyatt.easeOutCubic(menu_open_time, 0.4)) * view.afkPercent
-
-	if menu_state ~= "hidden" then
-		sx = 150 * open_a
-	end
-
-	local outro_scale = view.outroPercent * 0.3
-
-	logo.x = w / 2 - iw / 2 + ax / 2 - (iw / 2 * (beat - outro_scale)) - sx
-	logo.y = h / 2 - ih / 2 + ay / 2 - (ih / 2 * (beat - outro_scale))
-
-	local dx = (w / 2 - sx) - mx
-	local dy = (h / 2) - my
-	local distance = math.sqrt(math.pow(dx, 2) + math.pow(dy, 2))
-
-	logo.focused = distance < 255
-
-	if view.afkPercent == 0 then
-		menu_state = "hidden"
-	end
-
-	gfx.translate(logo.x, logo.y)
-	gfx.setColor(1, 1, 1)
-	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat - outro_scale, 1 + beat - outro_scale)
-
-	if gyatt.mousePressed(1) and logo.focused and self.hasFocus then
-		if menu_state == "hidden" then
-			menu_open_time = love.timer.getTime()
-			menu_button_update_time = love.timer.getTime()
-			menu_state = "main"
-		elseif menu_state == "main" then
-			menu_state = "play"
-			menu_button_update_time = love.timer.getTime()
-		elseif menu_state == "play" then
-			view:changeScreen("selectView")
-		end
-	end
-end
-
 ---@param id string
 ---@param x number
 ---@param alpha number
@@ -402,6 +355,56 @@ function ViewConfig:logoButtons(view)
 	gfx.setScissor()
 end
 
+---@param view osu.MainMenuView
+function ViewConfig:osuLogo(view)
+	self:logoButtons(view)
+
+	local w, h = Layout:move("base")
+
+	local iw, ih = img.osuLogo:getDimensions()
+	local mx, my = getMousePosition()
+	local ax, ay = -mx * 0.005, -my * 0.005
+
+	local sx = 0
+	local open_a = (gyatt.easeOutCubic(menu_open_time, 0.4)) * view.afkPercent
+
+	if menu_state ~= "hidden" then
+		sx = 150 * open_a
+	end
+
+	local outro_scale = view.outroPercent * 0.3
+
+	logo.x = w / 2 - iw / 2 + ax / 2 - (iw / 2 * (beat - outro_scale)) - sx
+	logo.y = h / 2 - ih / 2 + ay / 2 - (ih / 2 * (beat - outro_scale))
+
+	local dx = (w / 2 - sx) - mx
+	local dy = (h / 2) - my
+	local distance = math.sqrt(math.pow(dx, 2) + math.pow(dy, 2))
+
+	logo.focused = distance < 255
+
+	if view.afkPercent == 0 then
+		menu_state = "hidden"
+	end
+
+	gfx.translate(logo.x, logo.y)
+	gfx.setColor(1, 1, 1)
+	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat - outro_scale, 1 + beat - outro_scale)
+
+	if gyatt.mousePressed(1) and logo.focused and self.hasFocus then
+		if menu_state == "hidden" then
+			menu_open_time = love.timer.getTime()
+			menu_button_update_time = love.timer.getTime()
+			menu_state = "main"
+		elseif menu_state == "main" then
+			menu_state = "play"
+			menu_button_update_time = love.timer.getTime()
+		elseif menu_state == "play" then
+			view:changeScreen("selectView")
+		end
+	end
+end
+
 local direct_button = {
 	mouseOver = false,
 	updateTime = -math.huge,
@@ -445,12 +448,50 @@ local function updateBeat(view)
 end
 
 ---@param view osu.MainMenuView
+function ViewConfig:drawIntro(view)
+	local prev_canvas = gfx.getCanvas()
+	local canvas = gyatt.getCanvas("osuMainMenu")
+
+	gfx.setCanvas(canvas)
+
+	gfx.clear()
+	gfx.setBlendMode("alpha", "alphamultiply")
+
+	background(view)
+	self:header(view)
+	footer()
+	osuDirect(view)
+	self:osuLogo(view)
+
+	gfx.setCanvas({ prev_canvas, stencil = true })
+
+	gfx.origin()
+	local a = view.afkPercent
+	gfx.setColor(a, a, a, a)
+	gfx.setBlendMode("alpha", "premultiplied")
+	gfx.draw(canvas)
+	gfx.setBlendMode("alpha")
+
+	local scale = 0.75 + view.introPercent * 0.25
+	local w, h = Layout:move("base")
+	local iw, ih = img.welcomeText:getDimensions()
+	iw, ih = iw * scale, ih * scale
+	gfx.setColor(1, 1, 1, 1 - math.pow(view.introPercent, 12))
+	gfx.draw(img.welcomeText, w / 2 - iw / 2, h / 2 - ih / 2, 0, scale, scale)
+end
+
+---@param view osu.MainMenuView
 function ViewConfig:draw(view)
 	Layout:draw()
 
 	updateBeat(view)
 
-	background()
+	if view.state == "intro" then
+		self:drawIntro(view)
+		return
+	end
+
+	background(view)
 
 	local prev_canvas = gfx.getCanvas()
 	local canvas = gyatt.getCanvas("osuMainMenu")
@@ -471,9 +512,7 @@ function ViewConfig:draw(view)
 	gfx.setBlendMode("alpha", "premultiplied")
 	gfx.draw(canvas)
 	gfx.setBlendMode("alpha")
-	gfx.setColor(1, 1, 1)
 
-	self:logoButtons(view)
 	self:osuLogo(view)
 end
 
