@@ -224,7 +224,9 @@ function OsuSelectView:receive(event)
 	end
 end
 
-function OsuSelectView:quit() end
+function OsuSelectView:quit()
+	self:changeScreen("osuMainMenuView")
+end
 
 local gfx = love.graphics
 

@@ -2,6 +2,7 @@ local IViewConfig = require("thetan.skibidi.views.IViewConfig")
 local Layout = require("thetan.osu.views.OsuLayout")
 
 local ui = require("thetan.osu.ui")
+local flux = require("flux")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
 local math_util = require("math_util")
@@ -13,6 +14,9 @@ local getBeatValue = require("thetan.osu.views.beat_value")
 ---@class osu.MainMenuViewConfig : IViewConfig
 ---@operator call: osu.MainMenuViewConfig
 ---@field hasFocus boolean
+---@field mainButtonsTween table?
+---@field playButtonsTween table?
+---@field logoTween table?
 local ViewConfig = IViewConfig + {}
 
 ---@type table<string, string>
@@ -63,6 +67,10 @@ function ViewConfig:new(game, assets)
 	chart_count = #game.selectModel.noteChartSetLibrary.items
 	update_time = math.huge
 	menu_state = "hidden"
+
+	self.mainButtonsAnimation = 0
+	self.playButtonsAnimation = 0
+	self.logoAnimation = 0
 
 	self:createUiElements()
 
@@ -271,8 +279,10 @@ local function footer()
 
 	gfx.setColor(0, 0, 0, 0.4)
 	gfx.rectangle("fill", 0, h - 86, w, 86)
+end
 
-	gfx.setColor(1, 1, 1)
+local function copyright()
+	local w, h = Layout:move("base")
 	local ih = img.copyright:getHeight()
 	gfx.draw(img.copyright, 4, h - ih - 4)
 end
@@ -283,6 +293,81 @@ local logo = {
 	focused = false,
 }
 
+function ViewConfig:processLogoState(view, event)
+	if view.afkPercent == 0 then
+		menu_state = "hidden"
+	end
+
+	local logo_click = event == "logo_click"
+
+	if menu_state == "hidden" then
+		if logo_click then
+			menu_state = "main"
+			if self.mainButtonsTween then
+				self.mainButtonsTween:stop()
+			end
+			if self.logoTween then
+				self.logoTween:stop()
+			end
+			self.mainButtonsTween = flux.to(self, 0.3, { mainButtonsAnimation = 1 }):ease("quadout")
+			self.logoTween = flux.to(self, 0.3, { logoAnimation = 1 }):ease("quadout")
+		end
+	elseif menu_state == "main" then
+		if self.mainButtonsAnimation == 0 then
+			menu_state = "hidden"
+		end
+		if event == "hide" then
+			if self.mainButtonsTween then
+				self.mainButtonsTween:stop()
+			end
+			if self.logoTween then
+				self.logoTween:stop()
+			end
+			self.mainButtonsTween = flux.to(self, 1, { mainButtonsAnimation = 0 }):ease("quadout")
+			self.logoTween = flux.to(self, 1, { logoAnimation = 0 }):ease("quadout")
+			menu_state = "hidden"
+		elseif event == "switch_to_play" or logo_click then
+			if self.mainButtonsTween then
+				self.mainButtonsTween:stop()
+			end
+			if self.playButtonsTween then
+				self.playButtonsTween:stop()
+			end
+			self.mainButtonsTween = flux.to(self, 0.3, { mainButtonsAnimation = 0 }):ease("quadout")
+			self.playButtonsTween = flux.to(self, 0.3, { playButtonsAnimation = 1 }):ease("quadout")
+			menu_state = "play"
+		end
+	elseif menu_state == "play" then
+		if self.playButtonsAnimation == 0 then
+			menu_state = "hidden"
+		end
+		if logo_click then
+			view:changeScreen("selectView")
+		end
+		if event == "hide" then
+			if self.playButtonsTween then
+				self.playButtonsTween:stop()
+			end
+			if self.logoTween then
+				self.logoTween:stop()
+			end
+			self.playButtonsTween = flux.to(self, 1, { playButtonsAnimation = 0 }):ease("quadout")
+			self.logoTween = flux.to(self, 1, { logoAnimation = 0 }):ease("quadout")
+			menu_state = "hidden"
+		elseif event == "switch_to_main" then
+			if self.mainButtonsTween then
+				self.mainButtonsTween:stop()
+			end
+			if self.playButtonsTween then
+				self.playButtonsTween:stop()
+			end
+			self.mainButtonsTween = flux.to(self, 0.3, { mainButtonsAnimation = 1 }):ease("quadout")
+			self.playButtonsTween = flux.to(self, 0.3, { playButtonsAnimation = 0 }):ease("quadout")
+			menu_state = "main"
+		end
+	end
+end
+
 ---@param id string
 ---@param x number
 ---@param alpha number
@@ -290,7 +375,7 @@ function ViewConfig:logoButton(id, x, alpha)
 	local btn = buttons[id]
 
 	local pressed = false
-	local hover = gyatt.isOver(400, 85, 0, btn.y) and not logo.focused and self.hasFocus
+	local hover = gyatt.isOver(580, 85, 0, btn.y) and not logo.focused and self.hasFocus
 
 	local dt = love.timer.getDelta()
 
@@ -319,59 +404,55 @@ end
 
 ---@param view osu.MainMenuView
 function ViewConfig:logoButtons(view)
-	local w, h = Layout:move("base")
-	local buttons_a = (gyatt.easeOutCubic(menu_button_update_time, 0.4)) * view.afkPercent
-	local bx = 0
+	gfx.setScissor(gfx.getWidth() / 2, 0, gfx.getWidth() / 2, gfx.getHeight())
 
-	if menu_state ~= "hidden" then
-		bx = 150 * buttons_a
+	local a = self.mainButtonsAnimation
+	local x = 1 - a
+	local focus = menu_state == "main" and self.mainButtonsAnimation > 0.05
+
+	if self:logoButton("play", -300 * x, a) and focus then
+		self:processLogoState(view, "switch_to_play")
 	end
 
-	gfx.setScissor(gfx.getWidth() / 2, 0, gfx.getWidth() / 2, gfx.getHeight())
-	gfx.translate(w / 2, h / 2)
+	if self:logoButton("edit", -300 * x, a) and focus then
+		view:edit()
+	end
 
-	if menu_state == "main" then
-		if self:logoButton("play", -300 + bx, buttons_a) then
-			menu_state = "play"
-			menu_button_update_time = love.timer.getTime()
-		end
+	if self:logoButton("options", -300 * x, a) and focus then
+		view:openModal("thetan.irizz.views.modals.SettingsModal")
+	end
 
-		if self:logoButton("edit", -300 + bx, buttons_a) then
-			view:edit()
-		end
+	if self:logoButton("exit", -300 * x, a) and focus then
+		view:closeGame()
+		self:processLogoState(view, "hide")
+	end
 
-		if self:logoButton("options", -300 + bx, buttons_a) then
-			view:openModal("thetan.irizz.views.modals.SettingsModal")
-		end
+	a = self.playButtonsAnimation
+	x = 1 - a
+	focus = menu_state == "play" and self.playButtonsAnimation > 0.05
 
-		if self:logoButton("exit", -300 + bx, buttons_a) then
-			view:closeGame()
-		end
-	elseif menu_state == "play" then
-		if self:logoButton("solo", -300 + bx, buttons_a) then
-			view:changeScreen("selectView")
-		end
+	if self:logoButton("solo", -300 * x, a) and focus then
+		view:changeScreen("selectView")
+	end
 
-		self:logoButton("multi", -300 + bx, buttons_a)
+	if self:logoButton("multi", -300 * x, a) and focus then
+	end
 
-		if self:logoButton("back", -300 + bx, buttons_a) then
-			menu_state = "main"
-			menu_button_update_time = love.timer.getTime()
-		end
+	if self:logoButton("back", -300 * x, a) and focus then
+		self:processLogoState(view, "switch_to_main")
 	end
 
 	gfx.setScissor()
 end
 
 local num_rectangles = 256
-local radius = 255
+local radius = 253
 local rect_width = 5
 local rect_height = 500
 local current_rotation = 0
 
 function ViewConfig:spectrum()
 	local centerX, centerY = 0, 0
-	love.graphics.setColor(1, 1, 1, 0.65)
 
 	for i = 1, num_rectangles do
 		local angle = (i - 1) * (2 * math.pi / num_rectangles)
@@ -400,22 +481,15 @@ end
 
 ---@param view osu.MainMenuView
 function ViewConfig:osuLogo(view)
-	self:logoButtons(view)
-
 	local w, h = Layout:move("base")
 
 	local iw, ih = img.osuLogo:getDimensions()
 	local mx, my = getMousePosition()
 	local ax, ay = -mx * 0.005, -my * 0.005
 
-	local sx = 0
-	local open_a = (gyatt.easeOutCubic(menu_open_time, 0.4)) * view.afkPercent
-
-	if menu_state ~= "hidden" then
-		sx = 150 * open_a
-	end
-
 	local outro_scale = view.outroPercent * 0.3
+
+	local sx = self.logoAnimation * 150
 
 	logo.x = w / 2 - iw / 2 + ax / 2 - (iw / 2 * (beat - outro_scale)) - sx
 	logo.y = h / 2 - ih / 2 + ay / 2 - (ih / 2 * (beat - outro_scale))
@@ -426,13 +500,17 @@ function ViewConfig:osuLogo(view)
 
 	logo.focused = distance < 255
 
-	if view.afkPercent == 0 then
-		menu_state = "hidden"
-	end
-
 	gfx.push()
 	gfx.translate(w / 2 - sx, h / 2)
+	gfx.scale(1 + beat - outro_scale, 1 + beat - outro_scale)
+
+	gfx.push()
+	self:logoButtons(view)
+	gfx.pop()
+
+	love.graphics.setColor(1, 1, 1, 0.65)
 	self:spectrum()
+	gfx.scale(1)
 	gfx.pop()
 
 	gfx.setColor(1, 1, 1)
@@ -441,16 +519,7 @@ function ViewConfig:osuLogo(view)
 	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat - outro_scale, 1 + beat - outro_scale)
 
 	if gyatt.mousePressed(1) and logo.focused and self.hasFocus then
-		if menu_state == "hidden" then
-			menu_open_time = love.timer.getTime()
-			menu_button_update_time = love.timer.getTime()
-			menu_state = "main"
-		elseif menu_state == "main" then
-			menu_state = "play"
-			menu_button_update_time = love.timer.getTime()
-		elseif menu_state == "play" then
-			view:changeScreen("selectView")
-		end
+		self:processLogoState(view, "logo_click")
 	end
 end
 
@@ -499,6 +568,11 @@ local function updateFft(view)
 	---@type audio.bass.BassSource
 	local audio = view.game.previewModel.audio
 
+	if view.state == "intro" then
+		audio = snd.welcome
+		---@cast audio audio.bass.BassSource
+	end
+
 	if audio and audio.getData then
 		local currentFft = audio:getData()
 		beat = getBeatValue(currentFft)
@@ -540,7 +614,16 @@ function ViewConfig:drawIntro(view)
 	local w, h = Layout:move("base")
 	local iw, ih = img.welcomeText:getDimensions()
 	iw, ih = iw * scale, ih * scale
-	gfx.setColor(1, 1, 1, 1 - math.pow(view.introPercent, 12))
+	a = 1 - math.pow(view.introPercent, 8)
+
+	gfx.push()
+	gfx.translate(w / 2, h / 2)
+	gfx.setColor(0, 0.09, 0.21, a)
+	self:spectrum()
+	gfx.pop()
+	gfx.setColor(1, 1, 1, 1)
+	copyright()
+	gfx.setColor(1, 1, 1, a)
 	gfx.draw(img.welcomeText, w / 2 - iw / 2, h / 2 - ih / 2, 0, scale, scale)
 end
 
@@ -566,6 +649,9 @@ function ViewConfig:draw(view)
 	gfx.setBlendMode("alpha", "alphamultiply")
 	self:header(view)
 	footer()
+
+	gfx.setColor(1, 1, 1)
+	copyright()
 	osuDirect(view)
 
 	gfx.setCanvas({ prev_canvas, stencil = true })
@@ -577,6 +663,7 @@ function ViewConfig:draw(view)
 	gfx.draw(canvas)
 	gfx.setBlendMode("alpha")
 
+	self:processLogoState(view)
 	self:osuLogo(view)
 end
 

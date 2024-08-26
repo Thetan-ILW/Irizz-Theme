@@ -73,12 +73,13 @@ function MainMenuView:processState(event)
 	local state = self.state
 
 	if state == "normal" then
-		if love.timer.getTime() > self.mouseMoveTime + 8 then
+		if love.timer.getTime() > self.mouseMoveTime + 5 then
 			self.state = "fade_out"
 			if self.tween then
 				self.tween:stop()
 			end
 			self.tween = flux.to(self, 1, { afkPercent = 0 }):ease("quadout")
+			self.viewConfig:processLogoState(self, "hide")
 		end
 	elseif state == "fade_out" or state == "afk" then
 		if event == "mousemoved" then
