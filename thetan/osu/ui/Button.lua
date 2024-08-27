@@ -1,16 +1,17 @@
-local class = require("class")
+local UiElement = require("thetan.osu.ui.UiElement")
 
 local gyatt = require("thetan.gyatt")
 local ui = require("thetan.osu.ui")
 
----@class osu.ui.Button
+---@class osu.ui.Button : osu.UiElement
 ---@operator call: osu.ui.Button
 ---@field text string
 ---@field font love.Font
 ---@field scale number
 ---@field width number
 ---@field color number[]
----@field spacing number
+---@field margin number
+---@field private onChange function
 ---@field private totalW number
 ---@field private totalH number
 ---@field private middleAdditionalScale number
@@ -20,11 +21,12 @@ local ui = require("thetan.osu.ui")
 ---@field private hover boolean
 ---@field private hoverUpdateTime number
 ---@field private brightenShader love.Shader
-local Button = class()
+local Button = UiElement + {}
 
----@param assets osu.OsuSelectAssets
----@param params { text: string, font: love.Font, scale: number, width: number, color: number[], spacing: number }
-function Button:new(assets, params)
+---@param assets osu.OsuAssets
+---@param params { text: string, font: love.Font, scale: number?, width: number?, color: number[]?, margin: number? }
+---@param on_change function
+function Button:new(assets, params, on_change)
 	local img = assets.images
 	self.imageLeft = img.buttonLeft
 	self.imageMiddle = img.buttonMiddle
@@ -35,7 +37,7 @@ function Button:new(assets, params)
 	self.scale = params.scale or 1
 	self.width = params.width or 1
 	self.color = params.color or { 1, 1, 1, 1 }
-	self.spacing = params.spacing or 15
+	self.margin = params.margin or 15
 
 	self.middleAdditionalScale = 283 / (self.imageMiddle:getPixelWidth() / self.imageMiddle:getDPIScale())
 
@@ -43,12 +45,13 @@ function Button:new(assets, params)
 		+ self.imageMiddle:getWidth() * self.scale * self.width * self.middleAdditionalScale
 		+ self.imageRight:getWidth() * self.scale
 
-	self.totalH = self.imageLeft:getHeight() * self.scale
+	self.totalH = self.imageLeft:getHeight() * self.scale + self.margin
 
 	self.hover = false
 	self.hoverUpdateTime = -math.huge
 
 	self.brightenShader = require("irizz.shaders").brighten
+	self.onChange = on_change
 end
 
 ---@return number
@@ -59,7 +62,6 @@ end
 
 local gfx = love.graphics
 
----@return boolean
 function Button:update()
 	local mouse_over = gyatt.isOver(self.totalW, self.totalH)
 
@@ -70,20 +72,15 @@ function Button:update()
 	self.hover = mouse_over
 
 	if mouse_over and gyatt.mousePressed(1) then
-		return true
+		self.onChange()
 	end
-
-	return false
 end
 
----@return boolean
 function Button:draw()
 	local left = self.imageLeft
 	local middle = self.imageMiddle
 	local right = self.imageRight
 	local scale = self.scale
-
-	local pressed = self:update()
 
 	local prev_shader = gfx.getShader()
 
@@ -100,6 +97,7 @@ function Button:draw()
 	gfx.setColor(self.color)
 
 	gfx.push()
+	gfx.translate(0, self.margin / 2)
 	gfx.draw(left, 0, 0, 0, scale, scale)
 	gfx.translate(left:getWidth() * scale, 0)
 	gfx.draw(middle, 0, 0, 0, scale * self.width * self.middleAdditionalScale, scale)
@@ -109,13 +107,13 @@ function Button:draw()
 
 	gfx.setShader(prev_shader)
 
+	gfx.push()
 	gfx.setFont(self.font)
 	gfx.setColor({ 1, 1, 1, 1 })
 	ui.frameWithShadow(self.text, 0, 0, self.totalW, self.totalH, "center", "center")
+	gfx.pop()
 
-	gyatt.next(0, self.totalH + self.spacing)
-
-	return pressed
+	gyatt.next(0, self.totalH)
 end
 
 return Button

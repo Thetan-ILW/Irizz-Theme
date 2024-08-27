@@ -87,9 +87,13 @@ l.fontFiles = {
 
 l.fontGroups = {
 	mainMenu = {
-		username = { "Aller", 20, "ZenMaruGothic-Medium" },
+		username = { "Aller", 20, "ZenMaruGothic-Regular" },
 		belowUsername = { "Aller", 14 },
-		info = { "Aller", 18, "ZenMaruGothic-Medium" },
+		info = { "Aller", 18, "ZenMaruGothic-Regular" },
+	},
+	settings = {
+		groupLabel = { "Aller-Bold", 16, "ZenMaruGothic-Regular" },
+		buttons = { "Aller", 16, "ZenMaruGothic-Regular" },
 	},
 	songSelect = {
 		chartName = { "Aller", 25, "ZenMaruGothic-Regular" },

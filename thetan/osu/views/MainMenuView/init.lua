@@ -18,7 +18,7 @@ local get_assets = require("thetan.osu.views.assets_loader")
 local MainMenuView = ScreenView + {}
 
 local window_height = 0
-local game_launch = true
+local game_launch = false
 
 function MainMenuView:load()
 	self.game.selectController:load(self)
@@ -179,6 +179,8 @@ function MainMenuView:receive(event)
 			return
 		end
 	end
+
+	self.settingsView:receive(event)
 end
 
 local gfx = love.graphics
