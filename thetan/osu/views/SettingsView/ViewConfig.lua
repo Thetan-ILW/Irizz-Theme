@@ -4,6 +4,8 @@ local gyatt = require("thetan.gyatt")
 local flux = require("flux")
 local Layout = require("thetan.osu.views.OsuLayout")
 
+local Spacing = require("thetan.osu.ui.Spacing")
+
 ---@class osu.SettingsViewConfig : IViewConfig
 ---@operator call: osu.SettingsViewConfig
 ---@field focus boolean
@@ -11,6 +13,8 @@ local Layout = require("thetan.osu.views.OsuLayout")
 ---@field hoverRectTargetPosition number
 ---@field hoverRectTargetSize number
 ---@field hoverRectTween table?
+---@field spacing1 osu.ui.Spacing
+---@field spacing2 osu.ui.Spacing
 local ViewConfig = IViewConfig + {}
 
 local visibility = 0
@@ -26,6 +30,9 @@ function ViewConfig:new(assets)
 	self.hoverRectTargetPosition = 0
 	self.hoverRectTargetSize = 0
 	img = assets.images
+
+	self.spacing1 = Spacing(64)
+	self.spacing2 = Spacing(30)
 end
 
 function ViewConfig:tabs()
@@ -55,6 +62,13 @@ function ViewConfig:panel(view)
 
 	gfx.clear()
 	gfx.setBlendMode("alpha", "alphamultiply")
+
+	self.spacing1:draw()
+	view.optionsLabel:update()
+	view.optionsLabel:draw()
+	view.gameBehaviorLabel:update()
+	view.gameBehaviorLabel:draw()
+	self.spacing2:draw()
 
 	local c = containers["test"]
 	c.position = view.scrollPosition

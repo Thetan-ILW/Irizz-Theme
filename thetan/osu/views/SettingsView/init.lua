@@ -4,6 +4,7 @@ local math_util = require("math_util")
 
 local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
 local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
+local Label = require("thetan.osu.ui.Label")
 local Button = require("thetan.osu.ui.Button")
 
 ---@class osu.SettingsView
@@ -15,7 +16,9 @@ local Button = require("thetan.osu.ui.Button")
 ---@field scrollTargetPosition number
 ---@field scrollTween table?
 ---@field containers table<string, osu.SettingsView.GroupContainer>
----@field totalContainerHeight number
+---@field totalHeight number
+---@field optionsLabel osu.ui.Label
+---@field gameBehaviorLabel osu.ui.Label
 local SettingsView = class()
 
 ---@param assets osu.OsuAssets
@@ -26,10 +29,23 @@ function SettingsView:new(assets)
 	self.scrollPosition = 0
 	self.scrollTargetPosition = 0
 	self.containers = {}
-	self.totalContainerHeight = 0
+	self.totalHeight = 0
 
 	local text, font = assets.localization:get("settings")
 	assert(font)
+
+	self.optionsLabel = Label({
+		text = "Options",
+		width = 438,
+		font = font.optionsLabel,
+	})
+
+	self.gameBehaviorLabel = Label({
+		text = "Change the way soundsphere behaves",
+		width = 438,
+		font = font.gameBehaviorLabel,
+		color = { 0.83, 0.38, 0.47, 1 },
+	})
 
 	local btn_w = 2.65
 	local btn_s = 0.5
@@ -71,8 +87,11 @@ function SettingsView:new(assets)
 
 	self.containers["test"] = test_container
 
+	self.totalHeight = self.optionsLabel:getHeight()
+	self.totalHeight = self.totalHeight + self.gameBehaviorLabel:getHeight()
+
 	for _, c in pairs(self.containers) do
-		self.totalContainerHeight = self.totalContainerHeight + c.height
+		self.totalHeight = self.totalHeight + c.height
 	end
 end
 
@@ -139,8 +158,7 @@ function SettingsView:receive(event)
 	if event.name == "wheelmoved" and self.state ~= "hidden" and self.viewConfig.focus then
 		---@type number
 		local delta = -event[2]
-		self.scrollTargetPosition =
-			math_util.clamp(self.scrollTargetPosition + (delta * 50), 0, self.totalContainerHeight)
+		self.scrollTargetPosition = math_util.clamp(self.scrollTargetPosition + (delta * 50), 0, self.totalHeight)
 
 		flux.to(self, 0.1, { scrollPosition = -self.scrollTargetPosition }):ease("quadout")
 	end

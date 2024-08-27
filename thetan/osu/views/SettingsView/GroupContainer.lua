@@ -21,6 +21,7 @@ local font
 ---@type number
 local group_label_spacing = 15
 local group_spacing = 40
+local tab_label_spacing = 30
 
 ---@param name string
 ---@param fonts table<string, love.Font>
@@ -75,7 +76,8 @@ function GroupContainer:draw()
 
 	self.tabLabel:update()
 	self.tabLabel:draw()
-	local current_position = self.tabLabel:getHeight()
+	gfx.translate(0, tab_label_spacing)
+	local current_position = self.tabLabel:getHeight() + tab_label_spacing
 
 	for _, id in ipairs(self.groupOrder) do
 		local group = self.groups[id]
