@@ -154,6 +154,17 @@ function Assets.emptyAudio()
 	return empty_audio
 end
 
+function Assets:loadDefaultImage(name)
+	local image = Assets.loadImage(self.defaultsDirectory .. name)
+
+	if image then
+		return image
+	end
+
+	table.insert(self.errors, ("Image not found %s"):format(name))
+	return self.emptyImage()
+end
+
 ---@param directory string
 ---@param name string
 ---@return love.Image
@@ -164,14 +175,7 @@ function Assets:loadImageOrDefault(directory, name)
 		return image
 	end
 
-	image = Assets.loadImage(self.defaultsDirectory .. name)
-
-	if image then
-		return image
-	end
-
-	table.insert(self.errors, ("Image not found %s"):format(name))
-	return self.emptyImage()
+	return Assets.loadDefaultImage(self, name)
 end
 
 ---@param directory string

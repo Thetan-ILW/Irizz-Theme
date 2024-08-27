@@ -17,8 +17,6 @@ local utf8validate = require("utf8validate")
 ---@field resultViewConfig function?
 local OsuAssets = Assets + {}
 
-OsuAssets.defaultsDirectory = "resources/osu_default_assets/"
-
 local default_skin_ini = {
 	Colours = {
 		SongSelectActiveText = "0,0,0",
@@ -76,6 +74,7 @@ end
 ---@param skin_path string
 ---@param localization_file string
 function OsuAssets:new(skin_path, localization_file)
+	self.defaultsDirectory = "resources/osu_default_assets/"
 	self.skinPath = skin_path
 
 	local content = love.filesystem.read(skin_path .. "skin.ini") or love.filesystem.read(skin_path .. "Skin.ini")
@@ -111,6 +110,7 @@ function OsuAssets:new(skin_path, localization_file)
 		dropdownArrow = self:loadImageOrDefault(skin_path, "dropdown-arrow"),
 
 		menuBack = self:loadImageOrDefault(skin_path, "menu-back"),
+		menuBackDefault = self:loadDefaultImage("menu-back"),
 		modeButton = self:loadImageOrDefault(skin_path, "selection-mode"),
 		modsButton = self:loadImageOrDefault(skin_path, "selection-mods"),
 		randomButton = self:loadImageOrDefault(skin_path, "selection-random"),

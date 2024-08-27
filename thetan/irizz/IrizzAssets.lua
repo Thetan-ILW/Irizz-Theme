@@ -17,7 +17,6 @@ local table_util = require("table_util")
 ---@field errors string[]
 local IrizzAssets = Assets + {}
 
-IrizzAssets.defaultsDirectory = "irizz/"
 IrizzAssets.startSounds = {}
 IrizzAssets.startSoundNames = {}
 
@@ -50,6 +49,8 @@ end
 
 ---@param localization_filepath string
 function IrizzAssets:new(localization_filepath)
+	self.defaultsDirectory = "irizz/"
+
 	local userdata = "userdata/"
 	local icons = "irizz/icons/"
 	local start_sounds = "ui_sounds/start/"
@@ -57,9 +58,9 @@ function IrizzAssets:new(localization_filepath)
 	self:loadLocalization(localization_filepath)
 
 	self.images = {
-		gameIcon = IrizzAssets:loadImageOrDefault(userdata, "game_icon"),
-		avatar = IrizzAssets:loadImageOrDefault(userdata, "avatar"),
-		buttonGradient = IrizzAssets:loadImageOrDefault(userdata, "images/button_gradient"),
+		gameIcon = self:loadImageOrDefault(userdata, "game_icon"),
+		avatar = self:loadImageOrDefault(userdata, "avatar"),
+		buttonGradient = self:loadImageOrDefault(userdata, "images/button_gradient"),
 
 		modifiersIcon = loadImageOrEmpty(icons .. "modifiers.png"),
 		filtersIcon = loadImageOrEmpty(icons .. "filters.png"),
@@ -74,21 +75,21 @@ function IrizzAssets:new(localization_filepath)
 	}
 
 	self.sounds = {
-		scrollLargeList = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/scroll_large_list"),
-		scrollSmallList = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/scroll_small_list"),
-		checkboxClick = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/checkbox_click"),
-		buttonClick = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/button_click"),
-		sliderMoved = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/slider_moved"),
-		tabButtonClick = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/tab_button_click"),
-		songSelectScreenChanged = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/song_select_screen_changed"),
-		pauseAmbient = IrizzAssets:loadAudioOrDefault(userdata, "ui_sounds/pause"),
+		scrollLargeList = self:loadAudioOrDefault(userdata, "ui_sounds/scroll_large_list"),
+		scrollSmallList = self:loadAudioOrDefault(userdata, "ui_sounds/scroll_small_list"),
+		checkboxClick = self:loadAudioOrDefault(userdata, "ui_sounds/checkbox_click"),
+		buttonClick = self:loadAudioOrDefault(userdata, "ui_sounds/button_click"),
+		sliderMoved = self:loadAudioOrDefault(userdata, "ui_sounds/slider_moved"),
+		tabButtonClick = self:loadAudioOrDefault(userdata, "ui_sounds/tab_button_click"),
+		songSelectScreenChanged = self:loadAudioOrDefault(userdata, "ui_sounds/song_select_screen_changed"),
+		pauseAmbient = self:loadAudioOrDefault(userdata, "ui_sounds/pause"),
 	}
 
 	local sounds = getItems(start_sounds, true)
 
 	for _, name in ipairs(sounds) do
 		table.insert(self.startSoundNames, name)
-		self.startSounds[name] = IrizzAssets:loadAudioOrDefault(userdata, start_sounds .. name)
+		self.startSounds[name] = self:loadAudioOrDefault(userdata, start_sounds .. name)
 	end
 
 	self.colorThemes = getItems("color_themes/", true)

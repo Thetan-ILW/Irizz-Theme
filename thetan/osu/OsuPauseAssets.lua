@@ -7,10 +7,10 @@ local Assets = require("thetan.skibidi.models.AssetModel.Assets")
 ---@field sounds table<string, audio.Source?>
 local OsuPauseAssets = Assets + {}
 
-OsuPauseAssets.defaultsDirectory = "resources/osu_default_assets/"
-
 ---@param path string
 function OsuPauseAssets:new(path)
+	self.defaultsDirectory = "resources/osu_default_assets/"
+
 	self.images = {
 		overlay = self:loadImageOrDefault(path, "pause-overlay"),
 		overlayFail = self:loadImageOrDefault(path, "fail-background"),

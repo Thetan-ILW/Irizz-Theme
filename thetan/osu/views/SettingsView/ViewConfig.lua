@@ -9,11 +9,15 @@ local Layout = require("thetan.osu.views.OsuLayout")
 local ViewConfig = IViewConfig + {}
 
 local visibility = 0
+---@type table<string, love.Image>
+local img
 
 local gfx = love.graphics
 
-function ViewConfig:new()
+---@param assets osu.OsuAssets
+function ViewConfig:new(assets)
 	self.focus = false
+	img = assets.images
 end
 
 function ViewConfig:tabs()
@@ -31,6 +35,11 @@ function ViewConfig:panel()
 	gfx.rectangle("fill", 0, 0, 438 * visibility, h)
 
 	self.focus = gyatt.isOver(438 * visibility, h)
+
+	gfx.setColor(1, 1, 1, 1 * visibility)
+	local ih = img.menuBackDefault:getHeight()
+	gfx.translate(-64, h - ih)
+	gfx.draw(img.menuBackDefault)
 end
 
 ---@param view osu.SettingsView

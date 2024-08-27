@@ -10,8 +10,9 @@ local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
 ---@field visibilityTween table?
 local SettingsView = class()
 
-function SettingsView:new()
-	self.viewConfig = ViewConfig()
+---@param assets osu.OsuAssets
+function SettingsView:new(assets)
+	self.viewConfig = ViewConfig(assets)
 	self.visibility = 0
 	self.state = "hidden"
 end
