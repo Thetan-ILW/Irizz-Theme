@@ -20,10 +20,14 @@ function Label:new(params)
 	self.align = params.align or "center"
 
 	self.totalW = params.width
-	self.totalH = self.font:getHeight()
+	self.totalH = self.font:getHeight() * gyatt.getTextScale()
 end
 
 local gfx = love.graphics
+
+function Label:update()
+	self.totalH = self.font:getHeight() * gyatt.getTextScale()
+end
 
 function Label:draw()
 	gfx.setColor(self.color)

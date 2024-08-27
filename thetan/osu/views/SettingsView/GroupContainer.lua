@@ -18,6 +18,7 @@ local GroupContainer = class()
 ---@type table<string, love.Font>
 local font
 
+---@type number
 local group_label_spacing = 15
 local group_spacing = 40
 
@@ -72,6 +73,7 @@ function GroupContainer:draw()
 
 	self.hoverSize = 0
 
+	self.tabLabel:update()
 	self.tabLabel:draw()
 	local current_position = self.tabLabel:getHeight()
 
@@ -87,7 +89,7 @@ function GroupContainer:draw()
 		gyatt.text(group.name)
 
 		gfx.translate(0, group_label_spacing)
-		current_position = current_position + font.groupLabel:getHeight() + group_label_spacing
+		current_position = current_position + (font.groupLabel:getHeight() * gyatt.getTextScale()) + group_label_spacing
 
 		for _, element in ipairs(group.elements) do
 			element:update()

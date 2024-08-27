@@ -38,6 +38,7 @@ end
 ---@param view osu.SettingsView
 function ViewConfig:panel(view)
 	local w, h = Layout:move("base")
+	local scale = gfx.getHeight() / 768
 
 	gfx.setColor(0, 0, 0, 0.7 * visibility)
 	gfx.translate(64, 0)
@@ -76,7 +77,6 @@ function ViewConfig:panel(view)
 
 	gfx.origin()
 	gfx.setColor(1 * visibility, 1 * visibility, 1 * visibility, 1 * visibility)
-	local scale = gfx.getHeight() / 768
 	gfx.setScissor(64 * scale, 0, visibility * (438 * scale), h)
 	gfx.setBlendMode("alpha", "premultiplied")
 	gfx.draw(canvas)
