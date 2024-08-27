@@ -419,7 +419,7 @@ function ViewConfig:logoButtons(view)
 	end
 
 	if self:logoButton("options", -300 * x, a) and focus then
-		view:openModal("thetan.irizz.views.modals.SettingsModal")
+		view:toggleSettings()
 	end
 
 	if self:logoButton("exit", -300 * x, a) and focus then

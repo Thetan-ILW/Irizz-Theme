@@ -5,6 +5,8 @@ local gyatt = require("thetan.gyatt")
 local ViewConfig = require("thetan.osu.views.MainMenuView.ViewConfig")
 local InputMap = require("thetan.osu.views.MainMenuView.InputMap")
 
+local SettingsView = require("thetan.osu.views.SettingsView")
+
 local get_assets = require("thetan.osu.views.assets_loader")
 
 ---@class osu.MainMenuView : skibidi.ScreenView
@@ -24,6 +26,7 @@ function MainMenuView:load()
 	self.viewConfig = ViewConfig(self.game, self.assets)
 	self.inputMap = InputMap(self, self.actionModel)
 	self.actionModel.enable()
+	self.settingsView = SettingsView()
 
 	window_height = love.graphics.getHeight()
 	love.mouse.setVisible(false)
@@ -80,6 +83,7 @@ function MainMenuView:processState(event)
 			end
 			self.tween = flux.to(self, 1, { afkPercent = 0 }):ease("quadout")
 			self.viewConfig:processLogoState(self, "hide")
+			self.settingsView:processState("hide")
 		end
 	elseif state == "fade_out" or state == "afk" then
 		if event == "mousemoved" then
@@ -117,12 +121,13 @@ end
 ---@param dt number
 function MainMenuView:update(dt)
 	ScreenView.update(self, dt)
+	self.settingsView:update()
 
 	if self.state ~= "intro" then
 		self.game.selectController:update()
 	end
 
-	self.viewConfig.hasFocus = self.modal == nil
+	self.viewConfig.hasFocus = (self.modal == nil) and not self.settingsView:isFocused()
 	self:processState()
 end
 
@@ -132,6 +137,10 @@ function MainMenuView:edit()
 	end
 
 	self:changeScreen("editorView")
+end
+
+function MainMenuView:toggleSettings()
+	self.settingsView:processState("toggle")
 end
 
 function MainMenuView:closeGame()
@@ -188,6 +197,7 @@ end
 function MainMenuView:draw()
 	gyatt.setTextScale(768 / window_height)
 	self.viewConfig:draw(self)
+	self.settingsView:draw()
 	self:drawModal()
 	self.notificationView:draw()
 	self:drawCursor()
