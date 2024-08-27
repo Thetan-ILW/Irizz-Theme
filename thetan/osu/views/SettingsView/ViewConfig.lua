@@ -75,7 +75,7 @@ function ViewConfig:panel(view)
 	gfx.setCanvas(prev_canvas)
 
 	gfx.origin()
-	gfx.setColor(1, 1, 1, 1 * visibility)
+	gfx.setColor(1 * visibility, 1 * visibility, 1 * visibility, 1 * visibility)
 	local scale = gfx.getHeight() / 768
 	gfx.setScissor(64 * scale, 0, visibility * (438 * scale), h)
 	gfx.setBlendMode("alpha", "premultiplied")

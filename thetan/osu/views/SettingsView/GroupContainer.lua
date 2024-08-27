@@ -2,6 +2,8 @@ local class = require("class")
 
 local gyatt = require("thetan.gyatt")
 
+local Label = require("thetan.osu.ui.Label")
+
 ---@class osu.SettingsView.GroupContainer
 ---@operator call: osu.SettingsView.GroupContainer
 ---@field groups table<string, {name: string, height: number, elements: osu.UiElement[]}>
@@ -10,6 +12,7 @@ local gyatt = require("thetan.gyatt")
 ---@field position number
 ---@field hoverPosition number
 ---@field hoverSize number
+---@field tabLabel osu.ui.Label
 local GroupContainer = class()
 
 ---@type table<string, love.Font>
@@ -18,8 +21,9 @@ local font
 local group_label_spacing = 15
 local group_spacing = 40
 
+---@param name string
 ---@param fonts table<string, love.Font>
-function GroupContainer:new(fonts)
+function GroupContainer:new(name, fonts)
 	font = fonts
 	self.groups = {}
 	self.groupOrder = {}
@@ -27,6 +31,14 @@ function GroupContainer:new(fonts)
 	self.position = 0
 	self.hoverPosition = 0
 	self.hoverSize = 0
+
+	self.tabLabel = Label({
+		text = name,
+		width = 438 - 24 - 20,
+		font = fonts.tabLabel,
+		color = { 0.51, 0.78, 0.88, 1 },
+		align = "right",
+	})
 end
 
 function GroupContainer:clear()
@@ -57,9 +69,11 @@ local gfx = love.graphics
 
 function GroupContainer:draw()
 	gfx.translate(24, self.position)
-	local current_position = 0
 
 	self.hoverSize = 0
+
+	self.tabLabel:draw()
+	local current_position = self.tabLabel:getHeight()
 
 	for _, id in ipairs(self.groupOrder) do
 		local group = self.groups[id]

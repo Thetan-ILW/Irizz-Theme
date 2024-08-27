@@ -92,6 +92,7 @@ l.fontGroups = {
 		info = { "Aller", 18, "ZenMaruGothic-Regular" },
 	},
 	settings = {
+		tabLabel = { "Aller", 33, "ZenMaruGothic-Regular" },
 		groupLabel = { "Aller-Bold", 16, "ZenMaruGothic-Regular" },
 		buttons = { "Aller", 16, "ZenMaruGothic-Regular" },
 	},

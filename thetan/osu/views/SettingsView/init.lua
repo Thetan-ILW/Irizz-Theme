@@ -34,7 +34,7 @@ function SettingsView:new(assets)
 	local btn_w = 2.65
 	local btn_s = 0.5
 
-	local test_container = GroupContainer(font)
+	local test_container = GroupContainer("SKIN", font)
 	test_container:createGroup("skin", "SKIN")
 	test_container:add(
 		"skin",

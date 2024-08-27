@@ -18,4 +18,9 @@ function UiElement:isMouseOver()
 	return self.hover
 end
 
+function UiElement:update() end
+function UiElement:draw()
+	error("Silly mistake")
+end
+
 return UiElement
