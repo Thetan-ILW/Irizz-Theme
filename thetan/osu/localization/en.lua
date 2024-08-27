@@ -97,6 +97,7 @@ l.fontGroups = {
 		tabLabel = { "Aller", 33, "ZenMaruGothic-Regular" },
 		groupLabel = { "Aller-Bold", 16, "ZenMaruGothic-Regular" },
 		buttons = { "Aller", 16, "ZenMaruGothic-Regular" },
+		checkboxes = { "Aller", 16, "ZenMaruGothic-Regular" },
 	},
 	songSelect = {
 		chartName = { "Aller", 25, "ZenMaruGothic-Regular" },

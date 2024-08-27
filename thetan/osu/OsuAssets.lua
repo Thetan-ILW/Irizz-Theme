@@ -178,6 +178,9 @@ function OsuAssets:new(skin_path, localization_file)
 		menuBackButton = self:loadImageOrDefault(skin_path, "menu-button-back"),
 		menuBackButtonHover = self:loadImageOrDefault(skin_path, "menu-button-back-over"),
 
+		checkboxOff = self:loadImageOrDefault(skin_path, "menu-checkbox-off"),
+		checkboxOn = self:loadImageOrDefault(skin_path, "menu-checkbox-on"),
+
 		-- RESULT
 
 		title = self:loadImageOrDefault(skin_path, "ranking-title"),

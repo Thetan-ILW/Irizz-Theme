@@ -6,6 +6,7 @@ local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
 local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
 local Label = require("thetan.osu.ui.Label")
 local Button = require("thetan.osu.ui.Button")
+local Checkbox = require("thetan.osu.ui.Checkbox")
 
 ---@class osu.SettingsView
 ---@operator call: osu.SettingsView
@@ -73,6 +74,16 @@ function SettingsView:new(assets)
 		}, function() end)
 	)
 
+	local checkbox_test = false
+
+	test_container:add(
+		"skin",
+		Checkbox(assets, { text = "Show PP", font = font.checkboxes, pixelHeight = 37, pixelWidth = 404 }, function()
+			return checkbox_test
+		end, function()
+			checkbox_test = not checkbox_test
+		end)
+	)
 	test_container:createGroup("graphics", "GRAPHICS")
 	test_container:add(
 		"graphics",
