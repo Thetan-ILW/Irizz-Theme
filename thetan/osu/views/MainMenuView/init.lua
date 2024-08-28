@@ -27,7 +27,7 @@ function MainMenuView:load()
 	self.inputMap = InputMap(self, self.actionModel)
 	self.actionModel.enable()
 
-	self.settingsView = SettingsView(self.assets)
+	self.settingsView = SettingsView(self.assets, self.game)
 
 	window_height = love.graphics.getHeight()
 	love.mouse.setVisible(false)

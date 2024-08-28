@@ -25,8 +25,6 @@ function GameView:new(game)
 	self.game = game
 	self.screenTransition = ScreenTransition()
 	self.frameTimeView = FrameTimeView()
-
-	prev_window_res = love.graphics.getWidth() * love.graphics.getHeight()
 end
 
 function GameView:load()
@@ -35,6 +33,7 @@ function GameView:load()
 
 	self.actionModel = self.game.actionModel
 	self.notificationView = NotificationView(get_irizz_assets(self.game))
+	prev_window_res = love.graphics.getWidth() * love.graphics.getHeight()
 	self:setView(self.game.ui.osuMainMenuView)
 
 	self.inputMap = InputMap(self, self.actionModel)

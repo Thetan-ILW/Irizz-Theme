@@ -54,6 +54,7 @@ local gfx = love.graphics
 
 function Checkbox:draw()
 	gfx.setColor(1, 1, 1)
+	gfx.setFont(self.font)
 
 	local scale = 0.5 + (math_util.clamp(love.timer.getTime() - self.toggleTime, 0, 0.1) * 10) * 0.5
 	local image_size = self.imgOn:getHeight() * self.imageScale

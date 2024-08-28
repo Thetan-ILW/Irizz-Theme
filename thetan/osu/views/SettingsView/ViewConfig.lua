@@ -82,12 +82,7 @@ function ViewConfig:panel(view)
 				:ease("quadout")
 	end
 
-	gfx.setColor(0, 0.4, 1, 0.6)
 	gfx.translate(0, view.scrollPosition)
-
-	for _, c in ipairs(view.containers) do
-		gfx.rectangle("fill", 0, c.position, 438 + 60, 5)
-	end
 
 	view.topSpacing:draw()
 	view.optionsLabel:update()
@@ -103,7 +98,7 @@ function ViewConfig:panel(view)
 		if -view.scrollPosition + 768 > c.position and -view.scrollPosition < c.position + c.height then
 			c:draw()
 		else
-			gfx.translate(0, c.height + consts.groupSpacing)
+			gfx.translate(0, c.height)
 		end
 	end
 

@@ -58,12 +58,12 @@ end
 
 function GroupContainer:updateHeight()
 	local group_count = #self.groupOrder
-	local ts = gyatt.getTextScale()
+	local ts = math.min(gyatt.getTextScale(), 1)
 	local tab_label = font.tabLabel:getHeight() * ts + consts.tabLabelSpacing
 	local group_labels = (font.groupLabel:getHeight() * ts + consts.groupLabelSpacing) * group_count
 	local spacing = (group_count - 1) * consts.groupSpacing
 
-	self.height = tab_label + group_labels + spacing + self.elementsHeight
+	self.height = tab_label + group_labels + spacing + self.elementsHeight + consts.containerSpacing
 end
 
 ---@param element osu.UiElement
@@ -83,10 +83,11 @@ function GroupContainer:draw()
 	self.hoverPosition = 0
 	self.hoverSize = 0
 
+	gfx.translate(0, consts.containerSpacing)
 	self.tabLabel:update()
 	self.tabLabel:draw()
 	gfx.translate(0, consts.tabLabelSpacing)
-	local current_position = self.tabLabel:getHeight() + consts.tabLabelSpacing
+	local current_position = self.tabLabel:getHeight() + consts.tabLabelSpacing + consts.containerSpacing
 
 	for _, id in ipairs(self.groupOrder) do
 		local group = self.groups[id]
@@ -127,7 +128,7 @@ function GroupContainer:draw()
 		current_position = current_position + consts.groupSpacing
 	end
 
-	gfx.translate(-24, 0)
+	gfx.translate(-24, -consts.groupSpacing)
 end
 
 return GroupContainer

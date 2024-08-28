@@ -5,15 +5,17 @@ local math_util = require("math_util")
 
 local consts = require("thetan.osu.views.SettingsView.Consts")
 local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
-local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
 local Label = require("thetan.osu.ui.Label")
-local Button = require("thetan.osu.ui.Button")
-local Checkbox = require("thetan.osu.ui.Checkbox")
 local Spacing = require("thetan.osu.ui.Spacing")
+
+local graphics = require("thetan.osu.views.SettingsView.graphics")
+local audio = require("thetan.osu.views.SettingsView.audio")
+local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 
 ---@class osu.SettingsView
 ---@operator call: osu.SettingsView
 ---@field assets osu.OsuAssets
+---@field game sphere.GameController
 ---@field state "hidden" | "fade_in" | "visible" | "fade_out"
 ---@field visibility number
 ---@field visibilityTween table?
@@ -37,8 +39,10 @@ local text
 local font
 
 ---@param assets osu.OsuAssets
-function SettingsView:new(assets)
+---@param game sphere.GameController
+function SettingsView:new(assets, game)
 	self.assets = assets
+	self.game = game
 	self.viewConfig = ViewConfig(assets)
 	self.visibility = 0
 	self.state = "hidden"
@@ -74,74 +78,10 @@ function SettingsView:build()
 	})
 
 	local assets = self.assets
-	local btn_w = consts.buttonWidth
-	local btn_s = consts.buttonSize
 
-	local test_container = GroupContainer("SKIN", font)
-	test_container:createGroup("skin", "SKIN")
-	test_container:add(
-		"skin",
-		Button(assets, {
-			text = "Preview gameplay",
-			font = font.buttons,
-			width = btn_w,
-			scale = btn_s,
-			color = { 0.83, 0.38, 0.47, 1 },
-		}, function() end)
-	)
-	test_container:add(
-		"skin",
-		Button(assets, {
-			text = "Open current skin folder",
-			font = font.buttons,
-			width = btn_w,
-			scale = btn_s,
-			color = { 0.06, 0.51, 0.64, 1 },
-		}, function() end)
-	)
-
-	local checkbox_test = false
-
-	test_container:add(
-		"skin",
-		Checkbox(assets, { text = "Show PP", font = font.checkboxes, pixelHeight = 37, pixelWidth = 404 }, function()
-			return checkbox_test
-		end, function()
-			checkbox_test = not checkbox_test
-		end)
-	)
-
-	test_container:createGroup("graphics", "GRAPHICS")
-	for i = 1, 20 do
-		test_container:add(
-			"graphics",
-			Button(assets, {
-				text = "Apply resolution " .. i,
-				font = font.buttons,
-				width = btn_w,
-				scale = btn_s,
-				color = { 0.06, 0.51, 0.64, 1 },
-			}, function() end)
-		)
-	end
-
-	local second_container = GroupContainer("AUDIO", font)
-	second_container:createGroup("audio", "AUDIO")
-	for i = 1, 20 do
-		second_container:add(
-			"audio",
-			Button(assets, {
-				text = "audio " .. i,
-				font = font.buttons,
-				width = btn_w,
-				scale = btn_s,
-				color = { 0.06, 0.51, 0.64, 1 },
-			}, function() end)
-		)
-	end
-
-	table.insert(self.containers, test_container)
-	table.insert(self.containers, second_container)
+	table.insert(self.containers, graphics(assets, self))
+	table.insert(self.containers, audio(assets, self))
+	table.insert(self.containers, maintenance(assets, self))
 
 	------------- Setting positions and heights
 	local pos = self.optionsLabel:getHeight()
@@ -226,7 +166,6 @@ end
 function SettingsView:update(dt)
 	self:processState()
 
-	---@type number
 	local additional_pos = 0
 
 	for i, c in ipairs(self.containers) do
@@ -235,7 +174,7 @@ function SettingsView:update(dt)
 			self.hoverSize = c.hoverSize
 		end
 
-		additional_pos = additional_pos + c.height + consts.groupSpacing
+		additional_pos = additional_pos + c.height
 	end
 end
 
@@ -251,7 +190,7 @@ function SettingsView:jumpTo(container_index)
 end
 
 function SettingsView:resolutionUpdated()
-	--self:build() It will build it two times when you open MainMenu
+	self:build()
 end
 
 ---@param event table
