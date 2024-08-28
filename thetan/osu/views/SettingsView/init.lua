@@ -19,8 +19,9 @@ local Spacing = require("thetan.osu.ui.Spacing")
 ---@field scrollTween table?
 ---@field containers table<string, osu.SettingsView.GroupContainer>
 ---@field totalHeight number
----@field spacing1 osu.ui.Spacing
----@field spacing2 osu.ui.Spacing
+---@field top_spacing osu.ui.Spacing
+---@field header_spacing osu.ui.Spacing
+---@field bottom_spacing osu.ui.Spacing
 ---@field optionsLabel osu.ui.Label
 ---@field gameBehaviorLabel osu.ui.Label
 local SettingsView = class()
@@ -38,8 +39,9 @@ function SettingsView:new(assets)
 	local text, font = assets.localization:get("settings")
 	assert(font)
 
-	self.spacing1 = Spacing(64)
-	self.spacing2 = Spacing(30)
+	self.top_spacing = Spacing(64)
+	self.header_spacing = Spacing(30)
+	self.bottom_spacing = Spacing(64)
 
 	self.optionsLabel = Label({
 		text = "Options",
@@ -92,16 +94,18 @@ function SettingsView:new(assets)
 	)
 
 	test_container:createGroup("graphics", "GRAPHICS")
-	test_container:add(
-		"graphics",
-		Button(assets, {
-			text = "Apply resolution",
-			font = font.buttons,
-			width = btn_w,
-			scale = btn_s,
-			color = { 0.06, 0.51, 0.64, 1 },
-		}, function() end)
-	)
+	for i = 1, 20 do
+		test_container:add(
+			"graphics",
+			Button(assets, {
+				text = "Apply resolution" .. i,
+				font = font.buttons,
+				width = btn_w,
+				scale = btn_s,
+				color = { 0.06, 0.51, 0.64, 1 },
+			}, function() end)
+		)
+	end
 
 	self.containers["test"] = test_container
 end
@@ -109,8 +113,9 @@ end
 function SettingsView:getMaxScrollPosition()
 	local pos = self.optionsLabel:getHeight()
 	pos = pos + self.gameBehaviorLabel:getHeight()
-	pos = pos + self.spacing1:getHeight()
-	pos = pos + self.spacing2:getHeight()
+	pos = pos + self.top_spacing:getHeight()
+	pos = pos + self.header_spacing:getHeight()
+	pos = pos + self.bottom_spacing:getHeight()
 
 	for _, c in pairs(self.containers) do
 		pos = pos + c:getHeight()
@@ -183,7 +188,8 @@ function SettingsView:receive(event)
 	if event.name == "wheelmoved" and self.state ~= "hidden" and self.viewConfig.focus then
 		---@type number
 		local delta = -event[2]
-		self.scrollTargetPosition = math_util.clamp(self.scrollTargetPosition + (delta * 50), 0, self.totalHeight)
+		local max = math_util.clamp(self.totalHeight - 768, 0, self.totalHeight - 768)
+		self.scrollTargetPosition = math_util.clamp(self.scrollTargetPosition + (delta * 50), 0, max)
 
 		flux.to(self, 0.1, { scrollPosition = -self.scrollTargetPosition }):ease("quadout")
 	end
