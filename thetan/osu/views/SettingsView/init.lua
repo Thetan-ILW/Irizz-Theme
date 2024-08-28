@@ -7,6 +7,7 @@ local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
 local Label = require("thetan.osu.ui.Label")
 local Button = require("thetan.osu.ui.Button")
 local Checkbox = require("thetan.osu.ui.Checkbox")
+local Spacing = require("thetan.osu.ui.Spacing")
 
 ---@class osu.SettingsView
 ---@operator call: osu.SettingsView
@@ -18,6 +19,8 @@ local Checkbox = require("thetan.osu.ui.Checkbox")
 ---@field scrollTween table?
 ---@field containers table<string, osu.SettingsView.GroupContainer>
 ---@field totalHeight number
+---@field spacing1 osu.ui.Spacing
+---@field spacing2 osu.ui.Spacing
 ---@field optionsLabel osu.ui.Label
 ---@field gameBehaviorLabel osu.ui.Label
 local SettingsView = class()
@@ -34,6 +37,9 @@ function SettingsView:new(assets)
 
 	local text, font = assets.localization:get("settings")
 	assert(font)
+
+	self.spacing1 = Spacing(64)
+	self.spacing2 = Spacing(30)
 
 	self.optionsLabel = Label({
 		text = "Options",
@@ -84,6 +90,7 @@ function SettingsView:new(assets)
 			checkbox_test = not checkbox_test
 		end)
 	)
+
 	test_container:createGroup("graphics", "GRAPHICS")
 	test_container:add(
 		"graphics",
@@ -97,13 +104,19 @@ function SettingsView:new(assets)
 	)
 
 	self.containers["test"] = test_container
+end
 
-	self.totalHeight = self.optionsLabel:getHeight()
-	self.totalHeight = self.totalHeight + self.gameBehaviorLabel:getHeight()
+function SettingsView:getMaxScrollPosition()
+	local pos = self.optionsLabel:getHeight()
+	pos = pos + self.gameBehaviorLabel:getHeight()
+	pos = pos + self.spacing1:getHeight()
+	pos = pos + self.spacing2:getHeight()
 
 	for _, c in pairs(self.containers) do
-		self.totalHeight = self.totalHeight + c.height
+		pos = pos + c:getHeight()
 	end
+
+	return pos
 end
 
 ---@private
@@ -162,6 +175,7 @@ end
 
 function SettingsView:update(dt)
 	self:processState()
+	self.totalHeight = self:getMaxScrollPosition()
 end
 
 ---@param event table

@@ -4,8 +4,6 @@ local gyatt = require("thetan.gyatt")
 local flux = require("flux")
 local Layout = require("thetan.osu.views.OsuLayout")
 
-local Spacing = require("thetan.osu.ui.Spacing")
-
 ---@class osu.SettingsViewConfig : IViewConfig
 ---@operator call: osu.SettingsViewConfig
 ---@field focus boolean
@@ -13,8 +11,6 @@ local Spacing = require("thetan.osu.ui.Spacing")
 ---@field hoverRectTargetPosition number
 ---@field hoverRectTargetSize number
 ---@field hoverRectTween table?
----@field spacing1 osu.ui.Spacing
----@field spacing2 osu.ui.Spacing
 local ViewConfig = IViewConfig + {}
 
 local visibility = 0
@@ -30,9 +26,6 @@ function ViewConfig:new(assets)
 	self.hoverRectTargetPosition = 0
 	self.hoverRectTargetSize = 0
 	img = assets.images
-
-	self.spacing1 = Spacing(64)
-	self.spacing2 = Spacing(30)
 end
 
 function ViewConfig:tabs()
@@ -63,13 +56,6 @@ function ViewConfig:panel(view)
 	gfx.clear()
 	gfx.setBlendMode("alpha", "alphamultiply")
 
-	self.spacing1:draw()
-	view.optionsLabel:update()
-	view.optionsLabel:draw()
-	view.gameBehaviorLabel:update()
-	view.gameBehaviorLabel:draw()
-	self.spacing2:draw()
-
 	local c = containers["test"]
 	c.position = view.scrollPosition
 
@@ -83,9 +69,23 @@ function ViewConfig:panel(view)
 				:ease("quadout")
 	end
 
+	gfx.translate(0, view.scrollPosition)
+	view.spacing1:draw()
+	view.optionsLabel:update()
+	view.optionsLabel:draw()
+	view.gameBehaviorLabel:update()
+	view.gameBehaviorLabel:draw()
+	view.spacing2:draw()
+	gfx.translate(0, -view.scrollPosition)
+
 	gfx.setColor(0, 0, 0, 0.6)
 	gfx.rectangle("fill", 0, self.hoverRectTargetPosition + view.scrollPosition, 438, self.hoverRectTargetSize)
 	containers["test"]:draw()
+
+	gfx.setColor(1, 0, 0)
+	w, h = Layout:move("base")
+	gfx.translate(0, view.scrollPosition)
+	gfx.rectangle("fill", 0, view.totalHeight, 438 + 64, 5)
 
 	gfx.setCanvas(prev_canvas)
 

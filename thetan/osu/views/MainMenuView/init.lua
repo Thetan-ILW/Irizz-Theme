@@ -122,6 +122,8 @@ end
 ---@param dt number
 function MainMenuView:update(dt)
 	ScreenView.update(self, dt)
+	gyatt.setTextScale(768 / window_height)
+
 	self.settingsView:update()
 
 	if self.state ~= "intro" then
@@ -198,13 +200,11 @@ function MainMenuView:drawCursor()
 end
 
 function MainMenuView:draw()
-	gyatt.setTextScale(768 / window_height)
 	self.viewConfig:draw(self)
 	self.settingsView:draw()
 	self:drawModal()
 	self.notificationView:draw()
 	self:drawCursor()
-	gyatt.setTextScale(1)
 
 	if self.state == "outro" then
 		gfx.origin()
