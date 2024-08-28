@@ -96,13 +96,18 @@ function ViewConfig:panel(view)
 	gfx.setColor(0, 0, 0, 0.6)
 	gfx.rectangle("fill", 0, self.hoverRectTargetPosition, 438, self.hoverRectTargetSize)
 
-	---@type osu.ui.Combo?
-	local open_combo = nil
+	---@type osu.ui.Combo[]
+	local open_combos = {}
 
 	for _, c in ipairs(view.containers) do
 		if -view.scrollPosition + 768 > c.position and -view.scrollPosition < c.position + c.height then
 			c:draw()
-			open_combo = open_combo or c.openCombo
+
+			if #c.openCombos ~= 0 then
+				for _, combo in ipairs(c.openCombos) do
+					table.insert(open_combos, combo)
+				end
+			end
 		else
 			gfx.translate(0, c.height)
 		end
@@ -110,9 +115,11 @@ function ViewConfig:panel(view)
 
 	view.bottomSpacing:draw()
 
-	if open_combo then
-		gfx.pop()
-		open_combo:drawBody()
+	if #open_combos ~= 0 then
+		for i = #open_combos, 1, -1 do
+			gfx.pop()
+			open_combos[i]:drawBody()
+		end
 	end
 
 	gfx.setCanvas(prev_canvas)

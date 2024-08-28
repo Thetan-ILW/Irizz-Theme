@@ -16,7 +16,7 @@ local Label = require("thetan.osu.ui.Label")
 ---@field hoverSize number
 ---@field tabLabel osu.ui.Label
 ---@field isEmpty boolean
----@field openCombo osu.ui.Combo?
+---@field openCombos osu.ui.Combo[]
 local GroupContainer = class()
 
 ---@type table<string, love.Font>
@@ -34,7 +34,7 @@ function GroupContainer:new(name, fonts)
 	self.hoverPosition = 0
 	self.hoverSize = 0
 	self.isEmpty = true
-	self.openComboPosition = 0
+	self.openCombos = {}
 
 	self.tabLabel = Label({
 		text = name,
@@ -103,7 +103,7 @@ function GroupContainer:draw()
 	gfx.translate(0, consts.tabLabelSpacing)
 	local current_position = self.tabLabel:getHeight() + consts.tabLabelSpacing + consts.containerSpacing
 
-	self.openCombo = nil
+	self.openCombos = {}
 
 	for _, id in ipairs(self.groupOrder) do
 		local group = self.groups[id]
@@ -129,14 +129,12 @@ function GroupContainer:draw()
 			+ consts.groupLabelSpacing
 
 		for _, element in ipairs(group.elements) do
-			if not self.openCombo or not self.openCombo:isFocused() then
-				element:update()
-			end
+			element:update()
 
 			if element.state and element.state ~= "hidden" then
 				gfx.push()
 				---@cast element osu.ui.Combo
-				self.openCombo = element
+				table.insert(self.openCombos, element)
 			end
 
 			element:draw()

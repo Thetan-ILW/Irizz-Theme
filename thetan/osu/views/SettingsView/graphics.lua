@@ -29,6 +29,12 @@ return function(assets, view)
 	c:createGroup("renderer", "RENDERER")
 	Elements.currentGroup = "renderer"
 
+	combo("Fullscreen type:", function()
+		return flags.fullscreentype, { "desktop", "exclusive" }
+	end, function(v)
+		flags.fullscreentype = v
+	end, function() end)
+
 	combo("Vsync type:", function()
 		return flags.vsync, { 1, 0, -1 }
 	end, function(v)

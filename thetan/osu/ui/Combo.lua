@@ -118,6 +118,7 @@ function Combo:update()
 
 		if self.hoverIndex ~= 0 and gyatt.mousePressed(1) then
 			self.onChange(self.items[self.hoverIndex])
+			print(self.items[self.hoverIndex])
 			gyatt.resetJust()
 			self:processState("close")
 		end
