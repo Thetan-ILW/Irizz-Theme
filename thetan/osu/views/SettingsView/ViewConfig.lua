@@ -2,6 +2,7 @@ local IViewConfig = require("thetan.skibidi.views.IViewConfig")
 
 local gyatt = require("thetan.gyatt")
 local flux = require("flux")
+local consts = require("thetan.osu.views.SettingsView.Consts")
 local Layout = require("thetan.osu.views.OsuLayout")
 
 ---@class osu.SettingsViewConfig : IViewConfig
@@ -46,47 +47,50 @@ function ViewConfig:panel(view)
 
 	self.focus = gyatt.isOver(438 * visibility, h)
 
-	local containers = view.containers
-
 	local prev_canvas = gfx.getCanvas()
-	local canvas = gyatt.getCanvas("tab_test")
+	local canvas = gyatt.getCanvas("settings_containers")
 
 	gfx.setCanvas(canvas)
 
 	gfx.clear()
 	gfx.setBlendMode("alpha", "alphamultiply")
 
-	local c = containers["test"]
-	c.position = view.scrollPosition
-
-	if c.hoverPosition ~= self.hoverRectPosition then
+	if view.hoverPosition ~= self.hoverRectPosition then
 		if self.hoverRectTween then
 			self.hoverRectTween:stop()
 		end
-		self.hoverRectPosition = c.hoverPosition
+		self.hoverRectPosition = view.hoverPosition
 		self.hoverRectTween =
-			flux.to(self, 0.15, { hoverRectTargetPosition = c.hoverPosition, hoverRectTargetSize = c.hoverSize })
+			flux.to(self, 0.15, { hoverRectTargetPosition = view.hoverPosition, hoverRectTargetSize = view.hoverSize })
 				:ease("quadout")
 	end
 
+	gfx.setColor(0, 0.4, 1, 0.6)
 	gfx.translate(0, view.scrollPosition)
-	view.top_spacing:draw()
+
+	for _, c in ipairs(view.containers) do
+		gfx.rectangle("fill", 0, c.position, 438 + 60, 5)
+	end
+
+	view.topSpacing:draw()
 	view.optionsLabel:update()
 	view.optionsLabel:draw()
 	view.gameBehaviorLabel:update()
 	view.gameBehaviorLabel:draw()
-	view.header_spacing:draw()
-	gfx.translate(0, -view.scrollPosition)
+	view.headerSpacing:draw()
 
 	gfx.setColor(0, 0, 0, 0.6)
-	gfx.rectangle("fill", 0, self.hoverRectTargetPosition + view.scrollPosition, 438, self.hoverRectTargetSize)
-	containers["test"]:draw()
-	view.bottom_spacing:draw()
+	gfx.rectangle("fill", 0, self.hoverRectTargetPosition, 438, self.hoverRectTargetSize)
 
-	gfx.setColor(1, 0, 0)
-	w, h = Layout:move("base")
-	gfx.translate(0, view.scrollPosition)
-	gfx.rectangle("fill", 0, view.totalHeight, 438 + 64, 5)
+	for _, c in ipairs(view.containers) do
+		if -view.scrollPosition + 768 > c.position and -view.scrollPosition < c.position + c.height then
+			c:draw()
+		else
+			gfx.translate(0, c.height + consts.groupSpacing)
+		end
+	end
+
+	view.bottomSpacing:draw()
 
 	gfx.setCanvas(prev_canvas)
 

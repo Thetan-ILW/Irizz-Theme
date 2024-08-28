@@ -1,7 +1,9 @@
 local class = require("class")
+local gyatt = require("thetan.gyatt")
 local flux = require("flux")
 local math_util = require("math_util")
 
+local consts = require("thetan.osu.views.SettingsView.Consts")
 local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
 local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
 local Label = require("thetan.osu.ui.Label")
@@ -11,23 +13,32 @@ local Spacing = require("thetan.osu.ui.Spacing")
 
 ---@class osu.SettingsView
 ---@operator call: osu.SettingsView
+---@field assets osu.OsuAssets
 ---@field state "hidden" | "fade_in" | "visible" | "fade_out"
 ---@field visibility number
 ---@field visibilityTween table?
 ---@field scrollPosition number
 ---@field scrollTargetPosition number
 ---@field scrollTween table?
----@field containers table<string, osu.SettingsView.GroupContainer>
+---@field hoverPosition number
+---@field hoverSize number
+---@field containers osu.SettingsView.GroupContainer[]
 ---@field totalHeight number
----@field top_spacing osu.ui.Spacing
----@field header_spacing osu.ui.Spacing
----@field bottom_spacing osu.ui.Spacing
+---@field topSpacing osu.ui.Spacing
+---@field headerSpacing osu.ui.Spacing
+---@field bottomSpacing osu.ui.Spacing
 ---@field optionsLabel osu.ui.Label
 ---@field gameBehaviorLabel osu.ui.Label
 local SettingsView = class()
 
+---@type table<string, string>
+local text
+---@type table<string, love.Font>
+local font
+
 ---@param assets osu.OsuAssets
 function SettingsView:new(assets)
+	self.assets = assets
 	self.viewConfig = ViewConfig(assets)
 	self.visibility = 0
 	self.state = "hidden"
@@ -36,12 +47,18 @@ function SettingsView:new(assets)
 	self.containers = {}
 	self.totalHeight = 0
 
-	local text, font = assets.localization:get("settings")
+	text, font = assets.localization:get("settings")
 	assert(font)
 
-	self.top_spacing = Spacing(64)
-	self.header_spacing = Spacing(30)
-	self.bottom_spacing = Spacing(64)
+	self:build()
+end
+
+function SettingsView:build()
+	gyatt.setTextScale(768 / love.graphics.getHeight())
+	self.containers = {}
+	self.topSpacing = Spacing(64)
+	self.headerSpacing = Spacing(30)
+	self.bottomSpacing = Spacing(64)
 
 	self.optionsLabel = Label({
 		text = "Options",
@@ -56,8 +73,9 @@ function SettingsView:new(assets)
 		color = { 0.83, 0.38, 0.47, 1 },
 	})
 
-	local btn_w = 2.65
-	local btn_s = 0.5
+	local assets = self.assets
+	local btn_w = consts.buttonWidth
+	local btn_s = consts.buttonSize
 
 	local test_container = GroupContainer("SKIN", font)
 	test_container:createGroup("skin", "SKIN")
@@ -98,7 +116,7 @@ function SettingsView:new(assets)
 		test_container:add(
 			"graphics",
 			Button(assets, {
-				text = "Apply resolution" .. i,
+				text = "Apply resolution " .. i,
 				font = font.buttons,
 				width = btn_w,
 				scale = btn_s,
@@ -107,21 +125,48 @@ function SettingsView:new(assets)
 		)
 	end
 
-	self.containers["test"] = test_container
-end
-
-function SettingsView:getMaxScrollPosition()
-	local pos = self.optionsLabel:getHeight()
-	pos = pos + self.gameBehaviorLabel:getHeight()
-	pos = pos + self.top_spacing:getHeight()
-	pos = pos + self.header_spacing:getHeight()
-	pos = pos + self.bottom_spacing:getHeight()
-
-	for _, c in pairs(self.containers) do
-		pos = pos + c:getHeight()
+	local second_container = GroupContainer("AUDIO", font)
+	second_container:createGroup("audio", "AUDIO")
+	for i = 1, 20 do
+		second_container:add(
+			"audio",
+			Button(assets, {
+				text = "audio " .. i,
+				font = font.buttons,
+				width = btn_w,
+				scale = btn_s,
+				color = { 0.06, 0.51, 0.64, 1 },
+			}, function() end)
+		)
 	end
 
-	return pos
+	table.insert(self.containers, test_container)
+	table.insert(self.containers, second_container)
+
+	------------- Setting positions and heights
+	local pos = self.optionsLabel:getHeight()
+	pos = pos + self.gameBehaviorLabel:getHeight()
+	pos = pos + self.topSpacing:getHeight()
+	pos = pos + self.headerSpacing:getHeight()
+
+	for i, c in ipairs(self.containers) do
+		c:updateHeight()
+		c.position = pos
+		pos = pos + c.height
+	end
+
+	------------- Scroll limit
+	pos = self.optionsLabel:getHeight()
+	pos = pos + self.gameBehaviorLabel:getHeight()
+	pos = pos + self.topSpacing:getHeight()
+	pos = pos + self.headerSpacing:getHeight()
+	pos = pos + self.bottomSpacing:getHeight()
+
+	for _, c in ipairs(self.containers) do
+		pos = pos + c.height
+	end
+
+	self.totalHeight = pos
 end
 
 ---@private
@@ -180,7 +225,21 @@ end
 
 function SettingsView:update(dt)
 	self:processState()
-	self.totalHeight = self:getMaxScrollPosition()
+
+	local additional_pos = 0.0
+
+	for i, c in ipairs(self.containers) do
+		if c.hoverPosition ~= 0 then
+			self.hoverPosition = c.hoverPosition + additional_pos
+			self.hoverSize = c.hoverSize
+		end
+
+		additional_pos = additional_pos + c.height + consts.groupSpacing
+	end
+end
+
+function SettingsView:resolutionUpdated()
+	--self:build() It will build it two times when you open MainMenu
 end
 
 ---@param event table

@@ -165,6 +165,7 @@ function MainMenuView:resolutionUpdated()
 	window_height = self.assets.localization:updateScale()
 
 	self.viewConfig:resolutionUpdated()
+	self.settingsView:resolutionUpdated()
 
 	if self.modal then
 		self.modal.viewConfig:resolutionUpdated()
