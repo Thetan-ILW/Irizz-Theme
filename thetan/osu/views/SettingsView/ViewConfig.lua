@@ -90,6 +90,8 @@ function ViewConfig:panel(view)
 	view.gameBehaviorLabel:update()
 	view.gameBehaviorLabel:draw()
 	view.headerSpacing:draw()
+	view.searchLabel:draw()
+	view.headerSpacing:draw()
 
 	gfx.setColor(0, 0, 0, 0.6)
 	gfx.rectangle("fill", 0, self.hoverRectTargetPosition, 438, self.hoverRectTargetSize)

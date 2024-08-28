@@ -50,5 +50,11 @@ return function(assets, view)
 		flags.fullscreen = not flags.fullscreen
 	end)
 
+	c:removeEmptyGroups()
+
+	if c.isEmpty then
+		return nil
+	end
+
 	return c
 end

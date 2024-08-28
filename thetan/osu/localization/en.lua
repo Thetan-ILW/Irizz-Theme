@@ -94,6 +94,7 @@ l.fontGroups = {
 	settings = {
 		optionsLabel = { "Aller-Light", 28, "ZenMaruGothic-Regular" },
 		gameBehaviorLabel = { "Aller-Light", 19, "ZenMaruGothic-Regular" },
+		search = { "Aller", 25, "ZenMaruGothic-Regular" },
 		tabLabel = { "Aller", 33, "ZenMaruGothic-Regular" },
 		groupLabel = { "Aller-Bold", 16, "ZenMaruGothic-Regular" },
 		buttons = { "Aller", 16, "ZenMaruGothic-Regular" },

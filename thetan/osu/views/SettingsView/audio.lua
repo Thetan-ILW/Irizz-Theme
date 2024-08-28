@@ -33,5 +33,11 @@ return function(assets, view)
 		mode.secondary = audio_mode
 	end)
 
+	c:removeEmptyGroups()
+
+	if c.isEmpty then
+		return nil
+	end
+
 	return c
 end

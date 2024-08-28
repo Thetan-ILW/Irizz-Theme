@@ -15,6 +15,7 @@ local Label = require("thetan.osu.ui.Label")
 ---@field hoverPosition number
 ---@field hoverSize number
 ---@field tabLabel osu.ui.Label
+---@field isEmpty boolean
 local GroupContainer = class()
 
 ---@type table<string, love.Font>
@@ -31,6 +32,7 @@ function GroupContainer:new(name, fonts)
 	self.height = 0
 	self.hoverPosition = 0
 	self.hoverSize = 0
+	self.isEmpty = true
 
 	self.tabLabel = Label({
 		text = name,
@@ -56,6 +58,15 @@ function GroupContainer:createGroup(id, name)
 	table.insert(self.groupOrder, id)
 end
 
+function GroupContainer:removeEmptyGroups()
+	for i, id in ipairs(self.groupOrder) do
+		if #self.groups[id].elements == 0 then
+			table.remove(self.groupOrder, i)
+			self.groups[id] = nil
+		end
+	end
+end
+
 function GroupContainer:updateHeight()
 	local group_count = #self.groupOrder
 	local ts = math.min(gyatt.getTextScale(), 1)
@@ -68,6 +79,7 @@ end
 
 ---@param element osu.UiElement
 function GroupContainer:add(group, element)
+	self.isEmpty = false
 	table.insert(self.groups[group].elements, element)
 
 	local h = element:getHeight()

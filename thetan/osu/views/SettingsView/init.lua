@@ -3,11 +3,11 @@ local gyatt = require("thetan.gyatt")
 local flux = require("flux")
 local math_util = require("math_util")
 
-local consts = require("thetan.osu.views.SettingsView.Consts")
 local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
 local Label = require("thetan.osu.ui.Label")
 local Spacing = require("thetan.osu.ui.Spacing")
 
+local Elements = require("thetan.osu.views.SettingsView.Elements")
 local graphics = require("thetan.osu.views.SettingsView.graphics")
 local audio = require("thetan.osu.views.SettingsView.audio")
 local maintenance = require("thetan.osu.views.SettingsView.maintenance")
@@ -31,12 +31,15 @@ local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 ---@field bottomSpacing osu.ui.Spacing
 ---@field optionsLabel osu.ui.Label
 ---@field gameBehaviorLabel osu.ui.Label
+---@field searchLabel osu.ui.Label
 local SettingsView = class()
 
 ---@type table<string, string>
 local text
 ---@type table<string, love.Font>
 local font
+
+local search_text = ""
 
 ---@param assets osu.OsuAssets
 ---@param game sphere.GameController
@@ -59,6 +62,8 @@ end
 
 function SettingsView:build()
 	gyatt.setTextScale(768 / love.graphics.getHeight())
+
+	local prev_containers = self.containers or {}
 	self.containers = {}
 	self.topSpacing = Spacing(64)
 	self.headerSpacing = Spacing(30)
@@ -79,17 +84,32 @@ function SettingsView:build()
 
 	local assets = self.assets
 
+	Elements.searchText = search_text
 	table.insert(self.containers, graphics(assets, self))
 	table.insert(self.containers, audio(assets, self))
 	table.insert(self.containers, maintenance(assets, self))
 
+	if #self.containers == 0 then
+		self.containers = prev_containers
+		search_text = search_text:sub(1, -2)
+	end
+
+	local search = search_text == "" and "Type to search!" or search_text
+
+	self.searchLabel = Label({
+		text = search,
+		width = 438,
+		font = font.search,
+	})
+
 	------------- Setting positions and heights
 	local pos = self.optionsLabel:getHeight()
 	pos = pos + self.gameBehaviorLabel:getHeight()
+	pos = pos + self.searchLabel:getHeight()
 	pos = pos + self.topSpacing:getHeight()
-	pos = pos + self.headerSpacing:getHeight()
+	pos = pos + self.headerSpacing:getHeight() * 2
 
-	for i, c in ipairs(self.containers) do
+	for _, c in ipairs(self.containers) do
 		c:updateHeight()
 		c.position = pos
 		pos = pos + c.height
@@ -98,8 +118,9 @@ function SettingsView:build()
 	------------- Scroll limit
 	pos = self.optionsLabel:getHeight()
 	pos = pos + self.gameBehaviorLabel:getHeight()
+	pos = pos + self.searchLabel:getHeight()
 	pos = pos + self.topSpacing:getHeight()
-	pos = pos + self.headerSpacing:getHeight()
+	pos = pos + self.headerSpacing:getHeight() * 2
 	pos = pos + self.bottomSpacing:getHeight()
 
 	for _, c in ipairs(self.containers) do
@@ -175,6 +196,13 @@ function SettingsView:update(dt)
 		end
 
 		additional_pos = additional_pos + c.height
+	end
+
+	local changed = false
+	changed, search_text = gyatt.textInput(search_text)
+
+	if changed then
+		self:build()
 	end
 end
 

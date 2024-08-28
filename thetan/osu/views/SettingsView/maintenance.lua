@@ -27,6 +27,12 @@ return function(assets, view)
 		m.autoUpdate = not m.autoUpdate
 	end)
 
+	c:removeEmptyGroups()
+
+	if c.isEmpty then
+		return nil
+	end
+
 	c:add("version", Label({ text = version.date, font = font.version, width = 438 - 24 - 28 }))
 
 	return c

@@ -9,8 +9,23 @@ Elements.assets = nil
 Elements.currentContainer = nil
 ---@type string
 Elements.currentGroup = nil
+---@type string
+Elements.searchText = ""
 
+---@param text string
+---@param get_value function
+---@param on_change function
 function Elements.checkbox(text, get_value, on_change)
+	local search_text = Elements.searchText
+
+	if search_text ~= "" then
+		local a = text:lower()
+		local b = search_text:lower()
+		if not a:find(b) then
+			return
+		end
+	end
+
 	local assets = Elements.assets
 	local font = assets.localization.fontGroups.settings
 	local c = Elements.currentContainer
