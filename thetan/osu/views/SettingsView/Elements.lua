@@ -1,4 +1,5 @@
 local Checkbox = require("thetan.osu.ui.Checkbox")
+local Combo = require("thetan.osu.ui.Combo")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 
 local Elements = {}
@@ -12,18 +13,26 @@ Elements.currentGroup = nil
 ---@type string
 Elements.searchText = ""
 
----@param text string
----@param get_value function
----@param on_change function
-function Elements.checkbox(text, get_value, on_change)
+local function canAdd(text)
 	local search_text = Elements.searchText
 
 	if search_text ~= "" then
 		local a = text:lower()
 		local b = search_text:lower()
 		if not a:find(b) then
-			return
+			return false
 		end
+	end
+
+	return true
+end
+
+---@param text string
+---@param get_value function
+---@param on_change function
+function Elements.checkbox(text, get_value, on_change)
+	if not canAdd(text) then
+		return
 	end
 
 	local assets = Elements.assets
@@ -39,6 +48,41 @@ function Elements.checkbox(text, get_value, on_change)
 			pixelWidth = consts.checkboxWidth,
 			pixelHeight = consts.checkboxHeight,
 		}, get_value, on_change)
+	)
+end
+
+---@param text string
+---@param get_value fun(): any, any[]
+---@param on_change function
+---@param format function?
+function Elements.combo(text, get_value, on_change, format)
+	if Elements.searchText ~= "" then
+		local _, items = get_value()
+
+		local can_add = false
+
+		for _, v in ipairs(items) do
+			can_add = can_add or canAdd(format and format(v) or tostring(v))
+		end
+
+		if not can_add then
+			return
+		end
+	end
+
+	local assets = Elements.assets
+	local font = assets.localization.fontGroups.settings
+	local c = Elements.currentContainer
+	local current_group = Elements.currentGroup
+
+	c:add(
+		current_group,
+		Combo(assets, {
+			label = text,
+			font = font.combos,
+			pixelWidth = consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent,
+			pixelHeight = consts.comboHeight,
+		}, get_value, on_change, format)
 	)
 end
 

@@ -96,15 +96,24 @@ function ViewConfig:panel(view)
 	gfx.setColor(0, 0, 0, 0.6)
 	gfx.rectangle("fill", 0, self.hoverRectTargetPosition, 438, self.hoverRectTargetSize)
 
+	---@type osu.ui.Combo?
+	local open_combo = nil
+
 	for _, c in ipairs(view.containers) do
 		if -view.scrollPosition + 768 > c.position and -view.scrollPosition < c.position + c.height then
 			c:draw()
+			open_combo = open_combo or c.openCombo
 		else
 			gfx.translate(0, c.height)
 		end
 	end
 
 	view.bottomSpacing:draw()
+
+	if open_combo then
+		gfx.pop()
+		open_combo:drawBody()
+	end
 
 	gfx.setCanvas(prev_canvas)
 

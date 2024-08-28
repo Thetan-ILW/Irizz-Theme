@@ -3,7 +3,7 @@ local Elements = require("thetan.osu.views.SettingsView.Elements")
 
 ---@param assets osu.OsuAssets
 ---@param view osu.SettingsView
----@return osu.SettingsView.GroupContainer
+---@return osu.SettingsView.GroupContainer?
 return function(assets, view)
 	local font = assets.localization.fontGroups.settings
 

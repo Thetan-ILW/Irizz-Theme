@@ -16,6 +16,7 @@ gyatt.sameline = just.sameline
 gyatt.focus = just.focus
 gyatt.textInput = just.textinput
 gyatt.row = just.row
+gyatt.resetJust = just.reset
 
 local text_transform = love.math.newTransform()
 local text_scale = 1
@@ -26,6 +27,7 @@ function gyatt.setTextScale(scale)
 	text_scale = scale
 end
 
+---@return number
 function gyatt.getTextScale()
 	return text_scale
 end

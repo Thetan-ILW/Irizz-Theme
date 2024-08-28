@@ -16,6 +16,7 @@ local Label = require("thetan.osu.ui.Label")
 ---@field hoverSize number
 ---@field tabLabel osu.ui.Label
 ---@field isEmpty boolean
+---@field openCombo osu.ui.Combo?
 local GroupContainer = class()
 
 ---@type table<string, love.Font>
@@ -33,6 +34,7 @@ function GroupContainer:new(name, fonts)
 	self.hoverPosition = 0
 	self.hoverSize = 0
 	self.isEmpty = true
+	self.openComboPosition = 0
 
 	self.tabLabel = Label({
 		text = name,
@@ -90,7 +92,7 @@ end
 local gfx = love.graphics
 
 function GroupContainer:draw()
-	gfx.translate(24, 0)
+	gfx.translate(consts.tabIndent, 0)
 
 	self.hoverPosition = 0
 	self.hoverSize = 0
@@ -100,6 +102,8 @@ function GroupContainer:draw()
 	self.tabLabel:draw()
 	gfx.translate(0, consts.tabLabelSpacing)
 	local current_position = self.tabLabel:getHeight() + consts.tabLabelSpacing + consts.containerSpacing
+
+	self.openCombo = nil
 
 	for _, id in ipairs(self.groupOrder) do
 		local group = self.groups[id]
@@ -113,7 +117,7 @@ function GroupContainer:draw()
 			group.height + font.groupLabel:getHeight() * gyatt.getTextScale() + consts.groupLabelSpacing
 		)
 
-		gfx.translate(10, 0)
+		gfx.translate(consts.tabIndentIndent, 0)
 
 		gfx.setColor(1, 1, 1)
 		gfx.setFont(font.groupLabel)
@@ -125,7 +129,16 @@ function GroupContainer:draw()
 			+ consts.groupLabelSpacing
 
 		for _, element in ipairs(group.elements) do
-			element:update()
+			if not self.openCombo or not self.openCombo:isFocused() then
+				element:update()
+			end
+
+			if element.state and element.state ~= "hidden" then
+				gfx.push()
+				---@cast element osu.ui.Combo
+				self.openCombo = element
+			end
+
 			element:draw()
 
 			if element:isMouseOver() then
@@ -136,11 +149,11 @@ function GroupContainer:draw()
 			current_position = current_position + element:getHeight()
 		end
 
-		gfx.translate(-10, consts.groupSpacing)
+		gfx.translate(-consts.tabIndentIndent, consts.groupSpacing)
 		current_position = current_position + consts.groupSpacing
 	end
 
-	gfx.translate(-24, -consts.groupSpacing)
+	gfx.translate(-consts.tabIndent, -consts.groupSpacing)
 end
 
 return GroupContainer

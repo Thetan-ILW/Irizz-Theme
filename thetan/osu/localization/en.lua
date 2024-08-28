@@ -99,6 +99,7 @@ l.fontGroups = {
 		groupLabel = { "Aller-Bold", 16, "ZenMaruGothic-Regular" },
 		buttons = { "Aller", 16, "ZenMaruGothic-Regular" },
 		checkboxes = { "Aller", 16, "ZenMaruGothic-Regular" },
+		combos = { "Aller", 16, "ZenMaruGothic-Regular" },
 		version = { "Aller", 16, "ZenMaruGothic-Regular" },
 	},
 	songSelect = {

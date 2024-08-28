@@ -5,7 +5,7 @@ local version = require("version")
 
 ---@param assets osu.OsuAssets
 ---@param view osu.SettingsView
----@return osu.SettingsView.GroupContainer
+---@return osu.SettingsView.GroupContainer?
 return function(assets, view)
 	local font = assets.localization.fontGroups.settings
 

@@ -1,9 +1,15 @@
 local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
 local Elements = require("thetan.osu.views.SettingsView.Elements")
 
+local vsyncNames = {
+	[1] = "Enabled",
+	[0] = "Disabled",
+	[-1] = "Adaptive",
+}
+
 ---@param assets osu.OsuAssets
 ---@param view osu.SettingsView
----@return osu.SettingsView.GroupContainer
+---@return osu.SettingsView.GroupContainer?
 return function(assets, view)
 	local font = assets.localization.fontGroups.settings
 
@@ -17,10 +23,19 @@ return function(assets, view)
 	Elements.assets = assets
 	Elements.currentContainer = c
 	local checkbox = Elements.checkbox
+	local combo = Elements.combo
 
 	--------------- RENDERER ---------------
 	c:createGroup("renderer", "RENDERER")
 	Elements.currentGroup = "renderer"
+
+	combo("Vsync type:", function()
+		return flags.vsync, { 1, 0, -1 }
+	end, function(v)
+		flags.vsync = v
+	end, function(v)
+		return vsyncNames[v] or ""
+	end)
 
 	checkbox("Show FPS counter", function()
 		return m.showFPS

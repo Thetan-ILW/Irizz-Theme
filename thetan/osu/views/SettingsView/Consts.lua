@@ -1,4 +1,7 @@
 return {
+	settingsWidth = 438,
+	tabIndent = 24,
+	tabIndentIndent = 10,
 	groupLabelSpacing = 15.0,
 	groupSpacing = 40.0,
 	containerSpacing = 6.0,
@@ -7,4 +10,5 @@ return {
 	buttonSize = 0.5,
 	checkboxWidth = 404,
 	checkboxHeight = 37,
+	comboHeight = 37,
 }
