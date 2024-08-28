@@ -226,7 +226,8 @@ end
 function SettingsView:update(dt)
 	self:processState()
 
-	local additional_pos = 0.0
+	---@type number
+	local additional_pos = 0
 
 	for i, c in ipairs(self.containers) do
 		if c.hoverPosition ~= 0 then
@@ -236,6 +237,17 @@ function SettingsView:update(dt)
 
 		additional_pos = additional_pos + c.height + consts.groupSpacing
 	end
+end
+
+---@param container_index integer
+function SettingsView:jumpTo(container_index)
+	self.scrollTargetPosition = self.containers[container_index].position
+
+	if self.scrollTween then
+		self.scrollTween:stop()
+	end
+
+	self.scrollTween = flux.to(self, 0.25, { scrollPosition = -self.scrollTargetPosition }):ease("quadout")
 end
 
 function SettingsView:resolutionUpdated()
@@ -250,7 +262,11 @@ function SettingsView:receive(event)
 		local max = math_util.clamp(self.totalHeight - 768, 0, self.totalHeight - 768)
 		self.scrollTargetPosition = math_util.clamp(self.scrollTargetPosition + (delta * 50), 0, max)
 
-		flux.to(self, 0.1, { scrollPosition = -self.scrollTargetPosition }):ease("quadout")
+		if self.scrollTween then
+			self.scrollTween:stop()
+		end
+
+		self.scrollTween = flux.to(self, 0.1, { scrollPosition = -self.scrollTargetPosition }):ease("quadout")
 	end
 end
 

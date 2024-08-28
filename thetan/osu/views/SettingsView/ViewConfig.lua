@@ -29,11 +29,28 @@ function ViewConfig:new(assets)
 	img = assets.images
 end
 
-function ViewConfig:tabs()
+---@param view osu.SettingsView
+function ViewConfig:tabs(view)
 	local w, h = Layout:move("base")
 
 	gfx.setColor(0, 0, 0, visibility)
 	gfx.rectangle("fill", 0, 0, 64, h)
+
+	if gyatt.isOver(64, 64) and gyatt.mousePressed(1) then
+		view:jumpTo(1)
+	end
+
+	gfx.setColor(0.9, 0.4, 0.1, visibility)
+	gfx.rectangle("fill", 0, 0, 64, 64)
+
+	gfx.translate(0, 64)
+
+	if gyatt.isOver(64, 64) and gyatt.mousePressed(1) then
+		view:jumpTo(2)
+	end
+
+	gfx.setColor(0.3, 0.6, 0.8, visibility)
+	gfx.rectangle("fill", 0, 0, 64, 64)
 end
 
 ---@param view osu.SettingsView
@@ -113,7 +130,7 @@ function ViewConfig:draw(view)
 	Layout:draw()
 	visibility = view.visibility
 
-	self:tabs()
+	self:tabs(view)
 	self:panel(view)
 end
 
