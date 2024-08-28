@@ -62,8 +62,9 @@ end
 
 local gfx = love.graphics
 
-function Button:update()
-	local mouse_over = gyatt.isOver(self.totalW, self.totalH)
+---@param has_focus boolean
+function Button:update(has_focus)
+	local mouse_over = gyatt.isOver(self.totalW, self.totalH) and has_focus
 
 	if (not self.hover and mouse_over) or (self.hover and not mouse_over) then
 		self.hoverUpdateTime = love.timer.getTime()

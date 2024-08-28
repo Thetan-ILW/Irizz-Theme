@@ -105,6 +105,8 @@ function GroupContainer:draw()
 
 	self.openCombos = {}
 
+	local focus = true
+
 	for _, id in ipairs(self.groupOrder) do
 		local group = self.groups[id]
 
@@ -129,12 +131,13 @@ function GroupContainer:draw()
 			+ consts.groupLabelSpacing
 
 		for _, element in ipairs(group.elements) do
-			element:update()
+			element:update(focus)
 
 			if element.state and element.state ~= "hidden" then
 				gfx.push()
 				---@cast element osu.ui.Combo
 				table.insert(self.openCombos, element)
+				focus = not element:isFocused()
 			end
 
 			element:draw()

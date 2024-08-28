@@ -39,10 +39,11 @@ function Checkbox:new(assets, params, get_value, on_change)
 	self.toggleTime = -math.huge
 end
 
-function Checkbox:update()
+---@param has_focus boolean
+function Checkbox:update(has_focus)
 	self.toggled = self.getValue()
 
-	self.hover = gyatt.isOver(self.totalW, self.totalH)
+	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
 
 	if self.hover and gyatt.mousePressed(1) then
 		self.onChange()

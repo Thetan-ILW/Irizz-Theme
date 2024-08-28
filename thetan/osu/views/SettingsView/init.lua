@@ -32,14 +32,13 @@ local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 ---@field optionsLabel osu.ui.Label
 ---@field gameBehaviorLabel osu.ui.Label
 ---@field searchLabel osu.ui.Label
+---@field searchText string
 local SettingsView = class()
 
 ---@type table<string, string>
 local text
 ---@type table<string, love.Font>
 local font
-
-local search_text = ""
 
 ---@param assets osu.OsuAssets
 ---@param game sphere.GameController
@@ -53,6 +52,7 @@ function SettingsView:new(assets, game)
 	self.scrollTargetPosition = 0
 	self.containers = {}
 	self.totalHeight = 0
+	self.searchText = ""
 
 	text, font = assets.localization:get("settings")
 	assert(font)
@@ -84,17 +84,17 @@ function SettingsView:build()
 
 	local assets = self.assets
 
-	Elements.searchText = search_text
+	Elements.searchText = self.searchText
 	table.insert(self.containers, graphics(assets, self))
 	table.insert(self.containers, audio(assets, self))
 	table.insert(self.containers, maintenance(assets, self))
 
 	if #self.containers == 0 then
 		self.containers = prev_containers
-		search_text = search_text:sub(1, -2)
+		self.searchText = self.searchText:sub(1, -2)
 	end
 
-	local search = search_text == "" and "Type to search!" or search_text
+	local search = self.searchText == "" and "Type to search!" or self.searchText
 
 	self.searchLabel = Label({
 		text = search,
@@ -198,8 +198,12 @@ function SettingsView:update(dt)
 		additional_pos = additional_pos + c.height
 	end
 
+	if self.state == "hidden" then
+		return
+	end
+
 	local changed = false
-	changed, search_text = gyatt.textInput(search_text)
+	changed, self.searchText = gyatt.textInput(self.searchText)
 
 	if changed then
 		self:build()

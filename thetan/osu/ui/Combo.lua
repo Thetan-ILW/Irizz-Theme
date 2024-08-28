@@ -98,12 +98,12 @@ function Combo:processState(event)
 	end
 end
 
-function Combo:update()
+function Combo:update(has_focus)
 	self:processState()
 	local selected, items = self.getValue()
 	self.selected = self.format and self.format(selected) or tostring(selected)
 	self.items = items
-	self.hover = gyatt.isOver(self.totalW, self.totalH)
+	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
 
 	self.hoverIndex = 0
 

@@ -18,7 +18,8 @@ function UiElement:isMouseOver()
 	return self.hover
 end
 
-function UiElement:update() end
+---@param has_focus boolean
+function UiElement:update(has_focus) end
 function UiElement:draw()
 	error("Silly mistake")
 end

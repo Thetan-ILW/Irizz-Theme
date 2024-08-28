@@ -161,6 +161,10 @@ function MainMenuView:notechartChanged()
 	self.viewConfig:updateInfo(self)
 end
 
+function MainMenuView:sendQuitSignal()
+	self.settingsView:processState("hide")
+end
+
 function MainMenuView:resolutionUpdated()
 	window_height = self.assets.localization:updateScale()
 
