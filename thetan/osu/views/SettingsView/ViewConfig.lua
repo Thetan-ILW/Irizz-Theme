@@ -13,6 +13,8 @@ local Layout = require("thetan.osu.views.OsuLayout")
 ---@field hoverRectTargetPosition number
 ---@field hoverRectTargetSize number
 ---@field hoverRectTween table?
+---@field tabFocusAnimation number
+---@field tabFocusTween table?
 local ViewConfig = IViewConfig + {}
 
 local visibility = 0
@@ -20,7 +22,6 @@ local visibility = 0
 local img
 
 local tab_focus = 0
-local tab_focus_time = 0
 
 local gfx = love.graphics
 
@@ -30,6 +31,7 @@ function ViewConfig:new(assets)
 	self.hoverRectPosition = 0
 	self.hoverRectTargetPosition = 0
 	self.hoverRectTargetSize = 0
+	self.tabFocusAnimation = 1
 	img = assets.images
 end
 
@@ -46,18 +48,13 @@ function ViewConfig:tabs(view)
 	gfx.rectangle("fill", 0, 0, 64, h)
 
 	local tab_count = #view.containers
-	local tab_focus_alpha = math_util.clamp(love.timer.getTime() - tab_focus_time, 0, 0.25) * 4
 
 	local total_h = tab_count * (tab_image_height * tab_image_scale) + (tab_count - 1) * tab_image_spacing
 
 	gfx.translate(tab_image_indent, h / 2 - total_h / 2)
 
 	for i, c in ipairs(view.containers) do
-		if tab_focus == i then
-			gfx.setColor(1, 1, 1, math_util.clamp(visibility * tab_focus_alpha, 0.6, 1))
-		else
-			gfx.setColor(0.6, 0.6, 0.6, visibility)
-		end
+		gfx.setColor(0.6, 0.6, 0.6, visibility)
 
 		if gyatt.isOver(64, 64) then
 			gfx.setColor(1, 1, 1, visibility)
@@ -74,8 +71,8 @@ function ViewConfig:tabs(view)
 
 	w, h = Layout:move("base")
 
-	gfx.setColor(0.92, 0.46, 0.55, visibility * tab_focus_alpha)
-	local i = tab_focus - 1
+	gfx.setColor(0.92, 0.46, 0.55, visibility)
+	local i = self.tabFocusAnimation - 1
 	gfx.translate(
 		59,
 		h / 2
@@ -204,7 +201,7 @@ function ViewConfig:draw(view)
 	end
 
 	if last_tab_focus ~= tab_focus then
-		tab_focus_time = love.timer.getTime()
+		self.tabFocusTween = flux.to(self, 0.2, { tabFocusAnimation = tab_focus }):ease("cubicout")
 	end
 
 	self:tabs(view)
