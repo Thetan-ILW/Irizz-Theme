@@ -7,6 +7,7 @@ local Label = require("thetan.osu.ui.Label")
 
 ---@class osu.SettingsView.GroupContainer
 ---@operator call: osu.SettingsView.GroupContainer
+---@field assets osu.OsuAssets
 ---@field groups table<string, {name: string, height: number, elements: osu.UiElement[]}>
 ---@field groupOrder string[]
 ---@field elementsHeight number
@@ -24,7 +25,9 @@ local font
 
 ---@param name string
 ---@param fonts table<string, love.Font>
-function GroupContainer:new(name, fonts)
+function GroupContainer:new(name, assets, fonts)
+	self.assets = assets
+
 	font = fonts
 	self.groups = {}
 	self.groupOrder = {}
@@ -117,6 +120,8 @@ function GroupContainer:draw()
 	local current_position = self.tabLabel:getHeight() + consts.tabLabelSpacing + consts.containerSpacing
 
 	self.openCombos = {}
+	local changed_img = self.assets.images.optionChanged
+	local changed_img_h = changed_img:getHeight()
 
 	local focus = true
 
@@ -151,6 +156,14 @@ function GroupContainer:draw()
 				---@cast element osu.ui.Combo
 				table.insert(self.openCombos, element)
 				focus = not element:isFocused()
+			end
+
+			if element:isNotDefault() then
+				gfx.translate(-consts.tabIndentIndent, 0)
+				local h = element:getHeight()
+
+				gfx.draw(self.assets.images.optionChanged, 0, 0, 0, 1, h / changed_img_h)
+				gfx.translate(consts.tabIndentIndent, 0)
 			end
 
 			element:draw()

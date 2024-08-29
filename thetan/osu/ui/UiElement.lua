@@ -2,6 +2,8 @@ local class = require("class")
 
 ---@class osu.UiElement
 ---@operator call: osu.UiElement
+---@field private defaultValue any?
+---@field private valueChanged boolean
 ---@field private onChange function
 ---@field private totalH number
 ---@field private margin number
@@ -16,6 +18,10 @@ end
 ---@return boolean
 function UiElement:isMouseOver()
 	return self.hover
+end
+
+function UiElement:isNotDefault()
+	return self.valueChanged
 end
 
 ---@param has_focus boolean

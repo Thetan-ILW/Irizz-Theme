@@ -13,7 +13,7 @@ return function(assets, view)
 	local settings = view.game.configModel.configs.settings
 	local m = settings.miscellaneous
 
-	local c = GroupContainer("MAINTENANCE", font)
+	local c = GroupContainer("MAINTENANCE", assets, font)
 
 	Elements.assets = assets
 	Elements.currentContainer = c
@@ -22,7 +22,7 @@ return function(assets, view)
 	c:createGroup("version", "VERSION")
 	Elements.currentGroup = "version"
 
-	checkbox("Auto update", function()
+	checkbox("Auto update", true, nil, function()
 		return m.autoUpdate
 	end, function()
 		m.autoUpdate = not m.autoUpdate

@@ -7,6 +7,8 @@ local math_util = require("math_util")
 ---@operator call: osu.ui.Checkbox
 ---@field text string
 ---@field font love.Font
+---@field defaultValue boolean?
+---@field valueChanged boolean
 ---@field private totalW number
 ---@field private totalH number
 ---@field private hover boolean
@@ -20,7 +22,7 @@ local math_util = require("math_util")
 local Checkbox = UiElement + {}
 
 ---@param assets osu.OsuAssets
----@param params { text: string, font: love.Font, pixelWidth: number, pixelHeight: number }
+---@param params { text: string, font: love.Font, pixelWidth: number, pixelHeight: number, defaultValue: boolean? }
 ---@param get_value function
 ---@param on_change function
 function Checkbox:new(assets, params, get_value, on_change)
@@ -28,6 +30,8 @@ function Checkbox:new(assets, params, get_value, on_change)
 	self.font = params.font
 	self.totalW = params.pixelWidth
 	self.totalH = params.pixelHeight
+	self.defaultValue = params.defaultValue
+	self.valueChanged = false
 	self.getValue = get_value
 	self.onChange = on_change
 
@@ -42,6 +46,10 @@ end
 ---@param has_focus boolean
 function Checkbox:update(has_focus)
 	self.toggled = self.getValue()
+
+	if self.defaultValue ~= nil then
+		self.valueChanged = self.defaultValue ~= self.toggled
+	end
 
 	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
 

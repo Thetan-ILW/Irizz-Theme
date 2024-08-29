@@ -180,6 +180,7 @@ function OsuAssets:new(skin_path, localization_file)
 
 		checkboxOff = self:loadImageOrDefault(skin_path, "menu-checkbox-off"),
 		checkboxOn = self:loadImageOrDefault(skin_path, "menu-checkbox-on"),
+		optionChanged = self:loadImageOrDefault(skin_path, "menu-option-changed"),
 
 		-- RESULT
 

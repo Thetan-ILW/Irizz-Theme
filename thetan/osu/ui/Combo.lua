@@ -9,6 +9,8 @@ local flux = require("flux")
 ---@field labelColor number[]
 ---@field hoverColor number[]
 ---@field borderColor number[]
+---@field private defaultValue any?
+---@field private valueChanged boolean
 ---@field private totalW number
 ---@field private totalH number
 ---@field private hover boolean
@@ -25,7 +27,7 @@ local flux = require("flux")
 local Combo = UiElement + {}
 
 ---@param assets osu.OsuAssets
----@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, hoverColor: number[]?, borderColor: number[]? }
+---@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, hoverColor: number[]?, borderColor: number[]?, defaultValue: any? }
 ---@param get_value function
 ---@param on_change function
 ---@param format function?
@@ -36,6 +38,8 @@ function Combo:new(assets, params, get_value, on_change, format)
 	self.totalH = params.pixelHeight
 	self.hoverColor = params.hoverColor or { 0.72, 0.06, 0.46, 1 }
 	self.borderColor = params.borderColor or { 0, 0, 0, 1 }
+	self.defaultValue = params.defaultValue
+	self.valueChanged = false
 	self.onChange = on_change
 	self.getValue = get_value
 	self.format = format
@@ -104,6 +108,10 @@ function Combo:update(has_focus)
 	self.selected = self.format and self.format(selected) or tostring(selected)
 	self.items = items
 	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
+
+	if self.defaultValue ~= nil then
+		self.valueChanged = selected ~= self.defaultValue
+	end
 
 	self.hoverIndex = 0
 

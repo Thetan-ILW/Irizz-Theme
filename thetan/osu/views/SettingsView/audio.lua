@@ -11,7 +11,7 @@ return function(assets, view)
 	local a = settings.audio
 	local g = settings.gameplay
 
-	local c = GroupContainer("AUDIO", font)
+	local c = GroupContainer("AUDIO", assets, font)
 
 	Elements.assets = assets
 	Elements.currentContainer = c
@@ -24,7 +24,7 @@ return function(assets, view)
 	local mode = a.mode
 	local pitch = mode.primary == "bass_sample" and true or false
 
-	checkbox("Rate changes pitch", function()
+	checkbox("Rate changes pitch", false, nil, function()
 		pitch = mode.primary == "bass_sample" and true or false
 		return pitch
 	end, function()

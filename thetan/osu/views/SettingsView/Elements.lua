@@ -28,9 +28,11 @@ local function canAdd(text)
 end
 
 ---@param text string
+---@param default_value boolean?
+---@param tip string?
 ---@param get_value function
 ---@param on_change function
-function Elements.checkbox(text, get_value, on_change)
+function Elements.checkbox(text, default_value, tip, get_value, on_change)
 	if not canAdd(text) then
 		return
 	end
@@ -47,15 +49,18 @@ function Elements.checkbox(text, get_value, on_change)
 			font = font.checkboxes,
 			pixelWidth = consts.checkboxWidth,
 			pixelHeight = consts.checkboxHeight,
+			defaultValue = default_value,
 		}, get_value, on_change)
 	)
 end
 
 ---@param text string
+---@param default_value any?
+---@param tip string?
 ---@param get_value fun(): any, any[]
 ---@param on_change function
 ---@param format function?
-function Elements.combo(text, get_value, on_change, format)
+function Elements.combo(text, default_value, tip, get_value, on_change, format)
 	if Elements.searchText ~= "" then
 		local _, items = get_value()
 
@@ -84,6 +89,7 @@ function Elements.combo(text, get_value, on_change, format)
 			font = font.combos,
 			pixelWidth = consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent,
 			pixelHeight = consts.comboHeight,
+			defaultValue = default_value,
 		}, get_value, on_change, format)
 	)
 end

@@ -20,7 +20,7 @@ return function(assets, view)
 	local m = settings.miscellaneous
 	local flags = g.mode.flags
 
-	local c = GroupContainer(text.graphics, font)
+	local c = GroupContainer(text.graphics, assets, font)
 
 	Elements.assets = assets
 	Elements.currentContainer = c
@@ -31,7 +31,7 @@ return function(assets, view)
 	c:createGroup("renderer", text.renderer)
 	Elements.currentGroup = "renderer"
 
-	combo(text.vsyncType, function()
+	combo(text.vsyncType, 1, nil, function()
 		return flags.vsync, { 1, 0, -1 }
 	end, function(v)
 		flags.vsync = v
@@ -39,19 +39,19 @@ return function(assets, view)
 		return text[vsyncNames[v]] or ""
 	end)
 
-	checkbox(text.showFPS, function()
+	checkbox(text.showFPS, nil, nil, function()
 		return m.showFPS
 	end, function()
 		m.showFPS = not m.showFPS
 	end)
 
-	checkbox(text.vsyncInSongSelect, function()
+	checkbox(text.vsyncInSongSelect, true, nil, function()
 		return g.vsyncOnSelect
 	end, function()
 		g.vsyncOnSelect = not g.vsyncOnSelect
 	end)
 
-	checkbox("DWM flush", function()
+	checkbox("DWM flush", false, nil, function()
 		return g.dwmflush
 	end, function()
 		g.dwmflush = not g.dwmflush
@@ -61,7 +61,7 @@ return function(assets, view)
 	c:createGroup("layout", text.layout)
 	Elements.currentGroup = "layout"
 
-	combo(text.fullscreenType, function()
+	combo(text.fullscreenType, nil, nil, function()
 		return flags.fullscreentype, { "desktop", "exclusive" }
 	end, function(v)
 		flags.fullscreentype = v
@@ -70,7 +70,7 @@ return function(assets, view)
 	end)
 
 	local modes = love.window.getFullscreenModes()
-	combo(text.windowResolution, function()
+	combo(text.windowResolution, nil, nil, function()
 		return g.mode.window, modes
 	end, function(v)
 		g.mode.window = v
@@ -78,7 +78,7 @@ return function(assets, view)
 		return mode.width .. "x" .. mode.height
 	end)
 
-	checkbox(text.fullscreen, function()
+	checkbox(text.fullscreen, nil, nil, function()
 		return flags.fullscreen
 	end, function()
 		flags.fullscreen = not flags.fullscreen
@@ -88,13 +88,13 @@ return function(assets, view)
 	c:createGroup("details", text.details)
 	Elements.currentGroup = "details"
 
-	checkbox(text.backgroundVideos, function()
+	checkbox(text.backgroundVideos, false, nil, function()
 		return gp.bga.video
 	end, function()
 		gp.bga.video = not gp.bga.video
 	end)
 
-	checkbox(text.backgroundImages, function()
+	checkbox(text.backgroundImages, false, nil, function()
 		return gp.bga.image
 	end, function()
 		gp.bga.image = not gp.bga.image
