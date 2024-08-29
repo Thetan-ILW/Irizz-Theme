@@ -1,6 +1,8 @@
 local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
 local Elements = require("thetan.osu.views.SettingsView.Elements")
 
+local math_util = require("math_util")
+
 ---@param assets osu.OsuAssets
 ---@param view osu.SettingsView
 ---@return osu.SettingsView.GroupContainer?
@@ -10,16 +12,44 @@ return function(assets, view)
 	local settings = view.game.configModel.configs.settings
 	local a = settings.audio
 	local g = settings.gameplay
+	local vol = a.volume
 
 	local c = GroupContainer("AUDIO", assets, font, assets.images.audioTab)
+
+	----- there is no log volume type in osu
+	a.volumeType = "linear"
 
 	Elements.assets = assets
 	Elements.currentContainer = c
 	local checkbox = Elements.checkbox
+	local slider = Elements.slider
 
 	--------------- AUDIO ---------------
 	c:createGroup("volume", "VOLUME")
 	Elements.currentGroup = "volume"
+
+	local linear_volume = { min = 0, max = 1, increment = 0.01 }
+
+	slider("Master:", nil, nil, function()
+		return vol.master, linear_volume
+	end, function(v)
+		vol.master = v
+		assets:updateVolume(view.game.configModel)
+	end)
+
+	slider("Music:", nil, nil, function()
+		return vol.music, linear_volume
+	end, function(v)
+		vol.music = v
+		assets:updateVolume(view.game.configModel)
+	end)
+
+	slider("Effect:", nil, nil, function()
+		return vol.effects, linear_volume
+	end, function(v)
+		vol.effects = v
+		assets:updateVolume(view.game.configModel)
+	end)
 
 	local mode = a.mode
 	local pitch = mode.primary == "bass_sample" and true or false

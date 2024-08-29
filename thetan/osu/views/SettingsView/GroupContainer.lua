@@ -165,6 +165,7 @@ function GroupContainer:draw()
 				gfx.translate(-consts.tabIndentIndent, 0)
 				local h = element:getHeight()
 
+				gfx.setColor(1, 1, 1)
 				gfx.draw(self.assets.images.optionChanged, 0, 0, 0, 1, h / changed_img_h)
 				gfx.translate(consts.tabIndentIndent, 0)
 			end

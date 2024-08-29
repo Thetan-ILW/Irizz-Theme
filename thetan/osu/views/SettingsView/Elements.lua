@@ -1,5 +1,6 @@
 local Checkbox = require("thetan.osu.ui.Checkbox")
 local Combo = require("thetan.osu.ui.Combo")
+local Slider = require("thetan.osu.ui.Slider")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 
 local Elements = {}
@@ -27,13 +28,13 @@ local function canAdd(text)
 	return true
 end
 
----@param text string
+---@param label string
 ---@param default_value boolean?
 ---@param tip string?
 ---@param get_value function
 ---@param on_change function
-function Elements.checkbox(text, default_value, tip, get_value, on_change)
-	if not canAdd(text) then
+function Elements.checkbox(label, default_value, tip, get_value, on_change)
+	if not canAdd(label) then
 		return
 	end
 
@@ -45,7 +46,7 @@ function Elements.checkbox(text, default_value, tip, get_value, on_change)
 	c:add(
 		current_group,
 		Checkbox(assets, {
-			text = text,
+			text = label,
 			font = font.checkboxes,
 			pixelWidth = consts.checkboxWidth,
 			pixelHeight = consts.checkboxHeight,
@@ -54,13 +55,13 @@ function Elements.checkbox(text, default_value, tip, get_value, on_change)
 	)
 end
 
----@param text string
+---@param label string
 ---@param default_value any?
 ---@param tip string?
 ---@param get_value fun(): any, any[]
 ---@param on_change function
 ---@param format function?
-function Elements.combo(text, default_value, tip, get_value, on_change, format)
+function Elements.combo(label, default_value, tip, get_value, on_change, format)
 	if Elements.searchText ~= "" then
 		local _, items = get_value()
 
@@ -70,7 +71,7 @@ function Elements.combo(text, default_value, tip, get_value, on_change, format)
 			can_add = can_add or canAdd(format and format(v) or tostring(v))
 		end
 
-		can_add = can_add or canAdd(text)
+		can_add = can_add or canAdd(label)
 
 		if not can_add then
 			return
@@ -85,11 +86,39 @@ function Elements.combo(text, default_value, tip, get_value, on_change, format)
 	c:add(
 		current_group,
 		Combo(assets, {
-			label = text,
+			label = label,
 			font = font.combos,
 			pixelWidth = consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent,
 			pixelHeight = consts.comboHeight,
 			defaultValue = default_value,
+		}, get_value, on_change, format)
+	)
+end
+
+---@param label string
+---@param default_value any?
+---@param tip string?
+---@param get_value fun(): any, any[]
+---@param on_change function
+---@param format function?
+function Elements.slider(label, default_value, tip, get_value, on_change, format)
+	if not canAdd(label) then
+		return
+	end
+
+	local assets = Elements.assets
+	local font = assets.localization.fontGroups.settings
+	local c = Elements.currentContainer
+	local current_group = Elements.currentGroup
+
+	c:add(
+		current_group,
+		Slider({
+			label = label,
+			font = font.sliders,
+			pixelWidth = consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent,
+			pixelHeight = consts.sliderHeight,
+			default_value = default_value,
 		}, get_value, on_change, format)
 	)
 end

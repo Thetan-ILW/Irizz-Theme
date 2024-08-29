@@ -236,13 +236,13 @@ function SettingsView:receive(event)
 		---@type number
 		local delta = -event[2]
 		local max = math_util.clamp(self.totalHeight - 768, 0, self.totalHeight - 768)
-		self.scrollTargetPosition = math_util.clamp(self.scrollTargetPosition + (delta * 50), 0, max)
+		self.scrollTargetPosition = math_util.clamp(self.scrollTargetPosition + (delta * 90), 0, max)
 
 		if self.scrollTween then
 			self.scrollTween:stop()
 		end
 
-		self.scrollTween = flux.to(self, 0.1, { scrollPosition = -self.scrollTargetPosition }):ease("quadout")
+		self.scrollTween = flux.to(self, 0.2, { scrollPosition = -self.scrollTargetPosition }):ease("quadout")
 	end
 end
 

@@ -123,6 +123,7 @@ l.fontGroups = {
 		buttons = { "Aller", 16, "ZenMaruGothic-Regular" },
 		checkboxes = { "Aller", 16, "ZenMaruGothic-Regular" },
 		combos = { "Aller", 16, "ZenMaruGothic-Regular" },
+		sliders = { "Aller", 16, "ZenMaruGothic-Regular" },
 		version = { "Aller", 16, "ZenMaruGothic-Regular" },
 	},
 	songSelect = {

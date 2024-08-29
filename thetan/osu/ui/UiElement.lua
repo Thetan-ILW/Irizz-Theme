@@ -2,8 +2,8 @@ local class = require("class")
 
 ---@class osu.UiElement
 ---@operator call: osu.UiElement
----@field private defaultValue any?
----@field private valueChanged boolean
+---@field protected defaultValue any?
+---@field protected valueChanged boolean
 ---@field private onChange function
 ---@field private totalH number
 ---@field private margin number

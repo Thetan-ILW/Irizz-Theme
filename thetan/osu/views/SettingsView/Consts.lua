@@ -12,4 +12,5 @@ return {
 	checkboxWidth = 404,
 	checkboxHeight = 37,
 	comboHeight = 37,
+	sliderHeight = 37,
 }
