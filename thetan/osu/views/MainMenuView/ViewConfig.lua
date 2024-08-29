@@ -512,6 +512,7 @@ function ViewConfig:osuLogo(view)
 	gfx.pop()
 
 	love.graphics.setColor(1, 1, 1, 0.65)
+	gfx.translate(ax / 2, ay / 2)
 	self:spectrum()
 	gfx.scale(1)
 	gfx.pop()

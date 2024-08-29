@@ -123,7 +123,7 @@ function Elements.slider(label, default_value, tip, get_value, on_change, format
 			pixelWidth = consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent,
 			pixelHeight = consts.sliderHeight,
 			sliderPixelWidth = Elements.sliderPixelWidth,
-			default_value = default_value,
+			defaultValue = default_value,
 		}, get_value, on_change, format)
 	)
 end

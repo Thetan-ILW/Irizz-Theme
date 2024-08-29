@@ -19,7 +19,7 @@ local get_assets = require("thetan.osu.views.assets_loader")
 local MainMenuView = ScreenView + {}
 
 local window_height = 0
-local game_launch = false
+local show_intro = true
 
 function MainMenuView:load()
 	self.game.selectController:load(self)
@@ -37,15 +37,15 @@ function MainMenuView:load()
 	self.afkPercent = 1
 	self.outroPercent = 0
 	self.introPercent = 0
-	self.state = game_launch and "intro" or "normal"
+	self.state = show_intro and "intro" or "normal"
 
-	if game_launch then
+	if show_intro then
 		local snd = self.assets.sounds
 		snd.welcome:play()
 		snd.welcomePiano:play()
 	end
 
-	game_launch = false
+	show_intro = false
 
 	self.introTween = flux.to(self, 2, { introPercent = 1 }):ease("linear")
 end
