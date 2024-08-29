@@ -6,6 +6,7 @@ local math_util = require("math_util")
 local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
 local Label = require("thetan.osu.ui.Label")
 local Spacing = require("thetan.osu.ui.Spacing")
+local consts = require("thetan.osu.views.SettingsView.Consts")
 
 local Elements = require("thetan.osu.views.SettingsView.Elements")
 local graphics = require("thetan.osu.views.SettingsView.graphics")
@@ -71,13 +72,13 @@ function SettingsView:build()
 
 	self.optionsLabel = Label({
 		text = "Options",
-		width = 438,
+		pixelWidth = consts.labelWidth,
 		font = font.optionsLabel,
 	})
 
 	self.gameBehaviorLabel = Label({
 		text = "Change the way soundsphere behaves",
-		width = 438,
+		pixelWidth = consts.labelWidth,
 		font = font.gameBehaviorLabel,
 		color = { 0.83, 0.38, 0.47, 1 },
 	})
@@ -98,7 +99,7 @@ function SettingsView:build()
 
 	self.searchLabel = Label({
 		text = search,
-		width = 438,
+		pixelWidth = consts.labelWidth,
 		font = font.search,
 	})
 

@@ -1,5 +1,6 @@
 return {
 	settingsWidth = 438,
+	labelWidth = 438,
 	tabIndent = 24,
 	tabIndentIndent = 12,
 	groupLabelSpacing = 15.0,

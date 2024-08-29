@@ -62,9 +62,9 @@ function Checkbox:draw()
 	local x = image_size / 2 - (image_size * scale) / 2
 
 	if self.toggled then
-		gfx.draw(self.imgOn, x, x, 0, self.imageScale * scale, self.imageScale * scale)
+		gfx.draw(self.imgOn, x / 2, x, 0, self.imageScale * scale, self.imageScale * scale)
 	else
-		gfx.draw(self.imgOff, x, x, 0, self.imageScale * scale, self.imageScale * scale)
+		gfx.draw(self.imgOff, x / 2, x, 0, self.imageScale * scale, self.imageScale * scale)
 	end
 
 	x = self.imgOff:getWidth() * self.imageScale

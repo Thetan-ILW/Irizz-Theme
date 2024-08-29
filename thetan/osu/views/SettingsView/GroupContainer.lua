@@ -38,7 +38,7 @@ function GroupContainer:new(name, fonts)
 
 	self.tabLabel = Label({
 		text = name,
-		width = 438 - 24 - 20,
+		pixelWidth = consts.labelWidth - 24 - 20,
 		font = fonts.tabLabel,
 		color = { 0.51, 0.78, 0.88, 1 },
 		align = "right",

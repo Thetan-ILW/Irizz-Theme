@@ -1,6 +1,7 @@
 local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
 local Elements = require("thetan.osu.views.SettingsView.Elements")
 local Label = require("thetan.osu.ui.Label")
+local consts = require("thetan.osu.views.SettingsView.Consts")
 local version = require("version")
 
 ---@param assets osu.OsuAssets
@@ -33,7 +34,15 @@ return function(assets, view)
 		return nil
 	end
 
-	c:add("version", Label({ text = version.date, font = font.version, width = 438 - 24 - 28 }))
+	c:add(
+		"version",
+		Label(
+			{ text = version.date, font = font.version, pixelWidth = consts.labelWidth - 24 - 28, pixelHeight = 64 },
+			function()
+				love.system.openURL("https://github.com/semyon422/soundsphere/commits/master/")
+			end
+		)
+	)
 
 	return c
 end
