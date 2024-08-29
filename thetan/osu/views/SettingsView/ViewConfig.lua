@@ -15,11 +15,18 @@ local Layout = require("thetan.osu.views.OsuLayout")
 ---@field hoverRectTween table?
 ---@field tabFocusAnimation number
 ---@field tabFocusTween table?
+---@field tipAnimation number
+---@field tipTween table?
+---@field currentTip string?
 local ViewConfig = IViewConfig + {}
 
 local visibility = 0
+local tip_hover = false
+
 ---@type table<string, love.Image>
 local img
+---@type table<string, love.Font>
+local font
 
 local tab_focus = 0
 
@@ -27,12 +34,14 @@ local gfx = love.graphics
 
 ---@param assets osu.OsuAssets
 function ViewConfig:new(assets)
+	img = assets.images
+	font = assets.localization.fontGroups.settings
 	self.focus = false
 	self.hoverRectPosition = 0
 	self.hoverRectTargetPosition = 0
 	self.hoverRectTargetSize = 0
 	self.tabFocusAnimation = 1
-	img = assets.images
+	self.tipAnimation = 0
 end
 
 local tab_image_height = 64
@@ -82,6 +91,41 @@ function ViewConfig:tabs(view)
 			- (tab_image_height * tab_image_scale / 2)
 	)
 	gfx.rectangle("fill", 0, 0, 6, tab_image_height)
+end
+
+function ViewConfig:tip()
+	if self.tipAnimation == 0 then
+		return
+	end
+
+	local text = self.currentTip
+
+	if not text then
+		return
+	end
+
+	Layout:move("base")
+	local mx, my = gfx.inverseTransformPoint(love.mouse.getPosition())
+
+	local f = font.tip
+	local w = f:getWidth(text) * gyatt.getTextScale() + 12
+	local h = f:getHeight() * gyatt.getTextScale() + 4
+
+	mx = mx - w / 2
+	my = my + img.cursor:getHeight() / 2
+
+	local a = self.tipAnimation
+
+	gfx.setColor(0, 0, 0, a)
+	gfx.rectangle("fill", mx, my, w, h, 4, 4)
+
+	gfx.setColor(1, 1, 1, 0.5 * a)
+	gfx.setLineWidth(1)
+	gfx.rectangle("line", mx, my, w, h, 4, 4)
+
+	gfx.setColor(1, 1, 1, a)
+	gfx.setFont(f)
+	gyatt.frame(text, mx, my, w, h, "center", "center")
 end
 
 ---@param view osu.SettingsView
@@ -137,10 +181,13 @@ function ViewConfig:panel(view)
 
 	---@type osu.ui.Combo[]
 	local open_combos = {}
+	---@type string?
+	local tip = nil
 
 	for _, c in ipairs(view.containers) do
 		if -view.scrollPosition + 768 > c.position and -view.scrollPosition < c.position + c.height then
 			c:draw()
+			tip = tip or c.tip
 
 			if #c.openCombos ~= 0 then
 				for _, combo in ipairs(c.openCombos) do
@@ -184,6 +231,30 @@ function ViewConfig:panel(view)
 	local ih = img.menuBackDefault:getHeight()
 	gfx.translate(0, h - ih)
 	gfx.draw(img.menuBackDefault)
+
+	if tip then
+		if not tip_hover then
+			if self.tipTween then
+				self.tipTween:stop()
+			end
+			self.tipTween = flux.to(self, 0.2, { tipAnimation = 1 }):ease("quadout")
+		end
+
+		self.currentTip = tip
+
+		tip_hover = true
+	else
+		if tip_hover then
+			if self.tipTween then
+				self.tipTween:stop()
+			end
+			self.tipTween = flux.to(self, 0.2, { tipAnimation = 0 }):ease("quadout")
+		end
+
+		tip_hover = false
+	end
+
+	self:tip()
 end
 
 ---@param view osu.SettingsView

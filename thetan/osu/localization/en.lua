@@ -144,6 +144,7 @@ l.fontGroups = {
 		combos = { "Aller", 16, "ZenMaruGothic-Regular" },
 		sliders = { "Aller", 16, "ZenMaruGothic-Regular" },
 		version = { "Aller", 16, "ZenMaruGothic-Regular" },
+		tip = { "Aller", 14, "ZenMaruGothic-Regular" },
 	},
 	songSelect = {
 		chartName = { "Aller", 25, "ZenMaruGothic-Regular" },

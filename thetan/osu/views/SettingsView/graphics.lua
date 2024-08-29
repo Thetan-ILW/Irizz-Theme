@@ -36,8 +36,6 @@ return function(assets, view)
 		return flags.msaa, { 0, 1, 2, 4 }
 	end, function(v)
 		flags.msaa = v
-	end, function(v)
-		return ("%i"):format(v)
 	end)
 
 	combo(text.vsyncType, 1, nil, function()
@@ -54,7 +52,7 @@ return function(assets, view)
 	end, function(v)
 		g.fps = v
 	end, function(v)
-		return ("%i"):format(v)
+		return ("%i FPS"):format(v)
 	end)
 
 	checkbox(text.showFPS, false, nil, function()

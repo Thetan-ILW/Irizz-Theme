@@ -8,7 +8,7 @@ local Label = require("thetan.osu.ui.Label")
 ---@class osu.SettingsView.GroupContainer
 ---@operator call: osu.SettingsView.GroupContainer
 ---@field assets osu.OsuAssets
----@field iconlove.Image
+---@field icon love.Image
 ---@field groups table<string, {name: string, height: number, elements: osu.UiElement[]}>
 ---@field groupOrder string[]
 ---@field elementsHeight number
@@ -19,6 +19,7 @@ local Label = require("thetan.osu.ui.Label")
 ---@field tabLabel osu.ui.Label
 ---@field isEmpty boolean
 ---@field openCombos osu.ui.Combo[]
+---@field tip string?
 local GroupContainer = class()
 
 ---@type table<string, love.Font>
@@ -123,6 +124,7 @@ function GroupContainer:draw()
 	local current_position = self.tabLabel:getHeight() + consts.tabLabelSpacing + consts.containerSpacing
 
 	self.openCombos = {}
+	self.tip = nil
 
 	local focus = true
 
@@ -151,6 +153,7 @@ function GroupContainer:draw()
 
 		for _, element in ipairs(group.elements) do
 			element:update(focus)
+			self.tip = self.tip or element.tip
 
 			if element.state and element.state ~= "hidden" then
 				gfx.push()

@@ -13,12 +13,14 @@ local gyatt = require("thetan.gyatt")
 ---@field private dragging boolean
 ---@field private getValue fun(): number, { min: number, max: number, increment: number }
 ---@field private onChange fun(number)
+---@field private format? fun(number): string
 local Slider = UiElement + {}
 
 ---@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, sliderPixelWidth: number?, defaultValue: number }
 ---@param get_value fun(): number
 ---@param on_change fun(number)
-function Slider:new(assets, params, get_value, on_change)
+---@param format? fun(number): string
+function Slider:new(assets, params, get_value, on_change, format)
 	self.assets = assets
 	self.label = params.label
 	self.font = params.font
@@ -29,6 +31,9 @@ function Slider:new(assets, params, get_value, on_change)
 	self.dragging = false
 	self.getValue = get_value
 	self.onChange = on_change
+	self.format = format or function(v)
+		return ("%g"):format(v)
+	end
 end
 
 local gfx = love.graphics
@@ -57,6 +62,13 @@ function Slider:update(has_focus)
 	end
 
 	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
+
+	---@type string?
+	self.tip = nil
+
+	if self.hover then
+		self.tip = self.format(self.value)
+	end
 
 	local x, w = self:getPosAndWidth()
 
@@ -108,6 +120,7 @@ function Slider:draw()
 	gfx.circle("line", head_x, 0, head_radius)
 
 	gfx.pop()
+
 	gfx.translate(0, self.totalH)
 end
 

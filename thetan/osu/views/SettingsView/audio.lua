@@ -35,26 +35,30 @@ return function(assets, view)
 
 	Elements.sliderPixelWidth = 340
 
+	local volume_format = function(v)
+		return ("%i%%"):format(v * 100)
+	end
+
 	slider(text.master, nil, nil, function()
 		return vol.master, linear_volume
 	end, function(v)
 		vol.master = v
 		assets:updateVolume(view.game.configModel)
-	end)
+	end, volume_format)
 
 	slider(text.music, nil, nil, function()
 		return vol.music, linear_volume
 	end, function(v)
 		vol.music = v
 		assets:updateVolume(view.game.configModel)
-	end)
+	end, volume_format)
 
 	slider(text.effect, nil, nil, function()
 		return vol.effects, linear_volume
 	end, function(v)
 		vol.effects = v
 		assets:updateVolume(view.game.configModel)
-	end)
+	end, volume_format)
 
 	Elements.sliderPixelWidth = nil
 
