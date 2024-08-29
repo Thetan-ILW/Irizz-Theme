@@ -12,6 +12,7 @@ l.textGroups = {
 		-- Renderer
 		renderer = "RENDERER",
 		vsyncType = "Vsync type:",
+		fpsLimit = "FPS limit:",
 		showFPS = "Show FPS",
 		vsyncInSongSelect = "Vsync in Song Select",
 		adaptive = "Adaptive",

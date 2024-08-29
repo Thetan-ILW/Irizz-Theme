@@ -26,10 +26,19 @@ return function(assets, view)
 	Elements.currentContainer = c
 	local checkbox = Elements.checkbox
 	local combo = Elements.combo
+	local slider = Elements.slider
 
 	--------------- RENDERER ---------------
 	c:createGroup("renderer", text.renderer)
 	Elements.currentGroup = "renderer"
+
+	combo("MSAA:", 0, nil, function()
+		return flags.msaa, { 0, 1, 2, 4 }
+	end, function(v)
+		flags.msaa = v
+	end, function(v)
+		return ("%i"):format(v)
+	end)
 
 	combo(text.vsyncType, 1, nil, function()
 		return flags.vsync, { 1, 0, -1 }
@@ -37,6 +46,15 @@ return function(assets, view)
 		flags.vsync = v
 	end, function(v)
 		return text[vsyncNames[v]] or ""
+	end)
+
+	local fps_params = { min = 60, max = 2048, increment = 1 }
+	slider(text.fpsLimit, 240, nil, function()
+		return g.fps, fps_params
+	end, function(v)
+		g.fps = v
+	end, function(v)
+		return ("%i"):format(v)
 	end)
 
 	checkbox(text.showFPS, false, nil, function()
