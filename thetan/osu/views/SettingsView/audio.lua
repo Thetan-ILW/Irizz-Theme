@@ -11,7 +11,7 @@ return function(assets, view)
 	local a = settings.audio
 	local g = settings.gameplay
 
-	local c = GroupContainer("AUDIO", assets, font)
+	local c = GroupContainer("AUDIO", assets, font, assets.images.audioTab)
 
 	Elements.assets = assets
 	Elements.currentContainer = c

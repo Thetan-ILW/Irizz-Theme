@@ -8,6 +8,7 @@ local Label = require("thetan.osu.ui.Label")
 ---@class osu.SettingsView.GroupContainer
 ---@operator call: osu.SettingsView.GroupContainer
 ---@field assets osu.OsuAssets
+---@field iconlove.Image
 ---@field groups table<string, {name: string, height: number, elements: osu.UiElement[]}>
 ---@field groupOrder string[]
 ---@field elementsHeight number
@@ -25,8 +26,10 @@ local font
 
 ---@param name string
 ---@param fonts table<string, love.Font>
-function GroupContainer:new(name, assets, fonts)
+---@param icon love.Image
+function GroupContainer:new(name, assets, fonts, icon)
 	self.assets = assets
+	self.icon = icon
 
 	font = fonts
 	self.groups = {}

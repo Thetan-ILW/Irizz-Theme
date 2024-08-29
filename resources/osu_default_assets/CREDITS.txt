@@ -1,0 +1,13 @@
+---- menu-graphics-tab ----
+Edits were made
+Link: https://www.svgrepo.com/svg/533132/monitor-alt-1
+License: https://www.svgrepo.com/page/licensing/#CC%20Attribution
+
+---- menu-audio-tab ----
+Edits were made
+Link: https://www.svgrepo.com/svg/500145/audio-none
+License: https://www.svgrepo.com/page/licensing/#GPL
+
+---- menu-maintenance-tab ----
+Link: https://www.svgrepo.com/svg/479423/wrench-2
+Lincense: https://www.svgrepo.com/page/licensing/#PD

@@ -182,6 +182,10 @@ function OsuAssets:new(skin_path, localization_file)
 		checkboxOn = self:loadImageOrDefault(skin_path, "menu-checkbox-on"),
 		optionChanged = self:loadImageOrDefault(skin_path, "menu-option-changed"),
 
+		graphicsTab = self:loadImageOrDefault(skin_path, "menu-graphics-tab"),
+		audioTab = self:loadImageOrDefault(skin_path, "menu-audio-tab"),
+		maintenanceTab = self:loadImageOrDefault(skin_path, "menu-maintenance-tab"),
+
 		-- RESULT
 
 		title = self:loadImageOrDefault(skin_path, "ranking-title"),

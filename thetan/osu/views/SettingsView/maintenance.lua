@@ -13,7 +13,7 @@ return function(assets, view)
 	local settings = view.game.configModel.configs.settings
 	local m = settings.miscellaneous
 
-	local c = GroupContainer("MAINTENANCE", assets, font)
+	local c = GroupContainer("MAINTENANCE", assets, font, assets.images.maintenanceTab)
 
 	Elements.assets = assets
 	Elements.currentContainer = c

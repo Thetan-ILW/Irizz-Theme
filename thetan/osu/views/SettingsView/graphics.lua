@@ -20,7 +20,7 @@ return function(assets, view)
 	local m = settings.miscellaneous
 	local flags = g.mode.flags
 
-	local c = GroupContainer(text.graphics, assets, font)
+	local c = GroupContainer(text.graphics, assets, font, assets.images.graphicsTab)
 
 	Elements.assets = assets
 	Elements.currentContainer = c

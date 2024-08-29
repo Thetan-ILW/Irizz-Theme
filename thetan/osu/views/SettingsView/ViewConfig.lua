@@ -19,6 +19,9 @@ local visibility = 0
 ---@type table<string, love.Image>
 local img
 
+local tab_focus = 0
+local tab_focus_time = 0
+
 local gfx = love.graphics
 
 ---@param assets osu.OsuAssets
@@ -30,6 +33,11 @@ function ViewConfig:new(assets)
 	img = assets.images
 end
 
+local tab_image_height = 64
+local tab_image_spacing = 32
+local tab_image_scale = 0.5
+local tab_image_indent = 64 / 2 - (64 * tab_image_scale) / 2
+
 ---@param view osu.SettingsView
 function ViewConfig:tabs(view)
 	local w, h = Layout:move("base")
@@ -37,21 +45,46 @@ function ViewConfig:tabs(view)
 	gfx.setColor(0, 0, 0, visibility)
 	gfx.rectangle("fill", 0, 0, 64, h)
 
-	if gyatt.isOver(64, 64) and gyatt.mousePressed(1) then
-		view:jumpTo(1)
+	local tab_count = #view.containers
+	local tab_focus_alpha = math_util.clamp(love.timer.getTime() - tab_focus_time, 0, 0.25) * 4
+
+	local total_h = tab_count * (tab_image_height * tab_image_scale) + (tab_count - 1) * tab_image_spacing
+
+	gfx.translate(tab_image_indent, h / 2 - total_h / 2)
+
+	for i, c in ipairs(view.containers) do
+		if tab_focus == i then
+			gfx.setColor(1, 1, 1, math_util.clamp(visibility * tab_focus_alpha, 0.6, 1))
+		else
+			gfx.setColor(0.6, 0.6, 0.6, visibility)
+		end
+
+		if gyatt.isOver(64, 64) then
+			gfx.setColor(1, 1, 1, visibility)
+
+			if gyatt.mousePressed(1) then
+				view:jumpTo(i)
+			end
+		end
+
+		gfx.draw(c.icon, 0, 0, 0, tab_image_scale, tab_image_scale)
+
+		gfx.translate(0, (tab_image_height * tab_image_scale) + tab_image_spacing)
 	end
 
-	gfx.setColor(0.9, 0.4, 0.1, visibility)
-	gfx.rectangle("fill", 0, 0, 64, 64)
+	w, h = Layout:move("base")
 
-	gfx.translate(0, 64)
-
-	if gyatt.isOver(64, 64) and gyatt.mousePressed(1) then
-		view:jumpTo(2)
-	end
-
-	gfx.setColor(0.3, 0.6, 0.8, visibility)
-	gfx.rectangle("fill", 0, 0, 64, 64)
+	gfx.setColor(0.92, 0.46, 0.55, visibility * tab_focus_alpha)
+	local i = tab_focus - 1
+	gfx.translate(
+		59,
+		h / 2
+			- total_h / 2
+			+ (tab_image_height * tab_image_scale) * i
+			+ (tab_image_spacing * i)
+			- (tab_image_height * tab_image_scale / 2)
+	)
+	gfx.rectangle("fill", 0, 0, 6, tab_image_height)
 end
 
 ---@param view osu.SettingsView
@@ -160,6 +193,19 @@ end
 function ViewConfig:draw(view)
 	Layout:draw()
 	visibility = view.visibility
+
+	local last_tab_focus = tab_focus
+
+	for i, c in ipairs(view.containers) do
+		if -view.scrollPosition + 768 / 2 > c.position then
+			tab_focus = i
+			gfx.setColor(1, 1, 1, visibility)
+		end
+	end
+
+	if last_tab_focus ~= tab_focus then
+		tab_focus_time = love.timer.getTime()
+	end
 
 	self:tabs(view)
 	self:panel(view)

@@ -70,7 +70,7 @@ function SettingsView:build()
 	self.containers = {}
 	self.topSpacing = Spacing(64)
 	self.headerSpacing = Spacing(100)
-	self.bottomSpacing = Spacing(128)
+	self.bottomSpacing = Spacing(256)
 
 	self.optionsLabel = Label({
 		text = "Options",
@@ -223,7 +223,7 @@ function SettingsView:jumpTo(container_index)
 		self.scrollTween:stop()
 	end
 
-	self.scrollTween = flux.to(self, 0.25, { scrollPosition = -self.scrollTargetPosition }):ease("quadout")
+	self.scrollTween = flux.to(self, 0.25, { scrollPosition = -self.scrollTargetPosition + 64 }):ease("quadout")
 end
 
 function SettingsView:resolutionUpdated()
