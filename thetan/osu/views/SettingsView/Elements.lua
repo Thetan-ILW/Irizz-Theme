@@ -1,6 +1,7 @@
 local Checkbox = require("thetan.osu.ui.Checkbox")
 local Combo = require("thetan.osu.ui.Combo")
 local Slider = require("thetan.osu.ui.Slider")
+local Button = require("thetan.osu.ui.Button")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 
 local Elements = {}
@@ -124,6 +125,32 @@ function Elements.slider(label, default_value, tip, get_value, on_change, format
 			sliderPixelWidth = Elements.sliderPixelWidth,
 			default_value = default_value,
 		}, get_value, on_change, format)
+	)
+end
+
+Elements.buttonColor = { 0.05, 0.52, 0.65, 1 }
+
+---@param label string
+---@param on_change function
+function Elements.button(label, on_change)
+	if not canAdd(label) then
+		return
+	end
+
+	local assets = Elements.assets
+	local font = assets.localization.fontGroups.settings
+	local c = Elements.currentContainer
+	local current_group = Elements.currentGroup
+
+	c:add(
+		current_group,
+		Button(assets, {
+			text = label,
+			font = font.buttons,
+			scale = consts.buttonSize,
+			width = consts.buttonWidth,
+			color = Elements.buttonColor,
+		}, on_change)
 	)
 end
 

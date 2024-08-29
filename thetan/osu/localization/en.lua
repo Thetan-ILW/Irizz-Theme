@@ -28,6 +28,24 @@ l.textGroups = {
 		details = "DETAIL SETTINGS",
 		backgroundVideos = "Background videos",
 		backgroundImages = "Background images",
+		-------------- Audio
+		audio = "AUDIO",
+		-- Volume
+		volume = "VOLUME",
+		master = "Master:",
+		music = "Music:",
+		effect = "Effect:",
+		rateChangesPitch = "Rate changes pitch",
+		autoKeySound = "Auto key sound",
+		midiConstantVolume = "MIDI constant volume",
+		muteOnUnfocus = "Minimized game mutes music",
+		-- Device
+		device = "DEVICE",
+		updatePeriod = "Update period",
+		bufferLength = "Buffer length",
+		adjustRate = "Adjust rate",
+		apply = "Apply",
+		reset = "Reset",
 	},
 	songSelect = {
 		mappedBy = "Mapped by %s",
