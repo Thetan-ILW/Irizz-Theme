@@ -2,6 +2,7 @@ local IViewConfig = require("thetan.skibidi.views.IViewConfig")
 
 local gyatt = require("thetan.gyatt")
 local flux = require("flux")
+local math_util = require("math_util")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 local Layout = require("thetan.osu.views.OsuLayout")
 
@@ -84,13 +85,21 @@ function ViewConfig:panel(view)
 
 	gfx.translate(0, view.scrollPosition)
 
+	local search_pos = view.topSpacing:getHeight() + view.optionsLabel:getHeight() + view.gameBehaviorLabel:getHeight()
+	local floating_search = -view.scrollPosition > search_pos
+
 	view.topSpacing:draw()
 	view.optionsLabel:update()
 	view.optionsLabel:draw()
 	view.gameBehaviorLabel:update()
 	view.gameBehaviorLabel:draw()
-	view.headerSpacing:draw()
-	view.searchLabel:draw()
+
+	gfx.push()
+	if not floating_search then
+		view.searchLabel:draw()
+	end
+	gfx.pop()
+
 	view.headerSpacing:draw()
 
 	gfx.setColor(0, 0, 0, 0.6)
@@ -120,6 +129,15 @@ function ViewConfig:panel(view)
 			gfx.pop()
 			open_combos[i]:drawBody()
 		end
+	end
+
+	if floating_search then
+		w, h = Layout:move("base")
+		local a = math_util.clamp(-view.scrollPosition - search_pos, 0, 100) / 100
+		gfx.setColor(0, 0, 0, 0.6 * a)
+		gfx.translate(64, -24 * a)
+		gfx.rectangle("fill", 0, 0, consts.settingsWidth, 80)
+		view.searchLabel:draw()
 	end
 
 	gfx.setCanvas(prev_canvas)

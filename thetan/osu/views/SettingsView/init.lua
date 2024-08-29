@@ -67,8 +67,8 @@ function SettingsView:build()
 	local prev_containers = self.containers or {}
 	self.containers = {}
 	self.topSpacing = Spacing(64)
-	self.headerSpacing = Spacing(30)
-	self.bottomSpacing = Spacing(64)
+	self.headerSpacing = Spacing(100)
+	self.bottomSpacing = Spacing(128)
 
 	self.optionsLabel = Label({
 		text = "Options",
@@ -100,15 +100,15 @@ function SettingsView:build()
 	self.searchLabel = Label({
 		text = search,
 		pixelWidth = consts.labelWidth,
+		pixelHeight = 100,
 		font = font.search,
 	})
 
 	------------- Setting positions and heights
 	local pos = self.optionsLabel:getHeight()
 	pos = pos + self.gameBehaviorLabel:getHeight()
-	pos = pos + self.searchLabel:getHeight()
 	pos = pos + self.topSpacing:getHeight()
-	pos = pos + self.headerSpacing:getHeight() * 2
+	pos = pos + self.headerSpacing:getHeight()
 
 	for _, c in ipairs(self.containers) do
 		c:updateHeight()
@@ -119,9 +119,8 @@ function SettingsView:build()
 	------------- Scroll limit
 	pos = self.optionsLabel:getHeight()
 	pos = pos + self.gameBehaviorLabel:getHeight()
-	pos = pos + self.searchLabel:getHeight()
 	pos = pos + self.topSpacing:getHeight()
-	pos = pos + self.headerSpacing:getHeight() * 2
+	pos = pos + self.headerSpacing:getHeight()
 	pos = pos + self.bottomSpacing:getHeight()
 
 	for _, c in ipairs(self.containers) do
@@ -207,6 +206,8 @@ function SettingsView:update(dt)
 	changed, self.searchText = gyatt.textInput(self.searchText)
 
 	if changed then
+		self.scrollPosition = 0
+		self.scrollTargetPosition = 0
 		self:build()
 	end
 end

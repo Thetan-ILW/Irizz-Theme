@@ -12,11 +12,11 @@ local gyatt = require("thetan.gyatt")
 ---@field private totalH number
 ---@field private staticHeight boolean
 ---@field private hover boolean
----@field private onChange function
+---@field private onChange function?
 local Label = UiElement + {}
 
 ---@param params { text: string, font: love.Font, color: number[]?, pixelWidth: number, pixelHeight: number?, align?: "left" | "center" | "right" }
----@param on_change function
+---@param on_change function?
 function Label:new(params, on_change)
 	self.text = params.text
 	self.font = params.font
@@ -46,7 +46,9 @@ function Label:update()
 	self.hover = gyatt.isOver(self.totalW, self.totalH)
 
 	if self.hover and gyatt.mousePressed(1) then
-		self.onChange()
+		if self.onChange then
+			self.onChange()
+		end
 	end
 end
 
