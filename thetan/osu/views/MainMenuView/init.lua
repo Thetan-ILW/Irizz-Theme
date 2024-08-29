@@ -88,7 +88,7 @@ function MainMenuView:processState(event)
 			self.settingsView:processState("hide")
 		end
 	elseif state == "fade_out" or state == "afk" then
-		if event == "mousemoved" then
+		if event == "user_returned" then
 			self.state = "fade_in"
 			if self.tween then
 				self.tween:stop()
@@ -180,11 +180,12 @@ end
 function MainMenuView:receive(event)
 	if event.name == "mousemoved" then
 		self.lastUserActionTime = love.timer.getTime()
-		self:processState(event.name)
+		self:processState("user_returned")
 	end
 
 	if event.name == "keypressed" then
 		self.lastUserActionTime = love.timer.getTime()
+		self:processState("user_returned")
 		if self.inputMap:call("view") then
 			return
 		end
@@ -192,6 +193,7 @@ function MainMenuView:receive(event)
 
 	if event.name == "mousepressed" then
 		self.lastUserActionTime = love.timer.getTime()
+		self:processState("user_returned")
 	end
 
 	self.settingsView:receive(event)
@@ -201,7 +203,7 @@ local gfx = love.graphics
 
 function MainMenuView:drawCursor()
 	gfx.origin()
-	gfx.setColor(1, 1, 1)
+	gfx.setColor(1, 1, 1, self.afkPercent)
 
 	local x, y = love.mouse.getPosition()
 
