@@ -7,8 +7,7 @@ local gyatt = require("thetan.gyatt")
 ---@operator call: osu.ui.Slider
 ---@field private label string
 ---@field private font love.Font
----@field private totalH number
----@field private totalW number
+---@field private sliderW number?
 ---@field private params { min: number, max: number, increment: number }
 ---@field private value number
 ---@field private dragging boolean
@@ -16,7 +15,7 @@ local gyatt = require("thetan.gyatt")
 ---@field private onChange fun(number)
 local Slider = UiElement + {}
 
----@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, defaultValue: number }
+---@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, sliderPixelWidth: number?, defaultValue: number }
 ---@param get_value fun(): number
 ---@param on_change fun(number)
 function Slider:new(assets, params, get_value, on_change)
@@ -25,6 +24,7 @@ function Slider:new(assets, params, get_value, on_change)
 	self.font = params.font
 	self.totalW = params.pixelWidth
 	self.totalH = params.pixelHeight
+	self.sliderW = params.sliderPixelWidth
 	self.defaultValue = params.defaultValue
 	self.dragging = false
 	self.getValue = get_value
@@ -36,6 +36,19 @@ local line_height = 1
 local head_radius = 8
 local text_indent = 15
 
+function Slider:getPosAndWidth()
+	if self.sliderW then
+		local w = self.sliderW
+		local x = self.totalW - w - 15
+		return x, w
+	end
+
+	local x = self.font:getWidth(self.label) * gyatt.getTextScale()
+	local w = self.totalW - x - 15 - text_indent
+
+	return x, w
+end
+
 function Slider:update(has_focus)
 	self.value, self.params = self.getValue()
 
@@ -45,8 +58,7 @@ function Slider:update(has_focus)
 
 	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
 
-	local x = self.font:getWidth(self.label) * gyatt.getTextScale()
-	local w = self.totalW - x - 15 - 10
+	local x, w = self:getPosAndWidth()
 
 	local over_slider = gyatt.isOver(w + 8, self.totalH, x - 4, 0)
 
@@ -77,8 +89,8 @@ function Slider:draw()
 	gfx.setFont(self.font)
 	gyatt.frame(self.label, 0, 0, self.totalW, self.totalH, "left", "center")
 
-	local x = self.font:getWidth(self.label) * gyatt.getTextScale()
-	local w = self.totalW - x - 15 - text_indent
+	local x, w = self:getPosAndWidth()
+
 	local r2 = head_radius * 2
 	local head_coordinate = (self.value - self.params.min) / (self.params.max - self.params.min)
 	local head_x = head_coordinate * (w - r2)

@@ -30,6 +30,8 @@ return function(assets, view)
 
 	local linear_volume = { min = 0, max = 1, increment = 0.01 }
 
+	Elements.sliderPixelWidth = 340
+
 	slider("Master:", nil, nil, function()
 		return vol.master, linear_volume
 	end, function(v)
@@ -50,6 +52,8 @@ return function(assets, view)
 		vol.effects = v
 		assets:updateVolume(view.game.configModel)
 	end)
+
+	Elements.sliderPixelWidth = nil
 
 	local mode = a.mode
 	local pitch = mode.primary == "bass_sample" and true or false

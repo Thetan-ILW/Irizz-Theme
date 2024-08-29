@@ -201,6 +201,9 @@ function ViewConfig:draw(view)
 	end
 
 	if last_tab_focus ~= tab_focus then
+		if self.tabFocusTween then
+			self.tabFocusTween:stop()
+		end
 		self.tabFocusTween = flux.to(self, 0.2, { tabFocusAnimation = tab_focus }):ease("cubicout")
 	end
 

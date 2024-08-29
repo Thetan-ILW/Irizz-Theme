@@ -95,6 +95,9 @@ function Elements.combo(label, default_value, tip, get_value, on_change, format)
 	)
 end
 
+---@type number?
+Elements.sliderPixelWidth = nil
+
 ---@param label string
 ---@param default_value any?
 ---@param tip string?
@@ -118,6 +121,7 @@ function Elements.slider(label, default_value, tip, get_value, on_change, format
 			font = font.sliders,
 			pixelWidth = consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent,
 			pixelHeight = consts.sliderHeight,
+			sliderPixelWidth = Elements.sliderPixelWidth,
 			default_value = default_value,
 		}, get_value, on_change, format)
 	)
