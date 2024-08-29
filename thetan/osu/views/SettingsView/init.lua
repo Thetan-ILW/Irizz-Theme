@@ -23,6 +23,7 @@ local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 ---@field scrollPosition number
 ---@field scrollTargetPosition number
 ---@field scrollTween table?
+---@field hoverTime number
 ---@field hoverPosition number
 ---@field hoverSize number
 ---@field containers osu.SettingsView.GroupContainer[]
@@ -54,6 +55,7 @@ function SettingsView:new(assets, game)
 	self.containers = {}
 	self.totalHeight = 0
 	self.searchText = ""
+	self.hoverTime = 0
 
 	text, font = assets.localization:get("settings")
 	assert(font)
@@ -191,6 +193,7 @@ function SettingsView:update(dt)
 
 	for i, c in ipairs(self.containers) do
 		if c.hoverPosition ~= 0 then
+			self.hoverTime = love.timer.getTime()
 			self.hoverPosition = c.hoverPosition + additional_pos
 			self.hoverSize = c.hoverSize
 		end

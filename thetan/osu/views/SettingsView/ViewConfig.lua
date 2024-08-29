@@ -102,7 +102,7 @@ function ViewConfig:panel(view)
 
 	view.headerSpacing:draw()
 
-	gfx.setColor(0, 0, 0, 0.6)
+	gfx.setColor(0, 0, 0, 0.6 * (1 - math_util.clamp(love.timer.getTime() - view.hoverTime, 0, 0.5) * 2))
 	gfx.rectangle("fill", 0, self.hoverRectTargetPosition, 438, self.hoverRectTargetSize)
 
 	---@type osu.ui.Combo[]
