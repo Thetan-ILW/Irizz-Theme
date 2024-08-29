@@ -113,7 +113,7 @@ function Elements.slider(label, default_value, tip, get_value, on_change, format
 
 	c:add(
 		current_group,
-		Slider({
+		Slider(assets, {
 			label = label,
 			font = font.sliders,
 			pixelWidth = consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent,

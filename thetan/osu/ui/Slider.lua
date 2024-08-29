@@ -19,7 +19,8 @@ local Slider = UiElement + {}
 ---@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, defaultValue: number }
 ---@param get_value fun(): number
 ---@param on_change fun(number)
-function Slider:new(params, get_value, on_change)
+function Slider:new(assets, params, get_value, on_change)
+	self.assets = assets
 	self.label = params.label
 	self.font = params.font
 	self.totalW = params.pixelWidth
@@ -64,6 +65,7 @@ function Slider:update(has_focus)
 			local value = math_util.clamp(percent, self.params.min, self.params.max)
 
 			self.onChange(math_util.round(value, self.params.increment))
+			self.changeTime = -math.huge
 		else
 			self.dragging = false
 		end

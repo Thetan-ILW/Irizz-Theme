@@ -39,7 +39,7 @@ return function(assets, view)
 		return text[vsyncNames[v]] or ""
 	end)
 
-	checkbox(text.showFPS, nil, nil, function()
+	checkbox(text.showFPS, false, nil, function()
 		return m.showFPS
 	end, function()
 		m.showFPS = not m.showFPS
@@ -61,7 +61,7 @@ return function(assets, view)
 	c:createGroup("layout", text.layout)
 	Elements.currentGroup = "layout"
 
-	combo(text.fullscreenType, nil, nil, function()
+	combo(text.fullscreenType, "desktop", nil, function()
 		return flags.fullscreentype, { "desktop", "exclusive" }
 	end, function(v)
 		flags.fullscreentype = v

@@ -32,6 +32,7 @@ local Combo = UiElement + {}
 ---@param on_change function
 ---@param format function?
 function Combo:new(assets, params, get_value, on_change, format)
+	self.assets = assets
 	self.label = params.label
 	self.font = params.font
 	self.totalW = params.pixelWidth
@@ -47,6 +48,7 @@ function Combo:new(assets, params, get_value, on_change, format)
 	self.icon = assets.images.dropdownArrow
 	self.state = "hidden"
 	self.visibility = 0
+	self.changeTime = -math.huge
 end
 
 local gfx = love.graphics
@@ -126,6 +128,7 @@ function Combo:update(has_focus)
 
 		if self.hoverIndex ~= 0 and gyatt.mousePressed(1) then
 			self.onChange(self.items[self.hoverIndex])
+			self.changeTime = love.timer.getTime()
 			gyatt.resetJust()
 			self:processState("close")
 		end

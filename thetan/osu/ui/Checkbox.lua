@@ -5,20 +5,13 @@ local math_util = require("math_util")
 
 ---@class osu.ui.Checkbox : osu.UiElement
 ---@operator call: osu.ui.Checkbox
----@field text string
----@field font love.Font
----@field defaultValue boolean?
----@field valueChanged boolean
----@field private totalW number
----@field private totalH number
----@field private hover boolean
+---@field private text string
+---@field private font love.Font
 ---@field private imgOn love.Image
 ---@field private imgOff love.Image
----@field private getValue function
----@field private onChange function
 ---@field private imageScale number
 ---@field private toggled boolean
----@field private toggleTime number
+---@field private changeTime number
 local Checkbox = UiElement + {}
 
 ---@param assets osu.OsuAssets
@@ -26,6 +19,7 @@ local Checkbox = UiElement + {}
 ---@param get_value function
 ---@param on_change function
 function Checkbox:new(assets, params, get_value, on_change)
+	self.assets = assets
 	self.text = params.text
 	self.font = params.font
 	self.totalW = params.pixelWidth
@@ -40,7 +34,7 @@ function Checkbox:new(assets, params, get_value, on_change)
 	local ih = self.imgOff:getHeight()
 	self.imageScale = self.totalH / ih
 
-	self.toggleTime = -math.huge
+	self.changeTime = -math.huge
 end
 
 ---@param has_focus boolean
@@ -55,7 +49,7 @@ function Checkbox:update(has_focus)
 
 	if self.hover and gyatt.mousePressed(1) then
 		self.onChange()
-		self.toggleTime = love.timer.getTime()
+		self.changeTime = love.timer.getTime()
 	end
 end
 
@@ -65,7 +59,7 @@ function Checkbox:draw()
 	gfx.setColor(1, 1, 1)
 	gfx.setFont(self.font)
 
-	local scale = 0.5 + (math_util.clamp(love.timer.getTime() - self.toggleTime, 0, 0.1) * 10) * 0.5
+	local scale = 0.5 + (math_util.clamp(love.timer.getTime() - self.changeTime, 0, 0.1) * 10) * 0.5
 	local image_size = self.imgOn:getHeight() * self.imageScale
 	local x = image_size / 2 - (image_size * scale) / 2
 

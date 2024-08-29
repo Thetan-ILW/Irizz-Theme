@@ -72,13 +72,13 @@ function SettingsView:build()
 	self.headerSpacing = Spacing(100)
 	self.bottomSpacing = Spacing(256)
 
-	self.optionsLabel = Label({
+	self.optionsLabel = Label(self.assets, {
 		text = "Options",
 		pixelWidth = consts.labelWidth,
 		font = font.optionsLabel,
 	})
 
-	self.gameBehaviorLabel = Label({
+	self.gameBehaviorLabel = Label(self.assets, {
 		text = "Change the way soundsphere behaves",
 		pixelWidth = consts.labelWidth,
 		font = font.gameBehaviorLabel,
@@ -99,7 +99,7 @@ function SettingsView:build()
 
 	local search = self.searchText == "" and "Type to search!" or self.searchText
 
-	self.searchLabel = Label({
+	self.searchLabel = Label(self.assets, {
 		text = search,
 		pixelWidth = consts.labelWidth,
 		pixelHeight = 100,

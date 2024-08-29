@@ -27,6 +27,8 @@ local Button = UiElement + {}
 ---@param params { text: string, font: love.Font, scale: number?, width: number?, color: number[]?, margin: number? }
 ---@param on_change function
 function Button:new(assets, params, on_change)
+	self.assets = assets
+
 	local img = assets.images
 	self.imageLeft = img.buttonLeft
 	self.imageMiddle = img.buttonMiddle
@@ -74,6 +76,7 @@ function Button:update(has_focus)
 
 	if mouse_over and gyatt.mousePressed(1) then
 		self.onChange()
+		self.changeTime = -math.huge
 	end
 end
 

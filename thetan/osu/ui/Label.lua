@@ -15,9 +15,11 @@ local gyatt = require("thetan.gyatt")
 ---@field private onChange function?
 local Label = UiElement + {}
 
+---@param assets osu.OsuAssets
 ---@param params { text: string, font: love.Font, color: number[]?, pixelWidth: number, pixelHeight: number?, align?: "left" | "center" | "right" }
 ---@param on_change function?
-function Label:new(params, on_change)
+function Label:new(assets, params, on_change)
+	self.assets = assets
 	self.text = params.text
 	self.font = params.font
 	self.color = params.color or { 1, 1, 1, 1 }
@@ -48,6 +50,7 @@ function Label:update()
 	if self.hover and gyatt.mousePressed(1) then
 		if self.onChange then
 			self.onChange()
+			self.changeTime = -math.huge
 		end
 	end
 end

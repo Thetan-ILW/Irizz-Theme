@@ -37,6 +37,7 @@ return function(assets, view)
 	c:add(
 		"version",
 		Label(
+			assets,
 			{ text = version.date, font = font.version, pixelWidth = consts.labelWidth - 24 - 28, pixelHeight = 64 },
 			function()
 				love.system.openURL("https://github.com/semyon422/soundsphere/commits/master/")

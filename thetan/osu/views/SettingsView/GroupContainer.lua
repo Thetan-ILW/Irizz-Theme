@@ -42,7 +42,7 @@ function GroupContainer:new(name, assets, fonts, icon)
 	self.isEmpty = true
 	self.openCombos = {}
 
-	self.tabLabel = Label({
+	self.tabLabel = Label(assets, {
 		text = name,
 		pixelWidth = consts.labelWidth - 24 - 20,
 		font = fonts.tabLabel,
@@ -123,8 +123,6 @@ function GroupContainer:draw()
 	local current_position = self.tabLabel:getHeight() + consts.tabLabelSpacing + consts.containerSpacing
 
 	self.openCombos = {}
-	local changed_img = self.assets.images.optionChanged
-	local changed_img_h = changed_img:getHeight()
 
 	local focus = true
 
@@ -161,15 +159,9 @@ function GroupContainer:draw()
 				focus = not element:isFocused()
 			end
 
-			if element:isNotDefault() then
-				gfx.translate(-consts.tabIndentIndent, 0)
-				local h = element:getHeight()
-
-				gfx.setColor(1, 1, 1)
-				gfx.draw(self.assets.images.optionChanged, 0, 0, 0, 1, h / changed_img_h)
-				gfx.translate(consts.tabIndentIndent, 0)
-			end
-
+			gfx.translate(-consts.tabIndentIndent, 0)
+			element:drawYellowThingIfNotDefault()
+			gfx.translate(consts.tabIndentIndent, 0)
 			element:draw()
 
 			if element:isMouseOver() then
