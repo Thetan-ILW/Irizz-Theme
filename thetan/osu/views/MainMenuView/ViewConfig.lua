@@ -34,6 +34,7 @@ local username = ""
 local chart_count = 0
 local beat = 0
 local now_playing = ""
+local rate = 1
 
 local update_time = 0
 local menu_open_time = 0
@@ -136,6 +137,8 @@ function ViewConfig:updateInfo(view)
 	now_playing = ("%s - %s"):format(chartview.artist, chartview.title)
 
 	update_time = love.timer.getTime()
+	---@type number
+	rate = view.game.playContext.rate
 end
 
 local parallax = 0.01
@@ -577,7 +580,7 @@ local function updateFft(view)
 		local currentFft = audio:getData()
 		beat = getBeatValue(currentFft)
 
-		current_rotation = current_rotation + (beat * 100) * love.timer.getDelta()
+		current_rotation = current_rotation + (beat * 100 * rate) * love.timer.getDelta()
 		for i = 1, 64 do
 			smoothed_fft[i] = smoothed_fft[i] * (1 - smoothing_factor)
 				+ currentFft[(i - math.floor(current_rotation * 70)) % 64] * smoothing_factor

@@ -61,11 +61,24 @@ function GroupContainer:createGroup(id, name)
 end
 
 function GroupContainer:removeEmptyGroups()
+	---@type number[]
+	local groups_to_remove = {}
+
 	for i, id in ipairs(self.groupOrder) do
 		if #self.groups[id].elements == 0 then
-			table.remove(self.groupOrder, i)
-			self.groups[id] = nil
+			table.insert(groups_to_remove, id)
 		end
+	end
+
+	for i = #groups_to_remove, 1, -1 do
+		local id = groups_to_remove[i]
+		for j = #self.groupOrder, 1, -1 do
+			if self.groupOrder[j] == id then
+				table.remove(self.groupOrder, j)
+				break
+			end
+		end
+		self.groups[id] = nil
 	end
 end
 

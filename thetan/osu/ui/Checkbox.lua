@@ -67,8 +67,8 @@ function Checkbox:draw()
 		gfx.draw(self.imgOff, x, x, 0, self.imageScale * scale, self.imageScale * scale)
 	end
 
-	local x = self.imgOff:getWidth()
-	gyatt.frame(self.text, x * self.imageScale, 0, self.totalW, self.totalH, "left", "center")
+	x = self.imgOff:getWidth() * self.imageScale
+	gyatt.frame(self.text, x, 0, self.totalW, self.totalH, "left", "center")
 	gfx.translate(0, self.totalH)
 end
 

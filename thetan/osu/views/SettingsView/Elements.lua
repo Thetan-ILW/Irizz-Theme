@@ -65,6 +65,8 @@ function Elements.combo(text, get_value, on_change, format)
 			can_add = can_add or canAdd(format and format(v) or tostring(v))
 		end
 
+		can_add = can_add or canAdd(text)
+
 		if not can_add then
 			return
 		end

@@ -6,6 +6,29 @@ l.textGroups = {
 		sessionTime = "Game has been running for %s",
 		time = "It is currently %s",
 	},
+	settings = {
+		-------------- Graphics
+		graphics = "GRAPHICS",
+		-- Renderer
+		renderer = "RENDERER",
+		vsyncType = "Vsync type:",
+		showFPS = "Show FPS",
+		vsyncInSongSelect = "Vsync in song select",
+		adaptive = "Adaptive",
+		enabled = "Enabled",
+		disabled = "Disabled",
+		-- Layout
+		layout = "LAYOUT",
+		fullscreenType = "Fullscreen type:",
+		windowResolution = "Window resolution:",
+		desktop = "Desktop",
+		exclusive = "Exclusive",
+		fullscreen = "Fullscreen",
+		-- Details
+		details = "DETAIL SETTINGS",
+		backgroundVideos = "Background videos",
+		backgroundImages = "Background images",
+	},
 	songSelect = {
 		mappedBy = "Mapped by %s",
 		from = "From %s",

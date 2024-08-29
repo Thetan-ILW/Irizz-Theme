@@ -12,6 +12,7 @@ local get_assets = require("thetan.osu.views.assets_loader")
 ---@class osu.MainMenuView : skibidi.ScreenView
 ---@operator call: osu.MainMenuView
 ---@field state "intro" | "normal" | "fade_out" | "fade_in" | "afk" | "outro"
+---@field lastUserActionTime number
 ---@field tween table?
 ---@field introTween table?
 ---@field outroTween table?
@@ -32,7 +33,7 @@ function MainMenuView:load()
 	window_height = love.graphics.getHeight()
 	love.mouse.setVisible(false)
 
-	self.mouseMoveTime = love.timer.getTime()
+	self.lastUserActionTime = love.timer.getTime()
 	self.afkPercent = 1
 	self.outroPercent = 0
 	self.introPercent = 0
@@ -77,7 +78,7 @@ function MainMenuView:processState(event)
 	local state = self.state
 
 	if state == "normal" then
-		if love.timer.getTime() > self.mouseMoveTime + 5 then
+		if love.timer.getTime() > self.lastUserActionTime + 10 then
 			self.state = "fade_out"
 			if self.tween then
 				self.tween:stop()
@@ -178,14 +179,19 @@ end
 
 function MainMenuView:receive(event)
 	if event.name == "mousemoved" then
-		self.mouseMoveTime = love.timer.getTime()
+		self.lastUserActionTime = love.timer.getTime()
 		self:processState(event.name)
 	end
 
 	if event.name == "keypressed" then
+		self.lastUserActionTime = love.timer.getTime()
 		if self.inputMap:call("view") then
 			return
 		end
+	end
+
+	if event.name == "mousepressed" then
+		self.lastUserActionTime = love.timer.getTime()
 	end
 
 	self.settingsView:receive(event)

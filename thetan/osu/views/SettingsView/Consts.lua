@@ -1,7 +1,7 @@
 return {
 	settingsWidth = 438,
 	tabIndent = 24,
-	tabIndentIndent = 10,
+	tabIndentIndent = 12,
 	groupLabelSpacing = 15.0,
 	groupSpacing = 40.0,
 	containerSpacing = 6.0,
