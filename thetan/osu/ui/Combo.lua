@@ -1,7 +1,9 @@
 local UiElement = require("thetan.osu.ui.UiElement")
+local HoverState = require("thetan.osu.ui.HoverState")
+
 local gyatt = require("thetan.gyatt")
 local flux = require("flux")
-local HoverState = require("thetan.osu.ui.HoverState")
+local playSound = require("thetan.gyatt.play_sound")
 
 ---@class osu.ui.Combo : osu.UiElement
 ---@operator call: osu.ui.Combo
@@ -165,9 +167,7 @@ function Combo:update(has_focus)
 	end
 
 	if just_hovered then
-		local sound = self.assets.sounds.hoverOverRect
-		sound:stop()
-		sound:play()
+		playSound(self.assets.sounds.hoverOverRect)
 	end
 end
 

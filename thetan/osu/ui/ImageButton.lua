@@ -2,6 +2,7 @@ local UiElement = require("thetan.osu.ui.UiElement")
 local HoverState = require("thetan.osu.ui.HoverState")
 
 local gyatt = require("thetan.gyatt")
+local playSound = require("thetan.gyatt.play_sound")
 
 ---@class osu.ui.ImageButton : osu.UiElement
 ---@operator call: osu.ui.ImageButton
@@ -65,8 +66,7 @@ function ImageButton:update(has_focus)
 		self.hoverState:check(self.hoverWidth, self.hoverHeight, self.hoverX, self.hoverY, has_focus)
 
 	if just_hovered then
-		self.hoverSound:stop()
-		self.hoverSound:play()
+		playSound(self.hoverSound)
 	end
 
 	if hover and gyatt.mousePressed(1) then

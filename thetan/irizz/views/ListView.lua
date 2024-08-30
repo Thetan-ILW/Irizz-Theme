@@ -4,6 +4,7 @@ local class = require("class")
 
 local gyatt = require("thetan.gyatt")
 local colors = require("thetan.irizz.ui.colors")
+local playSound = require("thetan.gyatt.play_sound")
 
 ---@class irizz.ListView
 ---@operator call: irizz.ListView
@@ -46,12 +47,7 @@ function ListView:new(game)
 end
 
 function ListView:playSound()
-	if acceleration > 0.04 then
-		return
-	end
-
-	self.scrollSound:stop()
-	self.scrollSound:play()
+	playSound(self.scrollSound)
 end
 
 function ListView:reloadItems()

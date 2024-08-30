@@ -3,6 +3,7 @@ local HoverState = require("thetan.osu.ui.HoverState")
 
 local math_util = require("math_util")
 local gyatt = require("thetan.gyatt")
+local playSound = require("thetan.gyatt.play_sound")
 
 ---@class osu.ui.Slider : osu.UiElement
 ---@operator call: osu.ui.Slider
@@ -112,9 +113,7 @@ function Slider:update(has_focus)
 	end
 
 	if just_hovered then
-		local sound = self.assets.sounds.hoverOverRect
-		sound:stop()
-		sound:play()
+		playSound(self.assets.sounds.hoverOverRect)
 	end
 end
 

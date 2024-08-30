@@ -3,6 +3,7 @@ local HoverState = require("thetan.osu.ui.HoverState")
 
 local gyatt = require("thetan.gyatt")
 local ui = require("thetan.osu.ui")
+local playSound = require("thetan.gyatt.play_sound")
 
 ---@class osu.ui.Button : osu.UiElement
 ---@operator call: osu.ui.Button
@@ -79,9 +80,7 @@ function Button:update(has_focus)
 	end
 
 	if just_hovered then
-		local sound = self.assets.sounds.hoverOverRect
-		sound:stop()
-		sound:play()
+		playSound(self.assets.sounds.hoverOverRect)
 	end
 end
 

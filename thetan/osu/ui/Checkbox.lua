@@ -3,6 +3,7 @@ local HoverState = require("thetan.osu.ui.HoverState")
 
 local gyatt = require("thetan.gyatt")
 local math_util = require("math_util")
+local playSound = require("thetan.gyatt.play_sound")
 
 ---@class osu.ui.Checkbox : osu.UiElement
 ---@operator call: osu.ui.Checkbox
@@ -60,9 +61,7 @@ function Checkbox:update(has_focus)
 	end
 
 	if just_hovered then
-		local sound = self.assets.sounds.hoverOverRect
-		sound:stop()
-		sound:play()
+		playSound(self.assets.sounds.hoverOverRect)
 	end
 end
 
