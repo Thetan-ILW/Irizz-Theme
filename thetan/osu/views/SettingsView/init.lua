@@ -47,7 +47,7 @@ local font
 function SettingsView:new(assets, game)
 	self.assets = assets
 	self.game = game
-	self.viewConfig = ViewConfig(assets)
+	self.viewConfig = ViewConfig(self, assets)
 	self.visibility = 0
 	self.state = "hidden"
 	self.scrollPosition = 0

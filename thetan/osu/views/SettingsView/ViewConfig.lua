@@ -6,6 +6,8 @@ local math_util = require("math_util")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 local Layout = require("thetan.osu.views.OsuLayout")
 
+local ImageButton = require("thetan.osu.ui.ImageButton")
+
 ---@class osu.SettingsViewConfig : IViewConfig
 ---@operator call: osu.SettingsViewConfig
 ---@field focus boolean
@@ -18,6 +20,7 @@ local Layout = require("thetan.osu.views.OsuLayout")
 ---@field tipAnimation number
 ---@field tipTween table?
 ---@field currentTip string?
+---@field backButton osu.ui.ImageButton
 local ViewConfig = IViewConfig + {}
 
 local visibility = 0
@@ -32,8 +35,9 @@ local tab_focus = 0
 
 local gfx = love.graphics
 
+---@param view osu.SettingsView
 ---@param assets osu.OsuAssets
-function ViewConfig:new(assets)
+function ViewConfig:new(view, assets)
 	img = assets.images
 	font = assets.localization.fontGroups.settings
 	self.focus = false
@@ -42,6 +46,10 @@ function ViewConfig:new(assets)
 	self.hoverRectTargetSize = 0
 	self.tabFocusAnimation = 1
 	self.tipAnimation = 0
+
+	self.backButton = ImageButton({ idleImage = img.menuBack, hoverWidth = 100, hoverHeight = 200 }, function()
+		view:processState("hide")
+	end)
 end
 
 local tab_image_height = 64
@@ -227,11 +235,6 @@ function ViewConfig:panel(view)
 	gfx.setBlendMode("alpha")
 	gfx.setScissor()
 
-	w, h = Layout:move("base")
-	local ih = img.menuBackDefault:getHeight()
-	gfx.translate(0, h - ih)
-	gfx.draw(img.menuBackDefault)
-
 	if tip then
 		if not tip_hover then
 			if self.tipTween then
@@ -257,6 +260,15 @@ function ViewConfig:panel(view)
 	self:tip()
 end
 
+function ViewConfig:back()
+	local w, h = Layout:move("base")
+	local ih = self.backButton:getHeight()
+	gfx.translate(0, h - ih)
+	self.backButton.alpha = visibility
+	self.backButton:update(self.focus)
+	self.backButton:draw()
+end
+
 ---@param view osu.SettingsView
 function ViewConfig:draw(view)
 	Layout:draw()
@@ -280,6 +292,7 @@ function ViewConfig:draw(view)
 
 	self:tabs(view)
 	self:panel(view)
+	self:back()
 end
 
 return ViewConfig
