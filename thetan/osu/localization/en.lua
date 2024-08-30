@@ -115,6 +115,24 @@ l.textGroups = {
 		chartsFound = "Processed / Found",
 		chartsCached = "Charts cached",
 	},
+	gameTips = {
+		handStrain = "Don't strain your hands while you play, even if the parts are really hard.",
+		stamina = "Learn to conserve your stamina. This is the most important skill in rhythm games.",
+		getAJob = "Get a job to improve even faster.",
+		screenshot = "You can take a screenshot by pressing F12.",
+		discord = "Make sure to join our discord server!",
+		whining = "Whining will not help you.",
+		comfortZone = "Avoid playing in your comfort zone.",
+		warmUp = "Warm up is very important. You can't get good scores if you don't warm up properly.",
+		lua = "Learn programming and Lua to help develop this game.",
+		sessionTime = "An hour and a half is a good time for a session.",
+		archLinux = "Use Arch Linux to become a better person.",
+		fpsLimit = "Limit your FPS to 1024 or less, there is no point in setting it higher.",
+		osz = "Drag and drop osu! beatmaps into game window to import them.",
+		subahibi = "Read Subarashiki Hibi.",
+		vsrgScrollSpeed = "26 - 30 is a good range for a scroll speed.",
+		pauses = "You can pause in this game. We allow you to abuse it.",
+	},
 }
 
 l.fontFiles = {
@@ -132,6 +150,7 @@ l.fontGroups = {
 		username = { "Aller", 20, "ZenMaruGothic-Regular" },
 		belowUsername = { "Aller", 14 },
 		info = { "Aller", 18, "ZenMaruGothic-Regular" },
+		gameTip = { "Aller", 22, "ZenMaruGothic-Regular" },
 	},
 	settings = {
 		optionsLabel = { "Aller-Light", 28, "ZenMaruGothic-Regular" },

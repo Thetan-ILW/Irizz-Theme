@@ -5,12 +5,14 @@ local ui = require("thetan.osu.ui")
 local flux = require("flux")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
+local table_util = require("table_util")
 local math_util = require("math_util")
 local loop = require("loop")
 local gfx_util = require("gfx_util")
 local map = require("math_util").map
 local getBeatValue = require("thetan.osu.views.beat_value")
 
+local Label = require("thetan.osu.ui.Label")
 local HoverState = require("thetan.osu.ui.HoverState")
 
 ---@class osu.MainMenuViewConfig : IViewConfig
@@ -19,6 +21,7 @@ local HoverState = require("thetan.osu.ui.HoverState")
 ---@field mainButtonsTween table?
 ---@field playButtonsTween table?
 ---@field logoTween table?
+---@field gameTipLabel osu.ui.Label
 local ViewConfig = IViewConfig + {}
 
 ---@type table<string, string>
@@ -41,6 +44,7 @@ local rate = 1
 local update_time = 0
 ---@type "hidden" | "main" | "play"
 local menu_state = "hidden"
+local logo_click_time = -math.huge
 
 ---@type table<string, {image: love.Image, hoverImage: love.Image, y: number, hoverState: osu.ui.HoverState}>
 local buttons = {}
@@ -57,6 +61,7 @@ function ViewConfig:new(game, assets)
 	img = assets.images
 	snd = assets.sounds
 	text, font = assets.localization:get("mainMenu")
+	assert(font)
 
 	---@type skibidi.PlayerProfileModel
 	local profile = game.playerProfileModel
@@ -81,7 +86,38 @@ function ViewConfig:new(game, assets)
 
 	self.directHoverState = HoverState("quadout", 0.3)
 	self.copyrightHoverState = HoverState("elasticout", 1.5)
+
+	---@type string[]
+	local game_tips = assets.localization.textGroups.gameTips
+
+	local n = 0
+	for k, v in pairs(game_tips) do
+		n = n + 1
+	end
+
+	---@type string
+	local label
+	local ri = math.random(n)
+	local i = 1
+	for k, v in pairs(game_tips) do
+		if i == ri then
+			label = v
+			break
+		end
+		i = i + 1
+	end
+
+	self.gameTipLabel = Label(assets, {
+		text = label,
+		font = font.gameTip,
+		pixelWidth = (1366 - 206 * 2),
+		pixelHeight = 75,
+		color = { 1, 1, 1, 0.7 },
+		align = "center",
+	})
 end
+
+---@param params { text: string, font: love.Font, color: number[]?, pixelWidth: number, pixelHeight: number?, align?: "left" | "center" | "right" }
 
 function ViewConfig:createUiElements()
 	buttons.play = {
@@ -280,11 +316,20 @@ function ViewConfig:header(view)
 	gfx.rectangle("fill", 0, 0, 200 * percent, 5)
 end
 
-local function footer()
+function ViewConfig:footer()
 	local w, h = Layout:move("base")
 
 	gfx.setColor(0, 0, 0, 0.4)
 	gfx.rectangle("fill", 0, h - 86, w, 86)
+
+	local image = img.supporter
+	local iw, ih = image:getDimensions()
+
+	gfx.setColor(1, 1, 1)
+	gfx.draw(image, w - iw, h - ih)
+
+	gfx.translate(206, 658)
+	self.gameTipLabel:draw()
 end
 
 function ViewConfig:copyright()
@@ -317,6 +362,10 @@ function ViewConfig:processLogoState(view, event)
 	end
 
 	local logo_click = event == "logo_click"
+
+	if logo_click then
+		logo_click_time = love.timer.getTime()
+	end
 
 	if menu_state == "hidden" then
 		if logo_click then
@@ -521,8 +570,10 @@ function ViewConfig:osuLogo(view)
 
 	local sx = self.logoAnimation * 150
 
-	logo.x = w / 2 - iw / 2 + ax / 2 - (iw / 2 * (beat - outro_scale)) - sx
-	logo.y = h / 2 - ih / 2 + ay / 2 - (ih / 2 * (beat - outro_scale))
+	local add_scale = beat + ((1 - gyatt.easeOutCubic(logo_click_time, 0.6)) * 0.035)
+
+	logo.x = w / 2 - iw / 2 + ax / 2 - (iw / 2 * (add_scale - outro_scale)) - sx
+	logo.y = h / 2 - ih / 2 + ay / 2 - (ih / 2 * (add_scale - outro_scale))
 
 	local dx = (w / 2 - sx) - mx
 	local dy = (h / 2) - my
@@ -534,7 +585,7 @@ function ViewConfig:osuLogo(view)
 	gfx.translate(w / 2 - sx + (ax / 2), h / 2 + (ay / 2))
 
 	gfx.push()
-	gfx.scale(1 + beat - outro_scale, 1 + beat - outro_scale)
+	gfx.scale(1 + add_scale - outro_scale, 1 + add_scale - outro_scale)
 	gfx.setColor(1, 1, 1, 0.5)
 	self:spectrum()
 	gfx.pop()
@@ -546,7 +597,7 @@ function ViewConfig:osuLogo(view)
 	gfx.setColor(1, 1, 1)
 
 	gfx.translate(logo.x, logo.y)
-	gfx.draw(img.osuLogo, 0, 0, 0, 1 + beat - outro_scale, 1 + beat - outro_scale)
+	gfx.draw(img.osuLogo, 0, 0, 0, 1 + add_scale - outro_scale, 1 + add_scale - outro_scale)
 
 	if gyatt.mousePressed(1) and logo.focused and self.hasFocus then
 		self:processLogoState(view, "logo_click")
@@ -612,7 +663,7 @@ function ViewConfig:drawIntro(view)
 
 	background(view)
 	self:header(view)
-	footer()
+	self:footer()
 	self:osuDirect(view)
 	self:osuLogo(view)
 
@@ -663,7 +714,7 @@ function ViewConfig:draw(view)
 	gfx.clear()
 	gfx.setBlendMode("alpha", "alphamultiply")
 	self:header(view)
-	footer()
+	self:footer()
 
 	gfx.setColor(1, 1, 1)
 	self:copyright()

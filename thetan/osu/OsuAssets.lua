@@ -177,6 +177,7 @@ function OsuAssets:new(skin_path, localization_file)
 		menuMultiButtonHover = self:loadImageOrDefault(skin_path, "menu-button-multiplayer-over"),
 		menuBackButton = self:loadImageOrDefault(skin_path, "menu-button-back"),
 		menuBackButtonHover = self:loadImageOrDefault(skin_path, "menu-button-back-over"),
+		supporter = self:loadImageOrDefault(skin_path, "menu-subscriber"),
 
 		checkboxOff = self:loadImageOrDefault(skin_path, "menu-checkbox-off"),
 		checkboxOn = self:loadImageOrDefault(skin_path, "menu-checkbox-on"),
