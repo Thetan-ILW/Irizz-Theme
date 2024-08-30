@@ -5,13 +5,13 @@ return function(game)
 	---@type skibidi.AssetModel
 	local asset_model = game.assetModel
 	local configs = game.configModel.configs
-	local irizz = configs.irizz
+	local osu = configs.osu_ui
 
 	---@type string
-	local language = irizz.language
+	local language = osu.language
 
 	---@type string
-	local skin_path = ("userdata/skins/%s/"):format(irizz.osuSongSelectSkin)
+	local skin_path = ("userdata/skins/%s/"):format(osu.skin)
 
 	---@type skibidi.Assets?
 	local assets = asset_model:get("osu")

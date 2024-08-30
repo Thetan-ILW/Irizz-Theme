@@ -71,10 +71,14 @@ local gfx = love.graphics
 
 ---@param has_focus boolean
 function Button:update(has_focus)
+	if not has_focus then
+		return
+	end
+
 	local just_hovered = false
 	self.hover, self.animation, just_hovered = self.hoverState:check(self.totalW, self.totalH)
 
-	if self.hover and gyatt.mousePressed(1) and has_focus then
+	if self.hover and gyatt.mousePressed(1) then
 		self.onChange()
 		self.changeTime = -math.huge
 	end

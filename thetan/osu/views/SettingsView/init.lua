@@ -11,6 +11,7 @@ local consts = require("thetan.osu.views.SettingsView.Consts")
 local Elements = require("thetan.osu.views.SettingsView.Elements")
 local graphics = require("thetan.osu.views.SettingsView.graphics")
 local audio = require("thetan.osu.views.SettingsView.audio")
+local skin = require("thetan.osu.views.SettingsView.skin")
 local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 
 ---@class osu.SettingsView
@@ -35,6 +36,8 @@ local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 ---@field gameBehaviorLabel osu.ui.Label
 ---@field searchLabel osu.ui.Label
 ---@field searchText string
+---@field osuSkins string[]
+---@field modalActive boolean
 local SettingsView = class()
 
 ---@type table<string, string>
@@ -56,6 +59,8 @@ function SettingsView:new(assets, game)
 	self.totalHeight = 0
 	self.searchText = ""
 	self.hoverTime = 0
+	self.osuSkins = game.assetModel:getOsuSkins()
+	self.modalActive = true
 
 	text, font = assets.localization:get("settings")
 	assert(font)
@@ -90,6 +95,7 @@ function SettingsView:build()
 	Elements.searchText = self.searchText
 	table.insert(self.containers, graphics(assets, self))
 	table.insert(self.containers, audio(assets, self))
+	table.insert(self.containers, skin(assets, self))
 	table.insert(self.containers, maintenance(assets, self))
 
 	if #self.containers == 0 then
@@ -188,6 +194,7 @@ end
 
 function SettingsView:update(dt)
 	self:processState()
+	self.viewConfig.modalActive = self.modalActive
 
 	local additional_pos = 0
 

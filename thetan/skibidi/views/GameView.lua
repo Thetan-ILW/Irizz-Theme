@@ -83,6 +83,10 @@ function GameView:setView(view)
 	end)
 end
 
+function GameView:reloadView()
+	self:setView(self.view)
+end
+
 function GameView:unload()
 	if not self.view then
 		return

@@ -111,7 +111,8 @@ end
 
 local gfx = love.graphics
 
-function GroupContainer:draw()
+---@param has_focus boolean
+function GroupContainer:draw(has_focus)
 	gfx.translate(consts.tabIndent, 0)
 
 	self.hoverPosition = 0
@@ -126,7 +127,7 @@ function GroupContainer:draw()
 	self.openCombos = {}
 	self.tip = nil
 
-	local focus = true
+	local focus = has_focus
 
 	for _, id in ipairs(self.groupOrder) do
 		local group = self.groups[id]

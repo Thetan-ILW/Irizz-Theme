@@ -18,7 +18,7 @@ function Persistence:load()
 	configModel:open("irizz", true)
 	configModel:open("keybinds_v2", true)
 	configModel:open("vim_keybinds_v2", true)
-	configModel:open("osu_api", true)
+	configModel:open("osu_ui", true)
 	configModel:read()
 
 	self.cacheModel:load()

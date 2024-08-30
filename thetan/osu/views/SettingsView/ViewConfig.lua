@@ -11,6 +11,7 @@ local ImageButton = require("thetan.osu.ui.ImageButton")
 ---@class osu.SettingsViewConfig : IViewConfig
 ---@operator call: osu.SettingsViewConfig
 ---@field focus boolean
+---@field modalActive boolean
 ---@field hoverRectPosition number
 ---@field hoverRectTargetPosition number
 ---@field hoverRectTargetSize number
@@ -41,6 +42,7 @@ function ViewConfig:new(view, assets)
 	img = assets.images
 	font = assets.localization.fontGroups.settings
 	self.focus = false
+	self.modalActive = false
 	self.hoverRectPosition = 0
 	self.hoverRectTargetPosition = 0
 	self.hoverRectTargetSize = 0
@@ -142,7 +144,7 @@ function ViewConfig:panel(view)
 	local scale = gfx.getHeight() / 768
 
 	gfx.setColor(0, 0, 0, 0.7 * visibility)
-	self.focus = gyatt.isOver(64 + 438 * visibility, h)
+	self.focus = gyatt.isOver(64 + 438 * visibility, h) and self.modalActive
 
 	gfx.translate(64, 0)
 	gfx.rectangle("fill", 0, 0, 438 * visibility, h)
@@ -155,7 +157,7 @@ function ViewConfig:panel(view)
 	gfx.clear()
 	gfx.setBlendMode("alpha", "alphamultiply")
 
-	if view.hoverPosition ~= self.hoverRectPosition then
+	if view.hoverPosition ~= self.hoverRectPosition and self.focus then
 		if self.hoverRectTween then
 			self.hoverRectTween:stop()
 		end
@@ -194,7 +196,7 @@ function ViewConfig:panel(view)
 
 	for _, c in ipairs(view.containers) do
 		if -view.scrollPosition + 768 > c.position and -view.scrollPosition < c.position + c.height then
-			c:draw()
+			c:draw(self.focus)
 			tip = tip or c.tip
 
 			if #c.openCombos ~= 0 then

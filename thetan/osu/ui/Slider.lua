@@ -66,6 +66,10 @@ function Slider:update(has_focus)
 		self.valueChanged = self.defaultValue ~= self.value
 	end
 
+	if not has_focus then
+		return
+	end
+
 	local _, just_hovered = 0, false
 	self.hover, _, just_hovered = self.hoverState:check(self.totalW, self.totalH, 0, 0, has_focus)
 
