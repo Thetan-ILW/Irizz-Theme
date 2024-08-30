@@ -457,6 +457,7 @@ local current_rotation = 0
 function ViewConfig:spectrum()
 	local centerX, centerY = 0, 0
 
+	gfx.setLineWidth(1)
 	for i = 1, num_rectangles do
 		local angle = (i - 1) * (2 * math.pi / num_rectangles)
 
@@ -468,8 +469,8 @@ function ViewConfig:spectrum()
 		local tip_x = centerX + (radius + audio_value) * math.cos(angle)
 		local tip_y = centerY + (radius + audio_value) * math.sin(angle)
 
-		love.graphics.polygon(
-			"fill",
+		gfx.polygon(
+			"line",
 			base_x - rect_width / 2 * math.sin(angle),
 			base_y + rect_width / 2 * math.cos(angle),
 			base_x + rect_width / 2 * math.sin(angle),
@@ -488,7 +489,7 @@ function ViewConfig:osuLogo(view)
 
 	local iw, ih = img.osuLogo:getDimensions()
 	local mx, my = getMousePosition()
-	local ax, ay = -mx * 0.005, -my * 0.005
+	local ax, ay = -mx * 0.009, -my * 0.009
 
 	local outro_scale = view.outroPercent * 0.3
 
@@ -504,17 +505,16 @@ function ViewConfig:osuLogo(view)
 	logo.focused = distance < 255
 
 	gfx.push()
-	gfx.translate(w / 2 - sx, h / 2)
-	gfx.scale(1 + beat - outro_scale, 1 + beat - outro_scale)
+	gfx.translate(w / 2 - sx + (ax / 2), h / 2 + (ay / 2))
 
 	gfx.push()
-	self:logoButtons(view)
+	gfx.scale(1 + beat - outro_scale, 1 + beat - outro_scale)
+	gfx.setColor(1, 1, 1, 0.5)
+	self:spectrum()
 	gfx.pop()
 
-	love.graphics.setColor(1, 1, 1, 0.65)
-	gfx.translate(ax / 2, ay / 2)
-	self:spectrum()
-	gfx.scale(1)
+	gfx.scale(1 - outro_scale, 1 - outro_scale)
+	self:logoButtons(view)
 	gfx.pop()
 
 	gfx.setColor(1, 1, 1)
