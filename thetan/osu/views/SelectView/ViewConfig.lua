@@ -162,7 +162,7 @@ function ViewConfig:createUI(view)
 
 	combos.scoreSource = Combo(assets, {
 		font = font.dropdown,
-		pixelWidth = 305,
+		pixelWidth = 328,
 		pixelHeight = 34,
 		borderColor = { 0.08, 0.51, 0.7, 1 },
 		hoverColor = { 0.08, 0.51, 0.7, 1 },

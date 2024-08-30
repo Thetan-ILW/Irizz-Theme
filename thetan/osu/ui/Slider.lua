@@ -1,4 +1,5 @@
 local UiElement = require("thetan.osu.ui.UiElement")
+local HoverState = require("thetan.osu.ui.HoverState")
 
 local math_util = require("math_util")
 local gyatt = require("thetan.gyatt")
@@ -13,8 +14,11 @@ local gyatt = require("thetan.gyatt")
 ---@field private getValue fun(): number, { min: number, max: number, increment: number }
 ---@field private onChange fun(number)
 ---@field private format? fun(number): string
+---@field private hoverState osu.ui.HoverState
+---@field private lastMousePosition number
 local Slider = UiElement + {}
 
+---@param assets osu.OsuAssets
 ---@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, sliderPixelWidth: number?, defaultValue: number }
 ---@param get_value fun(): number
 ---@param on_change fun(number)
@@ -32,6 +36,8 @@ function Slider:new(assets, params, get_value, on_change, format)
 	self.format = format or function(v)
 		return ("%g"):format(v)
 	end
+	self.hoverState = HoverState("linear", 0)
+	self.lastMousePosition = 0
 end
 
 local gfx = love.graphics
@@ -59,7 +65,8 @@ function Slider:update(has_focus)
 		self.valueChanged = self.defaultValue ~= self.value
 	end
 
-	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
+	local _, just_hovered = 0, false
+	self.hover, _, just_hovered = self.hoverState:check(self.totalW, self.totalH, 0, 0, has_focus)
 
 	---@type string?
 	self.tip = nil
@@ -83,14 +90,31 @@ function Slider:update(has_focus)
 
 		if love.mouse.isDown(1) then
 			local range = self.params.max - self.params.min
-			local percent = self.params.min + ((mx - x) / w) * range
-			local value = math_util.clamp(percent, self.params.min, self.params.max)
+			local percent = (mx - x) / w
+			local value = math_util.clamp(self.params.min + percent * range, self.params.min, self.params.max)
 
-			self.onChange(math_util.round(value, self.params.increment))
-			self.changeTime = -math.huge
+			if self.lastMousePosition ~= mx then
+				self.onChange(math_util.round(value, self.params.increment))
+				self.changeTime = -math.huge
+
+				local sound = self.assets.sounds.sliderBar
+				if sound:getPosition() > 0.02 then
+					sound:stop()
+					sound:setRate(1 + percent * 0.2)
+				end
+
+				sound:play()
+				self.lastMousePosition = mx
+			end
 		else
 			self.dragging = false
 		end
+	end
+
+	if just_hovered then
+		local sound = self.assets.sounds.hoverOverRect
+		sound:stop()
+		sound:play()
 	end
 end
 

@@ -243,7 +243,16 @@ function OsuAssets:new(skin_path, localization_file)
 
 		applause = self:loadAudioOrDefault(skin_path, "applause"),
 		menuBack = self:loadAudioOrDefault(skin_path, "menuback"),
-		switchScreen = self:loadAudioOrDefault(skin_path, "menuhit"),
+		menuHit = self:loadAudioOrDefault(skin_path, "menuhit"),
+		menuPlayClick = self:loadAudioOrDefault(skin_path, "menu-play-click"),
+		menuEditClick = self:loadAudioOrDefault(skin_path, "menu-edit-click"),
+		menuFreeplayClick = self:loadAudioOrDefault(skin_path, "menu-freeplay-click"),
+		menuMultiplayerClick = self:loadAudioOrDefault(skin_path, "menu-multiplayer-click"),
+
+		checkOn = self:loadAudioOrDefault(skin_path, "check-on"),
+		checkOff = self:loadAudioOrDefault(skin_path, "check-off"),
+		sliderBar = self:loadAudioOrDefault(skin_path, "sliderbar"),
+		selectExpand = self:loadAudioOrDefault(skin_path, "select-expand"),
 	}
 
 	self.images.panelTop:setWrap("clamp")

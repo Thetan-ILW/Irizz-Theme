@@ -1,4 +1,5 @@
 local UiElement = require("thetan.osu.ui.UiElement")
+local HoverState = require("thetan.osu.ui.HoverState")
 
 local gyatt = require("thetan.gyatt")
 local math_util = require("math_util")
@@ -11,6 +12,7 @@ local math_util = require("math_util")
 ---@field private imageScale number
 ---@field private toggled boolean
 ---@field private changeTime number
+---@field private hoverState osu.ui.HoverState
 local Checkbox = UiElement + {}
 
 ---@param assets osu.OsuAssets
@@ -33,6 +35,7 @@ function Checkbox:new(assets, params, get_value, on_change)
 	self.imageScale = self.totalH / ih
 
 	self.changeTime = -math.huge
+	self.hoverState = HoverState("linear", 0)
 end
 
 ---@param has_focus boolean
@@ -43,11 +46,23 @@ function Checkbox:update(has_focus)
 		self.valueChanged = self.defaultValue ~= self.toggled
 	end
 
-	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
+	local _, just_hovered = 0, false
+	self.hover, _, just_hovered = self.hoverState:check(self.totalW, self.totalH, 0, 0, has_focus)
 
 	if self.hover and gyatt.mousePressed(1) then
 		self.onChange()
 		self.changeTime = love.timer.getTime()
+
+		local sounds = self.assets.sounds
+		local sound = self.getValue() and sounds.checkOn or sounds.checkOff
+		sound:stop()
+		sound:play()
+	end
+
+	if just_hovered then
+		local sound = self.assets.sounds.hoverOverRect
+		sound:stop()
+		sound:play()
 	end
 end
 

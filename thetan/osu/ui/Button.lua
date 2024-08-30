@@ -70,11 +70,18 @@ local gfx = love.graphics
 
 ---@param has_focus boolean
 function Button:update(has_focus)
-	self.hover, self.animation = self.hoverState:check(self.totalW, self.totalH)
+	local just_hovered = false
+	self.hover, self.animation, just_hovered = self.hoverState:check(self.totalW, self.totalH)
 
 	if self.hover and gyatt.mousePressed(1) and has_focus then
 		self.onChange()
 		self.changeTime = -math.huge
+	end
+
+	if just_hovered then
+		local sound = self.assets.sounds.hoverOverRect
+		sound:stop()
+		sound:play()
 	end
 end
 

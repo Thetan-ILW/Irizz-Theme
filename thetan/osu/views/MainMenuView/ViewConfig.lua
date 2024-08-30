@@ -329,6 +329,8 @@ function ViewConfig:processLogoState(view, event)
 			end
 			self.mainButtonsTween = flux.to(self, 0.3, { mainButtonsAnimation = 1 }):ease("quadout")
 			self.logoTween = flux.to(self, 0.3, { logoAnimation = 1 }):ease("quadout")
+			snd.menuHit:stop()
+			snd.menuHit:play()
 		end
 	elseif menu_state == "main" then
 		if self.mainButtonsAnimation == 0 then
@@ -354,12 +356,16 @@ function ViewConfig:processLogoState(view, event)
 			self.mainButtonsTween = flux.to(self, 0.3, { mainButtonsAnimation = 0 }):ease("quadout")
 			self.playButtonsTween = flux.to(self, 0.3, { playButtonsAnimation = 1 }):ease("quadout")
 			menu_state = "play"
+			snd.menuPlayClick:stop()
+			snd.menuPlayClick:play()
 		end
 	elseif menu_state == "play" then
 		if self.playButtonsAnimation == 0 then
 			menu_state = "hidden"
 		end
 		if logo_click then
+			snd.menuFreeplayClick:stop()
+			snd.menuFreeplayClick:play()
 			view:changeScreen("selectView")
 		end
 		if event == "hide" then
@@ -420,18 +426,26 @@ function ViewConfig:logoButtons(view)
 	local focus = menu_state == "main" and self.mainButtonsAnimation > 0.05
 
 	if self:logoButton("play", -300 * x, a) and focus then
+		snd.menuPlayClick:stop()
+		snd.menuPlayClick:play()
 		self:processLogoState(view, "switch_to_play")
 	end
 
 	if self:logoButton("edit", -300 * x, a) and focus then
+		snd.menuEditClick:stop()
+		snd.menuEditClick:play()
 		view:edit()
 	end
 
 	if self:logoButton("options", -300 * x, a) and focus then
+		snd.menuHit:stop()
+		snd.menuHit:play()
 		view:toggleSettings()
 	end
 
 	if self:logoButton("exit", -300 * x, a) and focus then
+		snd.menuHit:stop()
+		snd.menuHit:play()
 		view:closeGame()
 		self:processLogoState(view, "hide")
 	end
@@ -441,13 +455,19 @@ function ViewConfig:logoButtons(view)
 	focus = menu_state == "play" and self.playButtonsAnimation > 0.05
 
 	if self:logoButton("solo", -300 * x, a) and focus then
+		snd.menuFreeplayClick:stop()
+		snd.menuFreeplayClick:play()
 		view:changeScreen("selectView")
 	end
 
 	if self:logoButton("multi", -300 * x, a) and focus then
+		snd.menuMultiplayerClick:stop()
+		snd.menuMultiplayerClick:play()
 	end
 
 	if self:logoButton("back", -300 * x, a) and focus then
+		snd.menuBack:stop()
+		snd.menuBack:play()
 		self:processLogoState(view, "switch_to_main")
 	end
 

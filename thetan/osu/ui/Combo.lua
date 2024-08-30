@@ -69,6 +69,9 @@ function Combo:open()
 	end
 	self.visibilityTween = flux.to(self, 0.35, { visibility = 1 }):ease("cubicout")
 	self.state = "fade_in"
+	local sound = self.assets.sounds.selectExpand
+	sound:stop()
+	sound:play()
 end
 
 ---@private
@@ -131,7 +134,8 @@ function Combo:update(has_focus)
 	local selected, items = self.getValue()
 	self.selected = self.format and self.format(selected) or tostring(selected)
 	self.items = items
-	self.hover, self.headAnimation = self.headHoverState:check(self.totalW, self.totalH)
+	local just_hovered = false
+	self.hover, self.headAnimation, just_hovered = self.headHoverState:check(self.totalW, self.totalH)
 	self.hover = self.hover and has_focus
 
 	if self.defaultValue ~= nil then
@@ -158,6 +162,12 @@ function Combo:update(has_focus)
 		self:processState("toggle")
 	elseif not self.hover and gyatt.mousePressed(1) then
 		self:processState("close")
+	end
+
+	if just_hovered then
+		local sound = self.assets.sounds.hoverOverRect
+		sound:stop()
+		sound:play()
 	end
 end
 
