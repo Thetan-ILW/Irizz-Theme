@@ -41,10 +41,12 @@ end
 ---@param h number
 ---@param x number?
 ---@param y number?
+---@param has_focus boolean?
 ---@return boolean
 ---@return number
-function HoverState:check(w, h, x, y)
-	local over = gyatt.isOver(w, h, x or 0, y or 0)
+function HoverState:check(w, h, x, y, has_focus)
+	has_focus = has_focus == nil and true or has_focus
+	local over = gyatt.isOver(w, h, x or 0, y or 0) and has_focus
 	local state = self.state
 
 	if state == "idle" then

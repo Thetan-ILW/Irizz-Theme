@@ -134,10 +134,10 @@ function ViewConfig:panel(view)
 	local scale = gfx.getHeight() / 768
 
 	gfx.setColor(0, 0, 0, 0.7 * visibility)
+	self.focus = gyatt.isOver(64 + 438 * visibility, h)
+
 	gfx.translate(64, 0)
 	gfx.rectangle("fill", 0, 0, 438 * visibility, h)
-
-	self.focus = gyatt.isOver(438 * visibility, h)
 
 	local prev_canvas = gfx.getCanvas()
 	local canvas = gyatt.getCanvas("settings_containers")

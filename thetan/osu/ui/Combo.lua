@@ -1,6 +1,7 @@
 local UiElement = require("thetan.osu.ui.UiElement")
 local gyatt = require("thetan.gyatt")
 local flux = require("flux")
+local HoverState = require("thetan.osu.ui.HoverState")
 
 ---@class osu.ui.Combo : osu.UiElement
 ---@operator call: osu.ui.Combo
@@ -24,6 +25,8 @@ local flux = require("flux")
 ---@field private state "hidden" | "fade_in" | "open" | "fade_out"
 ---@field private visibility number
 ---@field private visibilityTween table?
+---@field private headHoverState osu.ui.HoverState
+---@field private headAnimation number
 local Combo = UiElement + {}
 
 ---@param assets osu.OsuAssets
@@ -49,6 +52,8 @@ function Combo:new(assets, params, get_value, on_change, format)
 	self.state = "hidden"
 	self.visibility = 0
 	self.changeTime = -math.huge
+	self.headHoverState = HoverState("quadout", 0.12)
+	self.headAnimation = 0
 end
 
 local gfx = love.graphics
@@ -109,7 +114,10 @@ function Combo:update(has_focus)
 	local selected, items = self.getValue()
 	self.selected = self.format and self.format(selected) or tostring(selected)
 	self.items = items
-	self.hover = gyatt.isOver(self.totalW, self.totalH) and has_focus
+	self.hover, self.headAnimation = self.headHoverState:check(self.totalW, self.totalH)
+	self.hover = self.hover and has_focus
+
+	self.hoverColor[4] = self.headAnimation
 
 	if self.defaultValue ~= nil then
 		self.valueChanged = selected ~= self.defaultValue

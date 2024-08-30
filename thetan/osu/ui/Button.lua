@@ -56,7 +56,7 @@ function Button:new(assets, params, on_change)
 	self.brightenShader = require("irizz.shaders").brighten
 	self.onChange = on_change
 
-	self.hoverState = HoverState("linear", 0.2)
+	self.hoverState = HoverState("quadout", 0.2)
 	self.animation = 0
 end
 

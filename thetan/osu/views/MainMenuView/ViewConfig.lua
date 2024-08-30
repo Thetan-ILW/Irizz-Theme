@@ -11,6 +11,8 @@ local gfx_util = require("gfx_util")
 local map = require("math_util").map
 local getBeatValue = require("thetan.osu.views.beat_value")
 
+local HoverState = require("thetan.osu.ui.HoverState")
+
 ---@class osu.MainMenuViewConfig : IViewConfig
 ---@operator call: osu.MainMenuViewConfig
 ---@field hasFocus boolean
@@ -37,12 +39,10 @@ local now_playing = ""
 local rate = 1
 
 local update_time = 0
-local menu_open_time = 0
-local menu_button_update_time = 0
 ---@type "hidden" | "main" | "play"
 local menu_state = "hidden"
 
----@type table<string, {image: love.Image, hoverImage: love.Image, y: number, animation: number}>
+---@type table<string, {image: love.Image, hoverImage: love.Image, y: number, hoverState: osu.ui.HoverState}>
 local buttons = {}
 
 local gfx = love.graphics
@@ -78,6 +78,9 @@ function ViewConfig:new(game, assets)
 	for i = 1, 64 do
 		smoothed_fft[i] = 0
 	end
+
+	self.directHoverState = HoverState("quadout", 0.3)
+	self.copyrightHoverState = HoverState("elasticout", 1.5)
 end
 
 function ViewConfig:createUiElements()
@@ -85,43 +88,43 @@ function ViewConfig:createUiElements()
 		image = img.menuPlayButton,
 		hoverImage = img.menuPlayButtonHover,
 		y = -200,
-		animation = 0,
+		hoverState = HoverState("quadout", 0.2),
 	}
 	buttons.edit = {
 		image = img.menuEditButton,
 		hoverImage = img.menuEditButtonHover,
 		y = -100,
-		animation = 0,
+		hoverState = HoverState("quadout", 0.2),
 	}
 	buttons.options = {
 		image = img.menuOptionsButton,
 		hoverImage = img.menuOptionsButtonHover,
 		y = 0,
-		animation = 0,
+		hoverState = HoverState("quadout", 0.2),
 	}
 	buttons.exit = {
 		image = img.menuExitButton,
 		hoverImage = img.menuExitButtonHover,
 		y = 100,
-		animation = 0,
+		hoverState = HoverState("quadout", 0.2),
 	}
 	buttons.solo = {
 		image = img.menuSoloButton,
 		hoverImage = img.menuSoloButtonHover,
 		y = -145,
-		animation = 0,
+		hoverState = HoverState("quadout", 0.2),
 	}
 	buttons.multi = {
 		image = img.menuMultiButton,
 		hoverImage = img.menuMultiButtonHover,
 		y = -42,
-		animation = 0,
+		hoverState = HoverState("quadout", 0.2),
 	}
 	buttons.back = {
 		image = img.menuBackButton,
 		hoverImage = img.menuBackButtonHover,
 		y = 60,
-		animation = 0,
+		hoverState = HoverState("quadout", 0.2),
 	}
 end
 
@@ -284,10 +287,22 @@ local function footer()
 	gfx.rectangle("fill", 0, h - 86, w, 86)
 end
 
-local function copyright()
+function ViewConfig:copyright()
 	local w, h = Layout:move("base")
-	local ih = img.copyright:getHeight()
-	gfx.draw(img.copyright, 4, h - ih - 4)
+	local iw, ih = img.copyright:getDimensions()
+
+	local hover, animation = self.copyrightHoverState:check(iw, ih, 0, h - ih, self.hasFocus)
+
+	local scale = 1 + (animation * 0.2)
+	gfx.push()
+	gfx.translate(0, h - ih * scale)
+	gfx.setColor(1, 1 - (1 * (animation * 0.28)), 1 - (1 * (animation * 0.77)))
+	gfx.draw(img.copyright, 4, -4, 0, scale, scale)
+	gfx.pop()
+
+	if hover and gyatt.mousePressed(1) then
+		love.system.openURL("https://soundsphere.xyz")
+	end
 end
 
 local logo = {
@@ -378,28 +393,19 @@ function ViewConfig:logoButton(id, x, alpha)
 	local btn = buttons[id]
 
 	local pressed = false
-	local hover = gyatt.isOver(580, 85, 0, btn.y) and not logo.focused and self.hasFocus
 
-	local dt = love.timer.getDelta()
+	local hover, animation = btn.hoverState:check(580, 85, 0, btn.y, not logo.focused and self.hasFocus)
 
-	if hover then
-		btn.animation = btn.animation + dt * 8
-
-		if gyatt.mousePressed(1) then
-			pressed = true
-		end
-	else
-		btn.animation = btn.animation - dt * 8
+	if hover and gyatt.mousePressed(1) then
+		pressed = true
 	end
 
-	btn.animation = math_util.clamp(btn.animation, 0, 1)
-
 	gfx.setColor(1, 1, 1, alpha)
-	gfx.draw(btn.image, x + (btn.animation * 20), btn.y)
+	gfx.draw(btn.image, x + (animation * 30), btn.y)
 
-	gfx.setColor(1, 1, 1, btn.animation * alpha)
+	gfx.setColor(1, 1, 1, animation * alpha)
 
-	gfx.draw(btn.hoverImage, x + (btn.animation * 20), btn.y)
+	gfx.draw(btn.hoverImage, x + (animation * 30), btn.y)
 	gfx.setColor(1, 1, 1)
 
 	return pressed
@@ -527,12 +533,7 @@ function ViewConfig:osuLogo(view)
 	end
 end
 
-local direct_button = {
-	mouseOver = false,
-	updateTime = -math.huge,
-}
-
-local function osuDirect(view)
+function ViewConfig:osuDirect(view)
 	local w, h = Layout:move("base")
 
 	local iw, ih = img.directButton:getDimensions()
@@ -540,21 +541,11 @@ local function osuDirect(view)
 	gfx.setColor(1, 1, 1)
 	gfx.translate(w - iw, h / 2 - ih / 2)
 
-	if gyatt.isOver(iw, ih) and not direct_button.mouseOver then
-		direct_button.updateTime = love.timer.getTime()
-		direct_button.mouseOver = true
-	elseif not gyatt.isOver(iw, ih) and direct_button.mouseOver then
-		direct_button.updateTime = love.timer.getTime()
-		direct_button.mouseOver = false
-	end
+	local hover, alpha = self.directHoverState:check(iw, ih)
 
 	gfx.draw(img.directButton)
 
-	local a = math_util.clamp(love.timer.getTime() - direct_button.updateTime, 0, 0.1) * 10
-
-	a = direct_button.mouseOver and a or 1 - a
-
-	gfx.setColor(1, 1, 1, a)
+	gfx.setColor(1, 1, 1, alpha)
 
 	gfx.draw(img.directButtonOver)
 	gfx.setColor(1, 1, 1)
@@ -602,7 +593,7 @@ function ViewConfig:drawIntro(view)
 	background(view)
 	self:header(view)
 	footer()
-	osuDirect(view)
+	self:osuDirect(view)
 	self:osuLogo(view)
 
 	gfx.setCanvas({ prev_canvas, stencil = true })
@@ -626,7 +617,7 @@ function ViewConfig:drawIntro(view)
 	self:spectrum()
 	gfx.pop()
 	gfx.setColor(1, 1, 1, 1)
-	copyright()
+	self:copyright()
 	gfx.setColor(1, 1, 1, a)
 	gfx.draw(img.welcomeText, w / 2 - iw / 2, h / 2 - ih / 2, 0, scale, scale)
 end
@@ -655,8 +646,8 @@ function ViewConfig:draw(view)
 	footer()
 
 	gfx.setColor(1, 1, 1)
-	copyright()
-	osuDirect(view)
+	self:copyright()
+	self:osuDirect(view)
 
 	gfx.setCanvas({ prev_canvas, stencil = true })
 
