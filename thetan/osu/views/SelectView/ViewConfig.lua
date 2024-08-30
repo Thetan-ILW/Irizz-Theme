@@ -119,38 +119,46 @@ local selected_group = group_options[1]
 function ViewConfig:createUI(view)
 	buttons.back = ImageButton(assets, {
 		idleImage = img.menuBack,
-		hoverWidth = 200,
-		hoverHeight = 200,
+		ay = "bottom",
+		hoverArea = { w = 200, h = 90 },
 		clickSound = assets.sounds.menuBack,
 	}, function()
 		view:changeScreen("osuMainMenuView")
 	end)
-	buttons.mode = ImageButton(
-		assets,
-		{ idleImage = img.modeButton, hoverImage = img.modeButtonOver, hoverWidth = 88, hoverHeight = 90 },
-		function() end
-	)
-	buttons.mods = ImageButton(
-		assets,
-		{ idleImage = img.modsButton, hoverImage = img.modsButtonOver, hoverWidth = 74, hoverHeight = 90 },
-		function()
-			view:openModal("thetan.irizz.views.modals.ModifierModal")
-		end
-	)
-	buttons.random = ImageButton(
-		assets,
-		{ idleImage = img.randomButton, hoverImage = img.randomButtonOver, hoverWidth = 74, hoverHeight = 90 },
-		function()
-			view.selectModel:scrollRandom()
-		end
-	)
-	buttons.chartOptions = ImageButton(
-		assets,
-		{ idleImage = img.optionsButton, hoverImage = img.optionsButtonOver, hoverWidth = 74, hoverHeight = 90 },
-		function()
-			view:openModal("thetan.osu.views.modals.ChartOptions")
-		end
-	)
+
+	buttons.mode = ImageButton(assets, {
+		idleImage = img.modeButton,
+		hoverImage = img.modeButtonOver,
+		ay = "bottom",
+		hoverArea = { w = 88, h = 90 },
+	}, function() end)
+
+	buttons.mods = ImageButton(assets, {
+		idleImage = img.modsButton,
+		hoverImage = img.modsButtonOver,
+		ay = "bottom",
+		hoverArea = { w = 74, h = 90 },
+	}, function()
+		view:openModal("thetan.irizz.views.modals.ModifierModal")
+	end)
+
+	buttons.random = ImageButton(assets, {
+		idleImage = img.randomButton,
+		hoverImage = img.randomButtonOver,
+		ay = "bottom",
+		hoverArea = { w = 74, h = 90 },
+	}, function()
+		view.selectModel:scrollRandom()
+	end)
+
+	buttons.chartOptions = ImageButton(assets, {
+		idleImage = img.optionsButton,
+		hoverImage = img.optionsButtonOver,
+		ay = "bottom",
+		hoverArea = { w = 74, h = 90 },
+	}, function()
+		view:openModal("thetan.osu.views.modals.ChartOptions")
+	end)
 
 	combos.scoreSource = Combo(assets, {
 		font = font.dropdown,
@@ -228,6 +236,8 @@ function ViewConfig:new(view, _assets)
 	update_time = current_time
 	self.scoreListView.scoreUpdateTime = love.timer.getTime()
 
+	local w, h = Layout:move("base")
+	top_panel_quad = gfx.newQuad(0, 0, w, img.panelTop:getHeight(), img.panelTop)
 	self:createUI(view)
 end
 
@@ -467,11 +477,8 @@ end
 
 local function drawBottomButton(id)
 	local button = buttons[id]
-	gfx.push()
-	gfx.translate(0, -button:getHeight())
 	button:update(has_focus)
 	button:draw()
-	gfx.pop()
 end
 
 function ViewConfig:bottom(view)
@@ -505,9 +512,10 @@ function ViewConfig:bottom(view)
 	gyatt.text(username)
 	gfx.setFont(font.belowUsername)
 
+	gfx.translate(0, 1)
 	gyatt.text(("Performance: %ipp\nAccuracy: %0.02f%%\nLv10"):format(pp, accuracy * 100))
 
-	gfx.translate(42, 28)
+	gfx.translate(42, 27)
 
 	gfx.setColor({ 0.15, 0.15, 0.15, 1 })
 	gfx.rectangle("fill", 0, 0, 197, 10, 8, 8)
@@ -528,7 +536,7 @@ function ViewConfig:bottom(view)
 	gfx.translate(0, h)
 	drawBottomButton("back")
 
-	gfx.translate(225, 0)
+	gfx.translate(224, 0)
 	drawBottomButton("mode")
 
 	iw, ih = img.maniaSmallIcon:getDimensions()
