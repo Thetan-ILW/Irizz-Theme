@@ -5,8 +5,7 @@ local gyatt = require("thetan.gyatt")
 
 ---@class osu.ui.Slider : osu.UiElement
 ---@operator call: osu.ui.Slider
----@field private label string
----@field private font love.Font
+---@field private label love.Text
 ---@field private sliderW number?
 ---@field private params { min: number, max: number, increment: number }
 ---@field private value number
@@ -22,8 +21,7 @@ local Slider = UiElement + {}
 ---@param format? fun(number): string
 function Slider:new(assets, params, get_value, on_change, format)
 	self.assets = assets
-	self.label = params.label
-	self.font = params.font
+	self.label = love.graphics.newText(params.font, params.label)
 	self.totalW = params.pixelWidth
 	self.totalH = params.pixelHeight
 	self.sliderW = params.sliderPixelWidth
@@ -48,7 +46,7 @@ function Slider:getPosAndWidth()
 		return x, w
 	end
 
-	local x = self.font:getWidth(self.label) * gyatt.getTextScale()
+	local x = self.label:getWidth() * gyatt.getTextScale()
 	local w = self.totalW - x - 15 - text_indent
 
 	return x, w
@@ -98,8 +96,7 @@ end
 
 function Slider:draw()
 	gfx.setColor(1, 1, 1)
-	gfx.setFont(self.font)
-	gyatt.frame(self.label, 0, 0, self.totalW, self.totalH, "left", "center")
+	gyatt.textFrame(self.label, 0, 0, self.totalW, self.totalH, "left", "center")
 
 	local x, w = self:getPosAndWidth()
 

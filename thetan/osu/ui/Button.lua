@@ -5,8 +5,7 @@ local ui = require("thetan.osu.ui")
 
 ---@class osu.ui.Button : osu.UiElement
 ---@operator call: osu.ui.Button
----@field text string
----@field font love.Font
+---@field label love.Text
 ---@field scale number
 ---@field width number
 ---@field color number[]
@@ -34,8 +33,7 @@ function Button:new(assets, params, on_change)
 	self.imageMiddle = img.buttonMiddle
 	self.imageRight = img.buttonRight
 
-	self.text = params.text
-	self.font = params.font
+	self.label = love.graphics.newText(params.font, params.text)
 	self.scale = params.scale or 1
 	self.width = params.width or 1
 	self.color = params.color or { 1, 1, 1, 1 }
@@ -112,9 +110,8 @@ function Button:draw()
 	gfx.setShader(prev_shader)
 
 	gfx.push()
-	gfx.setFont(self.font)
 	gfx.setColor({ 1, 1, 1, 1 })
-	ui.frameWithShadow(self.text, 0, 0, self.totalW, self.totalH, "center", "center")
+	ui.textFrameShadow(self.label, 0, 0, self.totalW, self.totalH, "center", "center")
 	gfx.pop()
 
 	gyatt.next(0, self.totalH)

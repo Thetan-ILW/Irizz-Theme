@@ -25,6 +25,25 @@ function ui.frameWithShadow(text, x, y, w, h, ax, ay)
 	gyatt.frame(text, x, y, w, h, ax, ay)
 end
 
+---@param img love.Text
+---@param x number
+---@param y number
+---@param w number
+---@param h number
+---@param ax? "left" | "center" | "right"
+---@param ay? "top" | "center" | "bottom"
+function ui.textFrameShadow(img, x, y, w, h, ax, ay)
+	local r, g, b, a = gfx.getColor()
+
+	gfx.push()
+	gfx.setColor(shadow)
+	gyatt.textFrame(img, x, y + 2, w, h, ax, ay)
+	gfx.pop()
+
+	gfx.setColor({ r, g, b, a })
+	gyatt.textFrame(img, x, y, w, h, ax, ay)
+end
+
 ---@param text string
 ---@param x number?
 ---@param ax string?

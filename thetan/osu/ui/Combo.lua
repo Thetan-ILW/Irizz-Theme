@@ -4,7 +4,7 @@ local flux = require("flux")
 
 ---@class osu.ui.Combo : osu.UiElement
 ---@operator call: osu.ui.Combo
----@field label string
+---@field label love.Text
 ---@field font love.Font
 ---@field labelColor number[]
 ---@field hoverColor number[]
@@ -33,7 +33,7 @@ local Combo = UiElement + {}
 ---@param format function?
 function Combo:new(assets, params, get_value, on_change, format)
 	self.assets = assets
-	self.label = params.label
+	self.label = love.graphics.newText(params.font, params.label)
 	self.font = params.font
 	self.totalW = params.pixelWidth
 	self.totalH = params.pixelHeight
@@ -118,7 +118,7 @@ function Combo:update(has_focus)
 	self.hoverIndex = 0
 
 	if self.state ~= "hidden" then
-		local x = self.font:getWidth(self.label) * math.min(gyatt.getTextScale(), 1)
+		local x = self.label:getWidth() * math.min(gyatt.getTextScale(), 1)
 		local w = self.totalW - x - 24
 		local h = math.floor(self.totalH / 1.5)
 
@@ -148,16 +148,15 @@ end
 local black = { 0, 0, 0, 1 }
 
 function Combo:draw()
-	gfx.setFont(self.font)
 	gfx.setColor(1, 1, 1)
-
-	gyatt.frame(self.label, 0, 0, self.totalW, self.totalH, "left", "center")
+	gyatt.textFrame(self.label, 0, 0, self.totalW, self.totalH, "left", "center")
 	self:drawHead()
 end
 
 function Combo:drawHead()
+	gfx.setFont(self.font)
 	gfx.push()
-	local x = self.font:getWidth(self.label) * math.min(gyatt.getTextScale(), 1)
+	local x = self.label:getWidth() * math.min(gyatt.getTextScale(), 1)
 	gfx.translate(x + 12, 0)
 
 	local w = self.totalW - x - 24
@@ -184,8 +183,9 @@ function Combo:drawHead()
 end
 
 function Combo:drawBody()
+	gfx.setFont(self.font)
 	gfx.push()
-	local x = self.font:getWidth(self.label) * math.min(gyatt.getTextScale(), 1)
+	local x = self.label:getWidth() * math.min(gyatt.getTextScale(), 1)
 	local w = self.totalW - x - 24
 	local h = math.floor(self.totalH / 1.5)
 	gfx.translate(x + 12, (self.totalH - h) / 2 + 2)

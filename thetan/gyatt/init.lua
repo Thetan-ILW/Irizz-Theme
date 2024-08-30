@@ -58,6 +58,42 @@ function gyatt.frame(text, x, y, w, h, ax, ay)
 	love.graphics.pop()
 end
 
+---@param img love.Text
+---@param x number
+---@param y number
+---@param w number
+---@param h number
+---@param ax? "left" | "center" | "right"
+---@param ay? "top" | "center" | "bottom"
+function gyatt.textFrame(img, x, y, w, h, ax, ay)
+	w = w or math.huge
+	h = h or math.huge
+	love.graphics.push()
+	love.graphics.translate(x, y)
+
+	x = 0
+	y = 0
+
+	local iw, ih = img:getDimensions()
+	iw, ih = iw * text_scale, ih * text_scale
+
+	if ax == "center" then
+		x = w / 2 - iw / 2
+	elseif ax == "right" then
+		x = w - iw
+	end
+
+	if ay == "center" then
+		y = h / 2 - ih / 2
+	elseif ay == "right" then
+		y = h - ih
+	end
+
+	love.graphics.translate(x, y)
+	love.graphics.draw(img, 0, 0, 0, text_scale, text_scale)
+	love.graphics.pop()
+end
+
 ---@param list irizz.ListView
 ---@param w number
 ---@param h number

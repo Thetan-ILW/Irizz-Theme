@@ -5,8 +5,7 @@ local math_util = require("math_util")
 
 ---@class osu.ui.Checkbox : osu.UiElement
 ---@operator call: osu.ui.Checkbox
----@field private text string
----@field private font love.Font
+---@field private label love.Text
 ---@field private imgOn love.Image
 ---@field private imgOff love.Image
 ---@field private imageScale number
@@ -20,8 +19,7 @@ local Checkbox = UiElement + {}
 ---@param on_change function
 function Checkbox:new(assets, params, get_value, on_change)
 	self.assets = assets
-	self.text = params.text
-	self.font = params.font
+	self.label = love.graphics.newText(params.font, params.text)
 	self.totalW = params.pixelWidth
 	self.totalH = params.pixelHeight
 	self.defaultValue = params.defaultValue
@@ -57,7 +55,6 @@ local gfx = love.graphics
 
 function Checkbox:draw()
 	gfx.setColor(1, 1, 1)
-	gfx.setFont(self.font)
 
 	local scale = 0.5 + (math_util.clamp(love.timer.getTime() - self.changeTime, 0, 0.1) * 10) * 0.5
 	local image_size = self.imgOn:getHeight() * self.imageScale
@@ -70,7 +67,7 @@ function Checkbox:draw()
 	end
 
 	x = self.imgOff:getWidth() * self.imageScale
-	gyatt.frame(self.text, x, 0, self.totalW, self.totalH, "left", "center")
+	gyatt.textFrame(self.label, x, 0, self.totalW - x, self.totalH, "left", "center")
 	gfx.translate(0, self.totalH)
 end
 

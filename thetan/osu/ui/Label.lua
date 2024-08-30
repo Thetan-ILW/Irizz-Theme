@@ -4,13 +4,11 @@ local gyatt = require("thetan.gyatt")
 
 ---@class osu.ui.Label : osu.UiElement
 ---@operator call: osu.ui.Label
----@field text string
----@field font love.Font
+---@field label love.Text
 ---@field color number[]
 ---@field align "left" | "center" | "right"
 ---@field private totalW number
 ---@field private totalH number
----@field private staticHeight boolean
 ---@field private hover boolean
 ---@field private onChange function?
 local Label = UiElement + {}
@@ -20,8 +18,7 @@ local Label = UiElement + {}
 ---@param on_change function?
 function Label:new(assets, params, on_change)
 	self.assets = assets
-	self.text = params.text
-	self.font = params.font
+	self.label = love.graphics.newText(params.font, params.text)
 	self.color = params.color or { 1, 1, 1, 1 }
 	self.align = params.align or "center"
 
@@ -30,21 +27,15 @@ function Label:new(assets, params, on_change)
 
 	if params.pixelHeight then
 		self.totalH = params.pixelHeight
-		self.staticHeight = true
 		return
 	end
 
-	self.totalH = self.font:getHeight() * math.min(gyatt.getTextScale(), 1)
-	self.staticHeight = false
+	self.totalH = self.label:getHeight() * math.min(gyatt.getTextScale(), 1)
 end
 
 local gfx = love.graphics
 
 function Label:update()
-	if not self.staticHeight then
-		self.totalH = self.font:getHeight() * math.min(gyatt.getTextScale(), 1)
-	end
-
 	self.hover = gyatt.isOver(self.totalW, self.totalH)
 
 	if self.hover and gyatt.mousePressed(1) then
@@ -57,8 +48,7 @@ end
 
 function Label:draw()
 	gfx.setColor(self.color)
-	gfx.setFont(self.font)
-	gyatt.frame(self.text, 0, 0, self.totalW, self.totalH, self.align, "center")
+	gyatt.textFrame(self.label, 0, 0, self.totalW, self.totalH, self.align, "center")
 	gfx.translate(0, self.totalH)
 end
 
