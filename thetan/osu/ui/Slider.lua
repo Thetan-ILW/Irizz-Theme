@@ -82,6 +82,9 @@ function Slider:update(has_focus)
 
 	local x, w = self:getPosAndWidth()
 
+	w = w - head_radius * 2
+	x = x + head_radius * 2
+
 	local over_slider = gyatt.isOver(w + 8, self.totalH, x - 4, 0)
 
 	if over_slider then

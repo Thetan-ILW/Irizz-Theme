@@ -78,6 +78,8 @@ return function(assets, view)
 		return g.longNoteShortening * 1000, ln_shortening
 	end, function(v)
 		g.longNoteShortening = v / 1000
+	end, function(v)
+		return ("%ims"):format(v)
 	end)
 
 	c:createGroup("result", "RESULT SCREEN")
