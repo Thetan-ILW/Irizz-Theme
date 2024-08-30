@@ -153,8 +153,8 @@ function ViewConfig:panel(view)
 		end
 		self.hoverRectPosition = view.hoverPosition
 		self.hoverRectTween =
-			flux.to(self, 0.15, { hoverRectTargetPosition = view.hoverPosition, hoverRectTargetSize = view.hoverSize })
-				:ease("quadout")
+			flux.to(self, 0.6, { hoverRectTargetPosition = view.hoverPosition, hoverRectTargetSize = view.hoverSize })
+				:ease("elasticout")
 	end
 
 	gfx.translate(0, view.scrollPosition)

@@ -1,4 +1,5 @@
 local UiElement = require("thetan.osu.ui.UiElement")
+local HoverState = require("thetan.osu.ui.HoverState")
 
 local gyatt = require("thetan.gyatt")
 local ui = require("thetan.osu.ui")
@@ -20,6 +21,8 @@ local ui = require("thetan.osu.ui")
 ---@field private hover boolean
 ---@field private hoverUpdateTime number
 ---@field private brightenShader love.Shader
+---@field private hoverState osu.ui.HoverState
+---@field private animation number
 local Button = UiElement + {}
 
 ---@param assets osu.OsuAssets
@@ -52,6 +55,9 @@ function Button:new(assets, params, on_change)
 
 	self.brightenShader = require("irizz.shaders").brighten
 	self.onChange = on_change
+
+	self.hoverState = HoverState("linear", 0.2)
+	self.animation = 0
 end
 
 ---@return number
@@ -64,15 +70,9 @@ local gfx = love.graphics
 
 ---@param has_focus boolean
 function Button:update(has_focus)
-	local mouse_over = gyatt.isOver(self.totalW, self.totalH) and has_focus
+	self.hover, self.animation = self.hoverState:check(self.totalW, self.totalH)
 
-	if (not self.hover and mouse_over) or (self.hover and not mouse_over) then
-		self.hoverUpdateTime = love.timer.getTime()
-	end
-
-	self.hover = mouse_over
-
-	if mouse_over and gyatt.mousePressed(1) then
+	if self.hover and gyatt.mousePressed(1) and has_focus then
 		self.onChange()
 		self.changeTime = -math.huge
 	end
@@ -88,11 +88,7 @@ function Button:draw()
 
 	gfx.setShader(self.brightenShader)
 
-	local a = gyatt.easeOutCubic(self.hoverUpdateTime, 0.2) * 0.3
-
-	if not self.hover then
-		a = 0.3 - a
-	end
+	local a = self.animation * 0.3
 
 	self.brightenShader:send("amount", a)
 
