@@ -38,9 +38,9 @@ function OsuSelectView:load()
 	self.assets = get_assets(self.game)
 
 	if self.assets.selectViewConfig then
-		self.viewConfig = self.assets.selectViewConfig()(self.game, self.assets)
+		self.viewConfig = self.assets.selectViewConfig()(self, self.assets)
 	else
-		self.viewConfig = ViewConfig(self.game, self.assets)
+		self.viewConfig = ViewConfig(self, self.assets)
 	end
 
 	self.uiLockViewConfig = UiLockView(self.game, self.assets)
@@ -176,7 +176,6 @@ function OsuSelectView:changeGroup(name)
 	end
 
 	selected_group = name
-	self.viewConfig:selectGroup(name)
 end
 
 function OsuSelectView:select()
@@ -244,7 +243,7 @@ end
 function OsuSelectView:resolutionUpdated()
 	window_height = self.assets.localization:updateScale()
 
-	self.viewConfig:resolutionUpdated()
+	self.viewConfig:resolutionUpdated(self)
 
 	if self.modal then
 		self.modal.viewConfig:resolutionUpdated()

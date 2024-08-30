@@ -44,14 +44,18 @@ end
 ---@param has_focus boolean?
 ---@return boolean
 ---@return number
+---@return boolean
 function HoverState:check(w, h, x, y, has_focus)
 	has_focus = has_focus == nil and true or has_focus
+	---@cast has_focus boolean
 	local over = gyatt.isOver(w, h, x or 0, y or 0) and has_focus
+	local just_hovered = false
 	local state = self.state
 
 	if state == "idle" then
 		if over then
 			self:fadeIn()
+			just_hovered = true
 		end
 	elseif state == "fade_in" then
 		if self.alpha == 1 then
@@ -70,10 +74,11 @@ function HoverState:check(w, h, x, y, has_focus)
 		end
 		if over then
 			self:fadeIn()
+			just_hovered = true
 		end
 	end
 
-	return over, self.alpha
+	return over, self.alpha, just_hovered
 end
 
 return HoverState

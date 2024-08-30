@@ -10,6 +10,8 @@ local gyatt = require("thetan.gyatt")
 ---@field private hoverImage love.Image?
 ---@field private hoverWidth number
 ---@field private hoverHeight number
+---@field private hoverSound audio.Source
+---@field private clickSound audio.Source
 ---@field private onClick function
 ---@field private hoverState osu.ui.HoverState
 ---@field private animation number
@@ -18,14 +20,18 @@ local ImageButton = UiElement + {}
 ---@type love.Shader
 local brighten_shader
 
----@param params { idleImage: love.Image, hoverImage: love.Image?, hoverWidth: number, hoverHeight: number}
+---@param assets osu.OsuAssets
+---@param params { idleImage: love.Image, hoverImage: love.Image?, hoverWidth: number, hoverHeight: number, hoverSound: audio.Source?, clickSound: audio.Source?}
 ---@param on_click function
-function ImageButton:new(params, on_click)
+function ImageButton:new(assets, params, on_click)
+	self.assets = assets
 	self.idleImage = params.idleImage
 	self.hoverImage = params.hoverImage
 	self.totalW, self.totalH = self.idleImage:getDimensions()
 	self.hoverWidth = params.hoverWidth
 	self.hoverHeight = params.hoverHeight
+	self.hoverSound = params.hoverSound or self.assets.sounds.hoverOverRect
+	self.clickSound = params.clickSound or self.assets.sounds.clickShortConfirm
 	self.onClick = on_click
 	self.hoverState = HoverState("quadout", 0.15)
 	self.animation = 0
@@ -36,11 +42,19 @@ function ImageButton:new(params, on_click)
 end
 
 function ImageButton:update(has_focus)
-	local hover
-	hover, self.animation = self.hoverState:check(self.hoverWidth, self.hoverHeight, 0, 0, has_focus)
+	local hover ---@type boolean
+	local just_hovered ---@type boolean
+	hover, self.animation, just_hovered = self.hoverState:check(self.hoverWidth, self.hoverHeight, 0, 0, has_focus)
+
+	if just_hovered then
+		self.hoverSound:stop()
+		self.hoverSound:play()
+	end
 
 	if hover and gyatt.mousePressed(1) then
 		self.onClick()
+		self.clickSound:stop()
+		self.clickSound:play()
 	end
 end
 

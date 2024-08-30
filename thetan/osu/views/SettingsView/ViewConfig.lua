@@ -47,7 +47,7 @@ function ViewConfig:new(view, assets)
 	self.tabFocusAnimation = 1
 	self.tipAnimation = 0
 
-	self.backButton = ImageButton({ idleImage = img.menuBack, hoverWidth = 100, hoverHeight = 200 }, function()
+	self.backButton = ImageButton(assets, { idleImage = img.menuBack, hoverWidth = 100, hoverHeight = 200 }, function()
 		view:processState("hide")
 	end)
 end

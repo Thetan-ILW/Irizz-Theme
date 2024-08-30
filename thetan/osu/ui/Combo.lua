@@ -117,8 +117,6 @@ function Combo:update(has_focus)
 	self.hover, self.headAnimation = self.headHoverState:check(self.totalW, self.totalH)
 	self.hover = self.hover and has_focus
 
-	self.hoverColor[4] = self.headAnimation
-
 	if self.defaultValue ~= nil then
 		self.valueChanged = selected ~= self.defaultValue
 	end
@@ -154,6 +152,7 @@ function Combo:isFocused()
 end
 
 local black = { 0, 0, 0, 1 }
+local mix = { 0, 0, 0, 1 }
 
 function Combo:draw()
 	gfx.setColor(1, 1, 1)
@@ -171,12 +170,16 @@ function Combo:drawHead()
 	local h = math.floor(self.totalH / 1.5)
 	local y = self.totalH / 2 - h / 2
 
-	gfx.setColor(self.hover and self.hoverColor or black)
 	gfx.setLineWidth(2)
-	gfx.rectangle("fill", 0, y, w, h, 4)
-
-	gfx.setColor(self.hover and self.hoverColor or self.borderColor)
+	gfx.setColor(self.borderColor)
 	gfx.rectangle("line", 0, y, w, h, 4)
+
+	local color = self.hoverColor
+	mix[1] = color[1] * self.headAnimation
+	mix[2] = color[2] * self.headAnimation
+	mix[3] = color[3] * self.headAnimation
+	gfx.setColor(mix)
+	gfx.rectangle("fill", 0, y, w, h, 4)
 
 	gfx.setColor(1, 1, 1)
 	gyatt.frame(self.selected, 2, y, w, h, "left", "center")

@@ -16,6 +16,9 @@ local TextInput = require("thetan.irizz.imgui.TextInput")
 local getBeatValue = require("thetan.osu.views.beat_value")
 local getModifierString = require("thetan.skibidi.modifier_string")
 
+local ImageButton = require("thetan.osu.ui.ImageButton")
+local Combo = require("thetan.osu.ui.Combo")
+
 local NoteChartSetListView = require("thetan.osu.views.SelectView.NoteChartSetListView")
 local CollectionListView = require("thetan.osu.views.SelectView.CollectionListView")
 local ScoreListView = require("thetan.osu.views.SelectView.ScoreListView")
@@ -47,6 +50,7 @@ local top_panel_quad
 local brighten_shader
 
 local has_focus = true
+local combo_focused = false
 
 local prev_chart_id = 0
 local chart_name = ""
@@ -71,8 +75,6 @@ local beat = 0
 
 local pp = 0
 local accuracy = 0
-
-local selected_group = "charts"
 
 local white = { 1, 1, 1, 1 }
 
@@ -105,11 +107,7 @@ local dropdowns = {
 		updateTime = 0,
 		selectedIndex = 1,
 		mouseOver = false,
-		items = {
-			"Local ranking",
-			"Online ranking",
-			"osu! API ranking",
-		},
+		items = {},
 	},
 	group = {
 		focus = false,
@@ -117,11 +115,7 @@ local dropdowns = {
 		selectedIndex = 1,
 		format = formatGroupSort,
 		mouseOver = false,
-		items = {
-			"charts",
-			"locations",
-			"directories",
-		},
+		items = {},
 	},
 	sort = {
 		focus = false,
@@ -133,37 +127,115 @@ local dropdowns = {
 	},
 }
 
-local buttons = {
-	back = {
-		updateTime = 0,
-		mouseOver = false,
-		rect = { 0, -90, 200, 90 },
-	},
-	mode = {
-		updateTime = 0,
-		mouseOver = false,
-		rect = { 0, -90, 88, 90 },
-	},
-	mods = {
-		updateTime = 0,
-		mouseOver = false,
-		rect = { 0, -90, 74, 90 },
-	},
-	random = {
-		updateTime = 0,
-		mouseOver = false,
-		rect = { 0, -90, 74, 90 },
-	},
-	chartOptions = {
-		updateTime = 0,
-		mouseOver = false,
-		rect = { 0, -90, 74, 90 },
-	},
-}
+---@type table<string, osu.ui.ImageButton>
+local buttons = {}
+---@type table<string, osu.ui.Combo>
+local combos = {}
 
----@param game sphere.GameController
----@param _assets osu.OsuSelectAssets
-function ViewConfig:new(game, _assets)
+local ranking_options = {
+	"Local ranking",
+	"Online ranking",
+}
+local ranking = ranking_options[1]
+
+local group_options = {
+	"charts",
+	"locations",
+	"directories",
+}
+local selected_group = group_options[1]
+
+---@param view osu.SelectView
+function ViewConfig:createUI(view)
+	buttons.back = ImageButton(assets, {
+		idleImage = img.menuBack,
+		hoverWidth = 200,
+		hoverHeight = 200,
+		clickSound = assets.sounds.menuBack,
+	}, function()
+		view:changeScreen("osuMainMenuView")
+	end)
+	buttons.mode = ImageButton(
+		assets,
+		{ idleImage = img.modeButton, hoverImage = img.modeButtonOver, hoverWidth = 88, hoverHeight = 90 },
+		function() end
+	)
+	buttons.mods = ImageButton(
+		assets,
+		{ idleImage = img.modsButton, hoverImage = img.modsButtonOver, hoverWidth = 74, hoverHeight = 90 },
+		function()
+			view:openModal("thetan.irizz.views.modals.ModifierModal")
+		end
+	)
+	buttons.random = ImageButton(
+		assets,
+		{ idleImage = img.randomButton, hoverImage = img.randomButtonOver, hoverWidth = 74, hoverHeight = 90 },
+		function()
+			view.selectModel:scrollRandom()
+		end
+	)
+	buttons.chartOptions = ImageButton(
+		assets,
+		{ idleImage = img.optionsButton, hoverImage = img.optionsButtonOver, hoverWidth = 74, hoverHeight = 90 },
+		function()
+			view:openModal("thetan.osu.views.modals.ChartOptions")
+		end
+	)
+
+	combos.scoreSource = Combo(assets, {
+		label = "",
+		font = font.dropdown,
+		pixelWidth = 305,
+		pixelHeight = 36,
+		borderColor = { 0.08, 0.51, 0.7, 1 },
+		hoverColor = { 0.08, 0.51, 0.7, 1 },
+	}, function()
+		return ranking, ranking_options
+	end, function(v)
+		ranking = v
+	end)
+
+	local sort_model = view.game.selectModel.sortModel
+	local select_config = view.game.configModel.configs.select
+
+	combos.sort = Combo(assets, {
+		label = "",
+		font = font.dropdown,
+		pixelWidth = 192,
+		pixelHeight = 36,
+		borderColor = { 0.68, 0.82, 0.54, 1 },
+		hoverColor = { 0.68, 0.82, 0.54, 1 },
+	}, function()
+		return select_config.sortFunction, sort_model.names
+	end, function(v)
+		local index = table_util.indexof(sort_model.names, v)
+		local name = sort_model.names[index]
+
+		if name then
+			view.game.selectModel:setSortFunction(name)
+		end
+	end, formatGroupSort)
+
+	combos.group = Combo(assets, {
+		label = "",
+		font = font.dropdown,
+		pixelWidth = 192,
+		pixelHeight = 36,
+		borderColor = { 0.57, 0.76, 0.9, 1 },
+		hoverColor = { 0.57, 0.76, 0.9, 1 },
+	}, function()
+		return selected_group, group_options
+	end, function(v)
+		selected_group = v
+		chart_list_update_time = love.timer.getTime() + 0.4
+		view:changeGroup(v)
+	end, formatGroupSort)
+end
+
+---@param view osu.SelectView
+---@param _assets osu.OsuAssets
+function ViewConfig:new(view, _assets)
+	local game = view.game
 	avatar = _assets.images.avatar
 
 	assets = _assets
@@ -181,12 +253,6 @@ function ViewConfig:new(game, _assets)
 	self.collectionListView = CollectionListView(game, assets)
 	self.scoreListView = ScoreListView(game, assets)
 
-	local sort_model = game.selectModel.sortModel
-	dropdowns.sort.items = sort_model.names
-
-	local sort_function = game.configModel.configs.select.sortFunction
-	dropdowns.sort.selectedIndex = table_util.indexof(sort_model.names, sort_function)
-
 	local shaders = require("irizz.shaders")
 	brighten_shader = shaders.brighten
 
@@ -196,7 +262,8 @@ function ViewConfig:new(game, _assets)
 	update_time = current_time
 	self.scoreListView.scoreUpdateTime = love.timer.getTime()
 
-	self:resolutionUpdated()
+	window_height = love.graphics.getHeight()
+	self:createUI(view)
 end
 
 function ViewConfig:updateInfo(view)
@@ -289,131 +356,6 @@ local function animate(time, interval)
 	return math_util.clamp(progress * progress, 0, 1)
 end
 
-local function dropdown(id, w)
-	local instance = dropdowns[id]
-
-	local mouse_over_button = gyatt.isOver(w, 22)
-
-	if mouse_over_button and not instance.mouseOver then
-		snd.hoverSelectableBox:stop()
-		snd.hoverSelectableBox:play()
-	end
-
-	instance.mouseOver = mouse_over_button
-
-	local r, g, b, a = gfx.getColor()
-	gfx.push()
-	gfx.setColor({ 0, 0, 0, 0.5 })
-	gfx.rectangle("fill", 0, 0, w, 22, 4, 4)
-
-	gfx.setColor({ r, g, b, a })
-	gfx.setLineWidth(1)
-	gfx.rectangle("line", 0, 0, w, 22, 4, 4)
-
-	gfx.push()
-	gfx.translate(3, -1)
-	gfx.setColor(white)
-	gfx.setFont(font.dropdown)
-
-	if instance.format then
-		gyatt.text(instance.format(instance.items[instance.selectedIndex]), w, "left")
-	else
-		gyatt.text(instance.items[instance.selectedIndex], w, "left")
-	end
-
-	gfx.pop()
-
-	gfx.translate(w - 25, 2)
-	gfx.draw(img.dropdownArrow)
-	gfx.pop()
-
-	local just_opened = false
-
-	local time = current_time
-
-	if gyatt.mousePressed(1) and has_focus then
-		local open = gyatt.isOver(w, 22)
-
-		if not instance.focus and open then
-			instance.focus = true
-			instance.updateTime = time
-			just_opened = true
-		elseif instance.focus and open then
-			instance.focus = false
-			instance.updateTime = time
-		end
-	end
-
-	local changed = false
-	local selected = 0
-
-	a = gyatt.easeOutCubic(instance.updateTime, 0.35)
-
-	if not instance.focus then
-		a = 1 - a
-	end
-
-	if a == 0 then
-		return
-	end
-
-	local prev_canvas = gfx.getCanvas()
-	local canvas = gyatt.getCanvas(id .. "_dropdown")
-
-	gfx.setCanvas({ canvas, stencil = true })
-	gfx.clear()
-
-	gfx.translate(0, 22)
-
-	for i, v in ipairs(instance.items) do
-		local mouse_over = gyatt.isOver(w, 27)
-
-		if instance.focus then
-			instance.mouseOver = instance.mouseOver or mouse_over
-		end
-
-		if mouse_over and gyatt.mousePressed(1) and instance.focus and has_focus then
-			selected = i
-			changed = true
-			instance.selectedIndex = i
-			instance.focus = false
-			instance.updateTime = time
-		end
-
-		gfx.push()
-
-		gfx.setColor(mouse_over and { r, g, b, 1 } or { 0, 0, 0, 1 })
-		gfx.rectangle("fill", 0, 0, w, 27, 4, 4)
-
-		gfx.setColor(white)
-		gfx.translate(10, 2)
-
-		if instance.format then
-			gyatt.text(instance.format(v))
-		else
-			gyatt.text(v)
-		end
-
-		gfx.pop()
-
-		gfx.translate(0, 27 * a)
-	end
-
-	gfx.setCanvas({ prev_canvas, stencil = true })
-
-	gfx.origin()
-
-	gfx.setColor({ a, a, a, a })
-	gfx.draw(canvas)
-
-	if not changed and gyatt.mousePressed(1) and not just_opened and instance.focus then
-		instance.focus = false
-		instance.updateTime = time
-	end
-
-	return changed, selected
-end
-
 local function tab(label)
 	gfx.setColor({ 0.86, 0.08, 0.23, 1 })
 	gfx.draw(img.tab)
@@ -474,14 +416,14 @@ end
 ---@param to_text boolean
 local function moveToSort(to_text)
 	local w, h = Layout:move("base")
-	local text_x = font.groupSort:getWidth(text.sort) * (768 / window_height) + 5
+	local text_x = font.groupSort:getWidth(text.sort) * gyatt.getTextScale() + 5
 	gfx.translate(w - 209 - (to_text and text_x or 0), 0)
 end
 
 ---@param to_text boolean
 local function moveToGroup(to_text)
 	moveToSort(true)
-	local text_x = font.groupSort:getWidth(text.group) * (768 / window_height) + 5
+	local text_x = font.groupSort:getWidth(text.group) * gyatt.getTextScale() + 5
 	gfx.translate(-208 - (to_text and text_x or 0), 0)
 end
 
@@ -521,17 +463,13 @@ function ViewConfig:top()
 	tab(text.noGrouping)
 end
 
-function ViewConfig:selectGroup(name)
-	selected_group = name
-	dropdowns.group.selectedIndex = table_util.indexof(dropdowns.group.items, name)
-	chart_list_update_time = love.timer.getTime() + 0.4
-end
-
 function ViewConfig:topUI(view)
 	local w, h = Layout:move("base")
-	gfx.translate(10, 120)
-	gfx.setColor({ 0.08, 0.51, 0.7, 1 })
-	dropdown("scoreSource", 305)
+	gfx.translate(10, 110)
+	gfx.push()
+	combos.scoreSource:update(has_focus)
+	combos.scoreSource:drawBody()
+	gfx.pop()
 
 	w, h = Layout:move("base")
 	gfx.setColor(white)
@@ -550,69 +488,25 @@ function ViewConfig:topUI(view)
 
 	w, h = Layout:move("base")
 	moveToSort(false)
-	gfx.translate(0, 29)
-	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
-	local changed, index = dropdown("sort", 192)
-
-	if changed then
-		local sort_model = view.game.selectModel.sortModel
-		local name = sort_model.names[index]
-
-		if name then
-			view.game.selectModel:setSortFunction(name)
-		end
-	end
+	gfx.translate(0, 22)
+	gfx.push()
+	combos.sort:update(has_focus)
+	combos.sort:drawBody()
+	gfx.pop()
 
 	moveToGroup(false)
-	gfx.translate(0, 29)
-	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
-	changed, index = dropdown("group", 192)
-
-	if changed then
-		view:changeGroup(dropdowns.group.items[index or 1])
-	end
+	gfx.translate(0, 22)
+	combos.group:update(has_focus)
+	combos.group:drawBody()
 end
 
-local function bottomButtonImage(id, image, mouse_over_image)
-	local instance = buttons[id]
-	local rect = instance.rect
-	local mouse_over = gyatt.isOver(rect[3], rect[4], rect[1], rect[2])
-
-	if mouse_over and not instance.mouseOver and has_focus then
-		snd.hoverSelectableBox:stop()
-		snd.hoverSelectableBox:play()
-	end
-
-	instance.mouseOver = mouse_over
-
-	local pressed = false
-
-	if mouse_over and has_focus then
-		instance.updateTime = current_time
-
-		if gyatt.mousePressed(1) then
-			pressed = true
-		end
-	end
-
-	local a = math_util.clamp(animate(instance.updateTime, 0.4), 0, 1)
-
-	local _, ih = image:getDimensions()
-
-	gfx.translate(0, -ih)
-	gfx.setColor({ 1, 1, 1, 1 })
-	gfx.draw(image)
-	gfx.translate(0, ih)
-
-	a = 1 - a
-
-	_, ih = mouse_over_image:getDimensions()
-	gfx.translate(0, -ih)
-	gfx.setColor({ 1, 1, 1, a })
-	gfx.draw(mouse_over_image)
-	gfx.translate(0, ih)
-
-	return pressed
+local function drawBottomButton(id)
+	local button = buttons[id]
+	gfx.push()
+	gfx.translate(0, -button:getHeight())
+	button:update(has_focus)
+	button:draw()
+	gfx.pop()
 end
 
 function ViewConfig:bottom(view)
@@ -667,12 +561,10 @@ function ViewConfig:bottom(view)
 
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
-	if bottomButtonImage("back", img.menuBack, img.menuBack) then
-		view:changeScreen("osuMainMenuView")
-	end
+	drawBottomButton("back")
 
 	w, h = Layout:move("bottomButtons")
-	bottomButtonImage("mode", img.modeButton, img.modeButtonOver)
+	drawBottomButton("mode")
 
 	iw, ih = img.maniaSmallIcon:getDimensions()
 	gfx.translate(-iw / 2 + 45, -ih / 2 - 55)
@@ -683,33 +575,20 @@ function ViewConfig:bottom(view)
 	gfx.translate(iw / 2 - 45, ih / 2 + 55)
 
 	gfx.translate(92, 0)
-
-	if bottomButtonImage("mods", img.modsButton, img.modsButtonOver) then
-		view:openModal("thetan.irizz.views.modals.ModifierModal")
-	end
+	drawBottomButton("mods")
 
 	gfx.translate(77, 0)
-
-	if bottomButtonImage("random", img.randomButton, img.randomButtonOver) then
-		view.selectModel:scrollRandom()
-	end
+	drawBottomButton("random")
 
 	gfx.translate(77, 0)
-
-	if bottomButtonImage("chartOptions", img.optionsButton, img.optionsButtonOver) then
-		view:openModal("thetan.osu.views.modals.ChartOptions")
-	end
+	drawBottomButton("chartOptions")
 end
 
 function ViewConfig:chartSetList()
 	local w, h = Layout:move("base")
 	local list = self.noteChartSetListView
 
-	local no_focus = false
-
-	for _, v in pairs(dropdowns) do
-		no_focus = no_focus or v.mouseOver
-	end
+	local no_focus = false or combo_focused
 
 	list.focus = not no_focus and has_focus
 
@@ -728,11 +607,7 @@ function ViewConfig:collectionList(view)
 	local w, h = Layout:move("base")
 	local list = self.collectionListView
 
-	local no_focus = false
-
-	for _, v in pairs(dropdowns) do
-		no_focus = no_focus or v.mouseOver
-	end
+	local no_focus = false or combo_focused
 
 	list.focus = not no_focus and has_focus
 
@@ -755,11 +630,7 @@ end
 function ViewConfig:scores(view)
 	local list = self.scoreListView
 
-	local no_focus = false
-
-	for _, v in pairs(dropdowns) do
-		no_focus = no_focus or v.mouseOver
-	end
+	local no_focus = false or combo_focused
 
 	list.focus = not no_focus and has_focus
 
@@ -901,18 +772,21 @@ function ViewConfig:chartPreview(view)
 	gfx.draw(canvas)
 end
 
-function ViewConfig:resolutionUpdated()
+---@param view osu.SelectView
+function ViewConfig:resolutionUpdated(view)
 	local w, h = Layout:move("base")
 	top_panel_quad = gfx.newQuad(0, 0, w, img.panelTop:getHeight(), img.panelTop)
 
 	local wh = love.graphics.getHeight()
 	window_height = wh
+	self:createUI(view)
 end
 
 function ViewConfig:setFocus(value)
 	has_focus = value
 end
 
+---@param view osu.SelectView
 local function updateBeat(view)
 	---@type audio.bass.BassSource
 	local audio = view.game.previewModel.audio
@@ -922,9 +796,19 @@ local function updateBeat(view)
 	end
 end
 
+local function checkFocus()
+	combo_focused = false
+
+	for _, combo in pairs(combos) do
+		combo_focused = combo_focused or combo:isFocused()
+	end
+end
+
+---@param view osu.SelectView
 function ViewConfig:draw(view)
 	Layout:draw()
 
+	checkFocus()
 	updateBeat(view)
 
 	current_time = love.timer.getTime()

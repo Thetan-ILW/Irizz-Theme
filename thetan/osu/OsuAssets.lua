@@ -10,7 +10,7 @@ local utf8validate = require("utf8validate")
 ---@field skinPath string
 ---@field images table<string, love.Image>
 ---@field imageFonts table<string, table<string, string>>
----@field sounds table<string, audio.Source?>
+---@field sounds table<string, audio.Source>
 ---@field params table<string, number|string|boolean>
 ---@field localization skibidi.Localization
 ---@field selectViewConfig function?
@@ -237,9 +237,9 @@ function OsuAssets:new(skin_path, localization_file)
 		selectChart = self:loadAudioOrDefault(skin_path, "select-difficulty"),
 		selectGroup = self:loadAudioOrDefault(skin_path, "select-expand"),
 		backButtonClick = self:loadAudioOrDefault(skin_path, "back-button-click"),
-		hoverSelectableBox = self:loadAudioOrDefault(skin_path, "click-short"),
+		hoverOverRect = self:loadAudioOrDefault(skin_path, "click-short"),
 		hoverAboveCharts = self:loadAudioOrDefault(skin_path, "menuclick"),
-		hoverMenuBack = self:loadAudioOrDefault(skin_path, "menu-back-hover"),
+		clickShortConfirm = self:loadAudioOrDefault(skin_path, "click-short-confirm"),
 
 		applause = self:loadAudioOrDefault(skin_path, "applause"),
 		menuBack = self:loadAudioOrDefault(skin_path, "menuback"),
