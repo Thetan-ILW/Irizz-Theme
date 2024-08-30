@@ -1,6 +1,6 @@
 local class = require("class")
 
-local Layout = require("thetan.osu.views.SelectView.Layout")
+local Layout = require("thetan.osu.views.OsuLayout")
 
 local ViewConfig = class()
 
@@ -32,15 +32,11 @@ local font
 local assets
 ---@type table<string, love.Image>
 local img
----@type table<string, audio.Source>
-local snd
 
 ---@type skibidi.ActionModel
 local action_model
 
 local gfx = love.graphics
-
-local window_height = 0
 
 ---@type love.Image
 local avatar
@@ -101,40 +97,14 @@ local function setFormat()
 	}
 end
 
-local dropdowns = {
-	scoreSource = {
-		focus = false,
-		updateTime = 0,
-		selectedIndex = 1,
-		mouseOver = false,
-		items = {},
-	},
-	group = {
-		focus = false,
-		updateTime = 0,
-		selectedIndex = 1,
-		format = formatGroupSort,
-		mouseOver = false,
-		items = {},
-	},
-	sort = {
-		focus = false,
-		updateTime = 0,
-		selectedIndex = 1,
-		format = formatGroupSort,
-		mouseOver = false,
-		items = {},
-	},
-}
-
 ---@type table<string, osu.ui.ImageButton>
 local buttons = {}
 ---@type table<string, osu.ui.Combo>
 local combos = {}
 
 local ranking_options = {
-	"Local ranking",
-	"Online ranking",
+	"Local Ranking",
+	"Online Ranking",
 }
 local ranking = ranking_options[1]
 
@@ -183,10 +153,9 @@ function ViewConfig:createUI(view)
 	)
 
 	combos.scoreSource = Combo(assets, {
-		label = "",
 		font = font.dropdown,
 		pixelWidth = 305,
-		pixelHeight = 36,
+		pixelHeight = 34,
 		borderColor = { 0.08, 0.51, 0.7, 1 },
 		hoverColor = { 0.08, 0.51, 0.7, 1 },
 	}, function()
@@ -199,10 +168,9 @@ function ViewConfig:createUI(view)
 	local select_config = view.game.configModel.configs.select
 
 	combos.sort = Combo(assets, {
-		label = "",
 		font = font.dropdown,
-		pixelWidth = 192,
-		pixelHeight = 36,
+		pixelWidth = 214,
+		pixelHeight = 34,
 		borderColor = { 0.68, 0.82, 0.54, 1 },
 		hoverColor = { 0.68, 0.82, 0.54, 1 },
 	}, function()
@@ -217,10 +185,9 @@ function ViewConfig:createUI(view)
 	end, formatGroupSort)
 
 	combos.group = Combo(assets, {
-		label = "",
 		font = font.dropdown,
-		pixelWidth = 192,
-		pixelHeight = 36,
+		pixelWidth = 214,
+		pixelHeight = 34,
 		borderColor = { 0.57, 0.76, 0.9, 1 },
 		hoverColor = { 0.57, 0.76, 0.9, 1 },
 	}, function()
@@ -240,7 +207,6 @@ function ViewConfig:new(view, _assets)
 
 	assets = _assets
 	img = assets.images
-	snd = assets.sounds
 
 	action_model = game.actionModel
 
@@ -262,7 +228,6 @@ function ViewConfig:new(view, _assets)
 	update_time = current_time
 	self.scoreListView.scoreUpdateTime = love.timer.getTime()
 
-	window_height = love.graphics.getHeight()
 	self:createUI(view)
 end
 
@@ -417,14 +382,14 @@ end
 local function moveToSort(to_text)
 	local w, h = Layout:move("base")
 	local text_x = font.groupSort:getWidth(text.sort) * gyatt.getTextScale() + 5
-	gfx.translate(w - 209 - (to_text and text_x or 0), 0)
+	gfx.translate(w - 220 - (to_text and text_x or 0), 0)
 end
 
 ---@param to_text boolean
 local function moveToGroup(to_text)
 	moveToSort(true)
 	local text_x = font.groupSort:getWidth(text.group) * gyatt.getTextScale() + 5
-	gfx.translate(-208 - (to_text and text_x or 0), 0)
+	gfx.translate(-210 - (to_text and text_x or 0), 0)
 end
 
 function ViewConfig:top()
@@ -440,12 +405,12 @@ function ViewConfig:top()
 	gfx.setFont(font.groupSort)
 
 	moveToSort(true)
-	gfx.translate(0, 23)
+	gfx.translate(10, 24)
 	gfx.setColor({ 0.68, 0.82, 0.54, 1 })
 	gyatt.text(text.sort)
 
 	moveToGroup(true)
-	gfx.translate(0, 23)
+	gfx.translate(12, 24)
 	gfx.setColor({ 0.57, 0.76, 0.9, 1 })
 	gyatt.text(text.group)
 
@@ -465,7 +430,7 @@ end
 
 function ViewConfig:topUI(view)
 	local w, h = Layout:move("base")
-	gfx.translate(10, 110)
+	gfx.translate(-2, 113)
 	gfx.push()
 	combos.scoreSource:update(has_focus)
 	combos.scoreSource:drawBody()
@@ -473,7 +438,7 @@ function ViewConfig:topUI(view)
 
 	w, h = Layout:move("base")
 	gfx.setColor(white)
-	gfx.translate(331, 118)
+	gfx.translate(331, 117)
 	gfx.draw(img.forum)
 
 	if gyatt.isOver(23, 23) and gyatt.mousePressed(1) then
@@ -488,14 +453,14 @@ function ViewConfig:topUI(view)
 
 	w, h = Layout:move("base")
 	moveToSort(false)
-	gfx.translate(0, 22)
+	gfx.translate(0, 24)
 	gfx.push()
 	combos.sort:update(has_focus)
 	combos.sort:drawBody()
 	gfx.pop()
 
 	moveToGroup(false)
-	gfx.translate(0, 22)
+	gfx.translate(0, 24)
 	combos.group:update(has_focus)
 	combos.group:drawBody()
 end
@@ -534,7 +499,7 @@ function ViewConfig:bottom(view)
 	gfx.setColor(white)
 	gfx.draw(avatar, 0, 0, 0, 74 / iw, 74 / ih)
 
-	gfx.translate(82, -4)
+	gfx.translate(80, -4)
 
 	gfx.setFont(font.username)
 	gyatt.text(username)
@@ -542,28 +507,28 @@ function ViewConfig:bottom(view)
 
 	gyatt.text(("Performance: %ipp\nAccuracy: %0.02f%%\nLv10"):format(pp, accuracy * 100))
 
-	gfx.translate(40, 22)
+	gfx.translate(42, 28)
 
 	gfx.setColor({ 0.15, 0.15, 0.15, 1 })
-	gfx.rectangle("fill", 0, 0, 199, 12, 8, 8)
+	gfx.rectangle("fill", 0, 0, 197, 10, 8, 8)
 
 	gfx.setLineWidth(1)
 	gfx.setColor({ 0.4, 0.4, 0.4, 1 })
-	gfx.rectangle("line", 0, 0, 199, 12, 6, 6)
+	gfx.rectangle("line", 0, 0, 197, 10, 6, 6)
 
 	w, h = Layout:move("base")
 	iw, ih = img.osuLogo:getDimensions()
 	iw, ih = iw * 0.45, ih * 0.45
 
 	gfx.setColor(white)
-	gfx.translate(w - iw - (iw / 2 * (1 + beat * 1.2)) + 180, h - ih - (ih / 2 * (1 + beat * 1.2)) + 180)
+	gfx.translate(w - iw - (iw / 2 * (1 + beat * 1.2)) + 170, h - ih - (ih / 2 * (1 + beat * 1.2)) + 196)
 	gfx.draw(img.osuLogo, 0, 0, 0, 0.45 * (1 + beat))
 
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
 	drawBottomButton("back")
 
-	w, h = Layout:move("bottomButtons")
+	gfx.translate(225, 0)
 	drawBottomButton("mode")
 
 	iw, ih = img.maniaSmallIcon:getDimensions()
@@ -777,8 +742,6 @@ function ViewConfig:resolutionUpdated(view)
 	local w, h = Layout:move("base")
 	top_panel_quad = gfx.newQuad(0, 0, w, img.panelTop:getHeight(), img.panelTop)
 
-	local wh = love.graphics.getHeight()
-	window_height = wh
 	self:createUI(view)
 end
 

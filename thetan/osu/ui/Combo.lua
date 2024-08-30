@@ -5,7 +5,7 @@ local HoverState = require("thetan.osu.ui.HoverState")
 
 ---@class osu.ui.Combo : osu.UiElement
 ---@operator call: osu.ui.Combo
----@field label love.Text
+---@field label love.Text?
 ---@field font love.Font
 ---@field labelColor number[]
 ---@field hoverColor number[]
@@ -36,7 +36,11 @@ local Combo = UiElement + {}
 ---@param format function?
 function Combo:new(assets, params, get_value, on_change, format)
 	self.assets = assets
-	self.label = love.graphics.newText(params.font, params.label)
+
+	if params.label then
+		self.label = love.graphics.newText(params.font, params.label)
+	end
+
 	self.font = params.font
 	self.totalW = params.pixelWidth
 	self.totalH = params.pixelHeight
@@ -109,6 +113,19 @@ function Combo:processState(event)
 	end
 end
 
+function Combo:getPosAndSize()
+	local x = 0
+
+	if self.label then
+		x = self.label:getWidth() * math.min(gyatt.getTextScale(), 1)
+	end
+
+	local w = self.totalW - x - 24
+	local h = math.floor(self.totalH / 1.5)
+
+	return x, w, h
+end
+
 function Combo:update(has_focus)
 	self:processState()
 	local selected, items = self.getValue()
@@ -124,10 +141,7 @@ function Combo:update(has_focus)
 	self.hoverIndex = 0
 
 	if self.state ~= "hidden" then
-		local x = self.label:getWidth() * math.min(gyatt.getTextScale(), 1)
-		local w = self.totalW - x - 24
-		local h = math.floor(self.totalH / 1.5)
-
+		local x, w, h = self:getPosAndSize()
 		for i, _ in ipairs(self.items) do
 			self.hoverIndex = gyatt.isOver(w, h, x, (self.totalH - h) + h * i) and i or self.hoverIndex
 		end
@@ -156,18 +170,19 @@ local mix = { 0, 0, 0, 1 }
 
 function Combo:draw()
 	gfx.setColor(1, 1, 1)
-	gyatt.textFrame(self.label, 0, 0, self.totalW, self.totalH, "left", "center")
+	if self.label then
+		gyatt.textFrame(self.label, 0, 0, self.totalW, self.totalH, "left", "center")
+	end
 	self:drawHead()
 end
 
 function Combo:drawHead()
 	gfx.setFont(self.font)
 	gfx.push()
-	local x = self.label:getWidth() * math.min(gyatt.getTextScale(), 1)
+
+	local x, w, h = self:getPosAndSize()
 	gfx.translate(x + 12, 0)
 
-	local w = self.totalW - x - 24
-	local h = math.floor(self.totalH / 1.5)
 	local y = self.totalH / 2 - h / 2
 
 	gfx.setLineWidth(2)
@@ -196,9 +211,7 @@ end
 function Combo:drawBody()
 	gfx.setFont(self.font)
 	gfx.push()
-	local x = self.label:getWidth() * math.min(gyatt.getTextScale(), 1)
-	local w = self.totalW - x - 24
-	local h = math.floor(self.totalH / 1.5)
+	local x, w, h = self:getPosAndSize()
 	gfx.translate(x + 12, (self.totalH - h) / 2 + 2)
 
 	for i, v in ipairs(self.items) do
