@@ -7,6 +7,7 @@ local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
 local Label = require("thetan.osu.ui.Label")
 local Spacing = require("thetan.osu.ui.Spacing")
 local BackButton = require("thetan.osu.ui.BackButton")
+local SkinPreview = require("thetan.osu.ui.SkinPreview")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 
 local Elements = require("thetan.osu.views.SettingsView.Elements")
@@ -40,6 +41,7 @@ local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 ---@field osuSkins string[]
 ---@field modalActive boolean
 ---@field backButton osu.ui.BackButton
+---@field skinPreview osu.ui.SkinPreview
 local SettingsView = class()
 
 ---@type table<string, string>
@@ -63,6 +65,12 @@ function SettingsView:new(assets, game)
 	self.hoverTime = 0
 	self.osuSkins = game.assetModel:getOsuSkins()
 	self.modalActive = true
+	self.skinPreview = SkinPreview(assets, consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent)
+
+	local input_mode = tostring(game.selectController.state.inputMode)
+	local selected_note_skin = game.noteSkinModel:getNoteSkin(input_mode)
+	local skin_preview_img = game.assetModel:loadSkinPreview(selected_note_skin.directoryPath)
+	self.skinPreview:setImage(skin_preview_img)
 
 	text, font = assets.localization:get("settings")
 	assert(font)
@@ -97,7 +105,7 @@ function SettingsView:build()
 	Elements.searchText = self.searchText
 	table.insert(self.containers, graphics(assets, self))
 	table.insert(self.containers, audio(assets, self))
-	table.insert(self.containers, skin(assets, self))
+	table.insert(self.containers, skin(assets, self, self.skinPreview))
 	table.insert(self.containers, maintenance(assets, self))
 
 	if #self.containers == 0 then
@@ -240,7 +248,7 @@ function SettingsView:jumpTo(container_index)
 		self.scrollTween:stop()
 	end
 
-	self.scrollTween = flux.to(self, 0.25, { scrollPosition = -self.scrollTargetPosition + 64 }):ease("quadout")
+	self.scrollTween = flux.to(self, 0.4, { scrollPosition = -self.scrollTargetPosition + 64 }):ease("cubicout")
 end
 
 function SettingsView:resolutionUpdated()

@@ -15,7 +15,9 @@ Elements.currentGroup = nil
 ---@type string
 Elements.searchText = ""
 
-local function canAdd(text)
+---@param text string
+---@return boolean
+function Elements.canAdd(text)
 	local search_text = Elements.searchText
 
 	if search_text ~= "" then
@@ -35,7 +37,7 @@ end
 ---@param get_value function
 ---@param on_change function
 function Elements.checkbox(label, default_value, tip, get_value, on_change)
-	if not canAdd(label) then
+	if not Elements.canAdd(label) then
 		return
 	end
 
@@ -70,10 +72,10 @@ function Elements.combo(label, default_value, tip, get_value, on_change, format)
 		local can_add = false
 
 		for _, v in ipairs(items) do
-			can_add = can_add or canAdd(format and format(v) or tostring(v))
+			can_add = can_add or Elements.canAdd(format and format(v) or tostring(v))
 		end
 
-		can_add = can_add or canAdd(label)
+		can_add = can_add or Elements.canAdd(label)
 
 		if not can_add then
 			return
@@ -108,7 +110,7 @@ Elements.sliderPixelWidth = nil
 ---@param on_change function
 ---@param format function?
 function Elements.slider(label, default_value, tip, get_value, on_change, format)
-	if not canAdd(label) then
+	if not Elements.canAdd(label) then
 		return
 	end
 
@@ -135,7 +137,7 @@ Elements.buttonColor = { 0.05, 0.52, 0.65, 1 }
 ---@param label string
 ---@param on_change function
 function Elements.button(label, on_change)
-	if not canAdd(label) then
+	if not Elements.canAdd(label) then
 		return
 	end
 

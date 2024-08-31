@@ -159,7 +159,7 @@ function ViewConfig:createUiElements()
 		font = font.gameTip,
 		pixelWidth = (1366 - 206 * 2),
 		pixelHeight = 75,
-		color = { 1, 1, 1, 0.7 },
+		color = { 1, 1, 1, 1 },
 		align = "center",
 	})
 end
@@ -325,8 +325,10 @@ function ViewConfig:footer()
 	local image = img.supporter
 	local iw, ih = image:getDimensions()
 
-	gfx.setColor(1, 1, 1)
+	local a = 0.8 + ((1 + math.sin(love.timer.getTime())) / 2) * 0.2
+	gfx.setColor(1, 1, 1, a)
 	gfx.draw(image, w - iw, h - ih)
+	gfx.setColor(1, 1, 1)
 
 	gfx.translate(206, 658)
 	self.gameTipLabel:draw()

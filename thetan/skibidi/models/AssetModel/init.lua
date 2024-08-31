@@ -85,6 +85,28 @@ function AssetModel:getOsuSkins()
 	return osu_skin_names
 end
 
+---@param skin_path string
+---@return love.Image?
+function AssetModel:loadSkinPreview(skin_path)
+	local small_path = ("%s/skin-preview.png"):format(skin_path)
+	local large_path = ("%s/skin-preview@2x.png"):format(skin_path)
+	local small_exist = love.filesystem.getInfo(small_path)
+	local large_exist = love.filesystem.getInfo(large_path)
+
+	---@type string?
+	local image_path
+
+	if love.graphics.getHeight() > 768 then
+		image_path = large_exist and large_path or small_path
+	else
+		image_path = small_exist and small_path or large_path
+	end
+
+	if love.filesystem.getInfo(image_path) then
+		return love.graphics.newImage(image_path)
+	end
+end
+
 function AssetModel:updateVolume()
 	for _, v in pairs(self.fields) do
 		v:updateVolume(self.configModel)

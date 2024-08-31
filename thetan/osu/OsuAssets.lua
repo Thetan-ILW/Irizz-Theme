@@ -189,6 +189,8 @@ function OsuAssets:new(skin_path, localization_file)
 		audioTab = self:loadImageOrDefault(skin_path, "menu-audio-tab"),
 		maintenanceTab = self:loadImageOrDefault(skin_path, "menu-maintenance-tab"),
 
+		noSkinPreview = self:loadImageOrDefault(skin_path, "no-skin-preview"),
+
 		-- RESULT
 
 		title = self:loadImageOrDefault(skin_path, "ranking-title"),

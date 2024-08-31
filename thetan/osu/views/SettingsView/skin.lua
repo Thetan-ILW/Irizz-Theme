@@ -7,8 +7,9 @@ local Format = require("sphere.views.Format")
 
 ---@param assets osu.OsuAssets
 ---@param view osu.SettingsView
+---@param skin_preview osu.ui.SkinPreview
 ---@return osu.SettingsView.GroupContainer?
-return function(assets, view)
+return function(assets, view, skin_preview)
 	local text, font = assets.localization:get("settings")
 	assert(text and font)
 
@@ -32,6 +33,10 @@ return function(assets, view)
 	c:createGroup("skin", "SKIN")
 	Elements.currentGroup = "skin"
 
+	if Elements.canAdd("skin") then
+		c:add("skin", skin_preview)
+	end
+
 	local input_mode = ""
 
 	combo("Current skin:", "Default", nil, function()
@@ -41,6 +46,8 @@ return function(assets, view)
 		return selected_note_skin, skins
 	end, function(v)
 		view.game.noteSkinModel:setDefaultNoteSkin(input_mode, v:getPath())
+		local skin_preview_img = view.game.assetModel:loadSkinPreview(v.dir)
+		skin_preview:setImage(skin_preview_img)
 	end, function(v)
 		---@type string
 		local k = Format.inputMode(input_mode)
@@ -102,16 +109,18 @@ return function(assets, view)
 	c:createGroup("camera", text.camera)
 	Elements.currentGroup = "camera"
 
-	c:add(
-		"camera",
-		Label(assets, {
-			text = text.cameraControls,
-			font = font.labels,
-			pixelWidth = consts.labelWidth - 24 - 28,
-			pixelHeight = 128,
-			align = "left",
-		})
-	)
+	if Elements.canAdd("camera") then
+		c:add(
+			"camera",
+			Label(assets, {
+				text = text.cameraControls,
+				font = font.labels,
+				pixelWidth = consts.labelWidth - 24 - 28,
+				pixelHeight = 128,
+				align = "left",
+			})
+		)
+	end
 
 	checkbox(text.enableCamera, false, nil, function()
 		return p.camera

@@ -61,22 +61,16 @@ function Button:new(assets, params, on_change)
 	self.animation = 0
 end
 
----@return number
----@return number
-function Button:getDimensions()
-	return self.totalW, self.totalH
-end
-
 local gfx = love.graphics
 
 ---@param has_focus boolean
 function Button:update(has_focus)
+	local just_hovered = false
+	self.hover, self.animation, just_hovered = self.hoverState:check(self.totalW, self.totalH)
+
 	if not has_focus then
 		return
 	end
-
-	local just_hovered = false
-	self.hover, self.animation, just_hovered = self.hoverState:check(self.totalW, self.totalH)
 
 	if self.hover and gyatt.mousePressed(1) then
 		self.onChange()
