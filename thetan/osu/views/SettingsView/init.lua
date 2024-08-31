@@ -231,9 +231,10 @@ function SettingsView:update(dt)
 	end
 
 	local changed = false
+	local prev = self.searchText
 	changed, self.searchText = gyatt.textInput(self.searchText)
 
-	if changed then
+	if changed and prev ~= self.searchText then
 		self.scrollPosition = 0
 		self.scrollTargetPosition = 0
 		self:build()

@@ -51,6 +51,10 @@ l.textGroups = {
 		adjustRate = "Adjust rate",
 		apply = "Apply",
 		reset = "Reset",
+		-- Offset adjustment
+		offsetAdjustment = "OFFSET ADJUSTMENT",
+		universalOffset = "Universal offset:",
+		chartFormatOffsets = "OFFSET ADJUSTMENT FOR CHART FORMATS",
 		-------------- Skin
 		-- Camera
 		camera = "3D CAMERA",

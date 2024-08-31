@@ -3,6 +3,13 @@ local Elements = require("thetan.osu.views.SettingsView.Elements")
 
 local audio = require("audio")
 
+local formats = { "osu", "qua", "sm", "ksh" }
+local audio_modes = { "bass_sample", "bass_fx_tempo" }
+
+local function formatMs(v)
+	return ("%dms"):format(v)
+end
+
 ---@param assets osu.OsuAssets
 ---@param view osu.SettingsView
 ---@return osu.SettingsView.GroupContainer?
@@ -15,6 +22,10 @@ return function(assets, view)
 	local g = settings.gameplay
 	local m = settings.miscellaneous
 	local vol = a.volume
+	---@type table<string, number>
+	local of = g.offset_format
+	---@type table<string, number>
+	local oam = g.offset_audio_mode
 
 	local c = GroupContainer(text.audio, assets, font, assets.images.audioTab)
 
@@ -39,28 +50,26 @@ return function(assets, view)
 		return ("%i%%"):format(v * 100)
 	end
 
-	slider(text.master, nil, nil, function()
+	slider(text.master, 0.2, nil, function()
 		return vol.master, linear_volume
 	end, function(v)
 		vol.master = v
 		assets:updateVolume(view.game.configModel)
 	end, volume_format)
 
-	slider(text.music, nil, nil, function()
+	slider(text.music, 1, nil, function()
 		return vol.music, linear_volume
 	end, function(v)
 		vol.music = v
 		assets:updateVolume(view.game.configModel)
 	end, volume_format)
 
-	slider(text.effect, nil, nil, function()
+	slider(text.effect, 1, nil, function()
 		return vol.effects, linear_volume
 	end, function(v)
 		vol.effects = v
 		assets:updateVolume(view.game.configModel)
 	end, volume_format)
-
-	Elements.sliderPixelWidth = nil
 
 	local mode = a.mode
 	local pitch = mode.primary == "bass_sample" and true or false
@@ -102,17 +111,13 @@ return function(assets, view)
 		return a.device.period, period_and_buffer
 	end, function(v)
 		a.device.period = v
-	end, function(v)
-		return ("%dms"):format(v)
-	end)
+	end, formatMs)
 
 	slider(text.bufferLength, 40, nil, function()
 		return a.device.buffer, period_and_buffer
 	end, function(v)
 		a.device.buffer = v
-	end, function(v)
-		return ("%dms"):format(v)
-	end)
+	end, formatMs)
 
 	slider(text.adjustRate, 0.1, nil, function()
 		return a.adjustRate, { min = 0, max = 1, increment = 0.01 }
@@ -121,8 +126,6 @@ return function(assets, view)
 	end, function(v)
 		return ("%0.02f"):format(v)
 	end)
-
-	Elements.sliderPixelWidth = nil
 
 	button(text.apply, function()
 		audio.setDevicePeriod(a.device.period)
@@ -137,6 +140,41 @@ return function(assets, view)
 		audio.reinit()
 	end)
 
+	Elements.sliderPixelWidth = nil
+
+	c:createGroup("offsetAdjustment", text.offsetAdjustment)
+	Elements.currentGroup = "offsetAdjustment"
+
+	local offset = { min = -300, max = 300, increment = 1 }
+
+	if mode.primary == "bass_sample" then
+		slider(text.universalOffset, 0, nil, function()
+			return oam.bass_sample, offset
+		end, function(v)
+			oam.bass_sample = v
+		end, formatMs)
+	else
+		slider(text.universalOffset, 0, nil, function()
+			return oam.bass_fx_tempo, offset
+		end, function(v)
+			oam.bass_fx_tempo = v
+		end, formatMs)
+	end
+
+	c:createGroup("chartFormatOffsets", text.chartFormatOffsets)
+	Elements.currentGroup = "chartFormatOffsets"
+
+	Elements.sliderPixelWidth = 360
+
+	for _, format in ipairs(formats) do
+		slider(("%s:"):format(format), 0, nil, function()
+			return of[format], offset
+		end, function(v)
+			of[format] = v
+		end, formatMs)
+	end
+
+	Elements.sliderPixelWidth = nil
 	c:removeEmptyGroups()
 
 	if c.isEmpty then

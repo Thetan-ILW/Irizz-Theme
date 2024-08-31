@@ -11,6 +11,7 @@ gyatt.button = just.button
 gyatt.isOver = just.is_over
 gyatt.wheelOver = just.wheel_over
 gyatt.mousePressed = just.mousepressed
+gyatt.keyPressed = just.keypressed
 gyatt.next = just.next
 gyatt.sameline = just.sameline
 gyatt.focus = just.focus

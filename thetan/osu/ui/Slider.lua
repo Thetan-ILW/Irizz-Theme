@@ -60,6 +60,16 @@ function Slider:getPosAndWidth()
 	return x, w
 end
 
+function Slider:playDragSound(percent)
+	local sound = self.assets.sounds.sliderBar
+	if sound:getPosition() > 0.02 then
+		sound:stop()
+		sound:setRate(1 + percent * 0.2)
+	end
+
+	sound:play()
+end
+
 function Slider:update(has_focus)
 	self.value, self.params = self.getValue()
 
@@ -91,6 +101,20 @@ function Slider:update(has_focus)
 		if gyatt.mousePressed(1) then
 			self.dragging = true
 		end
+		if gyatt.mousePressed(2) then
+			self.onChange(self.defaultValue or 0)
+		end
+		if gyatt.keyPressed("left") then
+			local new = math.max(self.value - self.params.increment, self.params.min)
+			self.onChange(new)
+			local range = self.params.max - self.params.min
+			self:playDragSound(new / range)
+		elseif gyatt.keyPressed("right") then
+			local new = math.min(self.value + self.params.increment, self.params.max)
+			self.onChange(new)
+			local range = self.params.max - self.params.min
+			self:playDragSound(new / range)
+		end
 	end
 
 	if self.dragging then
@@ -104,14 +128,7 @@ function Slider:update(has_focus)
 			if self.lastMousePosition ~= mx then
 				self.onChange(math_util.round(value, self.params.increment))
 				self.changeTime = -math.huge
-
-				local sound = self.assets.sounds.sliderBar
-				if sound:getPosition() > 0.02 then
-					sound:stop()
-					sound:setRate(1 + percent * 0.2)
-				end
-
-				sound:play()
+				self:playDragSound(percent)
 				self.lastMousePosition = mx
 			end
 		else
