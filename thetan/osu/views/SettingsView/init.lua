@@ -189,7 +189,11 @@ function SettingsView:processState(event)
 end
 
 function SettingsView:isFocused()
-	return (not self.state == "hidden") or self.viewConfig.focus
+	if self.state == "hidden" then
+		return false
+	end
+
+	return self.viewConfig.focus
 end
 
 function SettingsView:update(dt)

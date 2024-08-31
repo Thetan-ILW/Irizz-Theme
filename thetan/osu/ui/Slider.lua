@@ -20,7 +20,7 @@ local playSound = require("thetan.gyatt.play_sound")
 local Slider = UiElement + {}
 
 ---@param assets osu.OsuAssets
----@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, sliderPixelWidth: number?, defaultValue: number }
+---@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, sliderPixelWidth: number?, defaultValue: number, tip: string? }
 ---@param get_value fun(): number
 ---@param on_change fun(number)
 ---@param format? fun(number): string
@@ -31,6 +31,7 @@ function Slider:new(assets, params, get_value, on_change, format)
 	self.totalH = params.pixelHeight
 	self.sliderW = params.sliderPixelWidth
 	self.defaultValue = params.defaultValue
+	self.tip = params.tip
 	self.dragging = false
 	self.getValue = get_value
 	self.onChange = on_change
@@ -73,11 +74,10 @@ function Slider:update(has_focus)
 	local _, just_hovered = 0, false
 	self.hover, _, just_hovered = self.hoverState:check(self.totalW, self.totalH, 0, 0, has_focus)
 
-	---@type string?
-	self.tip = nil
+	self.activeTip = nil ---@type string?
 
 	if self.hover then
-		self.tip = self.format(self.value)
+		self.activeTip = self.format(self.value)
 	end
 
 	local x, w = self:getPosAndWidth()

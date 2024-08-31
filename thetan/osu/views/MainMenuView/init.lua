@@ -27,6 +27,7 @@ function MainMenuView:load()
 	self.viewConfig = ViewConfig(self.game, self.assets)
 	self.inputMap = InputMap(self, self.actionModel)
 	self.actionModel.enable()
+	self.game.previewModel.musicPlayerMode = true
 
 	self.settingsView = SettingsView(self.assets, self.game)
 
@@ -52,6 +53,7 @@ end
 
 function MainMenuView:beginUnload()
 	self.game.selectController:beginUnload()
+	self.game.previewModel.musicPlayerMode = false
 end
 
 function MainMenuView:unload()
@@ -125,6 +127,7 @@ function MainMenuView:update(dt)
 	ScreenView.update(self, dt)
 	gyatt.setTextScale(768 / window_height)
 
+	self.settingsView.modalActive = self.modal == nil
 	self.settingsView:update()
 
 	if self.state ~= "intro" then
@@ -163,6 +166,10 @@ function MainMenuView:notechartChanged()
 end
 
 function MainMenuView:sendQuitSignal()
+	if self.modal then
+		self.modal:quit()
+		return
+	end
 	self.settingsView:processState("hide")
 end
 

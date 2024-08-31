@@ -1,5 +1,7 @@
 local GroupContainer = require("thetan.osu.views.SettingsView.GroupContainer")
 local Elements = require("thetan.osu.views.SettingsView.Elements")
+local Label = require("thetan.osu.ui.Label")
+local consts = require("thetan.osu.views.SettingsView.Consts")
 local utf8validate = require("utf8validate")
 local Format = require("sphere.views.Format")
 
@@ -7,7 +9,8 @@ local Format = require("sphere.views.Format")
 ---@param view osu.SettingsView
 ---@return osu.SettingsView.GroupContainer?
 return function(assets, view)
-	local font = assets.localization.fontGroups.settings
+	local text, font = assets.localization:get("settings")
+	assert(text and font)
 
 	local configs = view.game.configModel.configs
 	local settings = configs.settings
@@ -96,22 +99,33 @@ return function(assets, view)
 		osu.result.pp = not osu.result.pp
 	end)
 
-	c:createGroup("camera", "3D CAMERA")
+	c:createGroup("camera", text.camera)
 	Elements.currentGroup = "camera"
 
-	checkbox("Enable 3D camera", false, nil, function()
+	c:add(
+		"camera",
+		Label(assets, {
+			text = text.cameraControls,
+			font = font.labels,
+			pixelWidth = consts.labelWidth - 24 - 28,
+			pixelHeight = 128,
+			align = "left",
+		})
+	)
+
+	checkbox(text.enableCamera, false, nil, function()
 		return p.camera
 	end, function()
 		p.camera = not p.camera
 	end)
 
-	checkbox("Allow rotation of X coordinate", false, nil, function()
+	checkbox(text.cameraX, false, nil, function()
 		return p.rx
 	end, function()
 		p.rx = not p.rx
 	end)
 
-	checkbox("Allow rotation of Y coordinate", false, nil, function()
+	checkbox(text.cameraY, false, nil, function()
 		return p.ry
 	end, function()
 		p.ry = not p.ry

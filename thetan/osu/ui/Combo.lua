@@ -32,7 +32,7 @@ local playSound = require("thetan.gyatt.play_sound")
 local Combo = UiElement + {}
 
 ---@param assets osu.OsuAssets
----@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, hoverColor: number[]?, borderColor: number[]?, defaultValue: any? }
+---@param params { label: string, font: love.Font, pixelWidth: number, pixelHeight: number, hoverColor: number[]?, borderColor: number[]?, defaultValue: any?, tip: string? }
 ---@param get_value function
 ---@param on_change function
 ---@param format function?
@@ -50,6 +50,7 @@ function Combo:new(assets, params, get_value, on_change, format)
 	self.borderColor = params.borderColor or { 0, 0, 0, 1 }
 	self.defaultValue = params.defaultValue
 	self.valueChanged = false
+	self.tip = params.tip
 	self.onChange = on_change
 	self.getValue = get_value
 	self.format = format
@@ -163,6 +164,12 @@ function Combo:update(has_focus)
 			gyatt.resetJust()
 			self:processState("close")
 		end
+	end
+
+	self.activeTip = nil
+
+	if self.hover then
+		self.activeTip = self.tip
 	end
 
 	if self.hover and gyatt.mousePressed(1) then

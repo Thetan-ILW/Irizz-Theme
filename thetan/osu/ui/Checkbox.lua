@@ -17,7 +17,7 @@ local playSound = require("thetan.gyatt.play_sound")
 local Checkbox = UiElement + {}
 
 ---@param assets osu.OsuAssets
----@param params { text: string, font: love.Font, pixelWidth: number, pixelHeight: number, defaultValue: boolean? }
+---@param params { text: string, font: love.Font, pixelWidth: number, pixelHeight: number, defaultValue: boolean?, tip: string? }
 ---@param get_value function
 ---@param on_change function
 function Checkbox:new(assets, params, get_value, on_change)
@@ -27,6 +27,7 @@ function Checkbox:new(assets, params, get_value, on_change)
 	self.totalH = params.pixelHeight
 	self.defaultValue = params.defaultValue
 	self.valueChanged = false
+	self.tip = params.tip
 	self.getValue = get_value
 	self.onChange = on_change
 
@@ -49,6 +50,12 @@ function Checkbox:update(has_focus)
 
 	local _, just_hovered = 0, false
 	self.hover, _, just_hovered = self.hoverState:check(self.totalW, self.totalH, 0, 0, has_focus)
+
+	self.activeTip = nil
+
+	if self.hover then
+		self.activeTip = self.tip
+	end
 
 	if self.hover and gyatt.mousePressed(1) then
 		self.onChange()

@@ -154,7 +154,7 @@ function GroupContainer:draw(has_focus)
 
 		for _, element in ipairs(group.elements) do
 			element:update(focus)
-			self.tip = self.tip or element.tip
+			self.tip = self.tip or element.activeTip
 
 			if element.state and element.state ~= "hidden" then
 				gfx.push()

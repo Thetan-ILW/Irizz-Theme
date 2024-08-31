@@ -114,28 +114,28 @@ function ViewConfig:tip()
 		return
 	end
 
-	Layout:move("base")
+	local sw, sh = Layout:move("base")
 	local mx, my = gfx.inverseTransformPoint(love.mouse.getPosition())
 
 	local f = font.tip
 	local w = f:getWidth(text) * gyatt.getTextScale() + 12
 	local h = f:getHeight() * gyatt.getTextScale() + 4
 
-	mx = mx - w / 2
-	my = my + img.cursor:getHeight() / 2
+	local x = math_util.clamp(mx - w / 2, 2, sw - 2)
+	local y = my + img.cursor:getHeight() / 2
 
 	local a = self.tipAnimation
 
 	gfx.setColor(0, 0, 0, a)
-	gfx.rectangle("fill", mx, my, w, h, 4, 4)
+	gfx.rectangle("fill", x, y, w, h, 4, 4)
 
 	gfx.setColor(1, 1, 1, 0.5 * a)
 	gfx.setLineWidth(1)
-	gfx.rectangle("line", mx, my, w, h, 4, 4)
+	gfx.rectangle("line", x, y, w, h, 4, 4)
 
 	gfx.setColor(1, 1, 1, a)
 	gfx.setFont(f)
-	gyatt.frame(text, mx, my, w, h, "center", "center")
+	gyatt.frame(text, x, y, w, h, "center", "center")
 end
 
 ---@param view osu.SettingsView

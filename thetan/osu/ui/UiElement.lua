@@ -1,11 +1,11 @@
 local class = require("class")
 
 local math_util = require("math_util")
-local gyatt = require("thetan.gyatt")
 
 ---@class osu.UiElement
 ---@operator call: osu.UiElement
----@field tip string?
+---@field activeTip string?
+---@field protected tip string?
 ---@field protected assets osu.OsuAssets
 ---@field protected defaultValue any?
 ---@field protected valueChanged boolean

@@ -65,7 +65,7 @@ return function(assets, view)
 	local mode = a.mode
 	local pitch = mode.primary == "bass_sample" and true or false
 
-	checkbox(text.rateChangesPitch, false, nil, function()
+	checkbox(text.rateChangesPitch, false, text.rateChangesPitchTip, function()
 		pitch = mode.primary == "bass_sample" and true or false
 		return pitch
 	end, function()
@@ -74,14 +74,7 @@ return function(assets, view)
 		mode.secondary = audio_mode
 	end)
 
-	--[[
-	g.autoKeySound = imgui.checkbox("autoKeySound", g.autoKeySound, text.autoKeySound)
-	a.midi.constantVolume = imgui.checkbox("midi.constantVolume", a.midi.constantVolume, text.midiConstantVolume)
-
-	m.muteOnUnfocus = imgui.checkbox("muteOnUnfocus", m.muteOnUnfocus, text.muteOnUnfocus)
-	]]
-
-	checkbox(text.autoKeySound, false, nil, function()
+	checkbox(text.autoKeySound, false, text.autoKeySoundTip, function()
 		return g.autoKeySound
 	end, function()
 		g.autoKeySound = not g.autoKeySound

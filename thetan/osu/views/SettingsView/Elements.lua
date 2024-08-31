@@ -52,6 +52,7 @@ function Elements.checkbox(label, default_value, tip, get_value, on_change)
 			pixelWidth = consts.checkboxWidth,
 			pixelHeight = consts.checkboxHeight,
 			defaultValue = default_value,
+			tip = tip,
 		}, get_value, on_change)
 	)
 end
@@ -92,6 +93,7 @@ function Elements.combo(label, default_value, tip, get_value, on_change, format)
 			pixelWidth = consts.settingsWidth - consts.tabIndentIndent - consts.tabIndent,
 			pixelHeight = consts.comboHeight,
 			defaultValue = default_value,
+			tip = tip,
 		}, get_value, on_change, format)
 	)
 end

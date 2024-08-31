@@ -18,6 +18,8 @@ l.textGroups = {
 		adaptive = "Adaptive",
 		enabled = "Enabled",
 		disabled = "Disabled",
+		msaaTip = "Antialiasing. Set this option to 2 or 4 to eliminate sharp edges on the screen. Game restart required.",
+		dwmFlushTip = "Acts like Vsync, but might cause graphical artifacts.",
 		-- Layout
 		layout = "LAYOUT",
 		fullscreenType = "Fullscreen type:",
@@ -37,7 +39,9 @@ l.textGroups = {
 		music = "Music:",
 		effect = "Effect:",
 		rateChangesPitch = "Rate changes pitch",
+		rateChangesPitchTip = "Changing the speed of the music will also change the pitch of the music.",
 		autoKeySound = "Auto key sound",
+		autoKeySoundTip = "Hitsound will play in perfect sync with the music, no matter how early/late you press a note.",
 		midiConstantVolume = "MIDI constant volume",
 		muteOnUnfocus = "Minimized game mutes music",
 		-- Device
@@ -47,6 +51,13 @@ l.textGroups = {
 		adjustRate = "Adjust rate",
 		apply = "Apply",
 		reset = "Reset",
+		-------------- Skin
+		-- Camera
+		camera = "3D CAMERA",
+		cameraControls = "Controls:\nF9 - enter camera mode.\nWASD - forward/left/right/back.\nSHIFT/SPACE - up/down.\nLeft mouse button - rotate",
+		enableCamera = "Enable 3D camera",
+		cameraX = "Allow rotation of X coordinate",
+		cameraY = "Allow rotation of Y coordinate",
 	},
 	songSelect = {
 		mappedBy = "Mapped by %s",
@@ -126,7 +137,7 @@ l.textGroups = {
 		warmUp = "Warm up is very important. You can't get good scores if you don't warm up properly.",
 		lua = "Learn programming and Lua to help develop this game.",
 		sessionTime = "An hour and a half is a good time for a session.",
-		archLinux = "Use Arch Linux to become a better person.",
+		archLinux = "Use Arch Linux with Hyprland to become a better person.",
 		fpsLimit = "Limit your FPS to 1024 or less, there is no point in setting it higher.",
 		osz = "Drag and drop osu! beatmaps into game window to import them.",
 		subahibi = "Read Subarashiki Hibi.",
@@ -162,7 +173,7 @@ l.fontGroups = {
 		checkboxes = { "Aller", 16, "ZenMaruGothic-Regular" },
 		combos = { "Aller", 16, "ZenMaruGothic-Regular" },
 		sliders = { "Aller", 16, "ZenMaruGothic-Regular" },
-		version = { "Aller", 16, "ZenMaruGothic-Regular" },
+		labels = { "Aller", 16, "ZenMaruGothic-Regular" },
 		tip = { "Aller", 14, "ZenMaruGothic-Regular" },
 	},
 	songSelect = {

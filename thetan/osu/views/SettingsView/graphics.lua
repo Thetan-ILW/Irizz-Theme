@@ -32,7 +32,7 @@ return function(assets, view)
 	c:createGroup("renderer", text.renderer)
 	Elements.currentGroup = "renderer"
 
-	combo("MSAA:", 0, nil, function()
+	combo("MSAA:", 0, text.msaaTip, function()
 		return flags.msaa, { 0, 1, 2, 4 }
 	end, function(v)
 		flags.msaa = v
@@ -67,11 +67,13 @@ return function(assets, view)
 		g.vsyncOnSelect = not g.vsyncOnSelect
 	end)
 
-	checkbox("DWM flush", false, nil, function()
-		return g.dwmflush
-	end, function()
-		g.dwmflush = not g.dwmflush
-	end)
+	if jit.os == "Windows" then
+		checkbox("DWM flush", false, text.dwmFlushTip, function()
+			return g.dwmflush
+		end, function()
+			g.dwmflush = not g.dwmflush
+		end)
+	end
 
 	--------------- LAYOUT ---------------
 	c:createGroup("layout", text.layout)
