@@ -21,7 +21,7 @@ return function(assets, view, skin_preview)
 	local graphics = settings.graphics
 	local p = graphics.perspective
 
-	local c = GroupContainer("SKIN", assets, font, assets.images.maintenanceTab)
+	local c = GroupContainer("SKIN", assets, font, assets.images.skinTab)
 
 	Elements.assets = assets
 	Elements.currentContainer = c

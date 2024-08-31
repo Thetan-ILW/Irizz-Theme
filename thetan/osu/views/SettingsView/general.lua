@@ -15,7 +15,7 @@ return function(assets, view)
 	local m = settings.miscellaneous
 	local osu = configs.osu_ui
 
-	local c = GroupContainer(text.general, assets, font, assets.images.maintenanceTab)
+	local c = GroupContainer(text.general, assets, font, assets.images.generalTab)
 
 	Elements.assets = assets
 	Elements.currentContainer = c

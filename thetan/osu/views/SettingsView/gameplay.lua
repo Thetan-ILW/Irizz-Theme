@@ -92,7 +92,7 @@ return function(assets, view)
 	local play_context = view.game.playContext
 	local note_timings = view.game.playContext.timings
 
-	local c = GroupContainer(text.gameplay, assets, font, assets.images.maintenanceTab)
+	local c = GroupContainer(text.gameplay, assets, font, assets.images.gameplayTab)
 
 	Elements.assets = assets
 	Elements.currentContainer = c

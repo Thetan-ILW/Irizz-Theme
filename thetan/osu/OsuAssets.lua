@@ -185,8 +185,12 @@ function OsuAssets:new(skin_path, localization_file)
 		checkboxOn = self:loadImageOrDefault(skin_path, "menu-checkbox-on"),
 		optionChanged = self:loadImageOrDefault(skin_path, "menu-option-changed"),
 
+		generalTab = self:loadImageOrDefault(skin_path, "menu-general-tab"),
 		graphicsTab = self:loadImageOrDefault(skin_path, "menu-graphics-tab"),
+		gameplayTab = self:loadImageOrDefault(skin_path, "menu-gameplay-tab"),
 		audioTab = self:loadImageOrDefault(skin_path, "menu-audio-tab"),
+		skinTab = self:loadImageOrDefault(skin_path, "menu-skin-tab"),
+		inputTab = self:loadImageOrDefault(skin_path, "menu-input-tab"),
 		maintenanceTab = self:loadImageOrDefault(skin_path, "menu-maintenance-tab"),
 
 		noSkinPreview = self:loadImageOrDefault(skin_path, "no-skin-preview"),
@@ -229,8 +233,10 @@ function OsuAssets:new(skin_path, localization_file)
 		automap10 = self:loadImageOrDefault(skin_path, "selection-mod-key10"),
 	}
 
-	local menu_back = self.loadImage("menu-back")
+	local menu_back = self.loadImage(skin_path .. "menu-back")
 	self.images.menuBack = menu_back or self.emptyImage()
+
+	self.hasBackButton = true
 
 	if not menu_back then
 		self.hasBackButton = false

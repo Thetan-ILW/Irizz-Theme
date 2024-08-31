@@ -154,10 +154,12 @@ function ViewConfig:createUiElements()
 		i = i + 1
 	end
 
+	Layout:draw()
+	local w, h = Layout:move("base")
 	self.gameTipLabel = Label(self.assets, {
 		text = label,
 		font = font.gameTip,
-		pixelWidth = (1366 - 206 * 2),
+		pixelWidth = w,
 		pixelHeight = 75,
 		color = { 1, 1, 1, 1 },
 		align = "center",
@@ -220,6 +222,11 @@ function ViewConfig:header(view)
 
 	gfx.push()
 	gfx.translate(6, 6)
+
+	gfx.setFont(font.rank)
+	gfx.setColor({ 1, 1, 1, 0.17 })
+	gyatt.frame("#69", -1, 10, 322, 78, "right", "top")
+
 	local iw, ih = img.avatar:getDimensions()
 	gfx.setColor(1, 1, 1)
 	gfx.draw(img.avatar, 0, 0, 0, 74 / iw, 74 / ih)
@@ -330,7 +337,7 @@ function ViewConfig:footer()
 	gfx.draw(image, w - iw, h - ih)
 	gfx.setColor(1, 1, 1)
 
-	gfx.translate(206, 658)
+	gfx.translate(0, 658)
 	self.gameTipLabel:draw()
 end
 

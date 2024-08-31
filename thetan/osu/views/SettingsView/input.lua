@@ -17,7 +17,7 @@ return function(assets, view)
 	local gp = settings.gameplay
 	local play_context = view.game.playContext
 
-	local c = GroupContainer(text.input, assets, font, assets.images.maintenanceTab)
+	local c = GroupContainer(text.input, assets, font, assets.images.inputTab)
 
 	Elements.assets = assets
 	Elements.currentContainer = c

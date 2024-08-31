@@ -45,6 +45,7 @@ l.textGroups = {
 		details = "DETAIL SETTINGS",
 		backgroundVideos = "Background videos",
 		backgroundImages = "Background images",
+		chartPreview = "Chart preview",
 		-------------- Gameplay
 		gameplay = "GAMEPLAY",
 		-- Scroll speed
@@ -242,6 +243,7 @@ l.fontGroups = {
 	mainMenu = {
 		username = { "Aller", 20, "ZenMaruGothic-Regular" },
 		belowUsername = { "Aller", 14 },
+		rank = { "Aller-Light", 50 },
 		info = { "Aller", 18, "ZenMaruGothic-Regular" },
 		gameTip = { "Aller", 22, "ZenMaruGothic-Regular" },
 	},

@@ -119,10 +119,16 @@ function Assets.loadAudio(path, use_sound_data)
 		local success, result = pcall(audio.newFileSource, path)
 
 		if success then
-			return result
+			local valid, error = pcall(result.stop, result)
+
+			if valid then
+				return result
+			end
+
+			table.insert(Assets.errors, ("Corrupted sound %s | %s"):format(path, error))
 		end
 
-		table.insert(Assets.errors, ("Failed to load sound %s | %s"):format(path, result))
+		table.insert(Assets.errors, ("Failed to load sound %s | Error: %s"):format(path, table.concat(result)))
 	end
 end
 
