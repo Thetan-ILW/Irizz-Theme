@@ -21,7 +21,7 @@ function Elements.canAdd(text)
 	local search_text = Elements.searchText
 
 	if search_text ~= "" then
-		local a = text:lower()
+		local a = tostring(text):lower()
 		local b = search_text:lower()
 		if not a:find(b) then
 			return false

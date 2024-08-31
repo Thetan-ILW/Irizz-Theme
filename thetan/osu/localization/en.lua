@@ -44,6 +44,38 @@ l.textGroups = {
 		details = "DETAIL SETTINGS",
 		backgroundVideos = "Background videos",
 		backgroundImages = "Background images",
+		-------------- Gameplay
+		gameplay = "GAMEPLAY",
+		-- Scroll speed
+		scrollSpeed = "SCROLL SPEED",
+		scrollSpeedType = "Speed type",
+		scrollSpeedLower = "Scroll speed:",
+		tempoFactor = "Tempo factor",
+		tempoFactorTip = "Specifies how the BPM should affect the scroll speed.",
+		average = "Average",
+		primary = "Primary",
+		minimum = "Minimum",
+		maximum = "Maximum",
+		primaryTempo = "Primary tempo:",
+		constScrollSpeed = "Constant scroll speed",
+		scaleScrollSpeed = "Scale scroll speed with rate",
+		taikoSV = "Taiko SV",
+		-- Scoring
+		scoring = "SCORING",
+		scoreSystem = "Score system:",
+		judgement = "Judgement:",
+		nearestInput = "Nearest input",
+		-- Health
+		health = "HEALTH",
+		maxHP = "Max health:",
+		actionOnFail = "Action in case of failure",
+		none = "None",
+		pause = "Pause",
+		quit = "Quit",
+		autoShift = "Auto shift",
+		-- Other
+		ratingWindow = "Rating hit timing window:",
+		lastMeanValues = "Last mean values:",
 		-------------- Audio
 		audio = "AUDIO",
 		-- Volume
@@ -188,6 +220,7 @@ l.textGroups = {
 		subahibi = "Read Subarashiki Hibi.",
 		vsrgScrollSpeed = "26 - 30 is a good range for a scroll speed.",
 		pauses = "You can pause in this game. We allow you to abuse it.",
+		doubleSetup = "Double setup is allowed. Surprise: You can bind any number of keys to a column.",
 	},
 }
 

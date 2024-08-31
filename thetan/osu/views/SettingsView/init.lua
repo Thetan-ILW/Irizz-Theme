@@ -13,6 +13,7 @@ local consts = require("thetan.osu.views.SettingsView.Consts")
 local Elements = require("thetan.osu.views.SettingsView.Elements")
 local general = require("thetan.osu.views.SettingsView.general")
 local graphics = require("thetan.osu.views.SettingsView.graphics")
+local gameplay = require("thetan.osu.views.SettingsView.gameplay")
 local audio = require("thetan.osu.views.SettingsView.audio")
 local skin = require("thetan.osu.views.SettingsView.skin")
 local input = require("thetan.osu.views.SettingsView.input")
@@ -80,11 +81,11 @@ function SettingsView:new(assets, game)
 	self:build()
 end
 
-function SettingsView:build()
+---@param tab string?
+function SettingsView:build(tab)
 	gyatt.setTextScale(768 / love.graphics.getHeight())
 
 	local prev_containers = self.containers or {}
-	self.containers = {}
 	self.topSpacing = Spacing(64)
 	self.headerSpacing = Spacing(100)
 	self.bottomSpacing = Spacing(256)
@@ -105,12 +106,24 @@ function SettingsView:build()
 	local assets = self.assets
 
 	Elements.searchText = self.searchText
-	table.insert(self.containers, general(assets, self))
-	table.insert(self.containers, graphics(assets, self))
-	table.insert(self.containers, audio(assets, self))
-	table.insert(self.containers, skin(assets, self, self.skinPreview))
-	table.insert(self.containers, input(assets, self))
-	table.insert(self.containers, maintenance(assets, self))
+
+	if not tab then
+		self.containers = {}
+		table.insert(self.containers, general(assets, self))
+		table.insert(self.containers, graphics(assets, self))
+		table.insert(self.containers, gameplay(assets, self))
+		table.insert(self.containers, audio(assets, self))
+		table.insert(self.containers, skin(assets, self, self.skinPreview))
+		table.insert(self.containers, input(assets, self))
+		table.insert(self.containers, maintenance(assets, self))
+	else
+		if tab == "gameplay" then
+			table.remove(self.containers, 3)
+			table.insert(self.containers, 3, gameplay(assets, self))
+		else
+			error("you forgor")
+		end
+	end
 
 	if #self.containers == 0 then
 		self.containers = prev_containers
