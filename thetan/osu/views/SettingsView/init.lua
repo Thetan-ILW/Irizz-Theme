@@ -6,6 +6,7 @@ local math_util = require("math_util")
 local ViewConfig = require("thetan.osu.views.SettingsView.ViewConfig")
 local Label = require("thetan.osu.ui.Label")
 local Spacing = require("thetan.osu.ui.Spacing")
+local BackButton = require("thetan.osu.ui.BackButton")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 
 local Elements = require("thetan.osu.views.SettingsView.Elements")
@@ -38,6 +39,7 @@ local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 ---@field searchText string
 ---@field osuSkins string[]
 ---@field modalActive boolean
+---@field backButton osu.ui.BackButton
 local SettingsView = class()
 
 ---@type table<string, string>
@@ -136,6 +138,10 @@ function SettingsView:build()
 	end
 
 	self.totalHeight = pos
+
+	self.backButton = BackButton(assets, { w = 64, h = 200 }, function()
+		self:processState("hide")
+	end)
 end
 
 ---@private

@@ -17,6 +17,7 @@ local HoverState = require("thetan.osu.ui.HoverState")
 
 ---@class osu.MainMenuViewConfig : IViewConfig
 ---@operator call: osu.MainMenuViewConfig
+---@field assets osu.OsuAssets
 ---@field hasFocus boolean
 ---@field mainButtonsTween table?
 ---@field playButtonsTween table?
@@ -58,6 +59,7 @@ local smoothing_factor = 0.2
 ---@param game sphere.GameController
 ---@param assets osu.OsuAssets
 function ViewConfig:new(game, assets)
+	self.assets = assets
 	img = assets.images
 	snd = assets.sounds
 	text, font = assets.localization:get("mainMenu")
@@ -86,38 +88,7 @@ function ViewConfig:new(game, assets)
 
 	self.directHoverState = HoverState("quadout", 0.3)
 	self.copyrightHoverState = HoverState("elasticout", 1.5)
-
-	---@type string[]
-	local game_tips = assets.localization.textGroups.gameTips
-
-	local n = 0
-	for k, v in pairs(game_tips) do
-		n = n + 1
-	end
-
-	---@type string
-	local label
-	local ri = math.random(n)
-	local i = 1
-	for k, v in pairs(game_tips) do
-		if i == ri then
-			label = v
-			break
-		end
-		i = i + 1
-	end
-
-	self.gameTipLabel = Label(assets, {
-		text = label,
-		font = font.gameTip,
-		pixelWidth = (1366 - 206 * 2),
-		pixelHeight = 75,
-		color = { 1, 1, 1, 0.7 },
-		align = "center",
-	})
 end
-
----@param params { text: string, font: love.Font, color: number[]?, pixelWidth: number, pixelHeight: number?, align?: "left" | "center" | "right" }
 
 function ViewConfig:createUiElements()
 	buttons.play = {
@@ -162,6 +133,35 @@ function ViewConfig:createUiElements()
 		y = 60,
 		hoverState = HoverState("quadout", 0.2),
 	}
+
+	---@type string[]
+	local game_tips = self.assets.localization.textGroups.gameTips
+
+	local n = 0
+	for k, v in pairs(game_tips) do
+		n = n + 1
+	end
+
+	---@type string
+	local label
+	local ri = math.random(n)
+	local i = 1
+	for k, v in pairs(game_tips) do
+		if i == ri then
+			label = v
+			break
+		end
+		i = i + 1
+	end
+
+	self.gameTipLabel = Label(self.assets, {
+		text = label,
+		font = font.gameTip,
+		pixelWidth = (1366 - 206 * 2),
+		pixelHeight = 75,
+		color = { 1, 1, 1, 0.7 },
+		align = "center",
+	})
 end
 
 local function getMousePosition()
@@ -451,7 +451,7 @@ function ViewConfig:logoButton(id, x, alpha)
 
 	local hover, animation, just_hovered = btn.hoverState:check(580, 85, 0, btn.y, not logo.focused and self.hasFocus)
 
-	if just_hovered then
+	if just_hovered and alpha ~= 0 then
 		playSound(snd.hoverMenu)
 	end
 
@@ -695,6 +695,10 @@ function ViewConfig:drawIntro(view)
 	self:copyright()
 	gfx.setColor(1, 1, 1, a)
 	gfx.draw(img.welcomeText, w / 2 - iw / 2, h / 2 - ih / 2, 0, scale, scale)
+end
+
+function ViewConfig:resolutionUpdated()
+	self:createUiElements()
 end
 
 ---@param view osu.MainMenuView

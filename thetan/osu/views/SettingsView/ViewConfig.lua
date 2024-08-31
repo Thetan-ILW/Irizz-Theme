@@ -6,8 +6,6 @@ local math_util = require("math_util")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 local Layout = require("thetan.osu.views.OsuLayout")
 
-local ImageButton = require("thetan.osu.ui.ImageButton")
-
 ---@class osu.SettingsViewConfig : IViewConfig
 ---@operator call: osu.SettingsViewConfig
 ---@field focus boolean
@@ -21,7 +19,6 @@ local ImageButton = require("thetan.osu.ui.ImageButton")
 ---@field tipAnimation number
 ---@field tipTween table?
 ---@field currentTip string?
----@field backButton osu.ui.ImageButton
 local ViewConfig = IViewConfig + {}
 
 local visibility = 0
@@ -48,10 +45,6 @@ function ViewConfig:new(view, assets)
 	self.hoverRectTargetSize = 0
 	self.tabFocusAnimation = 1
 	self.tipAnimation = 0
-
-	self.backButton = ImageButton(assets, { idleImage = img.menuBack, hoverArea = { w = 100, h = 200 } }, function()
-		view:processState("hide")
-	end)
 end
 
 local tab_image_height = 64
@@ -262,13 +255,15 @@ function ViewConfig:panel(view)
 	self:tip()
 end
 
-function ViewConfig:back()
+---@param view osu.SettingsView
+function ViewConfig:back(view)
+	local btn = view.backButton
 	local w, h = Layout:move("base")
-	local ih = self.backButton:getHeight()
-	gfx.translate(0, h - ih)
-	self.backButton.alpha = visibility
-	self.backButton:update(self.focus)
-	self.backButton:draw()
+	local ih = btn:getHeight()
+	gfx.translate(0, h - 58)
+	btn.alpha = visibility
+	btn:update(self.focus)
+	btn:draw()
 end
 
 ---@param view osu.SettingsView
@@ -294,7 +289,7 @@ function ViewConfig:draw(view)
 
 	self:tabs(view)
 	self:panel(view)
-	self:back()
+	self:back(view)
 end
 
 return ViewConfig

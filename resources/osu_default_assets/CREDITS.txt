@@ -10,4 +10,9 @@ License: https://www.svgrepo.com/page/licensing/#GPL
 
 ---- menu-maintenance-tab ----
 Link: https://www.svgrepo.com/svg/479423/wrench-2
-Lincense: https://www.svgrepo.com/page/licensing/#PD
+License: https://www.svgrepo.com/page/licensing/#PD
+
+---- menu-back-arrow ----
+Edits were made
+Link: https://www.svgrepo.com/svg/495000/arrow-circle-left
+License: https://www.svgrepo.com/page/licensing/#MIT

@@ -157,6 +157,9 @@ l.fontFiles = {
 }
 
 l.fontGroups = {
+	misc = {
+		backButton = { "Aller", 20, "ZenMaruGothic-Regular" },
+	},
 	mainMenu = {
 		username = { "Aller", 20, "ZenMaruGothic-Regular" },
 		belowUsername = { "Aller", 14 },

@@ -18,6 +18,7 @@ local getModifierString = require("thetan.skibidi.modifier_string")
 
 local ImageButton = require("thetan.osu.ui.ImageButton")
 local Combo = require("thetan.osu.ui.Combo")
+local BackButton = require("thetan.osu.ui.BackButton")
 
 local NoteChartSetListView = require("thetan.osu.views.SelectView.NoteChartSetListView")
 local CollectionListView = require("thetan.osu.views.SelectView.CollectionListView")
@@ -97,6 +98,9 @@ local function setFormat()
 	}
 end
 
+---@type osu.ui.BackButton?
+local back_button
+
 ---@type table<string, osu.ui.ImageButton>
 local buttons = {}
 ---@type table<string, osu.ui.Combo>
@@ -117,14 +121,20 @@ local selected_group = group_options[1]
 
 ---@param view osu.SelectView
 function ViewConfig:createUI(view)
-	buttons.back = ImageButton(assets, {
-		idleImage = img.menuBack,
-		ay = "bottom",
-		hoverArea = { w = 200, h = 90 },
-		clickSound = assets.sounds.menuBack,
-	}, function()
-		view:changeScreen("osuMainMenuView")
-	end)
+	if assets.hasBackButton then
+		buttons.back = ImageButton(assets, {
+			idleImage = img.menuBack,
+			ay = "bottom",
+			hoverArea = { w = 200, h = 90 },
+			clickSound = assets.sounds.menuBack,
+		}, function()
+			view:changeScreen("osuMainMenuView")
+		end)
+	else
+		back_button = BackButton(assets, { w = 93, h = 90 }, function()
+			view:changeScreen("osuMainMenuView")
+		end)
+	end
 
 	buttons.mode = ImageButton(assets, {
 		idleImage = img.modeButton,
@@ -534,7 +544,15 @@ function ViewConfig:bottom(view)
 
 	w, h = Layout:move("base")
 	gfx.translate(0, h)
-	drawBottomButton("back")
+
+	if back_button then
+		gfx.translate(0, -58)
+		back_button:update(has_focus)
+		back_button:draw()
+		gfx.translate(0, 58)
+	else
+		drawBottomButton("back")
+	end
 
 	gfx.translate(224, 0)
 	drawBottomButton("mode")

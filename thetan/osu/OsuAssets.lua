@@ -15,6 +15,7 @@ local utf8validate = require("utf8validate")
 ---@field localization skibidi.Localization
 ---@field selectViewConfig function?
 ---@field resultViewConfig function?
+---@field hasBackButton boolean
 local OsuAssets = Assets + {}
 
 local default_skin_ini = {
@@ -104,12 +105,13 @@ function OsuAssets:new(skin_path, localization_file)
 		avatar = self.loadImage("userdata/avatar") or self.emptyImage(),
 		panelTop = self:loadImageOrDefault(skin_path, "songselect-top"),
 
+		menuBackArrow = self:loadImageOrDefault("skin_path", "menu-back-arrow"),
+
 		panelBottom = self:loadImageOrDefault(skin_path, "songselect-bottom"),
 		rankedIcon = self:loadImageOrDefault(skin_path, "selection-ranked"),
 		danIcon = self:loadImageOrDefault(skin_path, "selection-dan"),
 		dropdownArrow = self:loadImageOrDefault(skin_path, "dropdown-arrow"),
 
-		menuBack = self:loadImageOrDefault(skin_path, "menu-back"),
 		menuBackDefault = self:loadDefaultImage("menu-back"),
 		modeButton = self:loadImageOrDefault(skin_path, "selection-mode"),
 		modsButton = self:loadImageOrDefault(skin_path, "selection-mods"),
@@ -224,6 +226,13 @@ function OsuAssets:new(skin_path, localization_file)
 		automap9 = self:loadImageOrDefault(skin_path, "selection-mod-key9"),
 		automap10 = self:loadImageOrDefault(skin_path, "selection-mod-key10"),
 	}
+
+	local menu_back = self.loadImage("menu-back")
+	self.images.menuBack = menu_back or self.emptyImage()
+
+	if not menu_back then
+		self.hasBackButton = false
+	end
 
 	local score_font_path = skin_path .. skin_ini.Fonts.ScorePrefix or skin_path .. "score"
 
