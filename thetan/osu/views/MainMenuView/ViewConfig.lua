@@ -325,7 +325,7 @@ function ViewConfig:footer()
 	local image = img.supporter
 	local iw, ih = image:getDimensions()
 
-	local a = 0.8 + ((1 + math.sin(love.timer.getTime())) / 2) * 0.2
+	local a = 0.6 + ((1 + math.sin(love.timer.getTime())) / 2) * 0.4
 	gfx.setColor(1, 1, 1, a)
 	gfx.draw(image, w - iw, h - ih)
 	gfx.setColor(1, 1, 1)

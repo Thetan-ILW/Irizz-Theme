@@ -30,7 +30,7 @@ return function(assets, view, skin_preview)
 	local slider = Elements.slider
 	local button = Elements.button
 
-	c:createGroup("skin", "SKIN")
+	c:createGroup("skin", text.skin)
 	Elements.currentGroup = "skin"
 
 	if Elements.canAdd("skin") then
@@ -39,7 +39,7 @@ return function(assets, view, skin_preview)
 
 	local input_mode = ""
 
-	combo("Current skin:", "Default", nil, function()
+	combo(text.currentSkin, "Default", nil, function()
 		input_mode = tostring(view.game.selectController.state.inputMode)
 		local selected_note_skin = view.game.noteSkinModel:getNoteSkin(input_mode)
 		local skins = view.game.noteSkinModel:getSkinInfos(input_mode)
@@ -65,7 +65,7 @@ return function(assets, view, skin_preview)
 
 	local prev_color = Elements.buttonColor
 	Elements.buttonColor = { 0.84, 0.38, 0.47, 1 }
-	button("Preview gameplay", function()
+	button(text.previewGameplay, function()
 		if not view.game.selectModel:notechartExists() then
 			return
 		end
@@ -75,16 +75,16 @@ return function(assets, view, skin_preview)
 	end)
 	Elements.buttonColor = prev_color
 
-	button("Open skin settings", function()
+	button(text.openSkinSettings, function()
 		view.game.gameView.view:openModal("thetan.irizz.views.modals.NoteSkinModal")
 	end)
 
-	button("Open current skin folder", function()
+	button(text.openCurrentSkinFolder, function()
 		love.system.openURL(love.filesystem.getSource() .. "/userdata/skins/" .. osu.skin)
 	end)
 
 	local ln_shortening = { min = -300, max = 0, increment = 10 }
-	slider("LN shortening", 0, nil, function()
+	slider(text.lnShortening, 0, nil, function()
 		return g.longNoteShortening * 1000, ln_shortening
 	end, function(v)
 		g.longNoteShortening = v / 1000
@@ -92,15 +92,15 @@ return function(assets, view, skin_preview)
 		return ("%ims"):format(v)
 	end)
 
-	c:createGroup("result", "RESULT SCREEN")
+	c:createGroup("result", text.resultScreen)
 	Elements.currentGroup = "result"
-	checkbox("Show hit graph", false, nil, function()
+	checkbox(text.showHitGraph, false, nil, function()
 		return osu.result.hitGraph
 	end, function()
 		osu.result.hitGraph = not osu.result.hitGraph
 	end)
 
-	checkbox("Show PP", false, nil, function()
+	checkbox(text.showPP, false, nil, function()
 		return osu.result.pp
 	end, function()
 		osu.result.pp = not osu.result.pp

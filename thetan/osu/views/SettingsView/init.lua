@@ -14,6 +14,7 @@ local Elements = require("thetan.osu.views.SettingsView.Elements")
 local graphics = require("thetan.osu.views.SettingsView.graphics")
 local audio = require("thetan.osu.views.SettingsView.audio")
 local skin = require("thetan.osu.views.SettingsView.skin")
+local input = require("thetan.osu.views.SettingsView.input")
 local maintenance = require("thetan.osu.views.SettingsView.maintenance")
 
 ---@class osu.SettingsView
@@ -106,6 +107,7 @@ function SettingsView:build()
 	table.insert(self.containers, graphics(assets, self))
 	table.insert(self.containers, audio(assets, self))
 	table.insert(self.containers, skin(assets, self, self.skinPreview))
+	table.insert(self.containers, input(assets, self))
 	table.insert(self.containers, maintenance(assets, self))
 
 	if #self.containers == 0 then

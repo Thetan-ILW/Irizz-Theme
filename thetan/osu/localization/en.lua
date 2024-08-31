@@ -46,9 +46,9 @@ l.textGroups = {
 		muteOnUnfocus = "Minimized game mutes music",
 		-- Device
 		device = "DEVICE",
-		updatePeriod = "Update period",
-		bufferLength = "Buffer length",
-		adjustRate = "Adjust rate",
+		updatePeriod = "Update period:",
+		bufferLength = "Buffer length:",
+		adjustRate = "Adjust rate:",
 		apply = "Apply",
 		reset = "Reset",
 		-- Offset adjustment
@@ -56,12 +56,38 @@ l.textGroups = {
 		universalOffset = "Universal offset:",
 		chartFormatOffsets = "OFFSET ADJUSTMENT FOR CHART FORMATS",
 		-------------- Skin
+		skin = "SKIN",
+		-- Skin
+		currentSkin = "Current skin:",
+		previewGameplay = "Preview gameplay",
+		openSkinSettings = "Open skin settings",
+		openCurrentSkinFolder = "Open current skin folder",
+		lnShortening = "LN shortening:",
+		resultScreen = "RESULT SCREEN",
+		showHitGraph = "Show hit graph",
+		showPP = "Show PP",
 		-- Camera
 		camera = "3D CAMERA",
 		cameraControls = "Controls:\nF9 - enter camera mode.\nF10 - reset\nWASD - forward/left/right/back.\nSHIFT/SPACE - up/down.\nLeft mouse button - rotate",
 		enableCamera = "Enable 3D camera",
 		cameraX = "Allow rotation of X coordinate",
 		cameraY = "Allow rotation of Y coordinate",
+		-------------- Input
+		-- Keyboard
+		input = "INPUT",
+		keyboard = "KEYBOARD",
+		maniaLayout = "osu!mania layout",
+		-- Offset adjustment
+		inputOffset = "Input offset:",
+		visualOffset = "Visual offset:",
+		multiplyInputOffset = "Multiply input offset by rate",
+		multiplyVisualOffset = "Multply input offset by rate",
+		-- Other
+		other = "OTHER",
+		threadedInput = "Threaded input",
+		threadedInputTip = "Your inputs will be processed in a separate thread, FPS will have no effect on the timings.",
+		taikoNoteHandler = "2K VSRG as Taiko charts",
+		taikoNoteHandlerTip = "Turn this on to play taiko charts.",
 	},
 	songSelect = {
 		mappedBy = "Mapped by %s",
