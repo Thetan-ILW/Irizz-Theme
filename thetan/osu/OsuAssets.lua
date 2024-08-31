@@ -237,9 +237,8 @@ function OsuAssets:new(skin_path, localization_file)
 		goodbye = self:loadAudioOrDefault(skin_path, "seeya"),
 		selectChart = self:loadAudioOrDefault(skin_path, "select-difficulty"),
 		selectGroup = self:loadAudioOrDefault(skin_path, "select-expand"),
-		backButtonClick = self:loadAudioOrDefault(skin_path, "back-button-click"),
 		hoverOverRect = self:loadAudioOrDefault(skin_path, "click-short"),
-		hoverAboveCharts = self:loadAudioOrDefault(skin_path, "menuclick"),
+		hoverMenu = self:loadAudioOrDefault(skin_path, "menuclick"),
 		clickShortConfirm = self:loadAudioOrDefault(skin_path, "click-short-confirm"),
 
 		applause = self:loadAudioOrDefault(skin_path, "applause"),

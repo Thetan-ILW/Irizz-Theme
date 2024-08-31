@@ -3,8 +3,13 @@ local t = {
 	skin = "Default",
 	language = "English",
 	cursorSize = 1,
-	resultHitGraph = false,
-	resultPP = false,
+	songSelect = {
+		previewIcon = false,
+	},
+	result = {
+		hitGraph = false,
+		pp = false,
+	},
 }
 
 return t

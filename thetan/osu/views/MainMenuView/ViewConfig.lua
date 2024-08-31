@@ -5,12 +5,12 @@ local ui = require("thetan.osu.ui")
 local flux = require("flux")
 local gyatt = require("thetan.gyatt")
 local time_util = require("time_util")
-local table_util = require("table_util")
 local math_util = require("math_util")
 local loop = require("loop")
 local gfx_util = require("gfx_util")
 local map = require("math_util").map
 local getBeatValue = require("thetan.osu.views.beat_value")
+local playSound = require("thetan.gyatt.play_sound")
 
 local Label = require("thetan.osu.ui.Label")
 local HoverState = require("thetan.osu.ui.HoverState")
@@ -449,7 +449,11 @@ function ViewConfig:logoButton(id, x, alpha)
 
 	local pressed = false
 
-	local hover, animation = btn.hoverState:check(580, 85, 0, btn.y, not logo.focused and self.hasFocus)
+	local hover, animation, just_hovered = btn.hoverState:check(580, 85, 0, btn.y, not logo.focused and self.hasFocus)
+
+	if just_hovered then
+		playSound(snd.hoverMenu)
+	end
 
 	if hover and gyatt.mousePressed(1) then
 		pressed = true

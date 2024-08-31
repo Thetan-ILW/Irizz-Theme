@@ -3,6 +3,8 @@ local gyatt = require("thetan.gyatt")
 local math_util = require("math_util")
 local Format = require("sphere.views.Format")
 
+local playSound = require("thetan.gyatt.play_sound")
+
 local NoteChartSetListView = ListView + {}
 
 NoteChartSetListView.rows = 7
@@ -11,7 +13,6 @@ NoteChartSetListView.staticCursor = false
 NoteChartSetListView.focus = false
 NoteChartSetListView.mouseScrollEase = { "quartout", 0.45 }
 
-NoteChartSetListView.assets = {}
 NoteChartSetListView.activeTextColor = { 0, 0, 0, 1 }
 NoteChartSetListView.inactiveTextColor = { 1, 1, 1, 1 }
 NoteChartSetListView.previewIcon = false
@@ -26,6 +27,7 @@ function NoteChartSetListView:new(game, assets)
 
 	self.assets = assets
 	self.font = assets.localization.fontGroups.chartSetList
+	self.hoverSound = self.assets.sounds.hoverMenu
 
 	local active_str = self.assets.params.songSelectActiveText
 	local inactive_str = self.assets.params.songSelectInactiveText
@@ -44,6 +46,7 @@ function NoteChartSetListView:new(game, assets)
 	end
 
 	self.scrollSound = assets.sounds.selectChart
+	self.hoverIndex = 0
 end
 
 function NoteChartSetListView:reloadItems()
@@ -107,8 +110,9 @@ end
 function NoteChartSetListView:update(w, h)
 	ListView.update(self, w, h)
 
-	local irizz = self.game.configModel.configs.irizz
-	self.previewIcon = irizz.osuSongSelectPreviewIcon
+	---@type osu.OsuConfig
+	local osu = self.game.configModel.configs.osu_ui
+	self.previewIcon = osu.songSelect.previewIcon
 end
 
 ---@param i number
@@ -140,6 +144,10 @@ function NoteChartSetListView:drawItem(i, w, h)
 	})
 
 	if gyatt.isOver(w, h, 0, 10) and self.focus then
+		if self.hoverIndex ~= i then
+			self.hoverIndex = i
+			playSound(self.hoverSound)
+		end
 		self.animations[i] = math_util.clamp((self.animations[i] or 0) + 0.03, 0, 0.55)
 	end
 

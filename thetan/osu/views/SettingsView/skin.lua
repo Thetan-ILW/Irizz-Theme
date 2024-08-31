@@ -85,15 +85,15 @@ return function(assets, view)
 	c:createGroup("result", "RESULT SCREEN")
 	Elements.currentGroup = "result"
 	checkbox("Show hit graph", false, nil, function()
-		return osu.resultHitGraph
+		return osu.result.hitGraph
 	end, function()
-		osu.resultHitGraph = not osu.resultHitGraph
+		osu.result.hitGraph = not osu.result.hitGraph
 	end)
 
 	checkbox("Show PP", false, nil, function()
-		return osu.resultPP
+		return osu.result.pp
 	end, function()
-		osu.resultPP = not osu.resultPP
+		osu.result.pp = not osu.result.pp
 	end)
 
 	c:createGroup("camera", "3D CAMERA")
