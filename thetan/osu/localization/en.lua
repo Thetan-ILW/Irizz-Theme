@@ -7,6 +7,19 @@ l.textGroups = {
 		time = "It is currently %s",
 	},
 	settings = {
+		-------------- General
+		general = "GENERAL",
+		-- Language
+		language = "LANGUAGE",
+		selectLanguage = "Select language:",
+		originalMetadata = "Prefer metadata in original language",
+		-- Updates
+		updates = "UPDATES",
+		autoUpdate = "Update game automatically",
+		gitVersion = "Git version of the game.",
+		upToDate = "Your soundsphere is up-to-date!",
+		notUpToDate = "Cannot tell if the game is up to date.",
+		openSoundsphereFolder = "Open soundsphere folder",
 		-------------- Graphics
 		graphics = "GRAPHICS",
 		-- Renderer
@@ -88,6 +101,8 @@ l.textGroups = {
 		threadedInputTip = "Your inputs will be processed in a separate thread, FPS will have no effect on the timings.",
 		taikoNoteHandler = "2K VSRG as Taiko charts",
 		taikoNoteHandlerTip = "Turn this on to play taiko charts.",
+		-------------- MAINTENANCE
+		maintenance = "MAINTENANCE",
 	},
 	songSelect = {
 		mappedBy = "Mapped by %s",

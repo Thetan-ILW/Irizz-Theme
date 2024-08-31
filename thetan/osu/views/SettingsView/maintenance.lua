@@ -8,42 +8,38 @@ local version = require("version")
 ---@param view osu.SettingsView
 ---@return osu.SettingsView.GroupContainer?
 return function(assets, view)
-	local font = assets.localization.fontGroups.settings
+	local text, font = assets.localization:get("settings")
+	assert(text and font)
 
 	local settings = view.game.configModel.configs.settings
-	local m = settings.miscellaneous
 
-	local c = GroupContainer("MAINTENANCE", assets, font, assets.images.maintenanceTab)
+	local c = GroupContainer(text.maintenance, assets, font, assets.images.maintenanceTab)
 
 	Elements.assets = assets
 	Elements.currentContainer = c
 	local checkbox = Elements.checkbox
 
-	c:createGroup("version", "VERSION")
-	Elements.currentGroup = "version"
+	c:createGroup("maintenance", text.maintenance)
+	Elements.currentGroup = "maintenance"
 
-	checkbox("Auto update", true, nil, function()
-		return m.autoUpdate
-	end, function()
-		m.autoUpdate = not m.autoUpdate
-	end)
+	if Elements.canAdd(version.date) then
+		c:add(
+			"maintenance",
+			Label(
+				assets,
+				{ text = version.date, font = font.labels, pixelWidth = consts.labelWidth - 24 - 28, pixelHeight = 64 },
+				function()
+					love.system.openURL("https://github.com/semyon422/soundsphere/commits/master/")
+				end
+			)
+		)
+	end
 
 	c:removeEmptyGroups()
 
 	if c.isEmpty then
 		return nil
 	end
-
-	c:add(
-		"version",
-		Label(
-			assets,
-			{ text = version.date, font = font.labels, pixelWidth = consts.labelWidth - 24 - 28, pixelHeight = 64 },
-			function()
-				love.system.openURL("https://github.com/semyon422/soundsphere/commits/master/")
-			end
-		)
-	)
 
 	return c
 end

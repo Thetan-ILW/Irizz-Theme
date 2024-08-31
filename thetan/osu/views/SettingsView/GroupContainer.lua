@@ -43,6 +43,8 @@ function GroupContainer:new(name, assets, fonts, icon)
 	self.isEmpty = true
 	self.openCombos = {}
 
+	assert(name, "Tab name is not specified.")
+
 	self.tabLabel = Label(assets, {
 		text = name,
 		pixelWidth = consts.labelWidth - 24 - 20,
@@ -102,6 +104,7 @@ end
 ---@param element osu.UiElement
 function GroupContainer:add(group, element)
 	self.isEmpty = false
+	assert(self.groups[group], "Group does not exist.")
 	table.insert(self.groups[group].elements, element)
 
 	local h = element:getHeight()

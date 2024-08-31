@@ -11,6 +11,7 @@ local SkinPreview = require("thetan.osu.ui.SkinPreview")
 local consts = require("thetan.osu.views.SettingsView.Consts")
 
 local Elements = require("thetan.osu.views.SettingsView.Elements")
+local general = require("thetan.osu.views.SettingsView.general")
 local graphics = require("thetan.osu.views.SettingsView.graphics")
 local audio = require("thetan.osu.views.SettingsView.audio")
 local skin = require("thetan.osu.views.SettingsView.skin")
@@ -104,6 +105,7 @@ function SettingsView:build()
 	local assets = self.assets
 
 	Elements.searchText = self.searchText
+	table.insert(self.containers, general(assets, self))
 	table.insert(self.containers, graphics(assets, self))
 	table.insert(self.containers, audio(assets, self))
 	table.insert(self.containers, skin(assets, self, self.skinPreview))
