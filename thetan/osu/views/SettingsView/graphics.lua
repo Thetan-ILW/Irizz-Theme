@@ -14,11 +14,13 @@ return function(assets, view)
 	local text, font = assets.localization:get("settings")
 	assert(text and font)
 
-	local settings = view.game.configModel.configs.settings
+	local configs = view.game.configModel.configs
+	local settings = configs.settings
 	local g = settings.graphics
 	local gp = settings.gameplay
 	local m = settings.miscellaneous
 	local flags = g.mode.flags
+	local osu = configs.osu_ui
 
 	local c = GroupContainer(text.graphics, assets, font, assets.images.graphicsTab)
 
@@ -78,6 +80,16 @@ return function(assets, view)
 	--------------- LAYOUT ---------------
 	c:createGroup("layout", text.layout)
 	Elements.currentGroup = "layout"
+
+	---@type string[]
+	local osu_skins = view.game.assetModel:getOsuSkins()
+
+	combo(text.uiSkin, "Default", nil, function()
+		return osu.skin, osu_skins
+	end, function(v)
+		osu.skin = v
+		view.game.gameView:reloadView()
+	end)
 
 	combo(text.fullscreenType, "desktop", nil, function()
 		return flags.fullscreentype, { "desktop", "exclusive" }

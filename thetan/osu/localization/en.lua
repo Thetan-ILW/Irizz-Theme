@@ -35,6 +35,7 @@ l.textGroups = {
 		dwmFlushTip = "Acts like Vsync, but might cause graphical artifacts.",
 		-- Layout
 		layout = "LAYOUT",
+		uiSkin = "UI skin:",
 		fullscreenType = "Fullscreen type:",
 		windowResolution = "Window resolution:",
 		desktop = "Desktop",
