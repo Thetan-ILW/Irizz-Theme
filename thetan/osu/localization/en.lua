@@ -54,7 +54,7 @@ l.textGroups = {
 		-------------- Skin
 		-- Camera
 		camera = "3D CAMERA",
-		cameraControls = "Controls:\nF9 - enter camera mode.\nWASD - forward/left/right/back.\nSHIFT/SPACE - up/down.\nLeft mouse button - rotate",
+		cameraControls = "Controls:\nF9 - enter camera mode.\nF10 - reset\nWASD - forward/left/right/back.\nSHIFT/SPACE - up/down.\nLeft mouse button - rotate",
 		enableCamera = "Enable 3D camera",
 		cameraX = "Allow rotation of X coordinate",
 		cameraY = "Allow rotation of Y coordinate",

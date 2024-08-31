@@ -128,13 +128,18 @@ function MainMenuView:update(dt)
 	gyatt.setTextScale(768 / window_height)
 
 	self.settingsView.modalActive = self.modal == nil
+
+	if self.changingScreen then
+		self.settingsView:processState("hide")
+	end
+
 	self.settingsView:update()
 
 	if self.state ~= "intro" then
 		self.game.selectController:update()
 	end
 
-	self.viewConfig.hasFocus = (self.modal == nil) and not self.settingsView:isFocused()
+	self.viewConfig.hasFocus = (self.modal == nil) and not self.settingsView:isFocused() and not self.changingScreen
 	self:processState()
 end
 

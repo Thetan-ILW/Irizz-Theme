@@ -11,6 +11,7 @@ local delay = require("delay")
 ---@field notificationView irizz.NotificationView
 ---@field actionModel skibidi.ActionModel
 ---@field assetModel skibidi.AssetModel
+---@field changingScreen boolean?
 local ScreenView = class()
 
 ---@param game sphere.GameController

@@ -77,7 +77,12 @@ function GameView:setView(view)
 	view.gameView = self
 
 	self.screenTransition:transit(function()
+		if self.view then
+			self.view.changingScreen = true
+		end
+
 		self.screenTransition:transitAsync(1, 0, transition)
+		view.changingScreen = false
 		self:_setView(view)
 		self.screenTransition:transitAsync(0, 1, transition)
 	end)

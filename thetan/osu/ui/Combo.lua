@@ -136,6 +136,7 @@ function Combo:update(has_focus)
 	self:processState()
 	local selected, items = self.getValue()
 	self.selected = self.format and self.format(selected) or tostring(selected)
+	self.items = items
 
 	local just_hovered = false
 	self.hover, self.headAnimation, just_hovered = self.headHoverState:check(self.totalW, self.totalH, 0, 0, has_focus)
@@ -143,8 +144,6 @@ function Combo:update(has_focus)
 	if not has_focus then
 		return
 	end
-
-	self.items = items
 
 	if self.defaultValue ~= nil then
 		self.valueChanged = selected ~= self.defaultValue

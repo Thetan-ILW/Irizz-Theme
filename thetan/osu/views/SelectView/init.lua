@@ -87,7 +87,7 @@ function OsuSelectView:update(dt)
 
 	self.assets:updateVolume(self.game.configModel)
 
-	self.viewConfig:setFocus(self.modal == nil)
+	self.viewConfig:setFocus(self.modal == nil and not self.changingScreen)
 
 	self.game.selectController:update()
 
